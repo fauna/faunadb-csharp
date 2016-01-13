@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
+using FaunaDB;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Values;
@@ -61,10 +62,8 @@ namespace Test
             await rootClient.Delete(DbRef);
         }
 
-        protected Client GetClient(string user = null, string password = null)
-        {
-            return new Client(domain: domain, scheme: scheme, port: port, user: user, password: password ?? serverKey);
-        }
+        protected Client GetClient(string user = null, string password = null) =>
+            new Client(domain: domain, scheme: scheme, port: port, user: user, password: password ?? serverKey);
 
         protected Client MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
@@ -77,33 +76,24 @@ namespace Test
             return new Client(domain: domain, scheme: scheme, port: port, clientIO: mock);
         }
 
-        protected static Ref GetRef(Value v)
-        {
-            return (Ref) ((ObjectV) v)["ref"];
-        }
+        protected static Ref GetRef(Value v) =>
+            (Ref) ((ObjectV) v)["ref"];
 
-        protected async Task<Value> Q(Value query)
-        {
-            return await TestClient.Query(query);
-        }
+        protected Task<Value> Q(Query query) =>
+            TestClient.Query(query);
     }
 
     class MockClientIO : IClientIO
     {
-        //HttpRequestMessage req;
         HttpResponseMessage resp;
 
         public MockClientIO(HttpResponseMessage resp)
         {
-            //this.req = req;
             this.resp = resp;
         }
 
-        public Task<HttpResponseMessage> DoRequest(HttpRequestMessage req)
-        {
-            //Assert.AreEqual(req, this.req);
-            return Task.FromResult(this.resp);
-        }
+        public Task<HttpResponseMessage> DoRequest(HttpRequestMessage req) =>
+            Task.FromResult(this.resp);
 
     }
 
@@ -117,7 +107,7 @@ namespace Test
             domain = env("FAUNA_DOMAIN");
             ...
             */
-            var configPath = "../../../testConfig.json";
+            const string configPath = "../../../testConfig.json";
             if (File.Exists(configPath)) {
                 string text = await File.OpenText(configPath).ReadToEndAsync();
                 return JsonConvert.DeserializeObject<Config>(text);
@@ -132,9 +122,7 @@ namespace Test
         public string User { get; set; }
         public string Password { get; set; }
 
-        public override string ToString()
-        {
-            return string.Format("Config(domain: {0}, scheme: {1}, port: {2}, user: {3}, password: {4})", Domain, Scheme, Port, User, Password);
-        }
+        public override string ToString() =>
+            $"Config(domain: {Domain}, scheme: {Scheme}, port: {Port}, user: {User}, password: {Password})";
     }
 }

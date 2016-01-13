@@ -58,30 +58,20 @@ namespace FaunaDB.Errors
         }
 
         #region boilerplate
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as FaunaException);
-        }
+        public override bool Equals(object obj) =>
+            Equals(obj as FaunaException);
 
-        public bool Equals(FaunaException e)
-        {
-            return e != null && e.Errors.SequenceEqual(Errors);
-        }
+        public bool Equals(FaunaException e) =>
+            e != null && e.Errors.SequenceEqual(Errors);
 
-        public static bool operator ==(FaunaException a, FaunaException b)
-        {
-            return object.Equals(a, b);
-        }
+        public static bool operator ==(FaunaException a, FaunaException b) =>
+            object.Equals(a, b);
 
-        public static bool operator !=(FaunaException a, FaunaException b)
-        {
-            return !object.Equals(a, b);
-        }
+        public static bool operator !=(FaunaException a, FaunaException b) =>
+            !object.Equals(a, b);
 
-        public override int GetHashCode()
-        {
-            return HashUtil.Hash(Errors);
-        }
+        public override int GetHashCode() =>
+            HashUtil.Hash(Errors);
         #endregion
     }
 

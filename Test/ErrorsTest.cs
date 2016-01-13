@@ -6,19 +6,19 @@ using System.Net;
 using System.Linq;
 using System.Threading.Tasks;
 
+using FaunaDB;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Values;
-
-//todo: remove this comment
+using static FaunaDB.Query;
 
 namespace Test
 {
     [TestFixture] public class ErrorsTest : TestCase
     {
-        [Test] public async void TestInfo()
+        [Test] public async void TestRequestResult()
         {
-            var err = await AssertU.Throws<BadRequest>(() => TestClient.Query(new ObjectV("foo", "bar")));
+            var err = await AssertU.Throws<BadRequest>(() => TestClient.Query((Query) new ObjectV("foo", "bar")));
             Assert.AreEqual(err.RequestResult.RequestContent, new ObjectV("foo", "bar"));
         }
 
@@ -34,7 +34,7 @@ namespace Test
         #region HTTP errors
         [Test] public async void TestHttpBadRequest()
         {
-            await AssertU.Throws<BadRequest>(() => TestClient.Query(new ObjectV("foo", "bar")));
+            await AssertU.Throws<BadRequest>(() => TestClient.Query((Query) new ObjectV("foo", "bar")));
         }
 
         [Test] public async void TestHttpUnauthorized()
@@ -73,41 +73,40 @@ namespace Test
         #region ErrorData
         [Test] public async void TestInvalidExpression()
         {
-            await AssertQueryException(new ObjectV("foo", "bar"), "invalid expression", ArrayV.Empty);
+            await AssertQueryException<BadRequest>((Query) new ObjectV("foo", "bar"), "invalid expression", ArrayV.Empty);
         }
 
         [Test] public async void TestUnboundVariable()
         {
-            await AssertQueryException(new ObjectV("var", "x"), "unbound variable", ArrayV.Empty);
+            await AssertQueryException<BadRequest>(Var("x"), "unbound variable", ArrayV.Empty);
         }
 
         [Test] public async void TestInvalidArgument()
         {
-            await AssertQueryException(new ObjectV("add", new ArrayV(1, "two")), "invalid argument", new ArrayV("add", 1));
+            await AssertQueryException<BadRequest>(Add(new ArrayV(1, "two")), "invalid argument", new ArrayV("add", 1));
         }
 
         [Test] public async void TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
             await TestClient.Post("classes", new ObjectV("name", "foofaws"));
-            await AssertQueryException(new ObjectV("get", new Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
+            await AssertQueryException<NotFound>(Get(new Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
         }
 
         [Test] public async void TestValueNotFound()
         {
-            await AssertQueryException(new ObjectV("select", new ArrayV("a"), "from", new ObjectV("object", ObjectV.Empty)), "value not found", ArrayV.Empty);
+            await AssertQueryException<NotFound>(Select("a", QueryObject(ObjectV.Empty)), "value not found", ArrayV.Empty);
         }
 
         [Test] public async void TestInstanceAlreadyExists()
         {
             await TestClient.Post("classes", new ObjectV("name", "duplicates"));
             var @ref = (Ref) ((ObjectV) (await TestClient.Post("classes/duplicates", ObjectV.Empty)))["ref"];
-            await AssertQueryException(new ObjectV("create", @ref), "instance already exists", new ArrayV("create"));
+            await AssertQueryException<BadRequest>(Create(@ref, QueryObject(ObjectV.Empty)), "instance already exists", new ArrayV("create"));
         }
         #endregion
 
         #region InvalidData
-
         [Test] public async void TestInvalidType()
         {
             await AssertInvalidData("classes", new ObjectV("name", 123), "invalid type", new ArrayV("name"));
@@ -149,8 +148,9 @@ namespace Test
 
             var failure = new Failure("code", "desc", new ArrayV("a", "b"));
             var vf = new ValidationFailed("vf_desc", new ArrayV("vf"), (new[] { failure }).ToImmutableArray());
-            Assert.AreEqual(vf.ToString(),
-                "ValidationFailed(vf_desc, ArrayV(StringV(vf)), [Failure(code, desc, ArrayV(StringV(a), StringV(b)))])");
+            Assert.AreEqual(
+                "ValidationFailed(vf_desc, ArrayV(StringV(vf)), [Failure(code, desc, ArrayV(StringV(a), StringV(b)))])",
+                vf.ToString());
         }
 
         async Task AssertHttpException<TException>(string code, Func<Task> action) where TException : FaunaException
@@ -167,9 +167,10 @@ namespace Test
             Assert.AreEqual(position, error.Position);
         }
 
-        async Task AssertQueryException(Value query, string code, ArrayV position = null)
+        async Task AssertQueryException<TException>(Query query, string code, ArrayV position = null)
+            where TException  : FaunaException
         {
-            var exception = await AssertU.Throws<FaunaException>(() => TestClient.Query(query));
+            var exception = await AssertU.Throws<TException>(() => TestClient.Query(query));
             AssertException(exception, code, position);
         }
     }

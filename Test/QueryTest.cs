@@ -53,16 +53,11 @@ namespace Test
         #endregion
 
         #region Helpers
+        Query NSet(int n) =>
+            Match(nIndexRef, n);
 
-        ObjectV NSet(int n)
-        {
-            return Match(n, nIndexRef);
-        }
-
-        ObjectV MSet(int m)
-        {
-            return Match(m, mIndexRef);
-        }
+        Query MSet(int m) =>
+            Match(mIndexRef, m);
 
         async Task<ObjectV> CreateInstance(int n = 0, Value m = null)
         {
@@ -70,37 +65,32 @@ namespace Test
             return (ObjectV) await Q(Create(classRef, Quote(new ObjectV("data", data))));
         }
 
-        async Task<Ref> CreateRef(int n = 0, Value m = null)
-        {
-            return GetRef(await CreateInstance(n, m));
-        }
+        async Task<Ref> CreateRef(int n = 0, Value m = null) =>
+            GetRef(await CreateInstance(n, m));
 
-        async Task<ObjectV> CreateThimble(ObjectV data)
-        {
-            return (ObjectV) await Q(Create(thimbleClassRef, Quote(new ObjectV("data", data))));
-        }
+        async Task<ObjectV> CreateThimble(ObjectV data) =>
+            (ObjectV) await Q(Create(thimbleClassRef, Quote(new ObjectV("data", data))));
 
-        async Task<ArrayV> SetToArray(Value set)
+        async Task<ArrayV> SetToArray(Query set)
         {
             var res = await Q(Paginate(set, size: 1000));
             return (ArrayV) ((ObjectV) res)["data"];
         }
 
-        async Task AssertSet(Value set, params Value[] expectedSetValues)
+        async Task AssertSet(Query set, params Value[] expectedSetValues)
         {
             Assert.AreEqual(new ArrayV(expectedSetValues), await SetToArray(set));
         }
 
-        async Task AssertBadQuery(Value expression)
+        async Task AssertBadQuery(Query expression)
         {
             await AssertU.Throws<BadRequest>(() => Q(expression));
         }
 
-        async Task AssertQuery(Value expected, Value expression)
+        async Task AssertQuery(Value expected, Query expression)
         {
             Assert.AreEqual(expected, await Q(expression));
         }
-
         #endregion
 
         #region Basic forms
@@ -111,8 +101,8 @@ namespace Test
             await AssertQuery(1, let);
             Assert.AreEqual(let, Let(1, a => a));
             Assert.AreEqual(
-                Let(new ObjectV("auto0", 1, "auto1", 2), new ArrayV(Var("auto0"), Var("auto1"))),
-                Let(1, 2, (a, b) => new ArrayV(a, b)));
+                Let(new ObjectV("auto0", 1, "auto1", 2), QueryArray(Var("auto0"), Var("auto1"))),
+                Let(1, 2, (a, b) => QueryArray(a, b)));
         }
 
         [Test] public async void TestIf()
@@ -131,22 +121,22 @@ namespace Test
         [Test] public async void TestObject()
         {
             // Unlike Quote, contents are evaluated.
-            await AssertQuery(new ObjectV("x", 1), QueryObject(new ObjectV("x", Let(new ObjectV("x", 1), Var("x")))));
+            await AssertQuery(new ObjectV("x", 1), QueryObject("x", Let(1, x => x)));
         }
 
         [Test] public async void TestQuote()
         {
-            var quoted = Let(new ObjectV("x", 1), Var("x"));
+            var quoted = (Value) Let(new ObjectV("x", 1), Var("x"));
             await AssertQuery(quoted, Quote(quoted));
         }
 
         [Test] public void TestLambda()
         {
             var expected = Lambda("auto0", Add(Var("auto0"), Var("auto0")));
-            Assert.AreEqual(expected, Lambda(a => Add(a, a)));
+            Assert.AreEqual(expected, Lambda(a => a + a));
 
-            expected = Lambda("auto0", Lambda("auto1", Lambda("auto2", new ArrayV(Var("auto0"), Var("auto1"), Var("auto2")))));
-            Assert.AreEqual(expected, Lambda(a => Lambda(b => Lambda(c => new ArrayV(a, b, c)))));
+            expected = Lambda("auto0", Lambda("auto1", Lambda("auto2", QueryArray(Var("auto0"), Var("auto1"), Var("auto2")))));
+            Assert.AreEqual(expected, Lambda(a => Lambda(b => Lambda(c => QueryArray(a, b, c)))));
 
             // Error in lambda should not affect future queries.
             AssertU.Throws<Exception>(() => {
@@ -157,7 +147,7 @@ namespace Test
             Assert.AreEqual(LambdaId, Lambda(a => a));
         }
 
-        static ObjectV LambdaId = new ObjectV("lambda", "auto0", "expr", new ObjectV("var", "auto0"));
+        static Query LambdaId = (Query) new ObjectV("lambda", "auto0", "expr", new ObjectV("var", "auto0"));
 
         [Test] public void TestLambdaMultithreaded()
         {
@@ -191,10 +181,9 @@ namespace Test
 
         [Test] public void TestLambdaMultiVar()
         {
-            var expected = Lambda(new ArrayV("auto0", "auto1"), new ArrayV(Var("auto0"), Var("auto1")));
-            Assert.AreEqual(expected, Lambda((a, b) => new ArrayV(a, b)));
+            var expected = Lambda(new ArrayV("auto0", "auto1"), QueryArray(Var("auto0"), Var("auto1")));
+            Assert.AreEqual(expected, Lambda((a, b) => QueryArray(a, b)));
         }
-
         #endregion
 
         #region Collection functions
@@ -213,7 +202,7 @@ namespace Test
             var refs = new ArrayV(await CreateRef(), await CreateRef());
             await Q(Foreach(refs, Delete));
             foreach (var @ref in refs)
-                await AssertQuery(false, Exists(@ref));
+                await AssertQuery(false, Exists((Query) @ref));
         }
 
         [Test] public async void TestFilter()
@@ -249,7 +238,6 @@ namespace Test
         [Test] public async void TestAppend() {
             await AssertQuery(new ArrayV(1, 2, 3, 4, 5, 6), Append(new ArrayV(4, 5, 6), new ArrayV(1, 2, 3)));
         }
-
         #endregion
 
         #region Read functions
@@ -265,7 +253,7 @@ namespace Test
             var testSet = NSet(1);
             await AssertQuery(new ObjectV("data", new ArrayV(refN1, refN1M1)), Paginate(testSet));
             await AssertQuery(new ObjectV("data", new ArrayV(refN1), "after", new ArrayV(refN1M1)), Paginate(testSet, size: 1));
-            var sources = new ArrayV(new Set(testSet));
+            var sources = new ArrayV(new SetRef(testSet));
             var page = new ObjectV("data",
                 new ArrayV(
                     new ObjectV("sources", sources, "value", refN1),
@@ -290,7 +278,6 @@ namespace Test
             var n = await Q(Count(instances));
             Assert.IsInstanceOfType(typeof(LongV), n);
         }
-
         #endregion
 
         #region Write functions
@@ -347,15 +334,13 @@ namespace Test
             Assert.AreEqual(newInstance, await Q(Get(@ref)));
 
             // Delete that event
-            await Q(Remove(@ref, newInstance["ts"], "create"));
+            await Q(Remove(@ref, (Query) newInstance["ts"], "create"));
             // Assert that it was undone
             Assert.AreEqual(instance, await Q(Get(@ref)));
         }
-
         #endregion
 
         #region Sets
-
         [Test] public async void TestMatch()
         {
             await AssertSet(NSet(1), refN1, refN1M1);
@@ -385,35 +370,29 @@ namespace Test
             Assert.AreEqual(referenced, await SetToArray(source));
 
             // For each obj with n=12, get the set of elements whose data.m refers to it.
-            var joined = Join(source, a => Match(a, mIndexRef));
+            var joined = Join(source, a => Match(mIndexRef, a));
             await AssertSet(joined, referencers.ToArray());
         }
-
         #endregion
 
         #region Authentication
 
-        [Test] public async void TestAuthentication()
+        [Test] public async void TestLoginLogout()
         {
-            // Setup
-            var userClassRef = GetRef(await TestClient.Post("classes", new ObjectV("name", "people")));
-            const string password = "swordfish";
-            var userRef = GetRef(await TestClient.Post(userClassRef,
-                new ObjectV("credentials", new ObjectV("password", password))));
+            var instanceRef = GetRef(await TestClient.Query(
+                Create(classRef, Quote(new ObjectV("credentials", new ObjectV("password", "sekrit"))))));
+            var secret = (string) ((ObjectV) await TestClient.Query(
+                Login(instanceRef, QueryObject("password", "sekrit"))))["secret"];
+            var instanceClient = GetClient(password: secret);
+            Assert.AreEqual(instanceRef, await instanceClient.Query(Select("ref", Get(new Ref("classes/widgets/self")))));
+            Assert.AreEqual(BoolV.True, await instanceClient.Query(Query.Logout(true)));
+        }
 
-            // Identify
-            await AssertQuery(true, Identify(userRef, password));
-            await AssertQuery(false, Identify(userRef, "pass123"));
-
-            // Login
-            var loginResponse = (ObjectV) await Q(LoginWithPassword(userRef, password));
-            Assert.AreEqual(loginResponse["instance"], userRef);
-            var userClient = GetClient(password: (string) loginResponse["secret"]);
-
-            // Logout
-            await userClient.Get("/tokens/self");
-            await userClient.Query(Logout(true));
-            await AssertU.Throws<PermissionDenied>(() => userClient.Get("/tokens/self"));
+        [Test] public async void TestIdentify()
+        {
+            var instanceRef = GetRef(await TestClient.Query(
+                Create(classRef, Quote(new ObjectV("credentials", new ObjectV("password", "sekrit"))))));
+            await AssertQuery(true, Identify(instanceRef, "sekrit"));
         }
 
         #endregion
@@ -431,7 +410,6 @@ namespace Test
         {
             await AssertQuery("hen wen", CaseFold("Hen Wen"));
         }
-
         #endregion
 
         #region Time and date functions
@@ -456,7 +434,6 @@ namespace Test
         {
             await AssertQuery(new FaunaDate("1970-01-01"), Date("1970-01-01"));
         }
-
         #endregion
 
         #region Miscellaneous functions
@@ -530,6 +507,26 @@ namespace Test
             await AssertBadQuery(Modulo());
         }
 
+        [Test] public async void TestLess()
+        {
+            await AssertQuery(true, Less(1, 2));
+        }
+
+        [Test] public async void TestLessOrEqual()
+        {
+            await AssertQuery(true, LessOrEqual(1, 1));
+        }
+
+        [Test] public async void TestGreater()
+        {
+            await AssertQuery(true, Greater(2, 1));
+        }
+
+        [Test] public async void TestGreaterOrEqual()
+        {
+            await AssertQuery(true, GreaterOrEqual(1, 1));
+        }
+
         [Test] public async void TestAnd()
         {
             await AssertQuery(false, And(true, true, false));
@@ -553,7 +550,6 @@ namespace Test
             await AssertQuery(false, Not(true));
             await AssertQuery(true, Not(false));
         }
-
         #endregion
 
         [Test] public async void TestVarargs()

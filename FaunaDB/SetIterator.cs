@@ -13,17 +13,94 @@ namespace FaunaDB
     /// <summary>
     /// Asynchronously yields values in a <see cref="Set"/>.
     /// SetIterators are best used with the helpers in
-    /// <see href="https://msdn.microsoft.com/en-us/library/system.reactive.linq.observable.aspx">Reactive Extensions</see>.
+    /// <see href="https://msdn.microsoft.com/en-us/library/system.reactive.linq.observable.aspx">Reactive Extensions</see>
+    /// and <see cref="IObservableUtil"/>.
     /// </summary>
-    public class SetIterator : IObservable<Value>
+    public class SetIterator : PushObservable<Value>
+    {
+        public SetIterator(Client.Client client, Query setQuery, int? pageSize = null, Query? mapLambda = null)
+            : base(new SetPusher(client, setQuery, pageSize, mapLambda)) {}
+    }
+
+    interface IPush<T>
+    {
+        Task DoPushes(IPushedTo<T> pushedTo);
+    }
+
+    interface IPushedTo<T>
+    {
+        void Push(T pushed);
+        bool ShouldContinue { get; }
+    }
+
+    /// <summary>
+    /// Ignore - used to implement SetIterator.
+    /// </summary>
+    public abstract class PushObservable<T> : IObservable<T>, IPushedTo<T>
+    {
+        IObserver<T> observer;
+        public bool ShouldContinue { get; private set; } = true;
+        IPush<T> pusher;
+
+        internal PushObservable(IPush<T> pusher)
+        {
+            this.pusher = pusher;
+        }
+
+        public IDisposable Subscribe(IObserver<T> observer)
+        {
+            if (this.observer != null)
+                throw new NotImplementedException("PushObservable does not support multiple observers.");
+            this.observer = observer;
+            Go();
+            return new Unsubscriber(this);
+        }
+
+        async void Go()
+        {
+            try
+            {
+                await pusher.DoPushes(this).ConfigureAwait(false);
+                observer.OnCompleted();
+            }
+            catch (Exception e)
+            {
+                observer.OnError(e);
+            }
+        }
+
+        public void Push(T value)
+        {
+            observer.OnNext(value);
+        }
+
+        void Stop()
+        {
+            ShouldContinue = false;
+        }
+
+        class Unsubscriber : IDisposable
+        {
+            readonly PushObservable<T> ob;
+
+            public Unsubscriber(PushObservable<T> ob)
+            {
+                this.ob = ob;
+            }
+
+            public void Dispose()
+            {
+                ob.Stop();
+            }
+        }
+    }
+
+    class SetPusher : IPush<Value>
     {
         readonly Client.Client client;
-        readonly Value setQuery;
+        readonly Query setQuery;
         readonly int? pageSize;
-        readonly Value mapLambda;
-        //todo: support multiple observers
-        IObserver<Value> observer;
-        bool shouldContinue = true;
+        readonly Query? mapLambda;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FaunaDB.SetIterator"/> class.
@@ -37,7 +114,7 @@ namespace FaunaDB
         /// var iter = new SetIterator(client, someSet, mapLambda: queryMapper);
         /// Console.WriteLine(await iter.ToArrayV());
         /// </example>
-        public SetIterator(Client.Client client, Value setQuery, int? pageSize = null, Value mapLambda = null)
+        public SetPusher(Client.Client client, Query setQuery, int? pageSize = null, Query? mapLambda = null)
         {
             this.client = client;
             this.setQuery = setQuery;
@@ -45,55 +122,33 @@ namespace FaunaDB
             this.mapLambda = mapLambda;
         }
 
-        public IDisposable Subscribe(IObserver<Value> observer)
+        public async Task DoPushes(IPushedTo<Value> pushedTo)
         {
-            if (this.observer != null)
-                throw new Exception("Multiple observers is complicated");
-            this.observer = observer;
-            Go();
-            return new Unsubscriber(this);
-        }
-
-        async void Go()
-        {
-            try
-            {
-                await GetPages();
-                observer.OnCompleted();
-            }
-            catch (Exception e)
-            {
-                observer.OnError(e);
-            }
-        }
-
-        async Task GetPages()
-        {
-            var page = await GetPage();
+            var page = await GetPage().ConfigureAwait(false);
             foreach (var v in page.Data)
             {
-                if (!shouldContinue)
+                if (!pushedTo.ShouldContinue)
                     return;
-                Push(v);
+                pushedTo.Push(v);
             }
 
             var isAfter = page.After != null;
 
             for (;;)
             {
-                if (!shouldContinue)
+                if (!pushedTo.ShouldContinue)
                     break;
                 
                 var cursor = isAfter ? page.After : page.Before;
                 if (cursor == null)
                     break;
                 
-                page = await (isAfter ? GetPage(after: cursor) : GetPage(before: cursor));
+                page = await (isAfter ? GetPage(after: cursor) : GetPage(before: cursor)).ConfigureAwait(false);
                 foreach (var v in page.Data)
                 {
-                    if (!shouldContinue)
+                    if (!pushedTo.ShouldContinue)
                         return;
-                    Push(v);
+                    pushedTo.Push(v);
                 }
             }
         }
@@ -102,33 +157,8 @@ namespace FaunaDB
         {
             var queried = Paginate(setQuery, size: pageSize, before: before, after: after);
             if (mapLambda != null)
-                queried = Map(queried, mapLambda);
-            return (Page) await client.Query(queried);
-        }
-
-        void Stop()
-        {
-            shouldContinue = false;
-        }
-
-        void Push(Value v)
-        {
-            observer.OnNext(v);
-        }
-
-        class Unsubscriber : IDisposable
-        {
-            readonly SetIterator f;
-
-            public Unsubscriber(SetIterator f)
-            {
-                this.f = f;
-            }
-
-            public void Dispose()
-            {
-                f.Stop();
-            }
+                queried = Map(queried, mapLambda.Value);
+            return (Page) await client.Query(queried).ConfigureAwait(false);
         }
     }
 
@@ -137,18 +167,13 @@ namespace FaunaDB
         /// <summary>
         /// Fetch all elements and put them in an <see cref="ArrayV"/>.
         /// </summary>
-        public static async Task<ArrayV> ToArrayV(this IObservable<Value> observable)
-        {
-            return new ArrayV((await FetchAll(observable)).ToImmutableArray());
-        }
+        public static async Task<ArrayV> ToArrayV(this IObservable<Value> observable) =>
+            new ArrayV((await FetchAll(observable).ConfigureAwait(false)).ToImmutableArray());
 
         /// <summary>
         /// Asynchronously collects all elements.
         /// </summary>
-        public static Task<IList<T>> FetchAll<T>(this IObservable<T> observable)
-        {
-            return observable.Buffer(int.MaxValue).ToTask();
-        }
+        public static Task<IList<T>> FetchAll<T>(this IObservable<T> observable) =>
+            observable.Buffer(int.MaxValue).ToTask();
     }
 }
-

@@ -21,40 +21,26 @@ namespace FaunaDB.Values
         }
 
         #region Pairs
-        public static KeyValuePair<string, Value> Pair(string key, Value value)
-        {
-            return new KeyValuePair<string, Value>(key, value);
-        }
+        public static KeyValuePair<string, Value> Pair(string key, Value value) =>
+            new KeyValuePair<string, Value>(key, value);
 
-        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1)
-        {
-            return new[] { Pair(k1, v1) };
-        }
+        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1) =>
+            new[] { Pair(k1, v1) };
 
-        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2)
-        {
-            return new[] { Pair(k1, v1), Pair(k2, v2) };
-        }
+        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2) =>
+            new[] { Pair(k1, v1), Pair(k2, v2) };
 
-        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3)
-        {
-            return new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3) };
-        }
+        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3) =>
+            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3) };
 
-        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3, string k4, Value v4)
-        {
-            return new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4) };
-        }
+        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3, string k4, Value v4) =>
+            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4) };
 
-        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3, string k4, Value v4, string k5, Value v5)
-        {
-            return new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5) };
-        }
+        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3, string k4, Value v4, string k5, Value v5) =>
+            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5) };
 
-        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3, string k4, Value v4, string k5, Value v5, string k6, Value v6)
-        {
-            return new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5), Pair(k6, v6) };
-        }
+        public static KeyValuePair<string, Value>[] Pairs(string k1, Value v1, string k2, Value v2, string k3, Value v3, string k4, Value v4, string k5, Value v5, string k6, Value v6) =>
+            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5), Pair(k6, v6) };
         #endregion
 
         #region Terse constructors
@@ -93,19 +79,15 @@ namespace FaunaDB.Values
         /// </summary>
         public static ObjectV WithoutNullValues(
             IEnumerable<KeyValuePair<string, Value>> notNullPairs,
-            IEnumerable<KeyValuePair<string, Value>> nullablePairs)
-        {
-            return new ObjectV(ImmutableUtil.DictWithoutNullValues(notNullPairs, nullablePairs));
-        }
+            IEnumerable<KeyValuePair<string, Value>> nullablePairs) =>
+            new ObjectV(ImmutableUtil.DictWithoutNullValues(notNullPairs, nullablePairs));
 
         /// <summary>
         /// Create an ObjectV while removing any null values.
         /// Use <see cref="Pairs"/> to simplify calling this. 
         /// </summary>
-        public static ObjectV WithoutNullValues(params KeyValuePair<string, Value>[] nullablePairs)
-        {
-            return new ObjectV(ImmutableUtil.DictWithoutNullValues(nullablePairs));
-        }
+        public static ObjectV WithoutNullValues(params KeyValuePair<string, Value>[] nullablePairs) =>
+            new ObjectV(ImmutableUtil.DictWithoutNullValues(nullablePairs));
         #endregion
 
         /// <exception cref="KeyNotFoundException"/>
@@ -134,15 +116,13 @@ namespace FaunaDB.Values
             return obj != null && ImmutableUtil.DictEquals(Val, obj.Val);
         }
 
-        protected override int HashCode()
-        {
-            return HashUtil.Hash(Val.Values);
-        }
+        protected override int HashCode() =>
+            HashUtil.Hash(Val.Values);
 
         public override string ToString()
         {
-            var props = string.Join(", ", from kv in Val select string.Format("{0}: {1}", kv.Key, kv.Value));
-            return string.Format("ObjectV({0})", props);
+            var props = string.Join(", ", from kv in Val select $"{kv.Key}: {kv.Value}");
+            return $"ObjectV({props})";
         }
         #endregion
     }

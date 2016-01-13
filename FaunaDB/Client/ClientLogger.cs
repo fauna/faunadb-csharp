@@ -13,10 +13,8 @@ namespace FaunaDB.Client
         /// <example>
         /// myClient.OnResponse += ClientLogger.Logger(Console.WriteLine);
         /// </example>
-        public static EventHandler<RequestResult> Logger(Action<string> logger)
-        {
-            return (client, info) => logger(ShowRequest(info));;
-        }
+        public static EventHandler<RequestResult> Logger(Action<string> logger) =>
+            (client, info) => logger(ShowRequest(info));
 
         /// <summary>
         /// String describing a single request.
@@ -26,23 +24,20 @@ namespace FaunaDB.Client
             var logged = new StringBuilder();
             Action<string> log = str => logged.Append(str);
 
-            log(string.Format("Fauna {0} /{1}{2}\n", rr.Method.Name(), rr.Path, rr.Query == null ? "" : Client.QueryString(rr.Query)));
-            log(string.Format("  Credentials: user: {0}, pass: {1}\n", rr.Client.User, rr.Client.Password));
+            log($"Fauna {rr.Method.Name()} /{rr.Path}{rr.Query == null ? "" : Client.QueryString(rr.Query)}\n");
+            log($"  Credentials: user: {rr.Client.User}, pass: {rr.Client.Password}\n");
             if (rr.RequestContent != null)
-                log(string.Format("  Request JSON: {0}\n", Indent(rr.RequestContent.ToJson(pretty: true))));
+                log($"  Request JSON: {Indent(rr.RequestContent.ToJson(pretty: true))}\n");
 
-            log(string.Format("  Response headers:\n    {0}\n", Indent(rr.ResponseHeaders.ToString().TrimEnd('\r', '\n', ' '))));
-            log(string.Format("  Response JSON:\n    {0}\n", Indent(rr.ResponseContent.ToJson(pretty: true))));
-            log(string.Format("  Response ({0}): API processing {1}ms, network latency {2}ms\n",
-                rr.StatusCode, ProcessingTime(rr.ResponseHeaders), rr.TimeTaken.Milliseconds));
+            log($"  Response headers:\n    {Indent(rr.ResponseHeaders.ToString().TrimEnd('\r', '\n', ' '))}\n");
+            log($"  Response JSON:\n    {Indent(rr.ResponseContent.ToJson(pretty: true))}\n");
+            log($"  Response ({rr.StatusCode}): API processing {ProcessingTime(rr.ResponseHeaders)}ms, network latency {rr.TimeTaken.Milliseconds}ms\n");
 
             return logged.ToString();
         }
 
-        static string Indent(string s)
-        {
-            return s.Replace("\n", "\n    ");
-        }
+        static string Indent(string s) =>
+            s.Replace("\n", "\n    ");
 
         static string ProcessingTime(HttpResponseHeaders headers)
         {
@@ -50,33 +45,5 @@ namespace FaunaDB.Client
             return headers.TryGetValues("X-HTTP-Request-Processing-Time", out time) ? string.Join("", time) : "N/A";
         }
     }
-    /*
-                    log(string.Format("Fauna {0} /{1}{2}\n", action, path, query));
-                    log(string.Format("  Credentials: {0}\n", credentials_str));
-                    if (data != null)
-                        log(string.Format("  Request JSON: {0}\n", Indent(data.ToJson(pretty: true))));
-
-                    var responseAndTime = await Time(() => ExecuteWithoutLogging(action, path, data, query));
-                    var response = responseAndTime.Item1;
-                    var responseHttp = response.Item1;
-                    var responseContent = response.Item2;
-                    var time = responseAndTime.Item2;
-
-                    log(string.Format("  Response headers:\n    {0}\n", Indent(responseHttp.Headers.ToString().TrimEnd('\r', '\n', ' '))));
-                    log(string.Format("  Response JSON:\n    {0}\n", Indent(responseContent.ToJson(pretty: true))));
-                    log(
-                        string.Format("  Response ({0}): API processing {1}ms, network latency {2}ms\n",
-                        responseHttp.StatusCode, ProcessingTime(responseHttp.Headers), time.Milliseconds));
-
-                    return HandleResponse(response);
-
-        async Task<T> Logging<T>(Func<Action<string>, Task<T>> func)
-        {
-            var logged = new StringBuilder();
-            var res = await func(str => logged.Append(str));
-            Log(logged.ToString());
-            return res;
-        }
-    */
 }
 

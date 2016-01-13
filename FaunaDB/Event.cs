@@ -39,8 +39,7 @@ namespace FaunaDB
                 case "delete":
                     return EventType.Delete;
                 default:
-                    throw new InvalidResponseException(
-                        string.Format("Expected event type to be \"create\" or \"delete\", not: {0}", action));
+                    throw new InvalidResponseException($"Expected event type to be \"create\" or \"delete\", not: {action}");
             }
         }
 
@@ -51,41 +50,27 @@ namespace FaunaDB
             Action = action;
         }
 
-        public static implicit operator Value(Event e)
-        {
-            return new ObjectV("resource", e.Resource, "ts", e.Ts, "action", e.Action.Name());
-        }
+        public static implicit operator Value(Event e) =>
+            new ObjectV("resource", e.Resource, "ts", e.Ts, "action", e.Action.Name());
 
         #region boilerplate
-        public override bool Equals(object obj)
-        {
-            return obj is Event && Equals((Event) obj);
-        }
+        public override bool Equals(object obj) =>
+            obj is Event && Equals((Event) obj);
 
-        public bool Equals(Event e)
-        {
-            return Resource == e.Resource && Ts == e.Ts && Action == e.Action;
-        }
+        public bool Equals(Event e) =>
+            Resource == e.Resource && Ts == e.Ts && Action == e.Action;
 
-        public static bool operator ==(Event a, Event b)
-        {
-            return object.Equals(a, b);
-        }
+        public static bool operator ==(Event a, Event b) =>
+            object.Equals(a, b);
 
-        public static bool operator !=(Event a, Event b)
-        {
-            return !object.Equals(a, b);
-        }
+        public static bool operator !=(Event a, Event b) =>
+            !object.Equals(a, b);
 
-        public override int GetHashCode()
-        {
-            return HashUtil.Hash(Resource, Ts, Action);
-        }
+        public override int GetHashCode() =>
+            HashUtil.Hash(Resource, Ts, Action);
 
-        public override string ToString()
-        {
-            return string.Format("Event({0}, {1}, {2})", Resource, Ts, Action.Name());
-        }
+        public override string ToString() =>
+            $"Event({Resource}, {Ts}, {Action.Name()})";
         #endregion
     }
 
@@ -118,7 +103,7 @@ namespace FaunaDB
                 case EventType.Delete:
                     return "delete";
                 default:
-                    throw new InvalidValueException(string.Format("Bad EventType: {0}", eventType));
+                    throw new InvalidValueException($"Bad EventType: {eventType}");
             }
         }
     }

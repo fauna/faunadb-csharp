@@ -56,36 +56,24 @@ namespace FaunaDB.Errors
             Position = position;
         }
 
-        #region Boilerplate
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ErrorData);
-        }
+        #region boilerplate
+        public override bool Equals(object obj) =>
+            Equals(obj as ErrorData);
 
-        public virtual bool Equals(ErrorData e)
-        {
-            return e != null && e.Code == Code && e.Description == Description && e.Position == Position;
-        }
+        public virtual bool Equals(ErrorData e) =>
+            e != null && e.Code == Code && e.Description == Description && e.Position == Position;
 
-        public static bool operator ==(ErrorData a, ErrorData b)
-        {
-            return object.Equals(a, b);
-        }
+        public static bool operator ==(ErrorData a, ErrorData b) =>
+            object.Equals(a, b);
 
-        public static bool operator !=(ErrorData a, ErrorData b)
-        {
-            return !object.Equals(a, b);
-        }
+        public static bool operator !=(ErrorData a, ErrorData b) =>
+            !object.Equals(a, b);
 
-        public override int GetHashCode()
-        {
-            return HashUtil.Hash(Position);
-        }
+        public override int GetHashCode() =>
+            HashUtil.Hash(Position);
 
-        public override string ToString()
-        {
-            return string.Format("ErrorData({0}, {1}, {2})", Code, Description, Position == null ? "null" : Position.ToString());
-        }
+        public override string ToString() =>
+            $"ErrorData({Code}, {Description}, {Position == null ? "null" : Position.ToString()})";
         #endregion
     }
 }

@@ -5,10 +5,8 @@ namespace FaunaDB {
     // I couldn't find any packages that work generically.
     static class HashUtil
     {
-        public static int Hash(params object[] values)
-        {
-            return Hash((IEnumerable<object>) values);
-        }
+        public static int Hash(params object[] values) =>
+            Hash((IEnumerable<object>) values);
 
         public static int Hash(IEnumerable<object> values)
         {

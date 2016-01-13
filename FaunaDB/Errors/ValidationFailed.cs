@@ -23,44 +23,30 @@ namespace FaunaDB.Errors
         }
 
         #region boilerplate
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as ValidationFailed);
-        }
+        public override bool Equals(object obj) =>
+            Equals(obj as ValidationFailed);
 
-        public override bool Equals(ErrorData e)
-        {
-            return Equals(e as ValidationFailed);
-        }
+        public override bool Equals(ErrorData e) =>
+            Equals(e as ValidationFailed);
 
-        public bool Equals(ValidationFailed v)
-        {
-            return v != null &&
+        public bool Equals(ValidationFailed v) =>
+            v != null &&
                 v.Code == Code &&
                 v.Description == Description &&
                 v.Position == Position &&
                 v.Failures.SequenceEqual(Failures);
-        }
 
-        public static bool operator ==(ValidationFailed a, ValidationFailed b)
-        {
-            return object.Equals(a, b);
-        }
+        public static bool operator ==(ValidationFailed a, ValidationFailed b) =>
+            object.Equals(a, b);
 
-        public static bool operator !=(ValidationFailed a, ValidationFailed b)
-        {
-            return !object.Equals(a, b);
-        }
+        public static bool operator !=(ValidationFailed a, ValidationFailed b) =>
+            !object.Equals(a, b);
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() =>
+            base.GetHashCode();
 
-        public override string ToString()
-        {
-            return string.Format("ValidationFailed({0}, {1}, [{2}])", Description, Position, string.Join(", ", Failures));
-        }
+        public override string ToString() =>
+            $"ValidationFailed({Description}, {Position}, [{string.Join(", ", Failures)}])";
         #endregion
     }
 }

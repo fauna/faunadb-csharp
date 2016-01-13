@@ -14,6 +14,9 @@ namespace FaunaDB.Values
         #region Construction
         public static readonly ArrayV Empty = new ArrayV(ImmutableArray<Value>.Empty);
 
+        public static ArrayV FromEnumerable(IEnumerable<Value> values) =>
+            new ArrayV(values.ToImmutableArray());
+
         public ArrayV(ImmutableArray<Value> value) : base(value)
         {
             if (value == null)
@@ -46,15 +49,11 @@ namespace FaunaDB.Values
         }
 
         #region IEnumerable
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return ((System.Collections.IEnumerable) Val).GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
+            ((System.Collections.IEnumerable) Val).GetEnumerator();
 
-        public IEnumerator<Value> GetEnumerator()
-        {
-            return ((IEnumerable<Value>) Val).GetEnumerator();
-        }
+        public IEnumerator<Value> GetEnumerator() =>
+            ((IEnumerable<Value>) Val).GetEnumerator();
         #endregion
 
         #region boilerplate
@@ -64,15 +63,11 @@ namespace FaunaDB.Values
             return a != null && Val.SequenceEqual(a.Val);
         }
 
-        protected override int HashCode()
-        {
-            return HashUtil.Hash(Val);
-        }
+        protected override int HashCode() =>
+            HashUtil.Hash(Val);
 
-        public override string ToString()
-        {
-            return string.Format("ArrayV({0})", string.Join(", ", this));
-        }
+        public override string ToString() =>
+            $"ArrayV({string.Join(", ", this)})";
         #endregion
     }
 }

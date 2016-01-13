@@ -45,41 +45,27 @@ namespace FaunaDB
             return value == null ? null : (Cursor?) new Cursor((ArrayV) value);
         }
 
-        public static implicit operator Value(Page p)
-        {
-            return ObjectV.WithoutNullValues(ObjectV.Pairs("data", p.Data), ObjectV.Pairs("before", p.Before?.Value, "after", p.After?.Value));
-        }
+        public static implicit operator Value(Page p) =>
+            ObjectV.WithoutNullValues(ObjectV.Pairs("data", p.Data), ObjectV.Pairs("before", p.Before?.Value, "after", p.After?.Value));
 
         #region boilerplate
-        public override bool Equals(object obj)
-        {
-            return obj is Page && Equals((Page) obj);
-        }
+        public override bool Equals(object obj) =>
+            obj is Page && Equals((Page) obj);
 
-        public bool Equals(Page p)
-        {
-            return p.Data == Data && p.Before == Before && p.After == After;
-        }
+        public bool Equals(Page p) =>
+            p.Data == Data && p.Before == Before && p.After == After;
 
-        public static bool operator==(Page a, Page b)
-        {
-            return object.Equals(a, b);
-        }
+        public static bool operator==(Page a, Page b) =>
+            object.Equals(a, b);
 
-        public static bool operator!=(Page a, Page b)
-        {
-            return !object.Equals(a, b);
-        }
+        public static bool operator!=(Page a, Page b) =>
+            !object.Equals(a, b);
 
-        public override int GetHashCode()
-        {
-            return HashUtil.Hash(Data, Before, After);
-        }
+        public override int GetHashCode() =>
+            HashUtil.Hash(Data, Before, After);
 
-        public override string ToString()
-        {
-            return string.Format("Page(Data: {0}, Before: {1}, After: {2})", Data, Before, After);
-        }
+        public override string ToString() =>
+            $"Page({Data}, Before: {Before}, After: {After})";
         #endregion
     }
 
@@ -100,41 +86,30 @@ namespace FaunaDB
             Value = value;
         }
 
-        public static implicit operator Value(Cursor c)
-        {
-            return c.Value;
-        }
+        public static implicit operator Value(Cursor c) =>
+            c.Value;
+
+        public static implicit operator Query(Cursor c) =>
+            (Query) (Value) c;
 
         #region boilerplate
-        public override bool Equals(object obj)
-        {
-            return obj is Cursor && Equals((Cursor) obj);
-        }
+        public override bool Equals(object obj) =>
+            obj is Cursor && Equals((Cursor) obj);
 
-        public bool Equals(Cursor c)
-        {
-            return Value == c.Value;
-        }
+        public bool Equals(Cursor c) =>
+            Value == c.Value;
 
-        public static bool operator ==(Cursor a, Cursor b)
-        {
-            return a.Equals(b);
-        }
+        public static bool operator ==(Cursor a, Cursor b) =>
+            a.Equals(b);
 
-        public static bool operator !=(Cursor a, Cursor b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(Cursor a, Cursor b) =>
+            !(a == b);
 
-        public override int GetHashCode()
-        {
-            return Value.GetHashCode();
-        }
+        public override int GetHashCode() =>
+            Value.GetHashCode();
 
-        public override string ToString()
-        {
-            return string.Format("Cursor({0})", Value);
-        }
+        public override string ToString() =>
+            $"Cursor({Value})";
         #endregion
     }
 }

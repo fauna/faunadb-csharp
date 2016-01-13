@@ -7,21 +7,18 @@ namespace FaunaDB
 {
     static class ImmutableUtil
     {
-        public static ImmutableDictionary<TKey, TVal> Create<TKey, TVal>(params KeyValuePair<TKey, TVal>[] pairs)
-        {
-            return BuildDict<TKey, TVal>(Add =>
+        public static ImmutableDictionary<TKey, TVal> Create<TKey, TVal>(params KeyValuePair<TKey, TVal>[] pairs) =>
+            BuildDict<TKey, TVal>(Add =>
             {
                 foreach (var kv in pairs)
                     Add(kv.Key, kv.Value);
             });
-        }
 
         public static ImmutableDictionary<TKey, TVal> DictWithoutNullValues<TKey, TVal>(
-            IEnumerable<KeyValuePair<TKey, TVal>> notNullPairs,
-            IEnumerable<KeyValuePair<TKey, TVal>> nullablePairs)
-            where TVal : class
-        {
-            return BuildDict<TKey, TVal>(Add =>
+                IEnumerable<KeyValuePair<TKey, TVal>> notNullPairs,
+                IEnumerable<KeyValuePair<TKey, TVal>> nullablePairs)
+                where TVal : class =>
+            BuildDict<TKey, TVal>(Add =>
             {
                 foreach (var kv in notNullPairs)
                     Add(kv.Key, kv.Value);
@@ -29,14 +26,11 @@ namespace FaunaDB
                     if (kv.Value != null)
                         Add(kv.Key, kv.Value);
             });
-        }
 
         public static ImmutableDictionary<TKey, TVal> DictWithoutNullValues<TKey, TVal>(
-            params KeyValuePair<TKey, TVal>[] nullablePairs)
-            where TVal : class
-        {
-            return DictWithoutNullValues<TKey, TVal>(Enumerable.Empty<KeyValuePair<TKey, TVal>>(), nullablePairs);
-        }
+                params KeyValuePair<TKey, TVal>[] nullablePairs)
+                where TVal : class =>
+            DictWithoutNullValues<TKey, TVal>(Enumerable.Empty<KeyValuePair<TKey, TVal>>(), nullablePairs);
 
         public static ImmutableDictionary<TKey, TVal> BuildDict<TKey, TVal>(Action<Action<TKey, TVal>> builder)
         {

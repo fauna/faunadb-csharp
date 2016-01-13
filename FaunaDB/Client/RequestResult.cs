@@ -73,21 +73,9 @@ namespace FaunaDB.Client
             EndTime = endTime;
         }
 
-        public TimeSpan TimeTaken
-        {
-            get
-            {
-                return EndTime - StartTime;
-            }
-        }
+        public TimeSpan TimeTaken { get { return EndTime - StartTime; } }
 
-        public Tuple<string, string> Auth
-        {
-            get
-            {
-                return new Tuple<string, string>(Client.User, Client.Password);
-            }
-        }
+        public Tuple<string, string> Auth { get { return new Tuple<string, string>(Client.User, Client.Password); } }
     }
 
     /// <summary>
@@ -122,7 +110,7 @@ namespace FaunaDB.Client
                 case HttpMethodKind.Delete:
                     return "DELETE";
                 default:
-                    throw new Exception(string.Format("Bad value: {0}", method));
+                    throw new Exception($"Bad value: {method}");
             }
         }
     }

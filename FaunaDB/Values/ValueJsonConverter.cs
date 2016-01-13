@@ -10,26 +10,20 @@ namespace FaunaDB.Values
             ((Value) value).WriteJson(writer);
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
             // For some reason, reader starts with one token already read.
-            return ValueReader.HandleValue(reader);
-        }
+            ValueReader.HandleValue(reader);
 
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(Value).IsAssignableFrom(objectType);
-        }
+        public override bool CanConvert(Type objectType) =>
+            typeof(Value).IsAssignableFrom(objectType);
     }
 
     class ValueReader
     {
         readonly JsonReader reader;
 
-        public static Value HandleValue(JsonReader reader)
-        {
-            return new ValueReader(reader).HandleValue();
-        }
+        public static Value HandleValue(JsonReader reader) =>
+            new ValueReader(reader).HandleValue();
 
         ValueReader(JsonReader reader)
         {
@@ -71,14 +65,12 @@ namespace FaunaDB.Values
             return HandleValue();
         }
 
-        ArrayV ReadArray()
-        {
-            return new ArrayV(Add =>
+        ArrayV ReadArray() =>
+            new ArrayV(Add =>
             {
                 while (Next() != JsonToken.EndArray)
                     Add(HandleValue());
             });
-        }
 
         Value ReadObject()
         {
@@ -98,7 +90,7 @@ namespace FaunaDB.Values
                         case "@set":
                             var v = ReadValue();
                             NextAndExpect(JsonToken.EndObject);
-                            return new Set((ObjectV)v);
+                            return new SetRef((Query) v);
                         case "@ts":
                             return new FaunaTime(ReadStringAndEndObject());
                         case "@date":
@@ -113,15 +105,13 @@ namespace FaunaDB.Values
             }
         }
 
-        ObjectV ReadObjectBody(string firstPropertyName)
-        {
-            return new ObjectV(add =>
+        ObjectV ReadObjectBody(string firstPropertyName) =>
+            new ObjectV(add =>
             {
                 add(firstPropertyName, ReadValue());
                 while (Next() != JsonToken.EndObject)
                     add(ExpectPropertyName(), ReadValue());
             });
-        }
 
         string ReadPropertyName()
         {

@@ -35,15 +35,11 @@ namespace FaunaDB.Values
             return w != null && w.Val.Equals(Val);
         }
 
-        protected override int HashCode()
-        {
-            return Val.GetHashCode();
-        }
+        protected override int HashCode() =>
+            Val.GetHashCode();
 
-        public override string ToString()
-        {
-            return string.Format("{0}({1})", GetType().Name, Val);
-        }
+        public override string ToString() =>
+            $"{GetType().Name}({Val})";
         #endregion
     }
 
@@ -52,7 +48,13 @@ namespace FaunaDB.Values
     /// </summary>
     public class BoolV : ValueWrap<BoolV, bool>
     {
-        internal BoolV(bool value) : base(value) {}
+        BoolV(bool value) : base(value) {}
+
+        public static BoolV Of(bool b) =>
+            b ? True : False;
+
+        public static readonly BoolV True = new BoolV(true);
+        public static readonly BoolV False = new BoolV(false);
     }
 
     /// <summary>

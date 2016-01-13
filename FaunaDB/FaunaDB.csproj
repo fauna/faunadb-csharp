@@ -62,7 +62,6 @@
     <Compile Include="Values\ObjectV.cs" />
     <Compile Include="Values\ArrayV.cs" />
     <Compile Include="Values\Ref.cs" />
-    <Compile Include="Values\Set.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="Values\ValueJsonConverter.cs" />
     <Compile Include="Values\JsonU.cs" />
@@ -81,6 +80,7 @@
     <Compile Include="SetIterator.cs" />
     <Compile Include="Client\RequestResult.cs" />
     <Compile Include="Errors\FaunaException.cs" />
+    <Compile Include="Values\SetRef.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Values\" />

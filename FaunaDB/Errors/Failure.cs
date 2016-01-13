@@ -30,36 +30,24 @@ namespace FaunaDB.Errors
             Field = field;
         }
 
-        #region Boilerplate
-        public override bool Equals(object obj)
-        {
-            return Equals(obj as Failure);
-        }
+        #region boilerplate
+        public override bool Equals(object obj) =>
+            Equals(obj as Failure);
 
-        public bool Equals(Failure f)
-        {
-            return f != null && f.Code == Code && f.Description == Description && f.Field == Field;
-        }
+        public bool Equals(Failure f) =>
+            f != null && f.Code == Code && f.Description == Description && f.Field == Field;
 
-        public static bool operator ==(Failure a, Failure b)
-        {
-            return object.Equals(a, b);
-        }
+        public static bool operator ==(Failure a, Failure b) =>
+            object.Equals(a, b);
 
-        public static bool operator !=(Failure a, Failure b)
-        {
-            return !object.Equals(a, b);
-        }
+        public static bool operator !=(Failure a, Failure b) =>
+            !object.Equals(a, b);
 
-        public override int GetHashCode()
-        {
-            return HashUtil.Hash(Field);
-        }
+        public override int GetHashCode() =>
+            HashUtil.Hash(Field);
 
-        public override string ToString()
-        {
-            return string.Format("Failure({0}, {1}, {2})", Code, Description, Field);
-        }
+        public override string ToString() =>
+            $"Failure({Code}, {Description}, {Field})";
         #endregion
     }
 }

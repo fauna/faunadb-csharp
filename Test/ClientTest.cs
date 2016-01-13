@@ -21,15 +21,12 @@ namespace Test
             await TestClient.Post("classes", new ObjectV("name", "my_class"));
         }
 
-        async Task<ObjectV> CreateInstance()
-        {
-            return (ObjectV) await TestClient.Post("classes/my_class", ObjectV.Empty);
-        }
+        async Task<ObjectV> CreateInstance() =>
+            (ObjectV) await TestClient.Post("classes/my_class", ObjectV.Empty);
 
         [Test] public async void TestPing()
         {
-            Assert.AreEqual("Scope Global is OK", await TestClient.Ping());
-            Assert.AreEqual("Scope Global is OK", await TestClient.Ping("global"));
+            Assert.AreEqual("Scope all is OK", await TestClient.Ping("all"));
         }
 
         [Test] public async void TestGet()
@@ -100,7 +97,7 @@ namespace Test
             }
             //todo: this should be flush with "response json: "
             AssertRead("    {");
-            AssertRead("      \"resource\": \"Scope Global is OK\"");
+            AssertRead("      \"resource\": \"Scope global is OK\"");
             AssertRead("    }");
             AssertRgx("^  Response \\(OK\\): API processing \\d+ms, network latency \\d+ms$");
         }

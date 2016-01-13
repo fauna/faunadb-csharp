@@ -63,10 +63,8 @@ namespace FaunaDB.Values
             }
         }
 
-        public static implicit operator string(Ref r)
-        {
-            return r.Val;
-        }
+        public static implicit operator string(Ref r) =>
+            r.Val;
 
         override internal void WriteJson(JsonWriter writer)
         {
