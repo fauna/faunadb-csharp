@@ -73,7 +73,7 @@ namespace FaunaDB.Errors
             HashUtil.Hash(Position);
 
         public override string ToString() =>
-            $"ErrorData({Code}, {Description}, {Position == null ? "null" : Position.ToString()})";
+            $"ErrorData({Code}, {Description}, {(Position == null ? "null" : Position.ToString())})";
         #endregion
     }
 }

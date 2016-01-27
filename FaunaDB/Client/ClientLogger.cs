@@ -24,7 +24,7 @@ namespace FaunaDB.Client
             var logged = new StringBuilder();
             Action<string> log = str => logged.Append(str);
 
-            log($"Fauna {rr.Method.Name()} /{rr.Path}{rr.Query == null ? "" : Client.QueryString(rr.Query)}\n");
+            log($"Fauna {rr.Method.Name()} /{rr.Path}{(rr.Query == null ? "" : Client.QueryString(rr.Query))}\n");
             log($"  Credentials: user: {rr.Client.User}, pass: {rr.Client.Password}\n");
             if (rr.RequestContent != null)
                 log($"  Request JSON: {Indent(rr.RequestContent.ToJson(pretty: true))}\n");
