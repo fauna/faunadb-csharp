@@ -39,12 +39,12 @@ namespace Test
             gadgetsSet = Match(indexRef, 0);
         }
 
-        [Test] public async void TestSetIterator()
+        [Test] public async Task TestSetIterator()
         {
             Assert.AreEqual(new ArrayV(a, b), await new SetIterator(TestClient, gadgetsSet, pageSize: 1).ToArrayV());
         }
 
-        [Test] public async void TestMapper()
+        [Test] public async Task TestMapper()
         {
             var queryMapper = Lambda(@ref => Select(new ArrayV("data", "n"), Get(@ref)));
             var queryMappedIter = new SetIterator(TestClient, gadgetsSet, mapLambda: queryMapper);

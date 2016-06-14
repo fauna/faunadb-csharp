@@ -107,7 +107,13 @@ namespace Test
             domain = env("FAUNA_DOMAIN");
             ...
             */
-            const string configPath = "../../../testConfig.json";
+            string directory = System.AppDomain.CurrentDomain.BaseDirectory;
+
+            while (!File.Exists(Path.Combine(directory, "testConfig.json")))
+                directory = Path.GetDirectoryName(directory);
+
+            string configPath = Path.Combine(directory, "testConfig.json");
+
             if (File.Exists(configPath)) {
                 string text = await File.OpenText(configPath).ReadToEndAsync();
                 return JsonConvert.DeserializeObject<Config>(text);

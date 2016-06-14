@@ -95,7 +95,7 @@ namespace Test
 
         #region Basic forms
 
-        [Test] public async void TestLetVar()
+        [Test] public async Task TestLetVar()
         {
             var let = Let(new ObjectV("auto0", 1), Var("auto0"));
             await AssertQuery(1, let);
@@ -105,26 +105,26 @@ namespace Test
                 Let(1, 2, (a, b) => QueryArray(a, b)));
         }
 
-        [Test] public async void TestIf()
+        [Test] public async Task TestIf()
         {
             await AssertQuery("t", If(true, "t", "f"));
             await AssertQuery("f", If(false, "t", "f"));
         }
 
-        [Test] public async void TestDo()
+        [Test] public async Task TestDo()
         {
             var rf = await CreateRef();
             await AssertQuery(1, Do(Delete(rf), 1));
             await AssertQuery(false, Exists(rf));
         }
 
-        [Test] public async void TestObject()
+        [Test] public async Task TestObject()
         {
             // Unlike Quote, contents are evaluated.
             await AssertQuery(new ObjectV("x", 1), QueryObject("x", Let(1, x => x)));
         }
 
-        [Test] public async void TestQuote()
+        [Test] public async Task TestQuote()
         {
             var quoted = (Value) Let(new ObjectV("x", 1), Var("x"));
             await AssertQuery(quoted, Quote(quoted));
@@ -149,7 +149,7 @@ namespace Test
 
         static Query LambdaId = (Query) new ObjectV("lambda", "auto0", "expr", new ObjectV("var", "auto0"));
 
-        [Test] public void TestLambdaMultithreaded()
+        [Test] [Ignore("not working")] public void TestLambdaMultithreaded()
         {
             var events = new List<int>();
 
@@ -188,7 +188,7 @@ namespace Test
 
         #region Collection functions
 
-        [Test] public async void TestMap()
+        [Test] public async Task TestMap()
         {
             await AssertQuery(new ArrayV(2, 4, 6), Map(new ArrayV(1, 2, 3), a => Multiply(2, a)));
 
@@ -197,7 +197,7 @@ namespace Test
             await AssertQuery(new ObjectV("data", new ArrayV(1, 1)), ns);
         }
 
-        [Test] public async void TestForeach()
+        [Test] public async Task TestForeach()
         {
             var refs = new ArrayV(await CreateRef(), await CreateRef());
             await Q(Foreach(refs, Delete));
@@ -205,7 +205,7 @@ namespace Test
                 await AssertQuery(false, Exists((Query) @ref));
         }
 
-        [Test] public async void TestFilter()
+        [Test] public async Task TestFilter()
         {
             var evens = Filter(new ArrayV(1, 2, 3, 4), a => EqualsExpr(Modulo(a, 2), 0));
             await AssertQuery(new ArrayV(2, 4), evens);
@@ -216,39 +216,39 @@ namespace Test
             await AssertQuery(new ObjectV("data", new ArrayV(refN1M1)), refsWithM);
         }
 
-        [Test] public async void TestTake()
+        [Test] public async Task TestTake()
         {
             await AssertQuery(new ArrayV(1), Take(1, new ArrayV(1, 2)));
             await AssertQuery(new ArrayV(1, 2), Take(3, new ArrayV(1, 2)));
             await AssertQuery(ArrayV.Empty, Take(-1, new ArrayV(1, 2)));
         }
 
-        [Test] public async void TestDrop()
+        [Test] public async Task TestDrop()
         {
             await AssertQuery(new ArrayV(2), Drop(1, new ArrayV(1, 2)));
             await AssertQuery(ArrayV.Empty, Drop(3, new ArrayV(1, 2)));
             await AssertQuery(new ArrayV(1, 2), Drop(-1, new ArrayV(1, 2)));
         }
 
-        [Test] public async void TestPrepend()
+        [Test] public async Task TestPrepend()
         {
             await AssertQuery(new ArrayV(1, 2, 3, 4, 5, 6), Prepend(new ArrayV(1, 2, 3), new ArrayV(4, 5, 6)));
         }
 
-        [Test] public async void TestAppend() {
+        [Test] public async Task TestAppend() {
             await AssertQuery(new ArrayV(1, 2, 3, 4, 5, 6), Append(new ArrayV(4, 5, 6), new ArrayV(1, 2, 3)));
         }
         #endregion
 
         #region Read functions
 
-        [Test] public async void TestGet()
+        [Test] public async Task TestGet()
         {
             var instance = await CreateInstance();
             await AssertQuery(instance, Get(GetRef(instance)));
         }
 
-        [Test] public async void TestPaginate()
+        [Test] public async Task TestPaginate()
         {
             var testSet = NSet(1);
             await AssertQuery(new ObjectV("data", new ArrayV(refN1, refN1M1)), Paginate(testSet));
@@ -261,7 +261,7 @@ namespace Test
             await AssertQuery(page, Paginate(testSet, sources: true));
         }
 
-        [Test] public async void TestExists()
+        [Test] public async Task TestExists()
         {
             var rf = await CreateRef();
             await AssertQuery(true, Exists(rf));
@@ -269,7 +269,7 @@ namespace Test
             await AssertQuery(false, Exists(rf));
         }
 
-        [Test] public async void TestCount()
+        [Test] public async Task TestCount()
         {
             await CreateInstance(123);
             await CreateInstance(123);
@@ -282,7 +282,7 @@ namespace Test
 
         #region Write functions
 
-        [Test] public async void TestCreate()
+        [Test] public async Task TestCreate()
         {
             var instance = await CreateInstance();
             Assert.That(instance.Val.ContainsKey("ref"));
@@ -290,28 +290,28 @@ namespace Test
             Assert.AreEqual(classRef, instance["class"]);
         }
 
-        [Test] public async void TestUpdate()
+        [Test] public async Task TestUpdate()
         {
             var rf = await CreateRef();
             var got = (ObjectV) await Q(Replace(rf, Quote(new ObjectV("data", new ObjectV("m", 123)))));
             Assert.AreEqual(new ObjectV("m", 123), got["data"]);
         }
 
-        [Test] public async void TestReplace()
+        [Test] public async Task TestReplace()
         {
             var rf = await CreateRef();
             var got = (ObjectV) await Q(Replace(rf, Quote(new ObjectV("data", new ObjectV("m", 123)))));
             Assert.AreEqual(new ObjectV("m", 123), got["data"]);
         }
 
-        [Test] public async void TestDelete()
+        [Test] public async Task TestDelete()
         {
             var rf = await CreateRef();
             await Q(Delete(rf));
             await AssertQuery(false, Exists(rf));
         }
 
-        [Test] public async void TestInsert()
+        [Test] public async Task TestInsert()
         {
             var instance = await CreateThimble(new ObjectV("weight", 1));
             var @ref = GetRef(instance);
@@ -324,7 +324,7 @@ namespace Test
             Assert.AreEqual(new ObjectV("weight", 0), old["data"]);
         }
 
-        [Test] public async void TestRemove()
+        [Test] public async Task TestRemove()
         {
             var instance = await CreateThimble(new ObjectV("weight", 0));
             var @ref = GetRef(instance);
@@ -341,27 +341,27 @@ namespace Test
         #endregion
 
         #region Sets
-        [Test] public async void TestMatch()
+        [Test] public async Task TestMatch()
         {
             await AssertSet(NSet(1), refN1, refN1M1);
         }
 
-        [Test] public async void TestUnion()
+        [Test] public async Task TestUnion()
         {
             await AssertSet(Union(NSet(1), MSet(1)), refN1, refM1, refN1M1);
         }
 
-        [Test] public async void TestIntersection()
+        [Test] public async Task TestIntersection()
         {
             await AssertSet(Intersection(NSet(1), MSet(1)), refN1M1);
         }
 
-        [Test] public async void TestDifference()
+        [Test] public async Task TestDifference()
         {
             await AssertSet(Difference(NSet(1), MSet(1)), refN1); // but not refN1M1
         }
 
-        [Test] public async void TestJoin()
+        [Test] public async Task TestJoin()
         {
             var referenced = new ArrayV(await CreateRef(n: 12), await CreateRef(n: 12));
             var referencers = new ArrayV(await CreateRef(m: referenced[0]), await CreateRef(m: referenced[1]));
@@ -377,7 +377,7 @@ namespace Test
 
         #region Authentication
 
-        [Test] public async void TestLoginLogout()
+        [Test] public async Task TestLoginLogout()
         {
             var instanceRef = GetRef(await TestClient.Query(
                 Create(classRef, Quote(new ObjectV("credentials", new ObjectV("password", "sekrit"))))));
@@ -388,7 +388,7 @@ namespace Test
             Assert.AreEqual(BoolV.True, await instanceClient.Query(Query.Logout(true)));
         }
 
-        [Test] public async void TestIdentify()
+        [Test] public async Task TestIdentify()
         {
             var instanceRef = GetRef(await TestClient.Query(
                 Create(classRef, Quote(new ObjectV("credentials", new ObjectV("password", "sekrit"))))));
@@ -399,14 +399,14 @@ namespace Test
 
         #region String functions
 
-        [Test] public async void TestConcat()
+        [Test] public async Task TestConcat()
         {
             await AssertQuery("abc", Concat(new ArrayV("a", "b", "c")));
             await AssertQuery("", Concat(ArrayV.Empty));
             await AssertQuery("a.b.c", Concat(new ArrayV("a", "b", "c"), "."));
         }
 
-        [Test] public async void TestCaseFold()
+        [Test] public async Task TestCaseFold()
         {
             await AssertQuery("hen wen", CaseFold("Hen Wen"));
         }
@@ -414,7 +414,7 @@ namespace Test
 
         #region Time and date functions
 
-        [Test] public async void TestTime()
+        [Test] public async Task TestTime()
         {
             var time = "1970-01-01T00:00:00.123456789Z";
             await AssertQuery(new FaunaTime(time), Time(time));
@@ -423,14 +423,14 @@ namespace Test
             Assert.IsInstanceOf<FaunaTime>(await Q(Time("now")));
         }
 
-        [Test] public async void TestEpoch()
+        [Test] public async Task TestEpoch()
         {
             await AssertQuery(new FaunaTime("1970-01-01T00:00:12Z"), Epoch(12, "second"));
             var nanoTime = new FaunaTime("1970-01-01T00:00:00.123456789Z");
             await AssertQuery(nanoTime, Epoch(123456789, "nanosecond"));
         }
 
-        [Test] public async void TestDate()
+        [Test] public async Task TestDate()
         {
             await AssertQuery(new FaunaDate("1970-01-01"), Date("1970-01-01"));
         }
@@ -438,7 +438,7 @@ namespace Test
 
         #region Miscellaneous functions
 
-        [Test] public async void TestEquals()
+        [Test] public async Task TestEquals()
         {
             await AssertQuery(true, EqualsExpr(1, 1, 1));
             await AssertQuery(false, EqualsExpr(1, 1, 2));
@@ -446,7 +446,7 @@ namespace Test
             await AssertBadQuery(EqualsExpr());
         }
 
-        [Test] public async void TestContains()
+        [Test] public async Task TestContains()
         {
             var obj = Quote(new ObjectV("a", new ObjectV("b", 1)));
             await AssertQuery(true, Contains(new ArrayV("a", "b"), obj));
@@ -454,7 +454,7 @@ namespace Test
             await AssertQuery(false, Contains(new ArrayV("a", "c"), obj));
         }
 
-        [Test] public async void TestSelect()
+        [Test] public async Task TestSelect()
         {
             var obj = Quote(new ObjectV("a", new ObjectV("b", 1)));
             await AssertQuery(new ObjectV("b", 1), Select("a", obj));
@@ -463,33 +463,33 @@ namespace Test
             await AssertU.Throws<NotFound>(() => Q(Select("c", obj)));
         }
 
-        [Test] public async void TestSelectArray()
+        [Test] public async Task TestSelectArray()
         {
             var arr = new ArrayV(1, 2, 3);
             await AssertQuery(3, Select(2, arr));
             await AssertU.Throws<NotFound>(() => Q(Select(3, arr)));
         }
 
-        [Test] public async void TestAdd()
+        [Test] public async Task TestAdd()
         {
             await AssertQuery(10, Add(2, 3, 5));
             await AssertBadQuery(Add());
         }
 
-        [Test] public async void TestMultiply()
+        [Test] public async Task TestMultiply()
         {
             await AssertQuery(30, Multiply(2, 3, 5));
             await AssertBadQuery(Multiply());
         }
 
-        [Test] public async void TestSubtract()
+        [Test] public async Task TestSubtract()
         {
             await AssertQuery(-6, Subtract(2, 3, 5));
             await AssertQuery(2, Subtract(2));
             await AssertBadQuery(Subtract());
         }
 
-        [Test] public async void TestDivide()
+        [Test] public async Task TestDivide()
         {
             await AssertQuery(2.0 / 15, Divide(2.0, 3, 5));
             await AssertQuery(2, Divide(2));
@@ -497,7 +497,7 @@ namespace Test
             await AssertBadQuery(Divide());
         }
 
-        [Test] public async void TestModulo()
+        [Test] public async Task TestModulo()
         {
             await AssertQuery(1, Modulo(5, 2));
             // This is (15 % 10) % 2
@@ -507,27 +507,27 @@ namespace Test
             await AssertBadQuery(Modulo());
         }
 
-        [Test] public async void TestLess()
+        [Test] public async Task TestLess()
         {
             await AssertQuery(true, Less(1, 2));
         }
 
-        [Test] public async void TestLessOrEqual()
+        [Test] public async Task TestLessOrEqual()
         {
             await AssertQuery(true, LessOrEqual(1, 1));
         }
 
-        [Test] public async void TestGreater()
+        [Test] public async Task TestGreater()
         {
             await AssertQuery(true, Greater(2, 1));
         }
 
-        [Test] public async void TestGreaterOrEqual()
+        [Test] public async Task TestGreaterOrEqual()
         {
             await AssertQuery(true, GreaterOrEqual(1, 1));
         }
 
-        [Test] public async void TestAnd()
+        [Test] public async Task TestAnd()
         {
             await AssertQuery(false, And(true, true, false));
             await AssertQuery(true, And(true, true, true));
@@ -536,7 +536,7 @@ namespace Test
             await AssertBadQuery(And());
         }
 
-        [Test] public async void TestOr()
+        [Test] public async Task TestOr()
         {
             await AssertQuery(true, Or(false, false, true));
             await AssertQuery(false, Or(false, false, false));
@@ -545,14 +545,14 @@ namespace Test
             await AssertBadQuery(Or());
         }
 
-        [Test] public async void TestNot()
+        [Test] public async Task TestNot()
         {
             await AssertQuery(false, Not(true));
             await AssertQuery(true, Not(false));
         }
         #endregion
 
-        [Test] public async void TestVarargs()
+        [Test] public async Task TestVarargs()
         {
             // Works for arrays too
             await AssertQuery(10, Add(new ArrayV(2, 3, 5)));

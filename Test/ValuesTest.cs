@@ -38,7 +38,7 @@ namespace Test {
         {
             var index = new Ref("indexes", "frogs_by_size");
             var match = new SetRef(Query.Match(index, @ref));
-            var jsonMatch = $"{{\"@set\":{{\"match\":{index.ToJson()},\"terms\":{jsonRef}}}}}";
+            var jsonMatch = $"{{\"@set\":{{\"terms\":{jsonRef},\"match\":{index.ToJson()}}}}}";
             Assert.AreEqual(match, Value.FromJson(jsonMatch));
             Assert.AreEqual(jsonMatch, match.ToJson());
         }

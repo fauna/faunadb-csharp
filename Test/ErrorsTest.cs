@@ -16,13 +16,13 @@ namespace Test
 {
     [TestFixture] public class ErrorsTest : TestCase
     {
-        [Test] public async void TestRequestResult()
+        [Test] public async Task TestRequestResult()
         {
             var err = await AssertU.Throws<BadRequest>(() => TestClient.Query((Query) new ObjectV("foo", "bar")));
             Assert.AreEqual(err.RequestResult.RequestContent, new ObjectV("foo", "bar"));
         }
 
-        [Test] public async void TestInvalidResponse()
+        [Test] public async Task TestInvalidResponse()
         {
             // Response must be valid JSON
             await AssertU.Throws<InvalidResponseException>(() => MockClient("I like fine wine").Get(""));
@@ -32,38 +32,38 @@ namespace Test
         }
 
         #region HTTP errors
-        [Test] public async void TestHttpBadRequest()
+        [Test] public async Task TestHttpBadRequest()
         {
             await AssertU.Throws<BadRequest>(() => TestClient.Query((Query) new ObjectV("foo", "bar")));
         }
 
-        [Test] public async void TestHttpUnauthorized()
+        [Test] public async Task TestHttpUnauthorized()
         {
             var client = GetClient(password: "bad_key");
             await AssertHttpException<Unauthorized>("unauthorized", () => client.Get(DbRef));
         }
 
-        [Test] public async void TestHttpPermissionDenied()
+        [Test] public async Task TestHttpPermissionDenied()
         {
             await AssertHttpException<PermissionDenied>("permission denied", () => TestClient.Get("databases"));
         }
 
-        [Test] public async void TestHttpNotFound()
+        [Test] public async Task TestHttpNotFound()
         {
             await AssertHttpException<NotFound>("not found", () => TestClient.Get("classes/not_found"));
         }
 
-        [Test] public async void TestHttpMethodNotAllowed()
+        [Test] public async Task TestHttpMethodNotAllowed()
         {
             await AssertHttpException<MethodNotAllowed>("method not allowed", () => TestClient.Delete("classes"));
         }
 
-        [Test] public async void TestInternalError()
+        [Test] public async Task TestInternalError()
         {
             await AssertHttpException<InternalError>("internal server error", () => TestClient.Get("error"));
         }
 
-        [Test] public async void TestUnavailableError()
+        [Test] public async Task TestUnavailableError()
         {
             var client = MockClient("{\"errors\": [{\"code\": \"unavailable\", \"description\": \"on vacation\"}]}", HttpStatusCode.ServiceUnavailable);
             await AssertHttpException<UnavailableError>("unavailable", () => client.Get(""));
@@ -71,34 +71,34 @@ namespace Test
         #endregion
 
         #region ErrorData
-        [Test] public async void TestInvalidExpression()
+        [Test] public async Task TestInvalidExpression()
         {
             await AssertQueryException<BadRequest>((Query) new ObjectV("foo", "bar"), "invalid expression", ArrayV.Empty);
         }
 
-        [Test] public async void TestUnboundVariable()
+        [Test] public async Task TestUnboundVariable()
         {
             await AssertQueryException<BadRequest>(Var("x"), "unbound variable", ArrayV.Empty);
         }
 
-        [Test] public async void TestInvalidArgument()
+        [Test] public async Task TestInvalidArgument()
         {
             await AssertQueryException<BadRequest>(Add(new ArrayV(1, "two")), "invalid argument", new ArrayV("add", 1));
         }
 
-        [Test] public async void TestInstanceNotFound()
+        [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
             await TestClient.Post("classes", new ObjectV("name", "foofaws"));
             await AssertQueryException<NotFound>(Get(new Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
         }
 
-        [Test] public async void TestValueNotFound()
+        [Test] public async Task TestValueNotFound()
         {
             await AssertQueryException<NotFound>(Select("a", QueryObject(ObjectV.Empty)), "value not found", ArrayV.Empty);
         }
 
-        [Test] public async void TestInstanceAlreadyExists()
+        [Test] public async Task TestInstanceAlreadyExists()
         {
             await TestClient.Post("classes", new ObjectV("name", "duplicates"));
             var @ref = (Ref) ((ObjectV) (await TestClient.Post("classes/duplicates", ObjectV.Empty)))["ref"];
@@ -107,17 +107,17 @@ namespace Test
         #endregion
 
         #region InvalidData
-        [Test] public async void TestInvalidType()
+        [Test] public async Task TestInvalidType()
         {
             await AssertInvalidData("classes", new ObjectV("name", 123), "invalid type", new ArrayV("name"));
         }
 
-        [Test] public async void TestValueRequired()
+        [Test] public async Task TestValueRequired()
         {
             await AssertInvalidData("classes", ObjectV.Empty, "value required", new ArrayV("name"));
         }
 
-        [Test] public async void TestDuplicateValue()
+        [Test] public async Task TestDuplicateValue()
         {
             await TestClient.Post("classes", new ObjectV("name", "gerbils"));
             await TestClient.Post("indexes", new ObjectV(
