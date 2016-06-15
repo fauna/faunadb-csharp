@@ -276,7 +276,7 @@ namespace Test
             var instances = NSet(123);
             // `Count` is currently only approximate. Should be 2.
             var n = await Q(Count(instances));
-            Assert.IsInstanceOfType(typeof(LongV), n);
+            Assert.IsInstanceOf<LongV>(n);
         }
         #endregion
 
@@ -420,7 +420,7 @@ namespace Test
             await AssertQuery(new FaunaTime(time), Time(time));
 
             // "now" refers to the current time.
-            Assert.IsInstanceOfType(typeof(FaunaTime), await Q(Time("now")));
+            Assert.IsInstanceOf<FaunaTime>(await Q(Time("now")));
         }
 
         [Test] public async void TestEpoch()
