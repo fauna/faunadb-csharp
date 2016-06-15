@@ -10,7 +10,8 @@ using FaunaDB;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Values;
-using static FaunaDB.Query;
+using FaunaDB.Query;
+using static FaunaDB.Query.Language;
 
 namespace Test
 {
@@ -18,7 +19,7 @@ namespace Test
     {
         [Test] public async Task TestRequestResult()
         {
-            var err = await AssertU.Throws<BadRequest>(() => TestClient.Query((Query) new ObjectV("foo", "bar")));
+            var err = await AssertU.Throws<BadRequest>(() => TestClient.Query((Language) new ObjectV("foo", "bar")));
             Assert.AreEqual(err.RequestResult.RequestContent, new ObjectV("foo", "bar"));
         }
 
@@ -34,7 +35,7 @@ namespace Test
         #region HTTP errors
         [Test] public async Task TestHttpBadRequest()
         {
-            await AssertU.Throws<BadRequest>(() => TestClient.Query((Query) new ObjectV("foo", "bar")));
+            await AssertU.Throws<BadRequest>(() => TestClient.Query((Language) new ObjectV("foo", "bar")));
         }
 
         [Test] public async Task TestHttpUnauthorized()
@@ -73,7 +74,7 @@ namespace Test
         #region ErrorData
         [Test] public async Task TestInvalidExpression()
         {
-            await AssertQueryException<BadRequest>((Query) new ObjectV("foo", "bar"), "invalid expression", ArrayV.Empty);
+            await AssertQueryException<BadRequest>((Language) new ObjectV("foo", "bar"), "invalid expression", ArrayV.Empty);
         }
 
         [Test] public async Task TestUnboundVariable()
@@ -167,7 +168,7 @@ namespace Test
             Assert.AreEqual(position, error.Position);
         }
 
-        async Task AssertQueryException<TException>(Query query, string code, ArrayV position = null)
+        async Task AssertQueryException<TException>(Language query, string code, ArrayV position = null)
             where TException  : FaunaException
         {
             var exception = await AssertU.Throws<TException>(() => TestClient.Query(query));

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FaunaDB.Query;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Values
 {
@@ -17,7 +18,7 @@ namespace FaunaDB.Values
         }
 
         #region boilerplate
-        public override bool Equals(Value v) =>
+        public override bool Equals(Expr v) =>
             object.ReferenceEquals(this, v);
 
         public override string ToString() =>

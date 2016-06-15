@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Headers;
 
 using FaunaDB.Values;
+using FaunaDB.Query;
 
 namespace FaunaDB.Client
 {
@@ -35,12 +36,12 @@ namespace FaunaDB.Client
         /// <summary>
         /// Request data. This will be null for <see cref="Client.Get"/>s. 
         /// </summary>
-        public Value RequestContent { get; }
+        public Expr RequestContent { get; }
 
         /// <summary>
         /// Value returned by the response. Includes "resource" wrapper object, or may be an "errors" object instead.
         /// </summary>
-        public Value ResponseContent { get; }
+        public Expr ResponseContent { get; }
 
         public HttpStatusCode StatusCode { get; }
 
@@ -54,8 +55,8 @@ namespace FaunaDB.Client
             HttpMethodKind method,
             string path,
             IReadOnlyDictionary<string, string> query,
-            Value requestContent,
-            Value responseContent,
+            Expr requestContent,
+            Expr responseContent,
             HttpStatusCode statusCode,
             HttpResponseHeaders responseHeaders,
             DateTime startTime,

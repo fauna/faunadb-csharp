@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 
 using FaunaDB;
 using FaunaDB.Values;
-using static FaunaDB.Query;
+using FaunaDB.Query;
+using static FaunaDB.Query.Language;
 
 namespace Test
 {
@@ -18,7 +19,7 @@ namespace Test
 
         Ref indexRef;
         Value a, b;
-        Query gadgetsSet;
+        Language gadgetsSet;
 
         async Task SetUpAsync()
         {
@@ -29,7 +30,7 @@ namespace Test
                 "path", "data.n",
                 "active", true)));
 
-            Func<Value, Task<Ref>> create = async n =>
+            Func<Expr, Task<Ref>> create = async n =>
                 GetRef(await Q(Create(classRef, Quote(new ObjectV("data", new ObjectV("n", n))))));
 
             a = await create(0);

@@ -16,6 +16,7 @@ Makefile.in
 *.pidb
 *.userprefs
 *.usertasks
+.vs/
 config.log
 config.make
 config.status

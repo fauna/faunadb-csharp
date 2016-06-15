@@ -1,13 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
 
+using FaunaDB.Query;
+
 namespace FaunaDB.Values
 {
     class ValueJsonConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            ((Value) value).WriteJson(writer);
+            ((Expr) value).WriteJson(writer);
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
@@ -15,14 +17,14 @@ namespace FaunaDB.Values
             ValueReader.HandleValue(reader);
 
         public override bool CanConvert(Type objectType) =>
-            typeof(Value).IsAssignableFrom(objectType);
+            typeof(Expr).IsAssignableFrom(objectType);
     }
 
     class ValueReader
     {
         readonly JsonReader reader;
 
-        public static Value HandleValue(JsonReader reader) =>
+        public static Expr HandleValue(JsonReader reader) =>
             new ValueReader(reader).HandleValue();
 
         ValueReader(JsonReader reader)
@@ -30,7 +32,7 @@ namespace FaunaDB.Values
             this.reader = reader;
         }
 
-        Value HandleValue()
+        Expr HandleValue()
         {
             switch (reader.TokenType)
             {
@@ -39,15 +41,15 @@ namespace FaunaDB.Values
                 case JsonToken.StartArray:
                     return ReadArray();
                 case JsonToken.Integer:
-                    return (long) reader.Value;
+                    return new LongV((long) reader.Value);
                 case JsonToken.Float:
-                    return (double) reader.Value;
+                    return new DoubleV((double) reader.Value);
                 case JsonToken.String:
-                    return (string) reader.Value;
+                    return new StringV((string) reader.Value);
                 case JsonToken.Boolean:
-                    return (bool) reader.Value;
+                    return BoolV.Of((bool) reader.Value);
                 case JsonToken.Null:
-                    return Value.Null;
+                    return NullV.Instance;
                 default:
                     return Unexpected();
             }
@@ -59,7 +61,7 @@ namespace FaunaDB.Values
             return reader.TokenType;
         }
 
-        Value ReadValue()
+        Expr ReadValue()
         {
             reader.Read();
             return HandleValue();
@@ -90,7 +92,7 @@ namespace FaunaDB.Values
                         case "@set":
                             var v = ReadValue();
                             NextAndExpect(JsonToken.EndObject);
-                            return new SetRef((Query) v);
+                            return new SetRef((Language) v);
                         case "@ts":
                             return new FaunaTime(ReadStringAndEndObject());
                         case "@date":

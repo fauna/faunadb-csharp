@@ -28,7 +28,7 @@ namespace FaunaDB.Errors
             if (200 <= ((int) code) && ((int) code) <= 299)
                 return;
             
-            var errors = (from _ in ((ArrayV) ((ObjectV) rr.ResponseContent)["errors"]).Val select (ErrorData) _).ToImmutableArray();
+            var errors = (from _ in ((ArrayV) ((ObjectV) rr.ResponseContent)["errors"]).Value select (ErrorData) _).ToImmutableArray();
 
             switch (code)
             {

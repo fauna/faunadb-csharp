@@ -6,7 +6,8 @@ using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
 
 using FaunaDB.Values;
-using static FaunaDB.Query;
+using FaunaDB.Query;
+using static FaunaDB.Query.Language;
 
 namespace FaunaDB
 {
@@ -16,9 +17,9 @@ namespace FaunaDB
     /// <see href="https://msdn.microsoft.com/en-us/library/system.reactive.linq.observable.aspx">Reactive Extensions</see>
     /// and <see cref="IObservableUtil"/>.
     /// </summary>
-    public class SetIterator : PushObservable<Value>
+    public class SetIterator : PushObservable<Expr>
     {
-        public SetIterator(Client.Client client, Query setQuery, int? pageSize = null, Query? mapLambda = null)
+        public SetIterator(Client.Client client, Language setQuery, int? pageSize = null, Language? mapLambda = null)
             : base(new SetPusher(client, setQuery, pageSize, mapLambda)) {}
     }
 
@@ -95,12 +96,12 @@ namespace FaunaDB
         }
     }
 
-    class SetPusher : IPush<Value>
+    class SetPusher : IPush<Expr>
     {
         readonly Client.Client client;
-        readonly Query setQuery;
+        readonly Language setQuery;
         readonly int? pageSize;
-        readonly Query? mapLambda;
+        readonly Language? mapLambda;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FaunaDB.SetIterator"/> class.
@@ -114,7 +115,7 @@ namespace FaunaDB
         /// var iter = new SetIterator(client, someSet, mapLambda: queryMapper);
         /// Console.WriteLine(await iter.ToArrayV());
         /// </example>
-        public SetPusher(Client.Client client, Query setQuery, int? pageSize = null, Query? mapLambda = null)
+        public SetPusher(Client.Client client, Language setQuery, int? pageSize = null, Language? mapLambda = null)
         {
             this.client = client;
             this.setQuery = setQuery;
@@ -122,7 +123,7 @@ namespace FaunaDB
             this.mapLambda = mapLambda;
         }
 
-        public async Task DoPushes(IPushedTo<Value> pushedTo)
+        public async Task DoPushes(IPushedTo<Expr> pushedTo)
         {
             var page = await GetPage().ConfigureAwait(false);
             foreach (var v in page.Data)
@@ -167,7 +168,7 @@ namespace FaunaDB
         /// <summary>
         /// Fetch all elements and put them in an <see cref="ArrayV"/>.
         /// </summary>
-        public static async Task<ArrayV> ToArrayV(this IObservable<Value> observable) =>
+        public static async Task<ArrayV> ToArrayV(this IObservable<Expr> observable) =>
             new ArrayV((await FetchAll(observable).ConfigureAwait(false)).ToImmutableArray());
 
         /// <summary>

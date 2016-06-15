@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 
 using FaunaDB.Values;
+using FaunaDB.Query;
 
 namespace FaunaDB.Errors
 {
@@ -23,8 +24,8 @@ namespace FaunaDB.Errors
             var description = (string) o["description"];
 
             ArrayV position = null;
-            Value pos;
-            if (o.Val.TryGetValue("position", out pos))
+            Expr pos;
+            if (o.Value.TryGetValue("position", out pos))
                 position = (ArrayV) pos;
 
             return code == "validation failed" ?

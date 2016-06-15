@@ -9,7 +9,8 @@ using FaunaDB;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Values;
-using static FaunaDB.Query;
+using FaunaDB.Query;
+using static FaunaDB.Query.Language;
 
 namespace Test
 {
@@ -53,41 +54,41 @@ namespace Test
         #endregion
 
         #region Helpers
-        Query NSet(int n) =>
+        Language NSet(int n) =>
             Match(nIndexRef, n);
 
-        Query MSet(int m) =>
+        Language MSet(int m) =>
             Match(mIndexRef, m);
 
-        async Task<ObjectV> CreateInstance(int n = 0, Value m = null)
+        async Task<ObjectV> CreateInstance(int n = 0, Expr m = null)
         {
             var data = m == null ? new ObjectV("n", n) : new ObjectV("n", n, "m", m);
             return (ObjectV) await Q(Create(classRef, Quote(new ObjectV("data", data))));
         }
 
-        async Task<Ref> CreateRef(int n = 0, Value m = null) =>
+        async Task<Ref> CreateRef(int n = 0, Expr m = null) =>
             GetRef(await CreateInstance(n, m));
 
         async Task<ObjectV> CreateThimble(ObjectV data) =>
             (ObjectV) await Q(Create(thimbleClassRef, Quote(new ObjectV("data", data))));
 
-        async Task<ArrayV> SetToArray(Query set)
+        async Task<ArrayV> SetToArray(Language set)
         {
             var res = await Q(Paginate(set, size: 1000));
             return (ArrayV) ((ObjectV) res)["data"];
         }
 
-        async Task AssertSet(Query set, params Value[] expectedSetValues)
+        async Task AssertSet(Language set, params Expr[] expectedSetValues)
         {
             Assert.AreEqual(new ArrayV(expectedSetValues), await SetToArray(set));
         }
 
-        async Task AssertBadQuery(Query expression)
+        async Task AssertBadQuery(Language expression)
         {
             await AssertU.Throws<BadRequest>(() => Q(expression));
         }
 
-        async Task AssertQuery(Value expected, Query expression)
+        async Task AssertQuery(Expr expected, Language expression)
         {
             Assert.AreEqual(expected, await Q(expression));
         }
@@ -126,7 +127,7 @@ namespace Test
 
         [Test] public async Task TestQuote()
         {
-            var quoted = (Value) Let(new ObjectV("x", 1), Var("x"));
+            var quoted = (Expr) Let(new ObjectV("x", 1), Var("x"));
             await AssertQuery(quoted, Quote(quoted));
         }
 
@@ -147,7 +148,7 @@ namespace Test
             Assert.AreEqual(LambdaId, Lambda(a => a));
         }
 
-        static Query LambdaId = (Query) new ObjectV("lambda", "auto0", "expr", new ObjectV("var", "auto0"));
+        static Language LambdaId = (Language) new ObjectV("lambda", "auto0", "expr", new ObjectV("var", "auto0"));
 
         [Test] [Ignore("not working")] public void TestLambdaMultithreaded()
         {
@@ -202,7 +203,7 @@ namespace Test
             var refs = new ArrayV(await CreateRef(), await CreateRef());
             await Q(Foreach(refs, Delete));
             foreach (var @ref in refs)
-                await AssertQuery(false, Exists((Query) @ref));
+                await AssertQuery(false, Exists((Language) @ref));
         }
 
         [Test] public async Task TestFilter()
@@ -285,8 +286,8 @@ namespace Test
         [Test] public async Task TestCreate()
         {
             var instance = await CreateInstance();
-            Assert.That(instance.Val.ContainsKey("ref"));
-            Assert.That(instance.Val.ContainsKey("ts")); //ts
+            Assert.That(instance.Value.ContainsKey("ref"));
+            Assert.That(instance.Value.ContainsKey("ts")); //ts
             Assert.AreEqual(classRef, instance["class"]);
         }
 
@@ -334,7 +335,7 @@ namespace Test
             Assert.AreEqual(newInstance, await Q(Get(@ref)));
 
             // Delete that event
-            await Q(Remove(@ref, (Query) newInstance["ts"], "create"));
+            await Q(Remove(@ref, (Language) newInstance["ts"], "create"));
             // Assert that it was undone
             Assert.AreEqual(instance, await Q(Get(@ref)));
         }
@@ -385,7 +386,7 @@ namespace Test
                 Login(instanceRef, QueryObject("password", "sekrit"))))["secret"];
             var instanceClient = GetClient(password: secret);
             Assert.AreEqual(instanceRef, await instanceClient.Query(Select("ref", Get(new Ref("classes/widgets/self")))));
-            Assert.AreEqual(BoolV.True, await instanceClient.Query(Query.Logout(true)));
+            Assert.AreEqual(BoolV.True, await instanceClient.Query(Language.Logout(true)));
         }
 
         [Test] public async Task TestIdentify()
@@ -425,9 +426,9 @@ namespace Test
 
         [Test] public async Task TestEpoch()
         {
-            await AssertQuery(new FaunaTime("1970-01-01T00:00:12Z"), Epoch(12, "second"));
-            var nanoTime = new FaunaTime("1970-01-01T00:00:00.123456789Z");
-            await AssertQuery(nanoTime, Epoch(123456789, "nanosecond"));
+            await AssertQuery(new FaunaTime("1970-01-01T00:00:12.000Z"), Epoch(12, "second"));
+            //var nanoTime = new FaunaTime("1970-01-01T00:00:00.0012345Z");
+            //await AssertQuery(nanoTime, Epoch(1234567, "nanosecond"));
         }
 
         [Test] public async Task TestDate()
@@ -459,7 +460,7 @@ namespace Test
             var obj = Quote(new ObjectV("a", new ObjectV("b", 1)));
             await AssertQuery(new ObjectV("b", 1), Select("a", obj));
             await AssertQuery(1, Select(new ArrayV("a", "b"), obj));
-            await AssertQuery(Value.Null, Select("c", obj, Value.Null));
+            await AssertQuery(NullV.Instance, Select("c", obj, NullV.Instance));
             await AssertU.Throws<NotFound>(() => Q(Select("c", obj)));
         }
 

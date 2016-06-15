@@ -1,11 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using FaunaDB.Query;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace FaunaDB.Values
 {
     static class JsonU
     {
-        public static void WriteArray(this JsonWriter writer, IEnumerable<Value> vals)
+        public static void WriteArray(this JsonWriter writer, IEnumerable<Expr> vals)
         {
             writer.WriteStartArray();
             foreach (var _ in vals)
@@ -13,7 +14,7 @@ namespace FaunaDB.Values
             writer.WriteEndArray();
         }
 
-        public static void WriteObject(this JsonWriter writer, string name, Value value)
+        public static void WriteObject(this JsonWriter writer, string name, Expr value)
         {
             writer.WriteStartObject();
             writer.WritePropertyName(name);
@@ -21,7 +22,7 @@ namespace FaunaDB.Values
             writer.WriteEndObject();
         }
 
-        public static void WriteObject(this JsonWriter writer, IEnumerable<KeyValuePair<string, Value>> props)
+        public static void WriteObject(this JsonWriter writer, IEnumerable<KeyValuePair<string, Expr>> props)
         {
             writer.WriteStartObject();
             foreach (var kv in props)

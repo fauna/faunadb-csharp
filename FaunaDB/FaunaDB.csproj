@@ -54,16 +54,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Event.cs" />
     <Compile Include="HashUtil.cs" />
-    <Compile Include="Query.cs" />
+    <Compile Include="Query\Expr.cs" />
+    <Compile Include="Query\Language.cs" />
     <Compile Include="Values\ObjectV.cs" />
     <Compile Include="Values\ArrayV.cs" />
-    <Compile Include="Values\Ref.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="Values\ValueJsonConverter.cs" />
     <Compile Include="Values\JsonU.cs" />
-    <Compile Include="Values\ValueWrap.cs" />
-    <Compile Include="Event.cs" />
+    <Compile Include="Values\ScalarValue.cs" />
     <Compile Include="Values\NullV.cs" />
     <Compile Include="Values\Value.cs" />
     <Compile Include="ImmutableUtil.cs" />
@@ -71,13 +71,11 @@
     <Compile Include="Errors\Failure.cs" />
     <Compile Include="Errors\ValidationFailed.cs" />
     <Compile Include="Errors\ErrorData.cs" />
-    <Compile Include="Values\FaunaDateAndTime.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientLogger.cs" />
     <Compile Include="SetIterator.cs" />
     <Compile Include="Client\RequestResult.cs" />
     <Compile Include="Errors\FaunaException.cs" />
-    <Compile Include="Values\SetRef.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

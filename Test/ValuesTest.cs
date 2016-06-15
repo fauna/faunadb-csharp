@@ -3,30 +3,19 @@ using System;
 
 using FaunaDB;
 using FaunaDB.Values;
+using FaunaDB.Query;
+using static FaunaDB.Query.Language;
 
 namespace Test {
     [TestFixture] public class ValuesTest : TestCase
     {
-        Ref @ref = new Ref("classes", "frogs", "123");
+        Ref @ref = new Ref("classes/frogs/123");
         const string jsonRef = "{\"@ref\":\"classes/frogs/123\"}";
 
         [Test] public void TestRef()
         {
             Assert.AreEqual(@ref, Value.FromJson(jsonRef));
             Assert.AreEqual(jsonRef, @ref.ToJson());
-
-            var keys = new Ref("keys");
-            Assert.AreEqual(keys, keys.Class);
-
-            /*
-            TODO: enabling this line causes every test to stop running.
-            Let's hope this is just a Mono error.
-            AssertU.Throws<InvalidValue>(() => keys.Id++);
-            */
-
-            var key = new Ref(keys, "123");
-            Assert.AreEqual(keys, key.Class);
-            Assert.AreEqual("123", key.Id);
         }
 
         [Test] public void TestObj()
@@ -36,8 +25,8 @@ namespace Test {
 
         [Test] public void TestSet()
         {
-            var index = new Ref("indexes", "frogs_by_size");
-            var match = new SetRef(Query.Match(index, @ref));
+            var index = new Ref("indexes/frogs_by_size");
+            var match = new SetRef(Language.Match(index, @ref));
             var jsonMatch = $"{{\"@set\":{{\"terms\":{jsonRef},\"match\":{index.ToJson()}}}}}";
             Assert.AreEqual(match, Value.FromJson(jsonMatch));
             Assert.AreEqual(jsonMatch, match.ToJson());
@@ -69,8 +58,8 @@ namespace Test {
 
         [Test] public void TestTime()
         {
-            var testTs = new FaunaTime("1970-01-01T00:00:00.123456789Z");
-            const string testTsJson = "{\"@ts\":\"1970-01-01T00:00:00.123456789Z\"}";
+            var testTs = new FaunaTime("1970-01-01T00:00:00.1234567Z");
+            const string testTsJson = "{\"@ts\":\"1970-01-01T00:00:00.1234567Z\"}";
             Assert.AreEqual(testTsJson, testTs.ToJson());
             Assert.AreEqual(testTs, Value.FromJson(testTsJson));
         }

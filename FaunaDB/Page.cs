@@ -1,6 +1,7 @@
 ﻿using System;
 
 using FaunaDB.Values;
+using FaunaDB.Query;
 
 namespace FaunaDB
 {
@@ -89,8 +90,8 @@ namespace FaunaDB
         public static implicit operator Value(Cursor c) =>
             c.Value;
 
-        public static implicit operator Query(Cursor c) =>
-            (Query) (Value) c;
+        public static implicit operator Language(Cursor c) =>
+            (Language) (Value) c;
 
         #region boilerplate
         public override bool Equals(object obj) =>

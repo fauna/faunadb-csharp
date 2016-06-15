@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FaunaDB.Query;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -9,24 +10,28 @@ namespace FaunaDB.Values
     /// <summary>
     /// Corresponds to a JSON array.
     /// </summary>
-    public sealed class ArrayV : ValueWrap<ArrayV, ImmutableArray<Value>>, IEnumerable<Value>
+    public sealed class ArrayV : Value, IEnumerable<Expr>
     {
         #region Construction
-        public static readonly ArrayV Empty = new ArrayV(ImmutableArray<Value>.Empty);
+        public static readonly ArrayV Empty = new ArrayV(ImmutableArray<Expr>.Empty);
 
-        public static ArrayV FromEnumerable(IEnumerable<Value> values) =>
+        public ImmutableArray<Expr> Value { get;  }
+
+        public static ArrayV FromEnumerable(IEnumerable<Expr> values) =>
             new ArrayV(values.ToImmutableArray());
 
-        public ArrayV(ImmutableArray<Value> value) : base(value)
+        public ArrayV(ImmutableArray<Expr> value)
         {
-            if (value == null)
+            Value = value;
+
+            if (Value == null)
                 throw new NullReferenceException();
         }
 
         /// <summary>
         /// Create from values.
         /// </summary>
-        public ArrayV(params Value[] values) : this(ImmutableArray.Create(values)) {}
+        public ArrayV(params Expr[] values) : this(ImmutableArray.Create(values)) {}
 
         /// <summary>
         /// Create from a builder expression.
@@ -34,37 +39,37 @@ namespace FaunaDB.Values
         /// <param name="builder">
         /// A lambda <c>(add) => { ... }</c> that calls <c>add</c> for each element to be in the new ArrayV.
         /// </param>
-        public ArrayV(Action<Action<Value>> builder) : this(ImmutableUtil.BuildArray(builder)) {}
+        public ArrayV(Action<Action<Expr>> builder) : this(ImmutableUtil.BuildArray(builder)) {}
         #endregion
 
         /// <summary>
         /// Get the nth value.
         /// </summary>
         /// <exception cref="IndexOutOfRangeException"/>
-        public Value this[int n] { get { return Val[n]; } }
+        public Expr this[int n] { get { return Value[n]; } }
 
         override internal void WriteJson(JsonWriter writer)
         {
-            writer.WriteArray(Val);
+            writer.WriteArray(Value);
         }
 
         #region IEnumerable
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
-            ((System.Collections.IEnumerable) Val).GetEnumerator();
+            ((System.Collections.IEnumerable) Value).GetEnumerator();
 
-        public IEnumerator<Value> GetEnumerator() =>
-            ((IEnumerable<Value>) Val).GetEnumerator();
+        public IEnumerator<Expr> GetEnumerator() =>
+            ((IEnumerable<Expr>) Value).GetEnumerator();
         #endregion
 
         #region boilerplate
-        public override bool Equals(Value v)
+        public override bool Equals(Expr v)
         {
             var a = v as ArrayV;
-            return a != null && Val.SequenceEqual(a.Val);
+            return a != null && Value.SequenceEqual(a.Value);
         }
 
         protected override int HashCode() =>
-            HashUtil.Hash(Val);
+            HashUtil.Hash(Value);
 
         public override string ToString() =>
             $"ArrayV({string.Join(", ", this)})";

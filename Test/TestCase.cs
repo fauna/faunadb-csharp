@@ -10,6 +10,8 @@ using FaunaDB;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Values;
+using FaunaDB.Query;
+using static FaunaDB.Query.Language;
 
 namespace Test
 {
@@ -44,7 +46,7 @@ namespace Test
             rootClient = GetClient(user: cfg.User, password: cfg.Password);
 
             const string dbName = "faunadb-csharp-test";
-            DbRef = new Ref("databases", dbName);
+            DbRef = new Ref($"databases/{dbName}");
 
             try {
                 await rootClient.Delete(DbRef);
@@ -76,10 +78,10 @@ namespace Test
             return new Client(domain: domain, scheme: scheme, port: port, clientIO: mock);
         }
 
-        protected static Ref GetRef(Value v) =>
+        protected static Ref GetRef(Expr v) =>
             (Ref) ((ObjectV) v)["ref"];
 
-        protected Task<Value> Q(Query query) =>
+        protected Task<Expr> Q(Language query) =>
             TestClient.Query(query);
     }
 
