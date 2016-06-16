@@ -4,106 +4,14 @@ using System.Linq;
 using System.Threading;
 
 using FaunaDB.Values;
+using System.Reflection;
+using System.Collections.Immutable;
 
 namespace FaunaDB.Query {
     public struct Language
     {
-        Expr Value { get; }
-
-        Language(Expr value)
-        {
-            Value = value;
-        }
-
-        /// <summary>
-        /// Treat any Value as a query.
-        /// If the Value is not a valid query (e.g. an ObjectV not wrapped by <see cref="QueryObject"/>), this will fail at run time.
-        /// </summary>
-        public static explicit operator Language(Value v) =>
-            new Language(v);
-
-        /// <summary>
-        /// Extract the value out of a Query.
-        /// For example, <c>Query.Add(1, 2).Value</c> is <c>new ObjectV("add", new ArrayV(1, 2))</c>.
-        /// </summary>
-        public static explicit operator Expr(Language q) =>
-            q.Value;
-
-        static readonly Language Null = new Language(NullV.Instance);
-
-        #region implicit
-        public static implicit operator Language(NullV n) =>
-            Null;
-
-        public static implicit operator Language(bool b) =>
-            new Language(b);
-
-        public static implicit operator Language(int i) =>
-            new Language(i);
-
-        public static implicit operator Language(long i) =>
-            new Language(i);
-
-        public static implicit operator Language(float f) =>
-            new Language(f);
-
-        public static implicit operator Language(double d) =>
-            new Language(d);
-
-        public static implicit operator Language(string s) =>
-            new Language(s);
-
-        public static implicit operator Language(ArrayV a) =>
-            new Language(a);
-
-        public static implicit operator Language(Ref r) =>
-            new Language(r);
-
-        public static implicit operator Language(EventType e) =>
-            e.Name();
-        #endregion
-
-        public static Language QueryArray(params Language[] values) =>
-        new Language(ArrayV.FromEnumerable(from v in values select (Value) v));
-
-        #region Operators
-        public static Language operator !(Language a) =>
-            Not(a);
-
-        public static Language operator +(Language a, Language b) =>
-            Add(a, b);
-
-        public static Language operator -(Language a, Language b) =>
-            Subtract(a, b);
-
-        public static Language operator *(Language a, Language b) =>
-            Multiply(a, b);
-
-        public static Language operator /(Language a, Language b) =>
-            Divide(a, b);
-
-        public static Language operator %(Language a, Language b) =>
-            Modulo(a, b);
-
-        public static Language operator &(Language a, Language b) =>
-            And(a, b);
-
-        public static Language operator |(Language a, Language b) =>
-            Or(a, b);
-
-        public static Language operator <(Language a, Language b) =>
-            Less(a, b);
-
-        public static Language operator <=(Language a, Language b) =>
-            LessOrEqual(a, b);
-
-        public static Language operator >(Language a, Language b) =>
-            Greater(a, b);
-
-        public static Language operator >=(Language a, Language b) =>
-            GreaterOrEqual(a, b);
-
-        #endregion
+        public static Expr QueryArray(params Expr[] values) =>
+            ArrayV.FromEnumerable(from v in values select v);
 
         #region Basic forms
 
@@ -111,8 +19,8 @@ namespace FaunaDB.Query {
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// This is the raw version. Usually it's easier to use the overload.
         /// </summary>
-        public static Language Let(ObjectV vars, Language @in) =>
-            Q("let", new Language(vars), "in", @in);
+        public static Expr Let(Expr vars, Expr @in) =>
+            Q("let", vars, "in", @in);
 
         /// <summary>
         /// Use a lambda expression to conveniently define let expressions.
@@ -121,90 +29,101 @@ namespace FaunaDB.Query {
         /// <example>
         /// <c>Query.Let(1, a => a)</c> is equivalent to <c>Query.Let(new ObjectV("auto0", 1), Query.Var("auto0"))</c>
         /// </example>
-        public static Language Let(Language value, Func<Language, Language> @in)
+        public static Expr Let(Expr value, Func<Expr, Expr> @in)
         {
-            using (var v = new AutoVar())
-                return Let(new ObjectV(v.Name, value.Value), @in(v.Query));
+            ParameterInfo[] info = @in.Method.GetParameters();
+            string p0 = info[0].Name;
+
+            return Let(
+                Q(p0, value),
+                @in(Var(p0)));
         }
 
-        public static Language Let(Language value1, Language value2, Func<Language, Language, Language> @in)
+        public static Expr Let(Expr value1, Expr value2, Func<Expr, Expr, Expr> @in)
         {
-            using (AutoVar v1 = new AutoVar(), v2 = new AutoVar())
-                return Let(
-                    new ObjectV(v1.Name, value1.Value, v2.Name, value2.Value),
-                    @in(v1.Query, v2.Query));               
+            ParameterInfo[] info = @in.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+
+            return Let(
+                Q(p0, value1, p1, value2),
+                @in(Var(p0), Var(p1)));
         }
 
-        public static Language Let(Language value1, Language value2, Language value3, Func<Language, Language, Language, Language> @in)
+        public static Expr Let(Expr value1, Expr value2, Expr value3, Func<Expr, Expr, Expr, Expr> @in)
         {
-            using (AutoVar v1 = new AutoVar(), v2 = new AutoVar(), v3 = new AutoVar())
-                return Let(
-                    new ObjectV(v1.Name, value1.Value, v2.Name, value2.Value, v3.Name, value3.Value),
-                    @in(v1.Query, v2.Query, v3.Query));                  
+            ParameterInfo[] info = @in.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+            string p2 = info[2].Name;
+
+            return Let(
+                Q(p0, value1, p1, value2, p2, value3),
+                @in(Var(p0), Var(p1), Var(p2)));
         }
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
-        public static Language Var(string varName) =>
+        public static Expr Var(string varName) =>
             Q("var", varName);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
-        public static Language If(Language condition, Language then, Language @else) =>
-            Q("if", condition, "then", then, "else", @else);
+        public static Expr If(Expr @if, Expr @then, Expr @else) =>
+            Q("if", @if, "then", @then, "else", @else);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
-        public static Language Do(params Language[] expressions) =>
+        public static Expr Do(params Expr[] expressions) =>
             Q("do", Varargs(expressions));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
         // todo: rename?
-        public static Language QueryObject(ObjectV fields) =>
-            Q("object", new Language(fields));
+        public static Expr QueryObject(ObjectV fields) =>
+            Q("object", fields);
 
-        public static Language QueryObject(string key1, Language value1) =>
-            QueryObject(new ObjectV(key1, value1.Value));
+        public static Expr QueryObject(string key1, Expr value1) =>
+            QueryObject(new ObjectV(key1, value1));
 
-        public static Language QueryObject(string key1, Language value1, string key2, Language value2) =>
-            QueryObject(new ObjectV(key1, value1.Value, key2, value2.Value));
+        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2) =>
+            QueryObject(new ObjectV(key1, value1, key2, value2));
 
-        public static Language QueryObject(string key1, Language value1, string key2, Language value2, string key3, Language value3) =>
-            QueryObject(new ObjectV(key1, value1.Value, key2, value2.Value, key3, value3.Value));
+        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
+            QueryObject(new ObjectV(key1, value1, key2, value2, key3, value3));
 
-        public static Language QueryObject(string key1, Language value1, string key2, Language value2, string key3, Language value3, string key4, Language value4) =>
-        QueryObject(new ObjectV(key1, value1.Value, key2, value2.Value, key3, value3.Value, key4, value4.Value));
+        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
+            QueryObject(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4));
 
-        public static Language QueryObject(string key1, Language value1, string key2, Language value2, string key3, Language value3,
-                string key4, Language value4, string key5, Language value5) =>
-        QueryObject(new ObjectV(key1, value1.Value, key2, value2.Value, key3, value3.Value, key4, value4.Value, key5, value5.Value));
+        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
+                string key4, Expr value4, string key5, Expr value5) =>
+            QueryObject(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
 
-        public static Language QueryObject(string key1, Language value1, string key2, Language value2, string key3, Language value3,
-                string key4, Language value4, string key5, Language value5, string key6, Language value6) =>
+        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
+                string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
             QueryObject(new ObjectV(
-                key1, value1.Value, key2, value2.Value, key3, value3.Value,
-                key4, value4.Value, key5, value5.Value, key6, value6.Value));
+                key1, value1, key2, value2, key3, value3,
+                key4, value4, key5, value5, key6, value6));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
-        public static Language Quote(Expr expr) =>
-            Q("quote", new Language(expr));
+        public static Expr Quote(Expr expr) =>
+            Q("quote", expr);
 
         #region Lambda
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// This is the raw version. Usually it's easier to use an overload.
         /// </summary>
-        public static Language Lambda(string varName, Language expr) =>
+        public static Expr Lambda(string varName, Expr expr) =>
             Q("lambda", varName, "expr", expr);
 
-        public static Language Lambda(ArrayV varNames, Language expr) =>
+        public static Expr Lambda(ArrayV varNames, Expr expr) =>
             Q("lambda", varNames, "expr", expr);
 
         /// <summary>
@@ -214,28 +133,42 @@ namespace FaunaDB.Query {
         /// <example>
         /// <c>Query.Lambda(a => a)</c> is equivalent to <c>Query.Lambda("auto0", Query.Var("auto0"))</c>.
         /// </example>
-        public static Language Lambda(Func<Language, Language> lambda)
+        public static Expr Lambda(Func<Expr, Expr> lambda)
         {
-            using (var v = new AutoVar())
-                return Lambda(v.Name, lambda(v.Query));
+            ParameterInfo[] info = lambda.Method.GetParameters();
+            string v0 = info[0].Name;
+
+            return Lambda(v0, lambda(Var(v0)));
         }
 
-        public static Language Lambda(Func<Language, Language, Language> lambda)
+        public static Expr Lambda(Func<Expr, Expr, Expr> lambda)
         {
-            using (AutoVar v1 = new AutoVar(), v2 = new AutoVar())
-                return Lambda(new ArrayV(v1.Name, v2.Name), lambda(v1.Query, v2.Query));
+            ParameterInfo[] info = lambda.Method.GetParameters();
+            string v0 = info[0].Name;
+            string v1 = info[1].Name;
+
+            return Lambda(new ArrayV(v0, v1), lambda(Var(v0), Var(v1)));
         }
 
-        public static Language Lambda(Func<Language, Language, Language, Language> lambda)
+        public static Expr Lambda(Func<Expr, Expr, Expr, Expr> lambda)
         {
-            using (AutoVar v1 = new AutoVar(), v2 = new AutoVar(), v3 = new AutoVar())
-                return Lambda(new ArrayV(v1.Name, v2.Name, v3.Name), lambda(v1.Query, v2.Query, v3.Query));
+            ParameterInfo[] info = lambda.Method.GetParameters();
+            string v0 = info[0].Name;
+            string v1 = info[1].Name;
+            string v2 = info[2].Name;
+
+            return Lambda(new ArrayV(v0, v1, v2), lambda(Var(v0), Var(v1), Var(v2)));
         }
 
-        public static Language Lambda(Func<Language, Language, Language, Language, Language> lambda)
+        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr> lambda)
         {
-            using (AutoVar v1 = new AutoVar(), v2 = new AutoVar(), v3 = new AutoVar(), v4 = new AutoVar())
-                return Lambda(new ArrayV(v1.Name, v2.Name, v3.Name, v4.Name), lambda(v1.Query, v2.Query, v3.Query, v4.Query));
+            ParameterInfo[] info = lambda.Method.GetParameters();
+            string v0 = info[0].Name;
+            string v1 = info[1].Name;
+            string v2 = info[2].Name;
+            string v3 = info[3].Name;
+
+            return Lambda(new ArrayV(v0, v1, v2, v3), lambda(Var(v0), Var(v1), Var(v2), Var(v3)));
         }
         #endregion
         #endregion
@@ -245,52 +178,52 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
-        public static Language Map(Language collection, Language lambda) =>
+        public static Expr Map(Expr collection, Expr lambda) =>
             Q("map", lambda, "collection", collection);
 
-        public static Language Map(Language collection, Func<Language, Language> lambda) =>
+        public static Expr Map(Expr collection, Func<Expr, Expr> lambda) =>
             Map(collection, Lambda(lambda));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
-        public static Language Foreach(Language collection, Language lambda) =>
+        public static Expr Foreach(Expr collection, Expr lambda) =>
             Q("foreach", lambda, "collection", collection);
 
-        public static Language Foreach(Language collection, Func<Language, Language> lambda) =>
+        public static Expr Foreach(Expr collection, Func<Expr, Expr> lambda) =>
             Foreach(collection, Lambda(lambda));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
-        public static Language Filter(Language collection, Language lambda) =>
+        public static Expr Filter(Expr collection, Expr lambda) =>
             Q("filter", lambda, "collection", collection);
 
-        public static Language Filter(Language collection, Func<Language, Language> lambda) =>
+        public static Expr Filter(Expr collection, Func<Expr, Expr> lambda) =>
             Filter(collection, Lambda(lambda));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
-        public static Language Take(Language number, Language collection) =>
+        public static Expr Take(Expr number, Expr collection) =>
             Q("take", number, "collection", collection);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
-        public static Language Drop(Language number, Language collection) =>
+        public static Expr Drop(Expr number, Expr collection) =>
             Q("drop", number, "collection", collection);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
-        public static Language Prepend(Language elements, Language collection) =>
+        public static Expr Prepend(Expr elements, Expr collection) =>
             Q("prepend", elements, "collection", collection);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
-        public static Language Append(Language elements, Language collection) =>
+        public static Expr Append(Expr elements, Expr collection) =>
             Q("append", elements, "collection", collection);
         #endregion
 
@@ -299,45 +232,45 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
-        public static Language Get(Language @ref, Language? ts = null) =>
+        public static Expr Get(Expr @ref, Expr ts = null) =>
             // todo: helper?
-            ts == null ? Q("get", @ref) : Q("get", @ref, "ts", ts.Value);
+            ts == null ? Q("get", @ref) : Q("get", @ref, "ts", ts);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
-        public static Language Paginate(
-            Language set,
-            Language? size = null,
-            Language? ts = null,
-            Language? after = null,
-            Language? before = null,
-            Language? events = null,
-            Language? sources = null) =>
+        public static Expr Paginate(
+            Expr set,
+            Expr size = null,
+            Expr ts = null,
+            Expr after = null,
+            Expr before = null,
+            Expr events = null,
+            Expr sources = null) =>
             //todo: helper?
-            new Language(ObjectV.WithoutNullValues(
-                ObjectV.Pairs("paginate", set.Value),
+            ObjectV.WithoutNullValues(
+                ObjectV.Pairs("paginate", set),
                 ObjectV.Pairs(
-                    "size", size?.Value,
-                    "ts", ts?.Value,
-                    "after", after?.Value,
-                    "before", before?.Value,
-                    "events", events?.Value,
-                    "sources", sources?.Value)));
+                    "size", size,
+                    "ts", ts,
+                    "after", after,
+                    "before", before,
+                    "events", events,
+                    "sources", sources));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
-        public static Language Exists(Language @ref, Language? ts = null) =>
+        public static Expr Exists(Expr @ref, Expr ts = null) =>
             //todo: helper?
-            ts == null ? Q("exists", @ref) : Q("exists", @ref, "ts", ts.Value);
+            ts == null ? Q("exists", @ref) : Q("exists", @ref, "ts", ts);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
-        public static Language Count(Language set, Language? events = null) =>
+        public static Expr Count(Expr set, Expr events = null) =>
             //todo: helper?
-            events == null ? Q("count", set) : Q("count", set, "events", events.Value);
+            events == null ? Q("count", set) : Q("count", set, "events", events);
         #endregion
 
         #region Write functions
@@ -345,84 +278,84 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
-        public static Language Create(Language classRef, Language @params) =>
+        public static Expr Create(Expr classRef, Expr @params) =>
             Q("create", classRef, "params", @params);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
-        public static Language Update(Language @ref, Language @params) =>
+        public static Expr Update(Expr @ref, Expr @params) =>
             Q("update", @ref, "params", @params);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
-        public static Language Replace(Language @ref, Language @params) =>
+        public static Expr Replace(Expr @ref, Expr @params) =>
             Q("replace", @ref, "params", @params);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
-        public static Language Delete(Language @ref) =>
+        public static Expr Delete(Expr @ref) =>
             Q("delete", @ref);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
-        public static Language Insert(Language @ref, Language ts, Language action, Language @params) =>
+        public static Expr Insert(Expr @ref, Expr ts, Expr action, Expr @params) =>
             Q("insert", @ref, "ts", ts, "action", action, "params", @params);
 
         /// <summary>
         /// <see cref="Insert"/> that takes an <see cref="Event"/> object instead of separate parameters.
         /// </summary>
-        public static Language Insert(Event e, Language @params) =>
-            Insert(e.Resource, e.Ts, e.Action, @params);
+        public static Expr Insert(Event e, Expr @params) =>
+            Insert(e.Resource, e.Ts, e.Action.Name(), @params);
 
         /// <summary>
         /// <see cref="Remove"/> that takes an <see cref="Event"/> object instead of separate parameters.
         /// </summary>
-        public static Language Remove(Language @ref, Language ts, Language action) =>
+        public static Expr Remove(Expr @ref, Expr ts, Expr action) =>
             Q("remove", @ref, "ts", ts, "action", action);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
-        public static Language Remove(Event e) =>
-            Remove(e.Resource, e.Ts, e.Action);
+        public static Expr Remove(Event e) =>
+            Remove(e.Resource, e.Ts, e.Action.Name());
         #endregion
 
         #region Sets
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Language Match(Language index, params Language[] terms) =>
+        public static Expr Match(Expr index, params Expr[] terms) =>
             Q("match", index, "terms", Varargs(terms));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Language Union(params Language[] sets) =>
+        public static Expr Union(params Expr[] sets) =>
             Q("union", Varargs(sets));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Language Intersection(params Language[] sets) =>
+        public static Expr Intersection(params Expr[] sets) =>
             Q("intersection", Varargs(sets));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Language Difference(params Language[] sets) =>
+        public static Expr Difference(params Expr[] sets) =>
             Q("difference", Varargs(sets));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Language Join(Language source, Language target) =>
+        public static Expr Join(Expr source, Expr target) =>
             Q("join", source, "with", target);
 
-        public static Language Join(Language source, Func<Language, Language> target) =>
+        public static Expr Join(Expr source, Func<Expr, Expr> target) =>
             Join(source, Lambda(target));
         #endregion
 
@@ -430,19 +363,19 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#auth_functions">docs</see>. 
         /// </summary>
-        public static Language Login(Language @ref, Language @params) =>
+        public static Expr Login(Expr @ref, Expr @params) =>
             Q("login", @ref, "params", @params);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#auth_functions">docs</see>. 
         /// </summary>
-        public static Language Logout(bool deleteTokens) =>
+        public static Expr Logout(bool deleteTokens) =>
             Q("logout", deleteTokens);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#auth_functions">docs</see>. 
         /// </summary>
-        public static Language Identify(Language @ref, Language password) =>
+        public static Expr Identify(Expr @ref, Expr password) =>
             Q("identify", @ref, "password", password);
         #endregion
 
@@ -451,14 +384,21 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#string_functions">docs</see>. 
         /// </summary>
-        public static Language Concat(Language strings, Language? separator = null) =>
+        public static Expr Concat(Expr strings) =>
             // todo: helper?
-            separator == null ? Q("concat", strings) : Q("concat", strings, "separator", separator.Value);
+            Q("concat", strings);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#string_functions">docs</see>. 
         /// </summary>
-        public static Language CaseFold(Language @string) =>
+        public static Expr Concat(Expr strings, Expr separator) =>
+            // todo: helper?
+            Q("concat", strings, "separator", separator);
+
+        /// <summary>
+        /// See the <see href="https://faunadb.com/documentation/queries#string_functions">docs</see>. 
+        /// </summary>
+        public static Expr CaseFold(Expr @string) =>
             Q("casefold", @string);
         #endregion
 
@@ -467,20 +407,20 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
         /// </summary>
-        public static Language Time(Language timeString) =>
-            Q("time", timeString);
+        public static Expr Time(Expr time) =>
+            Q("time", time);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
         /// </summary>
-        public static Language Epoch(Language number, Language unit) =>
+        public static Expr Epoch(Expr number, Expr unit) =>
             Q("epoch", number, "unit", unit);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
         /// </summary>
-        public static Language Date(Language dateString) =>
-            Q("date", dateString);
+        public static Expr Date(Expr date) =>
+            Q("date", date);
         #endregion
 
         #region Miscellaneous functions
@@ -488,148 +428,113 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language EqualsExpr(params Language[] values) =>
+        public static Expr EqualsExpr(params Expr[] values) =>
             Q("equals", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Contains(Language path, Language @in) =>
+        public static Expr Contains(Expr path, Expr @in) =>
             Q("contains", path, "in", @in);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Select(Language path, Language @from, Language? @default = null) =>
-            new Language(ObjectV.WithoutNullValues(
-                ObjectV.Pairs("select", path.Value, "from", @from.Value),
-                ObjectV.Pairs("default", @default?.Value)));
+        public static Expr Select(Expr path, Expr @from, Expr @default = null) =>
+            ObjectV.WithoutNullValues(
+                ObjectV.Pairs("select", path, "from", @from),
+                ObjectV.Pairs("default", @default));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Add(params Language[] numbers) =>
+        public static Expr Add(params Expr[] numbers) =>
             Q("add", Varargs(numbers));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Multiply(params Language[] numbers) =>
+        public static Expr Multiply(params Expr[] numbers) =>
             Q("multiply", Varargs(numbers));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Subtract(params Language[] numbers) =>
+        public static Expr Subtract(params Expr[] numbers) =>
             Q("subtract", Varargs(numbers));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Divide(params Language[] numbers) =>
+        public static Expr Divide(params Expr[] numbers) =>
             Q("divide", Varargs(numbers));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Modulo(params Language[] numbers) =>
+        public static Expr Modulo(params Expr[] numbers) =>
             Q("modulo", Varargs(numbers));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Language Less(params Language[] values) =>
+        public static Expr Less(params Expr[] values) =>
             Q("lt", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Language LessOrEqual(params Language[] values) =>
+        public static Expr LessOrEqual(params Expr[] values) =>
             Q("lte", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Language Greater(params Language[] values) =>
+        public static Expr Greater(params Expr[] values) =>
             Q("gt", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Language GreaterOrEqual(params Language[] values) =>
+        public static Expr GreaterOrEqual(params Expr[] values) =>
             Q("gte", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language And(params Language[] booleans) =>
+        public static Expr And(params Expr[] booleans) =>
             Q("and", Varargs(booleans));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Or(params Language[] booleans) =>
+        public static Expr Or(params Expr[] booleans) =>
             Q("or", Varargs(booleans));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Language Not(Language boolean) =>
+        public static Expr Not(Expr boolean) =>
             Q("not", boolean);
         #endregion
 
         #region Helpers
-        static ThreadLocal<int> autoVarNumber = new ThreadLocal<int>(() => 0);
 
-        class AutoVar : IDisposable
-        {
-            public string Name { get; }
-            public Language Query { get { return Var(Name); } }
-
-            public AutoVar()
-            {
-                Name = AutoName(autoVarNumber.Value);
-                autoVarNumber.Value++;
-            }
-
-            static List<string> autoVarNames = new List<string>();
-
-            static string AutoName(int number)
-            {
-                if (number < autoVarNames.Count)
-                    return autoVarNames[number];
-                else
-                {
-                    lock (autoVarNames)
-                    {
-                        for (var i = autoVarNames.Count; i <= number; i++)
-                            autoVarNames.Add($"auto{autoVarNumber.Value}");
-                    }
-                    return autoVarNames[number];
-                }
-            }
-
-            public void Dispose()
-            {
-                autoVarNumber.Value--;
-            }
-        }
-
-        static Language Varargs(params Language[] values) =>
-            values.Count() == 1 ? values[0] : ArrayV.FromEnumerable(from q in values select q.Value);
+        static Expr Varargs(params Expr[] values) =>
+            values.Count() == 1 ? values[0] : ArrayV.FromEnumerable(values);
 
         #region Q
-        static Language Q(string key1, Language value1) =>
-        new Language(new ObjectV(key1, value1.Value));
+        static Expr Q(string key1, Expr value1) =>
+            new ObjectV(key1, value1);
 
-        static Language Q(string key1, Language value1, string key2, Language value2) =>
-        new Language(new ObjectV(key1, value1.Value, key2, value2.Value));
+        static Expr Q(string key1, Expr value1, string key2, Expr value2) =>
+            new ObjectV(key1, value1, key2, value2);
 
-        static Language Q(string key1, Language value1, string key2, Language value2, string key3, Language value3) =>
-        new Language(new ObjectV(key1, value1.Value, key2, value2.Value, key3, value3.Value));
+        static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
+            new ObjectV(key1, value1, key2, value2, key3, value3);
 
-        static Language Q(string key1, Language value1, string key2, Language value2, string key3, Language value3, string key4, Language value4) =>
-        new Language(new ObjectV(key1, value1.Value, key2, value2.Value, key3, value3.Value, key4, value4.Value));
+        static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
+            new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4);
         #endregion
         #endregion
     }

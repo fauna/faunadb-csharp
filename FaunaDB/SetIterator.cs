@@ -19,7 +19,7 @@ namespace FaunaDB
     /// </summary>
     public class SetIterator : PushObservable<Expr>
     {
-        public SetIterator(Client.Client client, Language setQuery, int? pageSize = null, Language? mapLambda = null)
+        public SetIterator(Client.Client client, Expr setQuery, int? pageSize = null, Expr mapLambda = null)
             : base(new SetPusher(client, setQuery, pageSize, mapLambda)) {}
     }
 
@@ -99,9 +99,9 @@ namespace FaunaDB
     class SetPusher : IPush<Expr>
     {
         readonly Client.Client client;
-        readonly Language setQuery;
+        readonly Expr setQuery;
         readonly int? pageSize;
-        readonly Language? mapLambda;
+        readonly Expr mapLambda;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FaunaDB.SetIterator"/> class.
@@ -115,7 +115,7 @@ namespace FaunaDB
         /// var iter = new SetIterator(client, someSet, mapLambda: queryMapper);
         /// Console.WriteLine(await iter.ToArrayV());
         /// </example>
-        public SetPusher(Client.Client client, Language setQuery, int? pageSize = null, Language? mapLambda = null)
+        public SetPusher(Client.Client client, Expr setQuery, int? pageSize = null, Expr mapLambda = null)
         {
             this.client = client;
             this.setQuery = setQuery;
@@ -158,7 +158,7 @@ namespace FaunaDB
         {
             var queried = Paginate(setQuery, size: pageSize, before: before, after: after);
             if (mapLambda != null)
-                queried = Map(queried, mapLambda.Value);
+                queried = Map(queried, mapLambda);
             return (Page) await client.Query(queried).ConfigureAwait(false);
         }
     }

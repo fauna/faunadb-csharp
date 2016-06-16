@@ -104,5 +104,43 @@ namespace FaunaDB.Query
         protected abstract int HashCode();
         #endregion
 
+        #region Operators
+        public static Expr operator !(Expr a) =>
+            Language.Not(a);
+
+        public static Expr operator +(Expr a, Expr b) =>
+            Language.Add(a, b);
+
+        public static Expr operator -(Expr a, Expr b) =>
+            Language.Subtract(a, b);
+
+        public static Expr operator *(Expr a, Expr b) =>
+            Language.Multiply(a, b);
+
+        public static Expr operator /(Expr a, Expr b) =>
+            Language.Divide(a, b);
+
+        public static Expr operator %(Expr a, Expr b) =>
+            Language.Modulo(a, b);
+
+        public static Expr operator &(Expr a, Expr b) =>
+            Language.And(a, b);
+
+        public static Expr operator |(Expr a, Expr b) =>
+            Language.Or(a, b);
+
+        public static Expr operator <(Expr a, Expr b) =>
+            Language.Less(a, b);
+
+        public static Expr operator <=(Expr a, Expr b) =>
+            Language.LessOrEqual(a, b);
+
+        public static Expr operator >(Expr a, Expr b) =>
+            Language.Greater(a, b);
+
+        public static Expr operator >=(Expr a, Expr b) =>
+            Language.GreaterOrEqual(a, b);
+
+        #endregion
     }
 }

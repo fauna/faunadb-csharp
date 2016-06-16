@@ -114,13 +114,13 @@ namespace FaunaDB.Values
     /// This represents a set returned as part of a response. This looks like <c>{"@set": set_query}</c>.
     /// For query sets see <see cref="Language"/>.
     /// </remarks>
-    public sealed class SetRef : ScalarValue<SetRef, Language>
+    public sealed class SetRef : ScalarValue<SetRef, Expr>
     {
-        public SetRef(Language q) : base(q) { }
+        public SetRef(Expr q) : base(q) { }
 
         override internal void WriteJson(JsonWriter writer)
         {
-            writer.WriteObject("@set", (Value)Value);
+            writer.WriteObject("@set", Value);
         }
     }
 

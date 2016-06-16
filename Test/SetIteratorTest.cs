@@ -19,7 +19,7 @@ namespace Test
 
         Ref indexRef;
         Value a, b;
-        Language gadgetsSet;
+        Expr gadgetsSet;
 
         async Task SetUpAsync()
         {

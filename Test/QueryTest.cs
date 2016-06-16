@@ -54,10 +54,10 @@ namespace Test
         #endregion
 
         #region Helpers
-        Language NSet(int n) =>
+        Expr NSet(int n) =>
             Match(nIndexRef, n);
 
-        Language MSet(int m) =>
+        Expr MSet(int m) =>
             Match(mIndexRef, m);
 
         async Task<ObjectV> CreateInstance(int n = 0, Expr m = null)
@@ -72,23 +72,23 @@ namespace Test
         async Task<ObjectV> CreateThimble(ObjectV data) =>
             (ObjectV) await Q(Create(thimbleClassRef, Quote(new ObjectV("data", data))));
 
-        async Task<ArrayV> SetToArray(Language set)
+        async Task<ArrayV> SetToArray(Expr set)
         {
             var res = await Q(Paginate(set, size: 1000));
             return (ArrayV) ((ObjectV) res)["data"];
         }
 
-        async Task AssertSet(Language set, params Expr[] expectedSetValues)
+        async Task AssertSet(Expr set, params Expr[] expectedSetValues)
         {
             Assert.AreEqual(new ArrayV(expectedSetValues), await SetToArray(set));
         }
 
-        async Task AssertBadQuery(Language expression)
+        async Task AssertBadQuery(Expr expression)
         {
             await AssertU.Throws<BadRequest>(() => Q(expression));
         }
 
-        async Task AssertQuery(Expr expected, Language expression)
+        async Task AssertQuery(Expr expected, Expr expression)
         {
             Assert.AreEqual(expected, await Q(expression));
         }
@@ -98,11 +98,11 @@ namespace Test
 
         [Test] public async Task TestLetVar()
         {
-            var let = Let(new ObjectV("auto0", 1), Var("auto0"));
-            await AssertQuery(1, let);
-            Assert.AreEqual(let, Let(1, a => a));
+            var let = Let(new ObjectV("a", 1), Add(Var("a"), Var("a")));
+            await AssertQuery(2, let);
+            Assert.AreEqual(let, Let(1, a => Add(a, a)));
             Assert.AreEqual(
-                Let(new ObjectV("auto0", 1, "auto1", 2), QueryArray(Var("auto0"), Var("auto1"))),
+                Let(new ObjectV("a", 1, "b", 2), QueryArray(Var("a"), Var("b"))),
                 Let(1, 2, (a, b) => QueryArray(a, b)));
         }
 
@@ -133,10 +133,10 @@ namespace Test
 
         [Test] public void TestLambda()
         {
-            var expected = Lambda("auto0", Add(Var("auto0"), Var("auto0")));
-            Assert.AreEqual(expected, Lambda(a => a + a));
+            var expected = Lambda("a", Add(Var("a"), Var("a")));
+            Assert.AreEqual(expected, Lambda(a => Add(a, a)));
 
-            expected = Lambda("auto0", Lambda("auto1", Lambda("auto2", QueryArray(Var("auto0"), Var("auto1"), Var("auto2")))));
+            expected = Lambda("a", Lambda("b", Lambda("c", QueryArray(Var("a"), Var("b"), Var("c")))));
             Assert.AreEqual(expected, Lambda(a => Lambda(b => Lambda(c => QueryArray(a, b, c)))));
 
             // Error in lambda should not affect future queries.
@@ -148,7 +148,7 @@ namespace Test
             Assert.AreEqual(LambdaId, Lambda(a => a));
         }
 
-        static Language LambdaId = (Language) new ObjectV("lambda", "auto0", "expr", new ObjectV("var", "auto0"));
+        static Expr LambdaId = (Expr) new ObjectV("lambda", "a", "expr", new ObjectV("var", "a"));
 
         [Test] [Ignore("not working")] public void TestLambdaMultithreaded()
         {
@@ -182,7 +182,7 @@ namespace Test
 
         [Test] public void TestLambdaMultiVar()
         {
-            var expected = Lambda(new ArrayV("auto0", "auto1"), QueryArray(Var("auto0"), Var("auto1")));
+            var expected = Lambda(new ArrayV("a", "b"), QueryArray(Var("a"), Var("b")));
             Assert.AreEqual(expected, Lambda((a, b) => QueryArray(a, b)));
         }
         #endregion
@@ -203,7 +203,7 @@ namespace Test
             var refs = new ArrayV(await CreateRef(), await CreateRef());
             await Q(Foreach(refs, Delete));
             foreach (var @ref in refs)
-                await AssertQuery(false, Exists((Language) @ref));
+                await AssertQuery(false, Exists(@ref));
         }
 
         [Test] public async Task TestFilter()
@@ -319,7 +319,7 @@ namespace Test
             var ts = (long) instance["ts"];
             var prevTs = ts - 1;
             // Add previous event
-            await Q(Insert(@ref, prevTs, EventType.Create, Quote(new ObjectV("data", new ObjectV("weight", 0)))));
+            await Q(Insert(@ref, prevTs, EventType.Create.Name(), Quote(new ObjectV("data", new ObjectV("weight", 0)))));
             // Get version from previous event
             var old = (ObjectV) await Q(Get(@ref, prevTs));
             Assert.AreEqual(new ObjectV("weight", 0), old["data"]);
@@ -335,7 +335,7 @@ namespace Test
             Assert.AreEqual(newInstance, await Q(Get(@ref)));
 
             // Delete that event
-            await Q(Remove(@ref, (Language) newInstance["ts"], "create"));
+            await Q(Remove(@ref, newInstance["ts"], "create"));
             // Assert that it was undone
             Assert.AreEqual(instance, await Q(Get(@ref)));
         }

@@ -34,7 +34,7 @@ namespace FaunaDB
         /// <summary>
         /// Use this on a value that you know represents a Page.
         /// </summary>
-        public static explicit operator Page(Value v)
+        public static explicit operator Page(Expr v)
         {
             var obj = (ObjectV) v;
             return new Page((ArrayV) obj["data"], GetCursor(obj, "before"), GetCursor(obj, "after"));
@@ -46,7 +46,7 @@ namespace FaunaDB
             return value == null ? null : (Cursor?) new Cursor((ArrayV) value);
         }
 
-        public static implicit operator Value(Page p) =>
+        public static implicit operator Expr(Page p) =>
             ObjectV.WithoutNullValues(ObjectV.Pairs("data", p.Data), ObjectV.Pairs("before", p.Before?.Value, "after", p.After?.Value));
 
         #region boilerplate
@@ -87,11 +87,8 @@ namespace FaunaDB
             Value = value;
         }
 
-        public static implicit operator Value(Cursor c) =>
+        public static implicit operator Expr(Cursor c) =>
             c.Value;
-
-        public static implicit operator Language(Cursor c) =>
-            (Language) (Value) c;
 
         #region boilerplate
         public override bool Equals(object obj) =>

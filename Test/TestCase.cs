@@ -1,17 +1,13 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
-using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-
-using FaunaDB;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Values;
 using FaunaDB.Query;
-using static FaunaDB.Query.Language;
 
 namespace Test
 {
@@ -81,7 +77,7 @@ namespace Test
         protected static Ref GetRef(Expr v) =>
             (Ref) ((ObjectV) v)["ref"];
 
-        protected Task<Expr> Q(Language query) =>
+        protected Task<Expr> Q(Expr query) =>
             TestClient.Query(query);
     }
 
