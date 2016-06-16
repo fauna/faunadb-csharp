@@ -31,7 +31,7 @@ namespace Test
                 "active", true)));
 
             Func<Expr, Task<Ref>> create = async n =>
-                GetRef(await Q(Create(classRef, Quote(new ObjectV("data", new ObjectV("n", n))))));
+                GetRef(await Q(Create(classRef, Obj("data", Obj("n", n)))));
 
             a = await create(0);
             await create(1);

@@ -62,15 +62,15 @@ namespace Test
 
         async Task<ObjectV> CreateInstance(int n = 0, Expr m = null)
         {
-            var data = m == null ? new ObjectV("n", n) : new ObjectV("n", n, "m", m);
-            return (ObjectV) await Q(Create(classRef, Quote(new ObjectV("data", data))));
+            var data = m == null ? Obj("n", n) : Obj("n", n, "m", m);
+            return (ObjectV) await Q(Create(classRef, Obj("data", data)));
         }
 
         async Task<Ref> CreateRef(int n = 0, Expr m = null) =>
             GetRef(await CreateInstance(n, m));
 
-        async Task<ObjectV> CreateThimble(ObjectV data) =>
-            (ObjectV) await Q(Create(thimbleClassRef, Quote(new ObjectV("data", data))));
+        async Task<ObjectV> CreateThimble(Expr data) =>
+            (ObjectV) await Q(Create(thimbleClassRef, Obj("data", data)));
 
         async Task<ArrayV> SetToArray(Expr set)
         {
@@ -257,14 +257,14 @@ namespace Test
         [Test] public async Task TestUpdate()
         {
             var rf = await CreateRef();
-            var got = (ObjectV) await Q(Replace(rf, Quote(new ObjectV("data", new ObjectV("m", 123)))));
+            var got = (ObjectV) await Q(Replace(rf, Obj("data", Obj("m", 123))));
             Assert.AreEqual(new ObjectV("m", 123), got["data"]);
         }
 
         [Test] public async Task TestReplace()
         {
             var rf = await CreateRef();
-            var got = (ObjectV) await Q(Replace(rf, Quote(new ObjectV("data", new ObjectV("m", 123)))));
+            var got = (ObjectV) await Q(Replace(rf, Obj("data", Obj("m", 123))));
             Assert.AreEqual(new ObjectV("m", 123), got["data"]);
         }
 
@@ -277,7 +277,7 @@ namespace Test
 
         [Test] public async Task TestInsert()
         {
-            var instance = await CreateThimble(new ObjectV("weight", 1));
+            var instance = await CreateThimble(Obj("weight", 1));
             var @ref = GetRef(instance);
             var ts = (long) instance["ts"];
             var prevTs = ts - 1;
@@ -290,7 +290,7 @@ namespace Test
 
         [Test] public async Task TestRemove()
         {
-            var instance = await CreateThimble(new ObjectV("weight", 0));
+            var instance = await CreateThimble(Obj("weight", 0));
             var @ref = GetRef(instance);
 
             // Change it
