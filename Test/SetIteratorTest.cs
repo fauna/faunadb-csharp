@@ -11,7 +11,7 @@ namespace Test
 {
     [TestFixture] public class SetIteratorTest : TestCase
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         new public void SetUp()
         {
             SetUpAsync().Wait();

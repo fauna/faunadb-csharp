@@ -11,7 +11,7 @@ namespace Test
 {
     [TestFixture] public class ClientTest : TestCase
     {
-        [TestFixtureSetUp] new public void SetUp()
+        [OneTimeSetUp] new public void SetUp()
         {
             SetUpAsync().Wait();
         }

@@ -22,7 +22,7 @@ namespace Test
 
         string serverKey;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             SetUpAsync().Wait();

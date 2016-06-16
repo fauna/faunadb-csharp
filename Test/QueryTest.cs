@@ -25,7 +25,7 @@ namespace Test
         Ref thimbleClassRef;
 
         #region Setup
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         new public void SetUp()
         {
             SetUpAsync().Wait();
