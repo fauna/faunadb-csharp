@@ -14,13 +14,20 @@ namespace Test {
 
         [Test] public void TestRef()
         {
-            Assert.AreEqual(@ref, Value.FromJson(jsonRef));
+            Assert.AreEqual(@ref, Expr.FromJson(jsonRef));
             Assert.AreEqual(jsonRef, @ref.ToJson());
         }
 
         [Test] public void TestObj()
         {
-            Assert.AreEqual(new ObjectV("@foo", 1), Value.FromJson("{\"@obj\": {\"@foo\": 1}}"));
+            Assert.AreEqual(new ObjectV("@foo", 1), Expr.FromJson("{\"@obj\": {\"@foo\": 1}}"));
+        }
+
+        [Test] public void TestAnonymousObj()
+        {
+            Expr obj = Obj(new { foo = 10, bar = "bar" });
+
+            Assert.AreEqual(obj, Expr.FromJson("{\"@obj\": {\"foo\": 10, \"bar\": \"bar\"}}"));
         }
 
         [Test] public void TestSet()
@@ -28,7 +35,7 @@ namespace Test {
             var index = new Ref("indexes/frogs_by_size");
             var match = new SetRef(Language.Match(index, @ref));
             var jsonMatch = $"{{\"@set\":{{\"terms\":{jsonRef},\"match\":{index.ToJson()}}}}}";
-            Assert.AreEqual(match, Value.FromJson(jsonMatch));
+            Assert.AreEqual(match, Expr.FromJson(jsonMatch));
             Assert.AreEqual(jsonMatch, match.ToJson());
         }
 
@@ -61,7 +68,7 @@ namespace Test {
             var testTs = new FaunaTime("1970-01-01T00:00:00.1234567Z");
             const string testTsJson = "{\"@ts\":\"1970-01-01T00:00:00.1234567Z\"}";
             Assert.AreEqual(testTsJson, testTs.ToJson());
-            Assert.AreEqual(testTs, Value.FromJson(testTsJson));
+            Assert.AreEqual(testTs, Expr.FromJson(testTsJson));
         }
 
         [Test] public void TestDate()
@@ -69,7 +76,7 @@ namespace Test {
             var testDate = new FaunaDate("1970-01-01");
             var testDateJson = "{\"@date\":\"1970-01-01\"}";
             Assert.AreEqual(testDateJson, testDate.ToJson());
-            Assert.AreEqual(testDate, Value.FromJson(testDateJson));
+            Assert.AreEqual(testDate, Expr.FromJson(testDateJson));
         }
 
         DateTime UnixTimestamp(double seconds)

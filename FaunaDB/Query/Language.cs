@@ -10,6 +10,26 @@ using System.Collections.Immutable;
 namespace FaunaDB.Query {
     public partial struct Language
     {
+        private static ImmutableDictionary<Type, MethodInfo> ImplictsByType;
+
+        static Language()
+        {
+            var methods = typeof(Expr).GetMethods(BindingFlags.Public | BindingFlags.Static);
+            var implicitsMethods = from m in methods where (m.Name == "op_Implicit") select m;
+
+            var builder = ImmutableDictionary.CreateBuilder<Type, MethodInfo>();
+            foreach (var method in implicitsMethods)
+            {
+                var parameters = method.GetParameters();
+                if (parameters.Length == 1)
+                {
+                    builder.Add(parameters[0].ParameterType, method);
+                }
+            }
+
+            ImplictsByType = builder.ToImmutable();
+        }
+
         public static Expr Array(params Expr[] values) =>
             ArrayV.FromEnumerable(values);
 
@@ -86,6 +106,25 @@ namespace FaunaDB.Query {
         // todo: rename?
         public static Expr Obj(ObjectV fields) =>
             Q("object", fields);
+
+        public static Expr Obj(object obj)
+        {
+            var attributes = ImmutableDictionary.CreateBuilder<string, Expr>();
+
+            foreach (var property in obj.GetType().GetProperties())
+            {
+                MethodInfo methodInfo;
+                if (ImplictsByType.TryGetValue(property.PropertyType, out methodInfo))
+                {
+                    var value = property.GetValue(obj);
+                    Expr expr = (Expr) methodInfo.Invoke(null, new object[] { value });
+
+                    attributes.Add(property.Name, expr);
+                }
+            }
+
+            return new ObjectV(attributes.ToImmutable());
+        }
 
         public static Expr Obj(string key1, Expr value1) =>
             Obj(new ObjectV(key1, value1));
