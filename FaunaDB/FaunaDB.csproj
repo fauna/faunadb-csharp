@@ -54,7 +54,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Event.cs" />
     <Compile Include="HashUtil.cs" />
     <Compile Include="Query\Expr.cs" />
     <Compile Include="Query\Lambda.cs" />

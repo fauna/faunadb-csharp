@@ -275,19 +275,6 @@ namespace Test
             await AssertQuery(false, Exists(rf));
         }
 
-        [Test] public async Task TestInsert()
-        {
-            var instance = await CreateThimble(Obj("weight", 1));
-            var @ref = GetRef(instance);
-            var ts = (long) instance["ts"];
-            var prevTs = ts - 1;
-            // Add previous event
-            await Q(Insert(@ref, prevTs, EventType.Create.Name(), Obj("data", Obj("weight", 0))));
-            // Get version from previous event
-            var old = (ObjectV) await Q(Get(@ref, prevTs));
-            Assert.AreEqual(new ObjectV("weight", 0), old["data"]);
-        }
-
         [Test] public async Task TestRemove()
         {
             var instance = await CreateThimble(Obj("weight", 0));

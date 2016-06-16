@@ -284,18 +284,6 @@ namespace FaunaDB.Query {
         public static Expr Remove(Expr @ref, Expr ts, Expr action) =>
             Q("remove", @ref, "ts", ts, "action", action);
 
-        /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
-        /// </summary>
-        public static Expr Remove(Event e) =>
-            Remove(e.Resource, e.Ts, e.Action.Name());
-
-        /// <summary>
-        /// <see cref="Insert"/> that takes an <see cref="Event"/> object instead of separate parameters.
-        /// </summary>
-        public static Expr Insert(Event e, Expr @params) =>
-            Insert(e.Resource, e.Ts, e.Action.Name(), @params);
-
         #endregion
 
         #region Sets
