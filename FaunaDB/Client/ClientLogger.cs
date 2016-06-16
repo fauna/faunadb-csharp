@@ -31,7 +31,7 @@ namespace FaunaDB.Client
 
             log($"  Response headers:\n    {Indent(rr.ResponseHeaders.ToString().TrimEnd('\r', '\n', ' '))}\n");
             log($"  Response JSON:\n    {Indent(rr.ResponseContent.ToJson(pretty: true))}\n");
-            log($"  Response ({rr.StatusCode}): API processing {ProcessingTime(rr.ResponseHeaders)}ms, network latency {rr.TimeTaken.Milliseconds}ms\n");
+            log($"  Response ({rr.StatusCode}): API processing {ProcessingTime(rr.ResponseHeaders)}, network latency {rr.TimeTaken.Milliseconds}ms\n");
 
             return logged.ToString();
         }
@@ -42,7 +42,7 @@ namespace FaunaDB.Client
         static string ProcessingTime(HttpResponseHeaders headers)
         {
             IEnumerable<string> time;
-            return headers.TryGetValues("X-HTTP-Request-Processing-Time", out time) ? string.Join("", time) : "N/A";
+            return headers.TryGetValues("X-HTTP-Request-Processing-Time", out time) ? string.Join("", time) + "ms" : "N/A";
         }
     }
 }

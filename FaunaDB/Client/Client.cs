@@ -182,7 +182,7 @@ namespace FaunaDB.Client
             var responseHttp = await PerformRequest(action, path, data, query).ConfigureAwait(false);
             var responseText = await responseHttp.Content.ReadAsStringAsync().ConfigureAwait(false);
             var endTime = DateTime.UtcNow;
-            var responseContent = Value.FromJson(responseText);
+            var responseContent = Expr.FromJson(responseText);
 
             var rr = new RequestResult(
                 this,

@@ -96,14 +96,14 @@ namespace Test
 
         [Test] public async Task TestValueNotFound()
         {
-            await AssertQueryException<NotFound>(Select("a", QueryObject(ObjectV.Empty)), "value not found", ArrayV.Empty);
+            await AssertQueryException<NotFound>(Select("a", Obj(ObjectV.Empty)), "value not found", ArrayV.Empty);
         }
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
             await TestClient.Post("classes", new ObjectV("name", "duplicates"));
             var @ref = (Ref) ((ObjectV) (await TestClient.Post("classes/duplicates", ObjectV.Empty)))["ref"];
-            await AssertQueryException<BadRequest>(Create(@ref, QueryObject(ObjectV.Empty)), "instance already exists", new ArrayV("create"));
+            await AssertQueryException<BadRequest>(Create(@ref, Obj(ObjectV.Empty)), "instance already exists", new ArrayV("create"));
         }
         #endregion
 

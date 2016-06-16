@@ -67,7 +67,7 @@ namespace Test
             await AssertU.Throws<Exception>(() => TestClient.Get(rf));
         }
 
-        [Test] [Ignore("not working")] public async Task TestLogging()
+        [Test] public async Task TestLogging()
         {
             string logged = null;
             Action<string> log = str => {
@@ -99,7 +99,7 @@ namespace Test
             AssertRead("    {");
             AssertRead("      \"resource\": \"Scope global is OK\"");
             AssertRead("    }");
-            AssertRgx("^  Response \\(OK\\): API processing \\d+ms, network latency \\d+ms$");
+            AssertRgx("^  Response \\(OK\\): API processing (\\d+ms|N/A), network latency \\d+ms$");
         }
     }
 }

@@ -102,8 +102,8 @@ namespace Test
             await AssertQuery(2, let);
             Assert.AreEqual(let, Let(1, a => Add(a, a)));
             Assert.AreEqual(
-                Let(new ObjectV("a", 1, "b", 2), QueryArray(Var("a"), Var("b"))),
-                Let(1, 2, (a, b) => QueryArray(a, b)));
+                Let(new ObjectV("a", 1, "b", 2), Array(Var("a"), Var("b"))),
+                Let(1, 2, (a, b) => Array(a, b)));
         }
 
         [Test] public async Task TestIf()
@@ -122,22 +122,18 @@ namespace Test
         [Test] public async Task TestObject()
         {
             // Unlike Quote, contents are evaluated.
-            await AssertQuery(new ObjectV("x", 1), QueryObject("x", Let(1, x => x)));
-        }
-
-        [Test] public async Task TestQuote()
-        {
-            var quoted = (Expr) Let(new ObjectV("x", 1), Var("x"));
-            await AssertQuery(quoted, Quote(quoted));
+            await AssertQuery(new ObjectV("x", 1), Obj("x", Let(1, x => x)));
         }
 
         [Test] public void TestLambda()
         {
-            var expected = Lambda("a", Add(Var("a"), Var("a")));
-            Assert.AreEqual(expected, Lambda(a => Add(a, a)));
+            Expr lambdaId = new ObjectV("lambda", "a", "expr", new ObjectV("var", "a"));
+            Assert.AreEqual(lambdaId, Lambda(a => a));
 
-            expected = Lambda("a", Lambda("b", Lambda("c", QueryArray(Var("a"), Var("b"), Var("c")))));
-            Assert.AreEqual(expected, Lambda(a => Lambda(b => Lambda(c => QueryArray(a, b, c)))));
+            Assert.AreEqual(Lambda("a", Add(Var("a"), Var("a"))), Lambda(a => Add(a, a)));
+
+            var expected = Lambda("a", Lambda("b", Lambda("c", Array(Var("a"), Var("b"), Var("c")))));
+            Assert.AreEqual(expected, Lambda(a => Lambda(b => Lambda(c => Array(a, b, c)))));
 
             // Error in lambda should not affect future queries.
             AssertU.Throws<Exception>(() => {
@@ -145,45 +141,12 @@ namespace Test
                     throw new Exception();
                 });
             });
-            Assert.AreEqual(LambdaId, Lambda(a => a));
-        }
-
-        static Expr LambdaId = (Expr) new ObjectV("lambda", "a", "expr", new ObjectV("var", "a"));
-
-        [Test] [Ignore("not working")] public void TestLambdaMultithreaded()
-        {
-            var events = new List<int>();
-
-            var t1 = Task.Run(() =>
-            {
-                Assert.AreEqual(LambdaId, Lambda(a =>
-                {
-                    events.Add(0);
-                    Thread.Sleep(1000);
-                    events.Add(2);
-                    return a;
-                }));
-            });
-
-            var t2 = Task.Run(() =>
-            {
-                Thread.Sleep(500);
-                // This happens while t1 has incremented its auto name to auto1,
-                // but that doesn't affect this thread.
-                Assert.AreEqual(LambdaId, Lambda(a => a));
-                events.Add(1);
-            });
-
-            t1.Wait();
-            t2.Wait();
-
-            Assert.AreEqual(new List<int> { 0, 1, 2 }, events);
         }
 
         [Test] public void TestLambdaMultiVar()
         {
-            var expected = Lambda(new ArrayV("a", "b"), QueryArray(Var("a"), Var("b")));
-            Assert.AreEqual(expected, Lambda((a, b) => QueryArray(a, b)));
+            var expected = Lambda(Array("a", "b"), Array(Var("a"), Var("b")));
+            Assert.AreEqual(expected, Lambda((a, b) => Array(a, b)));
         }
         #endregion
 
@@ -319,7 +282,7 @@ namespace Test
             var ts = (long) instance["ts"];
             var prevTs = ts - 1;
             // Add previous event
-            await Q(Insert(@ref, prevTs, EventType.Create.Name(), Quote(new ObjectV("data", new ObjectV("weight", 0)))));
+            await Q(Insert(@ref, prevTs, EventType.Create.Name(), Obj("data", Obj("weight", 0))));
             // Get version from previous event
             var old = (ObjectV) await Q(Get(@ref, prevTs));
             Assert.AreEqual(new ObjectV("weight", 0), old["data"]);
@@ -331,7 +294,7 @@ namespace Test
             var @ref = GetRef(instance);
 
             // Change it
-            var newInstance = (ObjectV) await Q(Replace(@ref, Quote(new ObjectV("data", new ObjectV("weight", 1)))));
+            var newInstance = (ObjectV) await Q(Replace(@ref, Obj("data", Obj("weight", 1))));
             Assert.AreEqual(newInstance, await Q(Get(@ref)));
 
             // Delete that event
@@ -381,9 +344,9 @@ namespace Test
         [Test] public async Task TestLoginLogout()
         {
             var instanceRef = GetRef(await TestClient.Query(
-                Create(classRef, Quote(new ObjectV("credentials", new ObjectV("password", "sekrit"))))));
+                Create(classRef, Obj("credentials", Obj("password", "sekrit")))));
             var secret = (string) ((ObjectV) await TestClient.Query(
-                Login(instanceRef, QueryObject("password", "sekrit"))))["secret"];
+                Login(instanceRef, Obj("password", "sekrit"))))["secret"];
             var instanceClient = GetClient(password: secret);
             Assert.AreEqual(instanceRef, await instanceClient.Query(Select("ref", Get(new Ref("classes/widgets/self")))));
             Assert.AreEqual(BoolV.True, await instanceClient.Query(Language.Logout(true)));
@@ -392,7 +355,7 @@ namespace Test
         [Test] public async Task TestIdentify()
         {
             var instanceRef = GetRef(await TestClient.Query(
-                Create(classRef, Quote(new ObjectV("credentials", new ObjectV("password", "sekrit"))))));
+                Create(classRef, Obj("credentials", Obj("password", "sekrit")))));
             await AssertQuery(true, Identify(instanceRef, "sekrit"));
         }
 
@@ -449,7 +412,7 @@ namespace Test
 
         [Test] public async Task TestContains()
         {
-            var obj = Quote(new ObjectV("a", new ObjectV("b", 1)));
+            var obj = Obj("a", Obj("b", 1));
             await AssertQuery(true, Contains(new ArrayV("a", "b"), obj));
             await AssertQuery(true, Contains("a", obj));
             await AssertQuery(false, Contains(new ArrayV("a", "c"), obj));
@@ -457,7 +420,7 @@ namespace Test
 
         [Test] public async Task TestSelect()
         {
-            var obj = Quote(new ObjectV("a", new ObjectV("b", 1)));
+            var obj = Obj("a", Obj("b", 1));
             await AssertQuery(new ObjectV("b", 1), Select("a", obj));
             await AssertQuery(1, Select(new ArrayV("a", "b"), obj));
             await AssertQuery(NullV.Instance, Select("c", obj, NullV.Instance));

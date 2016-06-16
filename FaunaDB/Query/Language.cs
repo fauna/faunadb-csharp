@@ -8,10 +8,10 @@ using System.Reflection;
 using System.Collections.Immutable;
 
 namespace FaunaDB.Query {
-    public struct Language
+    public partial struct Language
     {
-        public static Expr QueryArray(params Expr[] values) =>
-            ArrayV.FromEnumerable(from v in values select v);
+        public static Expr Array(params Expr[] values) =>
+            ArrayV.FromEnumerable(values);
 
         #region Basic forms
 
@@ -84,93 +84,32 @@ namespace FaunaDB.Query {
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
         // todo: rename?
-        public static Expr QueryObject(ObjectV fields) =>
+        public static Expr Obj(ObjectV fields) =>
             Q("object", fields);
 
-        public static Expr QueryObject(string key1, Expr value1) =>
-            QueryObject(new ObjectV(key1, value1));
+        public static Expr Obj(string key1, Expr value1) =>
+            Obj(new ObjectV(key1, value1));
 
-        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2) =>
-            QueryObject(new ObjectV(key1, value1, key2, value2));
+        public static Expr Obj(string key1, Expr value1, string key2, Expr value2) =>
+            Obj(new ObjectV(key1, value1, key2, value2));
 
-        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            QueryObject(new ObjectV(key1, value1, key2, value2, key3, value3));
+        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
+            Obj(new ObjectV(key1, value1, key2, value2, key3, value3));
 
-        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            QueryObject(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4));
+        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
+            Obj(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4));
 
-        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
+        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
                 string key4, Expr value4, string key5, Expr value5) =>
-            QueryObject(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
+            Obj(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
 
-        public static Expr QueryObject(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
+        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
                 string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
-            QueryObject(new ObjectV(
+            Obj(new ObjectV(
                 key1, value1, key2, value2, key3, value3,
                 key4, value4, key5, value5, key6, value6));
 
-        /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
-        /// </summary>
-        public static Expr Quote(Expr expr) =>
-            Q("quote", expr);
-
-        #region Lambda
-        /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
-        /// This is the raw version. Usually it's easier to use an overload.
-        /// </summary>
-        public static Expr Lambda(string varName, Expr expr) =>
-            Q("lambda", varName, "expr", expr);
-
-        public static Expr Lambda(ArrayV varNames, Expr expr) =>
-            Q("lambda", varNames, "expr", expr);
-
-        /// <summary>
-        /// Use a lambda expression to tersely define a Lambda query.
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
-        /// </summary>
-        /// <example>
-        /// <c>Query.Lambda(a => a)</c> is equivalent to <c>Query.Lambda("auto0", Query.Var("auto0"))</c>.
-        /// </example>
-        public static Expr Lambda(Func<Expr, Expr> lambda)
-        {
-            ParameterInfo[] info = lambda.Method.GetParameters();
-            string v0 = info[0].Name;
-
-            return Lambda(v0, lambda(Var(v0)));
-        }
-
-        public static Expr Lambda(Func<Expr, Expr, Expr> lambda)
-        {
-            ParameterInfo[] info = lambda.Method.GetParameters();
-            string v0 = info[0].Name;
-            string v1 = info[1].Name;
-
-            return Lambda(new ArrayV(v0, v1), lambda(Var(v0), Var(v1)));
-        }
-
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr> lambda)
-        {
-            ParameterInfo[] info = lambda.Method.GetParameters();
-            string v0 = info[0].Name;
-            string v1 = info[1].Name;
-            string v2 = info[2].Name;
-
-            return Lambda(new ArrayV(v0, v1, v2), lambda(Var(v0), Var(v1), Var(v2)));
-        }
-
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr> lambda)
-        {
-            ParameterInfo[] info = lambda.Method.GetParameters();
-            string v0 = info[0].Name;
-            string v1 = info[1].Name;
-            string v2 = info[2].Name;
-            string v3 = info[3].Name;
-
-            return Lambda(new ArrayV(v0, v1, v2, v3), lambda(Var(v0), Var(v1), Var(v2), Var(v3)));
-        }
-        #endregion
+        public static Expr Quote(Expr expr) => Q("quote", expr);
         #endregion
 
         #region Collection functions
@@ -233,7 +172,6 @@ namespace FaunaDB.Query {
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
         public static Expr Get(Expr @ref, Expr ts = null) =>
-            // todo: helper?
             ts == null ? Q("get", @ref) : Q("get", @ref, "ts", ts);
 
         /// <summary>
@@ -247,7 +185,6 @@ namespace FaunaDB.Query {
             Expr before = null,
             Expr events = null,
             Expr sources = null) =>
-            //todo: helper?
             ObjectV.WithoutNullValues(
                 ObjectV.Pairs("paginate", set),
                 ObjectV.Pairs(
@@ -262,14 +199,12 @@ namespace FaunaDB.Query {
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
         public static Expr Exists(Expr @ref, Expr ts = null) =>
-            //todo: helper?
             ts == null ? Q("exists", @ref) : Q("exists", @ref, "ts", ts);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
         public static Expr Count(Expr set, Expr events = null) =>
-            //todo: helper?
             events == null ? Q("count", set) : Q("count", set, "events", events);
         #endregion
 
@@ -306,12 +241,6 @@ namespace FaunaDB.Query {
             Q("insert", @ref, "ts", ts, "action", action, "params", @params);
 
         /// <summary>
-        /// <see cref="Insert"/> that takes an <see cref="Event"/> object instead of separate parameters.
-        /// </summary>
-        public static Expr Insert(Event e, Expr @params) =>
-            Insert(e.Resource, e.Ts, e.Action.Name(), @params);
-
-        /// <summary>
         /// <see cref="Remove"/> that takes an <see cref="Event"/> object instead of separate parameters.
         /// </summary>
         public static Expr Remove(Expr @ref, Expr ts, Expr action) =>
@@ -322,6 +251,13 @@ namespace FaunaDB.Query {
         /// </summary>
         public static Expr Remove(Event e) =>
             Remove(e.Resource, e.Ts, e.Action.Name());
+
+        /// <summary>
+        /// <see cref="Insert"/> that takes an <see cref="Event"/> object instead of separate parameters.
+        /// </summary>
+        public static Expr Insert(Event e, Expr @params) =>
+            Insert(e.Resource, e.Ts, e.Action.Name(), @params);
+
         #endregion
 
         #region Sets
@@ -369,7 +305,7 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#auth_functions">docs</see>. 
         /// </summary>
-        public static Expr Logout(bool deleteTokens) =>
+        public static Expr Logout(Expr deleteTokens) =>
             Q("logout", deleteTokens);
 
         /// <summary>

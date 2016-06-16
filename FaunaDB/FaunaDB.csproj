@@ -57,6 +57,7 @@
     <Compile Include="Event.cs" />
     <Compile Include="HashUtil.cs" />
     <Compile Include="Query\Expr.cs" />
+    <Compile Include="Query\Lambda.cs" />
     <Compile Include="Query\Language.cs" />
     <Compile Include="Values\ObjectV.cs" />
     <Compile Include="Values\ArrayV.cs" />
