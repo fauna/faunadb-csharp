@@ -47,7 +47,7 @@ namespace FaunaDB
         }
 
         public static implicit operator Expr(Pagination p) =>
-            new ObjectV("data", p.Data, "before", p.Before?.Value, "after", p.After?.Value);
+            ObjectV.Of("data", p.Data, "before", p.Before?.Value, "after", p.After?.Value);
 
         #region boilerplate
         public override bool Equals(object obj) =>

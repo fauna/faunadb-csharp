@@ -46,7 +46,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
-        public static Expr Obj(ObjectV fields) =>
+        public static Expr Obj(Expr fields) =>
             Q("object", fields);
 
         /// <summary>
@@ -97,47 +97,43 @@ namespace FaunaDB.Query
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj() =>
-            Obj(new ObjectV());
+            Obj(ObjectV.Of());
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1) =>
-            Obj(new ObjectV(key1, value1));
+            Obj(ObjectV.Of(key1, value1));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2) =>
-            Obj(new ObjectV(key1, value1, key2, value2));
+            Obj(ObjectV.Of(key1, value1, key2, value2));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            Obj(new ObjectV(key1, value1, key2, value2, key3, value3));
+            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            Obj(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4));
+            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3, key4, value4));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
-        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
-                string key4, Expr value4, string key5, Expr value5) =>
-            Obj(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
+        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5) =>
+            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
-        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
-                string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
-            Obj(new ObjectV(
-                key1, value1, key2, value2, key3, value3,
-                key4, value4, key5, value5, key6, value6));
+        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
+            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6));
 
         #region Helpers
         static Expr Varargs(Expr head, Expr[] tail)

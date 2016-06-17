@@ -8,7 +8,7 @@ namespace FaunaDB.Types
     /// </summary>
     public class NullV : Value
     {
-        public static readonly Expr Instance = new NullV();
+        public static readonly Value Instance = new NullV();
 
         NullV() {}
 

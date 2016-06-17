@@ -18,7 +18,7 @@ namespace Test
 
         async Task SetUpAsync()
         {
-            await TestClient.Post("classes", new ObjectV("name", "my_class"));
+            await TestClient.Post("classes", ObjectV.Of("name", "my_class"));
         }
 
         async Task<ObjectV> CreateInstance() =>
@@ -36,27 +36,27 @@ namespace Test
 
         [Test] public async Task TestPost()
         {
-            var x = await TestClient.Post("classes/my_class", new ObjectV("data", new ObjectV("foo", 1)));
+            var x = await TestClient.Post("classes/my_class", ObjectV.Of("data", ObjectV.Of("foo", 1)));
             Assert.AreEqual(((ObjectV) ((ObjectV) x)["data"])["foo"], (Value) 1);
         }
 
         [Test] public async Task TestPut()
         {
             var instance = await CreateInstance();
-            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], new ObjectV("data", new ObjectV("a", 2)));
+            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("a", 2)));
 
             Assert.AreEqual((Value) 2, ((ObjectV) instance["data"])["a"]);
 
-            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], new ObjectV("data", new ObjectV("b", 3)));
-            Assert.AreEqual(new ObjectV("b", 3), instance["data"]);
+            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("b", 3)));
+            Assert.AreEqual(ObjectV.Of("b", 3), instance["data"]);
         }
 
         [Test] public async Task TestPatch()
         {
             var instance = await CreateInstance();
-            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], new ObjectV("data", new ObjectV("a", 1)));
-            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], new ObjectV("data", new ObjectV("b", 2)));
-            Assert.AreEqual(new ObjectV("a", 1, "b", 2), instance["data"]);
+            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("a", 1)));
+            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("b", 2)));
+            Assert.AreEqual(ObjectV.Of("a", 1, "b", 2), instance["data"]);
         }
 
         [Test] public async Task TestDelete()

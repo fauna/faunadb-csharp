@@ -26,42 +26,6 @@ namespace FaunaDB.Types
                 throw new NullReferenceException();
         }
 
-        #region Pairs
-        public static KeyValuePair<string, Expr> Pair(string key, Expr value) =>
-            new KeyValuePair<string, Expr>(key, value);
-
-        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3) =>
-            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3) };
-
-        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6) =>
-            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5), Pair(k6, v6) };
-
-        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6, string k7, Expr v7) =>
-            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5), Pair(k6, v6), Pair(k7, v7) };
-        #endregion
-
-        #region Terse constructors
-
-        public ObjectV(string k1, Expr v1)
-            : this(ImmutableDictionary.Of(k1, v1)) {}
-
-        public ObjectV(string k1, Expr v1, string k2, Expr v2)
-            : this(ImmutableDictionary.Of(k1, v1, k2, v2)) {}
-
-        public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3)
-            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3)) {}
-
-        public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4)
-            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4)) {}
-
-        public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5)
-            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5)) {}
-
-        public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6)
-            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)) {}
-        
-        #endregion
-
         /// <summary>
         /// Create from a builder expression.
         /// </summary>
@@ -111,6 +75,27 @@ namespace FaunaDB.Types
             return $"ObjectV({Value.ToString()})";
         }
         #endregion
+
+        public static ObjectV Of() =>
+            new ObjectV();
+
+        public static ObjectV Of(string key1, Expr value1) =>
+            new ObjectV(ImmutableDictionary.Of(key1, value1));
+
+        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2) =>
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2));
+
+        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3));
+
+        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4));
+
+        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5) =>
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
+
+        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6));
     }
 }
 

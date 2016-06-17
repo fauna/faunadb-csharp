@@ -15,8 +15,8 @@ namespace Test
     {
         [Test] public async Task TestRequestResult()
         {
-            var err = await AssertU.Throws<BadRequest>(() => TestClient.Query(new ObjectV("foo", "bar")));
-            Assert.AreEqual(err.RequestResult.RequestContent, new ObjectV("foo", "bar"));
+            var err = await AssertU.Throws<BadRequest>(() => TestClient.Query(ObjectV.Of("foo", "bar")));
+            Assert.AreEqual(err.RequestResult.RequestContent, ObjectV.Of("foo", "bar"));
         }
 
         [Test] public async Task TestInvalidResponse()
@@ -31,7 +31,7 @@ namespace Test
         #region HTTP errors
         [Test] public async Task TestHttpBadRequest()
         {
-            await AssertU.Throws<BadRequest>(() => TestClient.Query(new ObjectV("foo", "bar")));
+            await AssertU.Throws<BadRequest>(() => TestClient.Query(ObjectV.Of("foo", "bar")));
         }
 
         [Test] public async Task TestHttpUnauthorized()
@@ -70,7 +70,7 @@ namespace Test
         #region ErrorData
         [Test] public async Task TestInvalidExpression()
         {
-            await AssertQueryException<BadRequest>(new ObjectV("foo", "bar"), "invalid expression", ArrayV.Empty);
+            await AssertQueryException<BadRequest>(ObjectV.Of("foo", "bar"), "invalid expression", ArrayV.Empty);
         }
 
         [Test] public async Task TestUnboundVariable()
@@ -86,7 +86,7 @@ namespace Test
         [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
-            await TestClient.Post("classes", new ObjectV("name", "foofaws"));
+            await TestClient.Post("classes", ObjectV.Of("name", "foofaws"));
             await AssertQueryException<NotFound>(Get(new Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
         }
 
@@ -97,7 +97,7 @@ namespace Test
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
-            await TestClient.Post("classes", new ObjectV("name", "duplicates"));
+            await TestClient.Post("classes", ObjectV.Of("name", "duplicates"));
             var @ref = (Ref) ((ObjectV) (await TestClient.Post("classes/duplicates", ObjectV.Empty)))["ref"];
             await AssertQueryException<BadRequest>(Create(@ref, Obj(ObjectV.Empty)), "instance already exists", new ArrayV("create"));
         }
@@ -106,7 +106,7 @@ namespace Test
         #region InvalidData
         [Test] public async Task TestInvalidType()
         {
-            await AssertInvalidData("classes", new ObjectV("name", 123), "invalid type", new ArrayV("name"));
+            await AssertInvalidData("classes", ObjectV.Of("name", 123), "invalid type", new ArrayV("name"));
         }
 
         [Test] public async Task TestValueRequired()
@@ -116,14 +116,14 @@ namespace Test
 
         [Test] public async Task TestDuplicateValue()
         {
-            await TestClient.Post("classes", new ObjectV("name", "gerbils"));
-            await TestClient.Post("indexes", new ObjectV(
+            await TestClient.Post("classes", ObjectV.Of("name", "gerbils"));
+            await TestClient.Post("indexes", ObjectV.Of(
                 "name", "gerbils_by_x",
                 "source", new Ref("classes/gerbils"),
-                "terms", new ArrayV(new ObjectV("path", "data.x")),
+                "terms", new ArrayV(ObjectV.Of("path", "data.x")),
                 "unique", true
             ));
-            await TestClient.Post("classes/gerbils", new ObjectV("data", new ObjectV("x", 1)));
+            await TestClient.Post("classes/gerbils", ObjectV.Of("data", ObjectV.Of("x", 1)));
         }
 
         async Task AssertInvalidData(string className, ObjectV data, string code, ArrayV field)
