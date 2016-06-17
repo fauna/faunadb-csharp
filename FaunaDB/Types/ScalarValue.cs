@@ -50,7 +50,7 @@ namespace FaunaDB.Types
     /// </summary>
     public class BooleanV : ScalarValue<BooleanV, bool>
     {
-        BooleanV(bool value) : base(value) {}
+        internal BooleanV(bool value) : base(value) {}
 
         public static BooleanV Of(bool b) =>
             b ? True : False;
@@ -65,6 +65,9 @@ namespace FaunaDB.Types
     public class DoubleV : ScalarValue<DoubleV, double>
     {
         internal DoubleV(double value) : base(value) {}
+
+        public static DoubleV Of(double v) =>
+            new DoubleV(v);
     }
 
     /// <summary>
@@ -73,6 +76,9 @@ namespace FaunaDB.Types
     public class LongV : ScalarValue<LongV, long>
     {
         internal LongV(long value) : base(value) {}
+
+        public static LongV Of(long v) =>
+            new LongV(v);
     }
 
     /// <summary>
@@ -85,6 +91,9 @@ namespace FaunaDB.Types
             if (value == null)
                 throw new NullReferenceException();
         }
+
+        public static StringV Of(string v) =>
+            new StringV(v);
     }
 
     /// <summary>
