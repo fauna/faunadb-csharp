@@ -32,7 +32,7 @@ namespace FaunaDB.Types
             this.reader = reader;
         }
 
-        Expr HandleValue()
+        Value HandleValue()
         {
             switch (reader.TokenType)
             {
@@ -61,7 +61,7 @@ namespace FaunaDB.Types
             return reader.TokenType;
         }
 
-        Expr ReadValue()
+        Value ReadValue()
         {
             reader.Read();
             return HandleValue();
@@ -177,7 +177,7 @@ namespace FaunaDB.Types
             writer.WriteEndObject();
         }
 
-        public static void WriteObject(this JsonWriter writer, IEnumerable<KeyValuePair<string, Expr>> props)
+        public static void WriteObject<TValue>(this JsonWriter writer, IEnumerable<KeyValuePair<string, TValue>> props) where TValue : Expr
         {
             writer.WriteStartObject();
             foreach (var kv in props)

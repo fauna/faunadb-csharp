@@ -48,9 +48,9 @@ namespace Test
                 await rootClient.Delete(DbRef);
             } catch (NotFound) {}
 
-            await rootClient.Post("databases", ObjectV.Of("name", dbName));
+            await rootClient.Post("databases", UnescapedObject.With("name", dbName));
 
-            var key = (ObjectV) await rootClient.Post("keys", ObjectV.Of("database", DbRef, "role", "server"));
+            var key = (ObjectV) await rootClient.Post("keys", UnescapedObject.With("database", DbRef, "role", "server"));
             serverKey = (string) key["secret"];
             TestClient = GetClient();
         }

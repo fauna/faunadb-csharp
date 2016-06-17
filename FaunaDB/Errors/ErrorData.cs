@@ -23,7 +23,7 @@ namespace FaunaDB.Errors
             var description = (string) o["description"];
 
             ArrayV position = null;
-            Expr pos;
+            Value pos;
             if (o.Value.TryGetValue("position", out pos))
                 position = (ArrayV) pos;
 

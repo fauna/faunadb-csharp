@@ -51,6 +51,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Query\Unescaped.cs" />
     <Compile Include="Query\LetBinding.cs" />
     <Compile Include="Utils\HashUtil.cs" />
     <Compile Include="Query\Expr.cs" />

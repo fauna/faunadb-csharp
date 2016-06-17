@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using FaunaDB.Client;
 using FaunaDB.Types;
+using FaunaDB.Query;
 
 namespace Test
 {
@@ -18,11 +19,11 @@ namespace Test
 
         async Task SetUpAsync()
         {
-            await TestClient.Post("classes", ObjectV.Of("name", "my_class"));
+            await TestClient.Post("classes", UnescapedObject.With("name", "my_class"));
         }
 
         async Task<ObjectV> CreateInstance() =>
-            (ObjectV) await TestClient.Post("classes/my_class", ObjectV.Empty);
+            (ObjectV) await TestClient.Post("classes/my_class", UnescapedObject.Empty);
 
         [Test] public async Task TestPing()
         {
@@ -36,27 +37,27 @@ namespace Test
 
         [Test] public async Task TestPost()
         {
-            var x = await TestClient.Post("classes/my_class", ObjectV.Of("data", ObjectV.Of("foo", 1)));
+            var x = await TestClient.Post("classes/my_class", UnescapedObject.With("data", UnescapedObject.With("foo", 1)));
             Assert.AreEqual(((ObjectV) ((ObjectV) x)["data"])["foo"], (Value) 1);
         }
 
         [Test] public async Task TestPut()
         {
             var instance = await CreateInstance();
-            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("a", 2)));
+            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("a", 2)));
 
             Assert.AreEqual((Value) 2, ((ObjectV) instance["data"])["a"]);
 
-            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("b", 3)));
-            Assert.AreEqual(ObjectV.Of("b", 3), instance["data"]);
+            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("b", 3)));
+            Assert.AreEqual(ObjectV.With("b", 3), instance["data"]);
         }
 
         [Test] public async Task TestPatch()
         {
             var instance = await CreateInstance();
-            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("a", 1)));
-            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], ObjectV.Of("data", ObjectV.Of("b", 2)));
-            Assert.AreEqual(ObjectV.Of("a", 1, "b", 2), instance["data"]);
+            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("a", 1)));
+            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("b", 2)));
+            Assert.AreEqual(ObjectV.With("a", 1, "b", 2), instance["data"]);
         }
 
         [Test] public async Task TestDelete()
@@ -97,7 +98,9 @@ namespace Test
             }
             //todo: this should be flush with "response json: "
             AssertRead("    {");
-            AssertRead("      \"resource\": \"Scope global is OK\"");
+            AssertRead("      \"object\": {");
+            AssertRead("        \"resource\": \"Scope global is OK\"");
+            AssertRead("      }");
             AssertRead("    }");
             AssertRgx("^  Response \\(OK\\): API processing (\\d+ms|N/A), network latency \\d+ms$");
         }

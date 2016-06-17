@@ -3,6 +3,7 @@ using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FaunaDB.Types
 {
@@ -12,13 +13,13 @@ namespace FaunaDB.Types
     public sealed class ObjectV : Value
     {
         #region Construction
-        public static readonly ObjectV Empty = new ObjectV(new OrderedDictionary<string, Expr>());
+        public static readonly ObjectV Empty = new ObjectV(new OrderedDictionary<string, Value>());
 
-        public OrderedDictionary<string, Expr> Value { get; }
+        public OrderedDictionary<string, Value> Value { get; }
 
         public ObjectV() : this(Empty.Value) { }
 
-        public ObjectV(OrderedDictionary<string, Expr> value)
+        public ObjectV(OrderedDictionary<string, Value> value)
         {
             Value = value;
 
@@ -32,32 +33,35 @@ namespace FaunaDB.Types
         /// <param name="builder">
         /// A lambda <c>(add) => { ... }</c> that calls <c>add(key, value)</c> for each pair to be in the new ObjectV.
         /// </param>
-        public ObjectV(Action<Action<string, Expr>> builder)
+        public ObjectV(Action<Action<string, Value>> builder)
         {
-            var d = new OrderedDictionary<string, Expr>();
-            builder((k, v) => d.Add(new KeyValuePair<string, Expr>(k, v)));
+            var d = new OrderedDictionary<string, Value>();
+            builder((k, v) => d.Add(new KeyValuePair<string, Value>(k, v)));
             Value = d.ToImmutable();
         }
 
         #endregion
 
         /// <exception cref="KeyNotFoundException"/>
-        public Expr this[string key] { get { return Value[key]; } }
+        public Value this[string key] { get { return Value[key]; } }
 
         /// <summary>
         /// If there is no value at the given key, just return <c>null</c>.
         /// Otherwise, return the value.
         /// </summary>
-        public Expr GetOrNull(string key)
+        public Value GetOrNull(string key)
         {
-            Expr value;
+            Value value;
             Value.TryGetValue(key, out value);
             return value;
         }
 
         override internal void WriteJson(JsonWriter writer)
         {
+            writer.WriteStartObject();
+            writer.WritePropertyName("object");
             writer.WriteObject(Value);
+            writer.WriteEndObject();
         }
 
         #region boilerplate
@@ -72,30 +76,35 @@ namespace FaunaDB.Types
 
         public override string ToString()
         {
-            return $"ObjectV({Value.ToString()})";
+            var props = string.Join(",", from kv in Value select $"{kv.Key}: {kv.Value}");
+            return $"ObjectV({props})";
         }
         #endregion
 
-        public static ObjectV Of() =>
+        public static ObjectV With() =>
             new ObjectV();
 
-        public static ObjectV Of(string key1, Expr value1) =>
+        public static ObjectV With(string key1, Value value1) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1));
 
-        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2) =>
+        public static ObjectV With(string key1, Value value1, string key2, Value value2) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2));
 
-        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
+        public static ObjectV With(string key1, Value value1, string key2, Value value2, string key3, Value value3) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3));
 
-        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
+        public static ObjectV With(string key1, Value value1, string key2, Value value2, string key3, Value value3, string key4, Value value4) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4));
 
-        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5) =>
+        public static ObjectV With(string key1, Value value1, string key2, Value value2, string key3, Value value3, string key4, Value value4, string key5, Value value5) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
 
-        public static ObjectV Of(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
+        public static ObjectV With(string key1, Value value1, string key2, Value value2, string key3, Value value3, string key4, Value value4, string key5, Value value5, string key6, Value value6) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6));
+
+        public static ObjectV With(string key1, Value value1, string key2, Value value2, string key3, Value value3, string key4, Value value4, string key5, Value value5, string key6, Value value6, string key7, Value value7) =>
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6, key7, value7));
     }
+
 }
 

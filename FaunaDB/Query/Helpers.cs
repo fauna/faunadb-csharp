@@ -2,19 +2,26 @@
 using FaunaDB.Utils;
 using System;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Query
 {
+
     public partial struct Language
     {
-        public static Ref Ref(string id)
+        public static Expr Ref(string id)
         {
             return new Ref(id);
         }
 
-        public static ObjectV Ref(Expr classRef, Expr id)
+        public static Expr Ref(Expr classRef, Expr id)
         {
-            return Q("ref", classRef, "id", id);
+            return UnescapedObject.With("ref", classRef, "id", id);
+        }
+
+        public static Expr SetRef(Expr set)
+        {
+            return new SetRef(set);
         }
 
         public static TsV Ts(DateTime dateTime)
@@ -40,14 +47,14 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
-        public static Expr Arr(params Expr[] values) =>
+        public static ArrayV Arr(params Expr[] values) =>
             ArrayV.FromEnumerable(values);
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(Expr fields) =>
-            Q("object", fields);
+            UnescapedObject.With("object", fields);
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
@@ -89,7 +96,7 @@ namespace FaunaDB.Query
                     attributes.Add(property.Name, Obj(value));
                 }
 
-                return Obj(new ObjectV(attributes.ToImmutable()));
+                return Obj(new UnescapedObject(attributes.ToImmutable()));
             }
         }
 
@@ -97,43 +104,43 @@ namespace FaunaDB.Query
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj() =>
-            Obj(ObjectV.Of());
+            Obj(UnescapedObject.With());
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1) =>
-            Obj(ObjectV.Of(key1, value1));
+            Obj(UnescapedObject.With(key1, value1));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2) =>
-            Obj(ObjectV.Of(key1, value1, key2, value2));
+            Obj(UnescapedObject.With(key1, value1, key2, value2));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3));
+            Obj(UnescapedObject.With(key1, value1, key2, value2, key3, value3));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3, key4, value4));
+            Obj(UnescapedObject.With(key1, value1, key2, value2, key3, value3, key4, value4));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5) =>
-            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
+            Obj(UnescapedObject.With(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
-            Obj(ObjectV.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6));
+            Obj(UnescapedObject.With(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6));
 
         #region Helpers
         static Expr Varargs(Expr head, Expr[] tail)
@@ -150,24 +157,6 @@ namespace FaunaDB.Query
 
         static Expr Varargs(Expr[] values) =>
             values.Length == 1 ? values[0] : ArrayV.FromEnumerable(values);
-
-        static ObjectV Q(string k1, Expr v1) =>
-            new ObjectV(ImmutableDictionary.Of(k1, v1));
-
-        static ObjectV Q(string k1, Expr v1, string k2, Expr v2) =>
-            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2));
-
-        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3) =>
-            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3));
-
-        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4) =>
-            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4));
-
-        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5) =>
-            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5));
-
-        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6) =>
-            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6));
         #endregion
 
     }
