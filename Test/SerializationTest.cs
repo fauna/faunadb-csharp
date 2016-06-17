@@ -391,53 +391,169 @@ namespace Test
                 "\"with\":{\"lambda\":\"widget\",\"expr\":{\"match\":{\"@ref\":\"indexes/widgets\"},\"terms\":{\"var\":\"widget\"}}}}");
         }
 
-        [Test] public void TestLogin() { }
+        [Test] public void TestLogin()
+        {
+            AssertJsonEqual(Login(Ref("classes/widgets/123456789"), Obj("password", "P455w0rd")),
+                "{\"login\":{\"@ref\":\"classes/widgets/123456789\"},\"params\":{\"object\":{\"password\":\"P455w0rd\"}}}");
+        }
 
-        [Test] public void TestLogout() { }
+        [Test] public void TestLogout()
+        {
+            AssertJsonEqual(Logout(true), "{\"logout\":true}");
+            AssertJsonEqual(Logout(false), "{\"logout\":false}");
+        }
 
-        [Test] public void TestIdentity() { }
+        [Test] public void TestIdentify()
+        {
+            AssertJsonEqual(Identify(Ref("classes/widgets/123456789"), "P455w0rd"),
+                "{\"identify\":{\"@ref\":\"classes/widgets/123456789\"},\"password\":\"P455w0rd\"}");
+        }
 
-        [Test] public void TestConcat() { }
+        [Test] public void TestConcat()
+        {
+            AssertJsonEqual(Concat("str"),
+                "{\"concat\":\"str\"}");
 
-        [Test] public void TestCasefold() { }
+            AssertJsonEqual(Concat("str", "/"),
+                "{\"concat\":\"str\",\"separator\":\"/\"}");
 
-        [Test] public void TestTime() { }
+            AssertJsonEqual(Concat(Arr("str0", "str1")),
+                "{\"concat\":[\"str0\",\"str1\"]}");
 
-        [Test] public void TestEpoch() { }
+            AssertJsonEqual(Concat(Arr("str0", "str1"), "/"),
+                "{\"concat\":[\"str0\",\"str1\"],\"separator\":\"/\"}");
+        }
 
-        [Test] public void TestDate() { }
+        [Test] public void TestCasefold()
+        {
+            AssertJsonEqual(CaseFold("a string"),
+                "{\"casefold\":\"a string\"}");
+        }
 
-        [Test] public void TestNextId() { }
+        [Test] public void TestTime()
+        {
+            AssertJsonEqual(Time("1970-01-01T00:00:00+00:00"),
+                "{\"time\":\"1970-01-01T00:00:00+00:00\"}");
 
-        [Test] public void TestEquals() { }
+            AssertJsonEqual(Time("now"),
+                "{\"time\":\"now\"}");
+        }
 
-        [Test] public void TestContains() { }
+        [Test] public void TestEpoch()
+        {
+            AssertJsonEqual(Epoch(0, "second"),
+                "{\"epoch\":0,\"unit\":\"second\"}");
+        }
 
-        [Test] public void TestSelect() { }
+        [Test] public void TestDate()
+        {
+            AssertJsonEqual(Date("1970-01-01"),
+                "{\"date\":\"1970-01-01\"}");
+        }
 
-        [Test] public void TestAdd() { }
+        [Test] public void TestNextId()
+        {
+            AssertJsonEqual(NextId(),
+                "{\"next_id\":null}");
+        }
 
-        [Test] public void TestMultiply() { }
+        [Test] public void TestEquals()
+        {
+            AssertJsonEqual(EqualsFn("value"),
+                "{\"equals\":\"value\"}");
 
-        [Test] public void TestSubtract() { }
+            AssertJsonEqual(EqualsFn("value", 10),
+                "{\"equals\":[\"value\",10]}");
+        }
 
-        [Test] public void TestDivide() { }
+        [Test] public void TestContains()
+        {
+            AssertJsonEqual(Contains(Arr("favorites", "foods"), Obj("favorites", Obj("foods", Arr("crunchings", "munchings", "lunchings")))),
+                "{\"contains\":[\"favorites\",\"foods\"],\"in\":{\"object\":{\"favorites\":{\"object\":{\"foods\":[\"crunchings\",\"munchings\",\"lunchings\"]}}}}}");
+        }
 
-        [Test] public void TestModulo() { }
+        [Test] public void TestSelect()
+        {
+            AssertJsonEqual(Select(Arr("favorites", "foods", 1), Obj("favorites", Obj("foods", Arr("crunchings", "munchings", "lunchings")))),
+                "{\"select\":[\"favorites\",\"foods\",1]," +
+                "\"from\":{\"object\":{\"favorites\":{\"object\":{\"foods\":[\"crunchings\",\"munchings\",\"lunchings\"]}}}}}");
 
-        [Test] public void TestLT() { }
+            AssertJsonEqual(Select(Arr("favorites", "foods", 1), Obj("favorites", Obj("foods", Arr("crunchings", "munchings", "lunchings"))), "defaultValue"),
+                "{\"select\":[\"favorites\",\"foods\",1]," +
+                "\"from\":{\"object\":{\"favorites\":{\"object\":{\"foods\":[\"crunchings\",\"munchings\",\"lunchings\"]}}}}," +
+                "\"default\":\"defaultValue\"}");
+        }
 
-        [Test] public void TestLTE() { }
+        [Test] public void TestAdd()
+        {
+            AssertJsonEqual(Add(1), "{\"add\":1}");
+            AssertJsonEqual(Add(1, 2), "{\"add\":[1,2]}");
+        }
 
-        [Test] public void TestGT() { }
+        [Test] public void TestMultiply()
+        {
+            AssertJsonEqual(Multiply(1), "{\"multiply\":1}");
+            AssertJsonEqual(Multiply(1, 2), "{\"multiply\":[1,2]}");
+        }
 
-        [Test] public void TestGTE() { }
+        [Test] public void TestSubtract()
+        {
+            AssertJsonEqual(Subtract(1), "{\"subtract\":1}");
+            AssertJsonEqual(Subtract(1, 2), "{\"subtract\":[1,2]}");
+        }
 
-        [Test] public void TestAnd() { }
+        [Test] public void TestDivide()
+        {
+            AssertJsonEqual(Divide(1), "{\"divide\":1}");
+            AssertJsonEqual(Divide(1, 2), "{\"divide\":[1,2]}");
+        }
 
-        [Test] public void TestOr() { }
+        [Test] public void TestModulo()
+        {
+            AssertJsonEqual(Modulo(1), "{\"modulo\":1}");
+            AssertJsonEqual(Modulo(1, 2), "{\"modulo\":[1,2]}");
+        }
 
-        [Test] public void TestNot() { }
+        [Test] public void TestLT()
+        {
+            AssertJsonEqual(LT(1), "{\"lt\":1}");
+            AssertJsonEqual(LT(1, 2), "{\"lt\":[1,2]}");
+        }
 
+        [Test] public void TestLTE()
+        {
+            AssertJsonEqual(LTE(1), "{\"lte\":1}");
+            AssertJsonEqual(LTE(1, 2), "{\"lte\":[1,2]}");
+        }
+
+        [Test] public void TestGT()
+        {
+            AssertJsonEqual(GT(1), "{\"gt\":1}");
+            AssertJsonEqual(GT(1, 2), "{\"gt\":[1,2]}");
+        }
+
+        [Test] public void TestGTE()
+        {
+            AssertJsonEqual(GTE(1), "{\"gte\":1}");
+            AssertJsonEqual(GTE(1, 2), "{\"gte\":[1,2]}");
+        }
+
+        [Test] public void TestAnd()
+        {
+            AssertJsonEqual(And(false), "{\"and\":false}");
+            AssertJsonEqual(And(true, false), "{\"and\":[true,false]}");
+        }
+
+        [Test] public void TestOr()
+        {
+            AssertJsonEqual(Or(true), "{\"or\":true}");
+            AssertJsonEqual(Or(true, false), "{\"or\":[true,false]}");
+        }
+
+        [Test] public void TestNot()
+        {
+            AssertJsonEqual(Not(true), "{\"not\":true}");
+            AssertJsonEqual(Not(false), "{\"not\":false}");
+        }
     }
 }

@@ -427,8 +427,8 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Equals(params Expr[] values) =>
-            Q("equals", Varargs(values));
+        public static Expr EqualsFn(Expr first, params Expr[] tail) =>
+            Q("equals", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
@@ -445,68 +445,68 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Add(params Expr[] numbers) =>
-            Q("add", Varargs(numbers));
+        public static Expr Add(Expr first, params Expr[] tail) =>
+            Q("add", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Multiply(params Expr[] numbers) =>
-            Q("multiply", Varargs(numbers));
+        public static Expr Multiply(Expr first, params Expr[] tail) =>
+            Q("multiply", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Subtract(params Expr[] numbers) =>
-            Q("subtract", Varargs(numbers));
+        public static Expr Subtract(Expr first, params Expr[] tail) =>
+            Q("subtract", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Divide(params Expr[] numbers) =>
-            Q("divide", Varargs(numbers));
+        public static Expr Divide(Expr first, params Expr[] tail) =>
+            Q("divide", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Modulo(params Expr[] numbers) =>
-            Q("modulo", Varargs(numbers));
+        public static Expr Modulo(Expr first, params Expr[] tail) =>
+            Q("modulo", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr LT(params Expr[] values) =>
-            Q("lt", Varargs(values));
+        public static Expr LT(Expr first, params Expr[] tail) =>
+            Q("lt", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr LTE(params Expr[] values) =>
-            Q("lte", Varargs(values));
+        public static Expr LTE(Expr first, params Expr[] tail) =>
+            Q("lte", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr GT(params Expr[] values) =>
-            Q("gt", Varargs(values));
+        public static Expr GT(Expr first, params Expr[] tail) =>
+            Q("gt", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr GTE(params Expr[] values) =>
-            Q("gte", Varargs(values));
+        public static Expr GTE(Expr first, params Expr[] tail) =>
+            Q("gte", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr And(params Expr[] booleans) =>
-            Q("and", Varargs(booleans));
+        public static Expr And(Expr first, params Expr[] tail) =>
+            Q("and", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Or(params Expr[] booleans) =>
-            Q("or", Varargs(booleans));
+        public static Expr Or(Expr first, params Expr[] tail) =>
+            Q("or", Varargs(first, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 

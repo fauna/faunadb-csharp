@@ -169,7 +169,7 @@ namespace Test
 
         [Test] public async Task TestFilter()
         {
-            var evens = Filter(new ArrayV(1, 2, 3, 4), a => Language.Equals(Modulo(a, 2), 0));
+            var evens = Filter(new ArrayV(1, 2, 3, 4), a => Language.EqualsFn(Modulo(a, 2), 0));
             await AssertQuery(new ArrayV(2, 4), evens);
 
             // Works on page too
@@ -389,10 +389,9 @@ namespace Test
 
         [Test] public async Task TestEquals()
         {
-            await AssertQuery(true, Language.Equals(1, 1, 1));
-            await AssertQuery(false, Language.Equals(1, 1, 2));
-            await AssertQuery(true, Language.Equals(1));
-            await AssertBadQuery(Language.Equals());
+            await AssertQuery(true, EqualsFn(1, 1, 1));
+            await AssertQuery(false, EqualsFn(1, 1, 2));
+            await AssertQuery(true, EqualsFn(1));
         }
 
         [Test] public async Task TestContains()
@@ -422,20 +421,17 @@ namespace Test
         [Test] public async Task TestAdd()
         {
             await AssertQuery(10, Add(2, 3, 5));
-            await AssertBadQuery(Add());
         }
 
         [Test] public async Task TestMultiply()
         {
             await AssertQuery(30, Multiply(2, 3, 5));
-            await AssertBadQuery(Multiply());
         }
 
         [Test] public async Task TestSubtract()
         {
             await AssertQuery(-6, Subtract(2, 3, 5));
             await AssertQuery(2, Subtract(2));
-            await AssertBadQuery(Subtract());
         }
 
         [Test] public async Task TestDivide()
@@ -443,7 +439,6 @@ namespace Test
             await AssertQuery(2.0 / 15, Divide(2.0, 3, 5));
             await AssertQuery(2, Divide(2));
             await AssertBadQuery(Divide(1, 0));
-            await AssertBadQuery(Divide());
         }
 
         [Test] public async Task TestModulo()
@@ -453,7 +448,6 @@ namespace Test
             await AssertQuery(1, Modulo(15, 10, 2));
             await AssertQuery(2, Modulo(2));
             await AssertBadQuery(Modulo(1, 0));
-            await AssertBadQuery(Modulo());
         }
 
         [Test] public async Task TestLess()
@@ -482,7 +476,6 @@ namespace Test
             await AssertQuery(true, And(true, true, true));
             await AssertQuery(true, And(true));
             await AssertQuery(false, And(false));
-            await AssertBadQuery(And());
         }
 
         [Test] public async Task TestOr()
@@ -491,7 +484,6 @@ namespace Test
             await AssertQuery(false, Or(false, false, false));
             await AssertQuery(true, Or(true));
             await AssertQuery(false, Or(false));
-            await AssertBadQuery(Or());
         }
 
         [Test] public async Task TestNot()
