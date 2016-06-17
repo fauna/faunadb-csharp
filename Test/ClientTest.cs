@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Types;
 using FaunaDB.Query;
+using static FaunaDB.Query.Language;
 
 namespace Test
 {
@@ -19,11 +20,11 @@ namespace Test
 
         async Task SetUpAsync()
         {
-            await TestClient.Post("classes", UnescapedObject.With("name", "my_class"));
+            await TestClient.Query(Create(Ref("classes"), Obj("name", "my_class")));
         }
 
         async Task<ObjectV> CreateInstance() =>
-            (ObjectV) await TestClient.Post("classes/my_class", UnescapedObject.Empty);
+            (ObjectV) await TestClient.Query(Create(Ref("classes/my_class"), Obj()));
 
         [Test] public async Task TestPing()
         {
@@ -32,40 +33,9 @@ namespace Test
 
         [Test] public async Task TestGet()
         {
-            Assert.That(((ObjectV) await TestClient.Get("classes"))["data"] is ArrayV);
-        }
-
-        [Test] public async Task TestPost()
-        {
-            var x = await TestClient.Post("classes/my_class", UnescapedObject.With("data", UnescapedObject.With("foo", 1)));
-            Assert.AreEqual(((ObjectV) ((ObjectV) x)["data"])["foo"], (Value) 1);
-        }
-
-        [Test] public async Task TestPut()
-        {
-            var instance = await CreateInstance();
-            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("a", 2)));
-
-            Assert.AreEqual((Value) 2, ((ObjectV) instance["data"])["a"]);
-
-            instance = (ObjectV) await TestClient.Put((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("b", 3)));
-            Assert.AreEqual(ObjectV.With("b", 3), instance["data"]);
-        }
-
-        [Test] public async Task TestPatch()
-        {
-            var instance = await CreateInstance();
-            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("a", 1)));
-            instance = (ObjectV) await TestClient.Patch((Ref) instance["ref"], UnescapedObject.With("data", UnescapedObject.With("b", 2)));
-            Assert.AreEqual(ObjectV.With("a", 1, "b", 2), instance["data"]);
-        }
-
-        [Test] public async Task TestDelete()
-        {
-            var instance = await CreateInstance();
-            var rf = (Ref) instance["ref"];
-            await TestClient.Delete(rf);
-            await AssertU.Throws<Exception>(() => TestClient.Get(rf));
+            ObjectV obj = (ObjectV) await TestClient.Query(Get(Ref("classes")));
+            Assert.AreEqual(obj["ref"], Ref("classes/my_class"));
+            Assert.AreEqual(obj["name"], (Value) "my_class");
         }
 
         [Test] public async Task TestLogging()

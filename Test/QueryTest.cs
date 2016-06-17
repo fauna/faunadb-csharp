@@ -28,23 +28,23 @@ namespace Test
 
         async Task SetUpAsync()
         {
-            classRef = GetRef(await TestClient.Post("classes", UnescapedObject.With("name", "widgets")));
-            nIndexRef = GetRef(await TestClient.Post("indexes", UnescapedObject.With(
+            classRef = GetRef(await TestClient.Query(Create(Ref("classes"), Obj("name", "widgets"))));
+            nIndexRef = GetRef(await TestClient.Query(Create(Ref("indexes"), Obj(
                 "name", "widgets_by_n",
                 "source", classRef,
                 "path", "data.n",
-                "active", true)));
-            mIndexRef = GetRef(await TestClient.Post("indexes", UnescapedObject.With(
+                "active", true))));
+            mIndexRef = GetRef(await TestClient.Query(Create(Ref("indexes"), Obj(
                 "name", "widgets_by_m",
                 "source", classRef,
                 "path", "data.m",
-                "active", true)));
+                "active", true))));
 
             refN1 = await CreateRef(n: 1);
             refM1 = await CreateRef(m: 1);
             refN1M1 = await CreateRef(n: 1, m: 1);
 
-            thimbleClassRef = GetRef(await TestClient.Post("classes", UnescapedObject.With("name", "thimbles")));
+            thimbleClassRef = GetRef(await TestClient.Query(Create(Ref("classes"), Obj("name", "thimbles"))));
         }
         #endregion
 

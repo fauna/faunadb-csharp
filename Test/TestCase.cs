@@ -9,6 +9,8 @@ using FaunaDB.Errors;
 using FaunaDB.Types;
 using FaunaDB.Query;
 
+using static FaunaDB.Query.Language;
+
 namespace Test
 {
     public class TestCase
@@ -45,19 +47,19 @@ namespace Test
             DbRef = new Ref($"databases/{dbName}");
 
             try {
-                await rootClient.Delete(DbRef);
+                await rootClient.Query(Delete(DbRef));
             } catch (NotFound) {}
 
-            await rootClient.Post("databases", UnescapedObject.With("name", dbName));
+            await rootClient.Query(Create(Ref("databases"), Obj("name", dbName)));
 
-            var key = (ObjectV) await rootClient.Post("keys", UnescapedObject.With("database", DbRef, "role", "server"));
+            var key = (ObjectV) await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "server")));
             serverKey = (string) key["secret"];
             TestClient = GetClient();
         }
 
         public async Task TearDown()
         {
-            await rootClient.Delete(DbRef);
+            await rootClient.Query(Delete(DbRef));
         }
 
         protected Client GetClient(string user = null, string password = null) =>

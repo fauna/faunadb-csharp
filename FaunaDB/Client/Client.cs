@@ -103,52 +103,6 @@ namespace FaunaDB.Client
                 new DefaultClientIO(new Uri(scheme + "://" + domain + ":" + port), timeout ?? TimeSpan.FromSeconds(60), user, password);
         }
 
-        #region HTTP methods
-        /// <summary>
-        /// HTTP <c>GET</c>. See the <see href="https://faunadb.com/documentation/rest">docs</see>.
-        /// </summary>
-        /// <param name="path">
-        /// Path relative to the <c>domain</c> this was constructed with.
-        /// You can also use a Ref here and it will implicitly conert.
-        /// </param>
-        /// <param name="query">Values to be converted to URL parameters.</param>
-        /// <exception cref="FaunaException"/>
-        public Task<Expr> Get(string path, IDictionary<string, string> query = null) =>
-            Execute(HttpMethodKind.Get, path, query: query);
-
-        /// <summary>
-        /// HTTP <c>POST</c>. See the <see href="https://faunadb.com/documentation/rest">docs</see>.
-        /// </summary>
-        /// <param name="path">
-        /// Path relative to the <c>domain</c> this was constructed with.
-        /// You can also use a Ref here and it will implicitly convert.
-        /// </param>
-        /// <param name="data">Value to be converted to request JSON.</param>
-        /// <exception cref="FaunaException"/>
-        public Task<Expr> Post(string path, Expr data = null) =>
-            Execute(HttpMethodKind.Post, path, data: data);
-
-        /// <summary>
-        /// Like <c>Post</c>, but a <c>PUT</c> request.
-        /// </summary>
-        /// <exception cref="FaunaException"/>
-        public Task<Expr> Put(string path, Expr data = null) =>
-            Execute(HttpMethodKind.Put, path, data: data);
-
-        /// <summary>
-        /// Like <c>Post</c>, but a <c>PATCH</c> request.
-        /// </summary>
-        /// <exception cref="FaunaException"/>
-        public Task<Expr> Patch(string path, Expr data = null) =>
-            Execute(HttpMethodKind.Patch, path, data: data);
-
-        /// <summary>
-        /// Like <c>Post</c>, but a <c>DELETE</c> request.
-        /// </summary>
-        /// <exception cref="FaunaException"/>
-        public Task<Expr> Delete(string path) =>
-            Execute(HttpMethodKind.Delete, path);
-
         /// <summary>
         /// Use the FaunaDB query API.
         /// </summary>
@@ -163,9 +117,8 @@ namespace FaunaDB.Client
         /// </summary>
         /// <exception cref="FaunaException"/>
         public async Task<string> Ping(string scope = null, int? timeout = null) =>
-            (string) await Get("ping", ImmutableDictionary.Of("scope", scope, "timeout", timeout?.ToString()))
+            (string)await Execute(HttpMethodKind.Get, "ping", query: ImmutableDictionary.Of("scope", scope, "timeout", timeout?.ToString()))
                 .ConfigureAwait(false);
-        #endregion
 
         async Task<Expr> Execute(HttpMethodKind action, string path, Expr data = null, IDictionary<string, string> query = null)
         {

@@ -22,10 +22,10 @@ namespace Test
         [Test] public async Task TestInvalidResponse()
         {
             // Response must be valid JSON
-            await AssertU.Throws<InvalidResponseException>(() => MockClient("I like fine wine").Get(""));
+            await AssertU.Throws<InvalidResponseException>(() => MockClient("I like fine wine").Query(Get(Ref(""))));
             // Response must have "resource"
             //todo: is this the right error to throw?
-            await AssertU.Throws<KeyNotFoundException>(() => MockClient("{\"resoars\": 1}").Get(""));
+            await AssertU.Throws<KeyNotFoundException>(() => MockClient("{\"resoars\": 1}").Query(Get(Ref(""))));
         }
 
         #region HTTP errors
@@ -37,33 +37,13 @@ namespace Test
         [Test] public async Task TestHttpUnauthorized()
         {
             var client = GetClient(password: "bad_key");
-            await AssertHttpException<Unauthorized>("unauthorized", () => client.Get(DbRef));
-        }
-
-        [Test] public async Task TestHttpPermissionDenied()
-        {
-            await AssertHttpException<PermissionDenied>("permission denied", () => TestClient.Get("databases"));
-        }
-
-        [Test] public async Task TestHttpNotFound()
-        {
-            await AssertHttpException<NotFound>("not found", () => TestClient.Get("classes/not_found"));
-        }
-
-        [Test] public async Task TestHttpMethodNotAllowed()
-        {
-            await AssertHttpException<MethodNotAllowed>("method not allowed", () => TestClient.Delete("classes"));
-        }
-
-        [Test] public async Task TestInternalError()
-        {
-            await AssertHttpException<InternalError>("internal server error", () => TestClient.Get("error"));
+            await AssertHttpException<Unauthorized>("unauthorized", () => client.Query(Get(DbRef)));
         }
 
         [Test] public async Task TestUnavailableError()
         {
             var client = MockClient("{\"errors\": [{\"code\": \"unavailable\", \"description\": \"on vacation\"}]}", HttpStatusCode.ServiceUnavailable);
-            await AssertHttpException<UnavailableError>("unavailable", () => client.Get(""));
+            await AssertHttpException<UnavailableError>("unavailable", () => client.Query(Get(Ref(""))));
         }
         #endregion
 
@@ -86,7 +66,7 @@ namespace Test
         [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
-            await TestClient.Post("classes", UnescapedObject.With("name", "foofaws"));
+            await TestClient.Query(Create(Ref("classes"), Obj("name", "foofaws")));
             await AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
         }
 
@@ -97,46 +77,23 @@ namespace Test
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
-            await TestClient.Post("classes", UnescapedObject.With("name", "duplicates"));
-            var @ref = (Ref) ((ObjectV) (await TestClient.Post("classes/duplicates", UnescapedObject.Empty)))["ref"];
+            await TestClient.Query(Create(Ref("classes"), Obj("name", "duplicates")));
+            var @ref = (Ref) ((ObjectV) (await TestClient.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
             await AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", Arr("create"));
         }
         #endregion
 
-        #region InvalidData
-        [Test] public async Task TestInvalidType()
-        {
-            await AssertInvalidData("classes", UnescapedObject.With("name", 123), "invalid type", Arr("name"));
-        }
-
-        [Test] public async Task TestValueRequired()
-        {
-            await AssertInvalidData("classes", UnescapedObject.Empty, "value required", Arr("name"));
-        }
-
         [Test] public async Task TestDuplicateValue()
         {
-            await TestClient.Post("classes", UnescapedObject.With("name", "gerbils"));
-            await TestClient.Post("indexes", UnescapedObject.With(
+            await TestClient.Query(Create(Ref("classes"), Obj("name", "gerbils")));
+            await TestClient.Query(Create(Ref("indexes"), Obj(
                 "name", "gerbils_by_x",
                 "source", Ref("classes/gerbils"),
-                "terms", Arr(UnescapedObject.With("path", "data.x")),
+                "terms", Arr(Obj("path", "data.x")),
                 "unique", true
-            ));
-            await TestClient.Post("classes/gerbils", UnescapedObject.With("data", UnescapedObject.With("x", 1)));
+            )));
+            await TestClient.Query(Create(Ref("classes/gerbils"), Obj("data", Obj("x", 1))));
         }
-
-        async Task AssertInvalidData(string className, Expr data, string code, ArrayV field)
-        {
-            var exception = await AssertU.Throws<BadRequest>(() => TestClient.Post(className, data));
-            AssertException(exception, "validation failed", ArrayV.Empty);
-            var failures = ((ValidationFailed) exception.Errors.First()).Failures;
-            Assert.AreEqual(1, failures.Count());
-            var failure = failures.First();
-            Assert.AreEqual(code, failure.Code);
-            Assert.AreEqual(field, failure.Field);
-        }
-        #endregion
 
         [Test] public void TestToString()
         {
