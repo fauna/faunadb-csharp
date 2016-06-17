@@ -108,11 +108,11 @@ namespace FaunaDB.Types
         }
 
         ObjectV ReadObjectBody(string firstPropertyName) =>
-            new ObjectV(add =>
+            new ObjectV(Add =>
             {
-                add(firstPropertyName, ReadValue());
+                Add(firstPropertyName, ReadValue());
                 while (Next() != JsonToken.EndObject)
-                    add(ExpectPropertyName(), ReadValue());
+                    Add(ExpectPropertyName(), ReadValue());
             });
 
         string ReadPropertyName()
@@ -159,7 +159,7 @@ namespace FaunaDB.Types
         }
     }
 
-    static class JsonU
+    static class JsonWriterExtensions
     {
         public static void WriteArray(this JsonWriter writer, IEnumerable<Expr> vals)
         {

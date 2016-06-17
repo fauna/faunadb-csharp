@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
-
+﻿using FaunaDB.Query;
 using FaunaDB.Types;
-using FaunaDB.Query;
+using FaunaDB.Utils;
+using System;
+using System.Linq;
 
 namespace FaunaDB.Errors
 {
@@ -31,7 +30,7 @@ namespace FaunaDB.Errors
             return code == "validation failed" ?
                 new ValidationFailed(
                     description, position,
-                    (from _ in (ArrayV) o["failures"] select (Failure) _).ToImmutableArray()) :
+                    (from _ in (ArrayV) o["failures"] select (Failure) _).ToList()) :
                 new ErrorData(code, description, position);
         }
 

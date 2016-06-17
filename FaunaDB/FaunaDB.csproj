@@ -33,9 +33,6 @@
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Reactive.Interfaces">
       <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
@@ -54,26 +51,25 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HashUtil.cs" />
+    <Compile Include="Utils\HashUtil.cs" />
     <Compile Include="Query\Expr.cs" />
     <Compile Include="Query\Helpers.cs" />
     <Compile Include="Query\Lambda.cs" />
     <Compile Include="Query\Language.cs" />
     <Compile Include="Types\ObjectV.cs" />
     <Compile Include="Types\ArrayV.cs" />
-    <Compile Include="Page.cs" />
+    <Compile Include="Query\Pagination.cs" />
     <Compile Include="Types\Value.cs" />
     <Compile Include="Types\Json.cs" />
     <Compile Include="Types\ScalarValue.cs" />
     <Compile Include="Types\NullV.cs" />
-    <Compile Include="ImmutableUtil.cs" />
+    <Compile Include="Utils\OrderedDictionary.cs" />
     <Compile Include="Errors\Errors.cs" />
     <Compile Include="Errors\Failure.cs" />
     <Compile Include="Errors\ValidationFailed.cs" />
     <Compile Include="Errors\ErrorData.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\ClientLogger.cs" />
-    <Compile Include="SetIterator.cs" />
     <Compile Include="Client\RequestResult.cs" />
     <Compile Include="Errors\FaunaException.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Types;
+using FaunaDB.Utils;
 using System;
 using System.Reflection;
 
@@ -157,9 +158,9 @@ namespace FaunaDB.Query
             Expr size = null,
             Expr events = null,
             Expr sources = null) =>
-            ObjectV.WithoutNullValues(
-                ObjectV.Pairs("paginate", set),
-                ObjectV.Pairs(
+                new ObjectV(
+                    ImmutableDictionary.Of(
+                    "paginate", set,
                     "ts", ts,
                     "after", after,
                     "before", before,
@@ -347,9 +348,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
         public static Expr Select(Expr path, Expr @from, Expr @default = null) =>
-            ObjectV.WithoutNullValues(
-                ObjectV.Pairs("select", path, "from", @from),
-                ObjectV.Pairs("default", @default));
+            Q("select", path, "from", @from, "default", @default);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 

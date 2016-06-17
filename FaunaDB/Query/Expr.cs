@@ -1,8 +1,9 @@
 ﻿using FaunaDB.Errors;
 using FaunaDB.Types;
+using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 
 namespace FaunaDB.Query
 {
@@ -39,10 +40,10 @@ namespace FaunaDB.Query
 
 
         #region implicit conversions
-        public static implicit operator Expr(ImmutableArray<Expr> values) =>
-            values == null ? NullV.Instance : new ArrayV(values);
+        public static implicit operator Expr(List<Expr> values) =>
+            values == null ? NullV.Instance : ArrayV.FromEnumerable(values);
 
-        public static implicit operator Expr(ImmutableDictionary<string, Expr> values) =>
+        public static implicit operator Expr(OrderedDictionary<string, Expr> values) =>
             values == null ? NullV.Instance : new ObjectV(values);
 
         public static implicit operator Expr(bool b) =>
@@ -63,11 +64,11 @@ namespace FaunaDB.Query
         #endregion
 
         #region explicit (downcasting) conversions
-        public static explicit operator ImmutableDictionary<string, Expr>(Expr v) =>
-            ((ObjectV) v).Value;
-
-        public static explicit operator ImmutableArray<Expr>(Expr v) =>
+        public static explicit operator List<Expr>(Expr v) =>
             ((ArrayV) v).Value;
+
+        public static explicit operator OrderedDictionary<string, Expr>(Expr v) =>
+            ((ObjectV)v).Value;
 
         public static explicit operator bool(Expr v) =>
             ((BooleanV) v).Value;

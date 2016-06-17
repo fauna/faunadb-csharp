@@ -1,6 +1,6 @@
 ﻿using FaunaDB.Types;
 using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace FaunaDB.Errors
@@ -13,9 +13,9 @@ namespace FaunaDB.Errors
         /// <summary>
         /// List of all <see cref="Failure"/> objects returned by the server. 
         /// </summary>
-        public ImmutableArray<Failure> Failures { get; }
+        public List<Failure> Failures { get; }
 
-        public ValidationFailed(string description, ArrayV position, ImmutableArray<Failure> failures)
+        public ValidationFailed(string description, ArrayV position, List<Failure> failures)
             : base("validation failed", description, position)
         {
             Failures = failures;

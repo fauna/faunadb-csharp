@@ -1,12 +1,22 @@
 ﻿using FaunaDB.Types;
+using FaunaDB.Utils;
 using System;
-using System.Collections.Immutable;
 using System.Reflection;
 
 namespace FaunaDB.Query
 {
     public partial struct Language
     {
+        public static Expr Ref(string id)
+        {
+            return new Ref(id);
+        }
+
+        public static Expr Ref(Expr classRef, Expr id)
+        {
+            return Q("ref", classRef, "id", id);
+        }
+
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
@@ -39,7 +49,7 @@ namespace FaunaDB.Query
             {
                 Type arrayType = type.GetElementType();
 
-                System.Array array = (System.Array)obj;
+                Array array = (Array)obj;
                 Expr[] exprs = new Expr[array.Length];
                 for (int i = 0; i < array.Length; i++)
                 {
@@ -50,7 +60,7 @@ namespace FaunaDB.Query
             }
             else
             {
-                var attributes = ImmutableDictionary.CreateBuilder<string, Expr>();
+                var attributes = new OrderedDictionary<string, Expr>();
 
                 foreach (var property in obj.GetType().GetProperties())
                 {
@@ -62,6 +72,12 @@ namespace FaunaDB.Query
                 return Obj(new ObjectV(attributes.ToImmutable()));
             }
         }
+
+        /// <summary>
+        /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
+        /// </summary>
+        public static Expr Obj() =>
+            Obj(new ObjectV());
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
@@ -108,16 +124,16 @@ namespace FaunaDB.Query
             values.Length == 1 ? values[0] : ArrayV.FromEnumerable(values);
 
         static Expr Q(string key1, Expr value1) =>
-            new ObjectV(key1, value1);
+            new ObjectV(ImmutableDictionary.Of(key1, value1));
 
         static Expr Q(string key1, Expr value1, string key2, Expr value2) =>
-            new ObjectV(key1, value1, key2, value2);
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2));
 
         static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            new ObjectV(key1, value1, key2, value2, key3, value3);
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3));
 
         static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4);
+            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4));
         #endregion
 
     }

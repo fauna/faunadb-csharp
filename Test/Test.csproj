@@ -36,9 +36,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-    </Reference>
     <Reference Include="System.Reactive.Interfaces">
       <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
@@ -64,11 +61,10 @@
     <Compile Include="AssertU.cs" />
     <Compile Include="QueryTest.cs" />
     <Compile Include="ClientTest.cs" />
-    <Compile Include="ValuesTest.cs" />
+    <Compile Include="SerializationTest.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="ErrorsTest.cs" />
     <Compile Include="PageTest.cs" />
-    <Compile Include="SetIteratorTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

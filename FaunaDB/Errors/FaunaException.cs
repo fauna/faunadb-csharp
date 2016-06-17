@@ -1,7 +1,8 @@
 ﻿using FaunaDB.Client;
 using FaunaDB.Types;
+using FaunaDB.Utils;
 using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -16,7 +17,7 @@ namespace FaunaDB.Errors
         /// <summary>
         /// List of all errors sent by the server.
         /// </summary>
-        public ImmutableArray<ErrorData> Errors { get; }
+        public List<ErrorData> Errors { get; }
 
         public RequestResult RequestResult { get; }
 
@@ -27,7 +28,7 @@ namespace FaunaDB.Errors
             if (200 <= ((int) code) && ((int) code) <= 299)
                 return;
             
-            var errors = (from _ in ((ArrayV) ((ObjectV) rr.ResponseContent)["errors"]) select (ErrorData) _).ToImmutableArray();
+            var errors = (from _ in ((ArrayV) ((ObjectV) rr.ResponseContent)["errors"]) select (ErrorData) _).ToList();
 
             switch (code)
             {
@@ -50,7 +51,7 @@ namespace FaunaDB.Errors
             }
         }
 
-        protected FaunaException(RequestResult rr, ImmutableArray<ErrorData> errors) : base(errors.FirstOrDefault()?.Description)
+        protected FaunaException(RequestResult rr, List<ErrorData> errors) : base(errors.FirstOrDefault()?.Description)
         {
             RequestResult = rr;
             Errors = errors;
@@ -79,7 +80,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class BadRequest : FaunaException
     {
-        internal BadRequest(RequestResult rr, ImmutableArray<ErrorData> errors) : base(rr, errors) {}
+        internal BadRequest(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 
     /// <summary>
@@ -87,7 +88,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class Unauthorized : FaunaException
     {
-        internal Unauthorized(RequestResult rr, ImmutableArray<ErrorData> errors) : base(rr, errors) {}
+        internal Unauthorized(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 
     /// <summary>
@@ -95,7 +96,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class PermissionDenied : FaunaException
     {
-        internal PermissionDenied(RequestResult rr, ImmutableArray<ErrorData> errors) : base(rr, errors) {}
+        internal PermissionDenied(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 
     /// <summary>
@@ -103,7 +104,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class NotFound : FaunaException
     {
-        public NotFound(RequestResult rr, ImmutableArray<ErrorData> errors) : base(rr, errors) {}
+        public NotFound(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 
     /// <summary>
@@ -111,7 +112,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class MethodNotAllowed : FaunaException
     {
-        internal MethodNotAllowed(RequestResult rr, ImmutableArray<ErrorData> errors) : base(rr, errors) {}
+        internal MethodNotAllowed(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 
     /// <summary>
@@ -119,7 +120,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class InternalError : FaunaException
     {
-        internal InternalError(RequestResult rr, ImmutableArray<ErrorData> errors) : base(rr, errors) {}
+        internal InternalError(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 
     /// <summary>
@@ -127,7 +128,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class UnavailableError : FaunaException
     {
-        internal UnavailableError(RequestResult rr, ImmutableArray<ErrorData> errors) : base(rr, errors) {}
+        internal UnavailableError(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 }
 

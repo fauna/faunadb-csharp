@@ -1,21 +1,67 @@
-﻿using NUnit.Framework;
-using System;
-
-using FaunaDB;
+﻿using FaunaDB.Query;
 using FaunaDB.Types;
-using FaunaDB.Query;
+using FaunaDB.Utils;
+using NUnit.Framework;
+using System;
+using System.Collections.Specialized;
 using static FaunaDB.Query.Language;
 
-namespace Test {
-    [TestFixture] public class ValuesTest : TestCase
+namespace Test
+{
+    [TestFixture] public class SerializationTest
     {
-        Ref @ref = new Ref("classes/frogs/123");
-        const string jsonRef = "{\"@ref\":\"classes/frogs/123\"}";
+        private static void AssertJsonEqual(Expr expr, string value)
+        {
+            Assert.AreEqual(expr.ToJson(), value);
+        }
+
+        [Test] public void TestLiteralValues()
+        {
+            AssertJsonEqual(10L, "10");
+            AssertJsonEqual(10, "10");
+            AssertJsonEqual("a string", "\"a string\"");
+            AssertJsonEqual(3.14, "3.14");
+            AssertJsonEqual(true, "true");
+            AssertJsonEqual(false, "false");
+            AssertJsonEqual(NullV.Instance, "null");
+        }
+
+        [Test] public void TestArrayValues()
+        {
+            AssertJsonEqual(Arr(10, 3.14, "a string", true, false, NullV.Instance), "[10,3.14,\"a string\",true,false,null]");
+        }
+
+        [Test] public void TestObjectValues()
+        {
+            AssertJsonEqual(Obj(), "{\"object\":{}}");
+
+            AssertJsonEqual(Obj("k0", "v0", "k1", "v1"), "{\"object\":{\"k0\":\"v0\",\"k1\":\"v1\"}}");
+
+            AssertJsonEqual(Obj("foo", "bar"), "{\"object\":{\"foo\":\"bar\"}}");
+
+            AssertJsonEqual(Obj("long", 10, "double", 2.78), "{\"object\":{\"long\":10,\"double\":2.78}}");
+        }
+
+        [Test]
+        public void TestObjectAndArrays()
+        {
+            AssertJsonEqual(Obj("foo", Arr("bar")), "{\"object\":{\"foo\":[\"bar\"]}}");
+
+            AssertJsonEqual(
+                Obj("foo", Arr("bar", Obj("foo", "bar"))),
+                "{\"object\":{\"foo\":[\"bar\",{\"object\":{\"foo\":\"bar\"}}]}}");
+        }
+
+        [Test] public void TestComplexObjects()
+        {
+            AssertJsonEqual(Obj("a", Obj("b", Obj("c", "d"))), "{\"object\":{\"a\":{\"object\":{\"b\":{\"object\":{\"c\":\"d\"}}}}}}");
+        }
 
         [Test] public void TestRef()
         {
-            Assert.AreEqual(@ref, Expr.FromJson(jsonRef));
-            Assert.AreEqual(jsonRef, @ref.ToJson());
+            AssertJsonEqual(Ref("classes"), "{\"@ref\":\"classes\"}");
+
+            AssertJsonEqual(Ref(Ref("classes/people"), "id1"), "{\"ref\":{\"@ref\":\"classes/people\"},\"id\":\"id1\"}");
         }
 
         [Test] public void TestObj()
@@ -47,9 +93,12 @@ namespace Test {
 
         [Test] public void TestSet()
         {
+            Ref @ref = new Ref("classes/frogs/123");
+            const string jsonRef = "{\"@ref\":\"classes/frogs/123\"}";
+
             var index = new Ref("indexes/frogs_by_size");
-            var match = new SetRef(Language.Match(index, @ref));
-            var jsonMatch = $"{{\"@set\":{{\"terms\":{jsonRef},\"match\":{index.ToJson()}}}}}";
+            var match = new SetRef(Match(index, @ref));
+            var jsonMatch = $"{{\"@set\":{{\"match\":{index.ToJson()},\"terms\":{jsonRef}}}}}";
             Assert.AreEqual(match, Expr.FromJson(jsonMatch));
             Assert.AreEqual(jsonMatch, match.ToJson());
         }
@@ -107,8 +156,6 @@ namespace Test {
             var o3 = new ObjectV("x", 0, "y", 0);
             Assert.AreEqual(o1, o2);
             Assert.AreNotEqual(o1, o3);
-            Assert.AreEqual(o1.GetHashCode(), o2.GetHashCode());
-            Assert.AreNotEqual(o1.GetHashCode(), o3.GetHashCode());
         }
     }
 }

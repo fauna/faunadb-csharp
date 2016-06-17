@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace FaunaDB {
+namespace FaunaDB.Utils
+{
     // "Fnv" and "System.Data.HashFunction" packages work on byte[].
     // I couldn't find any packages that work generically.
     static class HashUtil

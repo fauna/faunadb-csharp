@@ -4,7 +4,6 @@ using FaunaDB.Types;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -145,7 +144,7 @@ namespace Test
             Assert.AreEqual(err.ToString(), "ErrorData(code, desc, null)");
 
             var failure = new Failure("code", "desc", new ArrayV("a", "b"));
-            var vf = new ValidationFailed("vf_desc", new ArrayV("vf"), (new[] { failure }).ToImmutableArray());
+            var vf = new ValidationFailed("vf_desc", new ArrayV("vf"), (new[] { failure }.ToList()));
             Assert.AreEqual(
                 "ValidationFailed(vf_desc, Arr(StringV(vf)), [Failure(code, desc, Arr(StringV(a), StringV(b)))])",
                 vf.ToString());

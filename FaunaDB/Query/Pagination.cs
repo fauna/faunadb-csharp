@@ -1,5 +1,6 @@
 ﻿using FaunaDB.Query;
 using FaunaDB.Types;
+using FaunaDB.Utils;
 using System;
 
 namespace FaunaDB
@@ -8,7 +9,7 @@ namespace FaunaDB
     /// A single pagination result.
     /// See <c>paginate</c> in the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
     /// </summary>
-    public struct Page : IEquatable<Page>
+    public struct Pagination : IEquatable<Pagination>
     {
         /// <summary>
         /// Pagination results. What these are depends on the query.
@@ -23,7 +24,7 @@ namespace FaunaDB
         /// </summary>
         public Cursor? After { get; }
 
-        public Page(ArrayV data, Cursor? before = null, Cursor? after = null)
+        public Pagination(ArrayV data, Cursor? before = null, Cursor? after = null)
         {
             Data = data;
             Before = before;
@@ -33,10 +34,10 @@ namespace FaunaDB
         /// <summary>
         /// Use this on a value that you know represents a Page.
         /// </summary>
-        public static explicit operator Page(Expr v)
+        public static explicit operator Pagination(Expr v)
         {
             var obj = (ObjectV) v;
-            return new Page((ArrayV) obj["data"], GetCursor(obj, "before"), GetCursor(obj, "after"));
+            return new Pagination((ArrayV) obj["data"], GetCursor(obj, "before"), GetCursor(obj, "after"));
         }
 
         static Cursor? GetCursor(ObjectV obj, string direction)
@@ -45,20 +46,20 @@ namespace FaunaDB
             return value == null ? null : (Cursor?) new Cursor((ArrayV) value);
         }
 
-        public static implicit operator Expr(Page p) =>
-            ObjectV.WithoutNullValues(ObjectV.Pairs("data", p.Data), ObjectV.Pairs("before", p.Before?.Value, "after", p.After?.Value));
+        public static implicit operator Expr(Pagination p) =>
+            new ObjectV("data", p.Data, "before", p.Before?.Value, "after", p.After?.Value);
 
         #region boilerplate
         public override bool Equals(object obj) =>
-            obj is Page && Equals((Page) obj);
+            obj is Pagination && Equals((Pagination) obj);
 
-        public bool Equals(Page p) =>
+        public bool Equals(Pagination p) =>
             p.Data == Data && p.Before == Before && p.After == After;
 
-        public static bool operator==(Page a, Page b) =>
+        public static bool operator==(Pagination a, Pagination b) =>
             object.Equals(a, b);
 
-        public static bool operator!=(Page a, Page b) =>
+        public static bool operator!=(Pagination a, Pagination b) =>
             !object.Equals(a, b);
 
         public override int GetHashCode() =>

@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Types;
+using FaunaDB.Utils;
 using System;
 
 namespace FaunaDB.Errors

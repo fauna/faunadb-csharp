@@ -1,8 +1,8 @@
 ﻿using FaunaDB.Query;
+using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 
 namespace FaunaDB.Types
 {
@@ -12,11 +12,13 @@ namespace FaunaDB.Types
     public sealed class ObjectV : Value
     {
         #region Construction
-        public static readonly ObjectV Empty = new ObjectV(ImmutableDictionary<string, Expr>.Empty);
+        public static readonly ObjectV Empty = new ObjectV(new OrderedDictionary<string, Expr>());
 
-        public ImmutableDictionary<string, Expr> Value { get; }
+        public OrderedDictionary<string, Expr> Value { get; }
 
-        public ObjectV(ImmutableDictionary<string, Expr> value)
+        public ObjectV() : this(Empty.Value) { }
+
+        public ObjectV(OrderedDictionary<string, Expr> value)
         {
             Value = value;
 
@@ -28,44 +30,35 @@ namespace FaunaDB.Types
         public static KeyValuePair<string, Expr> Pair(string key, Expr value) =>
             new KeyValuePair<string, Expr>(key, value);
 
-        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1) =>
-            new[] { Pair(k1, v1) };
-
-        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2) =>
-            new[] { Pair(k1, v1), Pair(k2, v2) };
-
         public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3) =>
             new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3) };
 
-        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4) =>
-            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4) };
-
-        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5) =>
-            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5) };
-
         public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6) =>
             new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5), Pair(k6, v6) };
+
+        public static KeyValuePair<string, Expr>[] Pairs(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6, string k7, Expr v7) =>
+            new[] { Pair(k1, v1), Pair(k2, v2), Pair(k3, v3), Pair(k4, v4), Pair(k5, v5), Pair(k6, v6), Pair(k7, v7) };
         #endregion
 
         #region Terse constructors
 
         public ObjectV(string k1, Expr v1)
-            : this(ImmutableUtil.Create(Pairs(k1, v1))) {}
+            : this(ImmutableDictionary.Of(k1, v1)) {}
 
         public ObjectV(string k1, Expr v1, string k2, Expr v2)
-            : this(ImmutableUtil.Create(Pairs(k1, v1, k2, v2))) {}
+            : this(ImmutableDictionary.Of(k1, v1, k2, v2)) {}
 
         public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3)
-            : this(ImmutableUtil.Create(Pairs(k1, v1, k2, v2, k3, v3))) {}
+            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3)) {}
 
         public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4)
-            : this(ImmutableUtil.Create(Pairs(k1, v1, k2, v2, k3, v3, k4, v4))) {}
+            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4)) {}
 
         public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5)
-            : this(ImmutableUtil.Create(Pairs(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5))) {}
+            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5)) {}
 
         public ObjectV(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6)
-            : this(ImmutableUtil.Create(Pairs(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6))) {}
+            : this(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6)) {}
         
         #endregion
 
@@ -75,23 +68,13 @@ namespace FaunaDB.Types
         /// <param name="builder">
         /// A lambda <c>(add) => { ... }</c> that calls <c>add(key, value)</c> for each pair to be in the new ObjectV.
         /// </param>
-        public ObjectV(Action<Action<string, Expr>> builder) : this(ImmutableUtil.BuildDict(builder)) {}
+        public ObjectV(Action<Action<string, Expr>> builder)
+        {
+            var d = new OrderedDictionary<string, Expr>();
+            builder((k, v) => d.Add(new KeyValuePair<string, Expr>(k, v)));
+            Value = d.ToImmutable();
+        }
 
-        /// <summary>
-        /// Blindly uses all entries from <c>notNullPairs</c>, but ignores <c>nullablePairs</c> where values are null.
-        /// Use <see cref="Pairs"/> to simplify calling this.
-        /// </summary>
-        public static ObjectV WithoutNullValues(
-            IEnumerable<KeyValuePair<string, Expr>> notNullPairs,
-            IEnumerable<KeyValuePair<string, Expr>> nullablePairs) =>
-            new ObjectV(ImmutableUtil.DictWithoutNullValues(notNullPairs, nullablePairs));
-
-        /// <summary>
-        /// Create an ObjectV while removing any null values.
-        /// Use <see cref="Pairs"/> to simplify calling this. 
-        /// </summary>
-        public static ObjectV WithoutNullValues(params KeyValuePair<string, Expr>[] nullablePairs) =>
-            new ObjectV(ImmutableUtil.DictWithoutNullValues(nullablePairs));
         #endregion
 
         /// <exception cref="KeyNotFoundException"/>
@@ -117,7 +100,7 @@ namespace FaunaDB.Types
         public override bool Equals(Expr v)
         {
             var obj = v as ObjectV;
-            return obj != null && ImmutableUtil.DictEquals(Value, obj.Value);
+            return obj != null && Value.Equals(obj.Value);
         }
 
         protected override int HashCode() =>

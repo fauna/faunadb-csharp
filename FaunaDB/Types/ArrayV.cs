@@ -1,8 +1,9 @@
 ﻿using FaunaDB.Query;
+using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace FaunaDB.Types
@@ -12,14 +13,14 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class ArrayV : Value, IEnumerable<Expr>
     {
-        public static readonly ArrayV Empty = new ArrayV(ImmutableArray<Expr>.Empty);
+        public static readonly ArrayV Empty = new ArrayV(new List<Expr>());
 
-        public ImmutableArray<Expr> Value { get; }
+        public List<Expr> Value { get; }
 
         public static ArrayV FromEnumerable(IEnumerable<Expr> values) =>
-            new ArrayV(values.ToImmutableArray());
+            new ArrayV(new List<Expr>(values));
 
-        public ArrayV(ImmutableArray<Expr> value)
+        public ArrayV(List<Expr> value)
         {
             Value = value;
 
@@ -30,7 +31,7 @@ namespace FaunaDB.Types
         /// <summary>
         /// Create from values.
         /// </summary>
-        public ArrayV(params Expr[] values) : this(ImmutableArray.Create(values)) {}
+        public ArrayV(params Expr[] values) : this(new List<Expr>(values)) {}
 
         /// <summary>
         /// Create from a builder expression.
@@ -38,7 +39,11 @@ namespace FaunaDB.Types
         /// <param name="builder">
         /// A lambda <c>(add) => { ... }</c> that calls <c>add</c> for each element to be in the new ArrayV.
         /// </param>
-        public ArrayV(Action<Action<Expr>> builder) : this(ImmutableUtil.BuildArray(builder)) {}
+        public ArrayV(Action<Action<Expr>> builder)
+        {
+            Value = new List<Expr>();
+            builder(Value.Add);
+        }
 
         /// <summary>
         /// Get the nth value.
@@ -46,7 +51,7 @@ namespace FaunaDB.Types
         /// <exception cref="IndexOutOfRangeException"/>
         public Expr this[int n] { get { return Value[n]; } }
 
-        public int Length { get { return Value.Length; } }
+        public int Length { get { return Value.Count; } }
 
         override internal void WriteJson(JsonWriter writer)
         {
@@ -54,10 +59,10 @@ namespace FaunaDB.Types
         }
 
         #region IEnumerable
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() =>
-            ((System.Collections.IEnumerable) Value).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() =>
+            ((IEnumerable) Value).GetEnumerator();
 
-        public IEnumerator<Expr> GetEnumerator() =>
+        IEnumerator<Expr> IEnumerable<Expr>.GetEnumerator() =>
             ((IEnumerable<Expr>) Value).GetEnumerator();
         #endregion
 

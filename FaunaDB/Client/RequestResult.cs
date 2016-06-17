@@ -31,7 +31,7 @@ namespace FaunaDB.Client
         /// <summary>
         /// Query data. This is only valid for <see cref="Client.Get"/> (which is also called by <see cref="Client.Ping"/> .
         /// </summary>
-        public IReadOnlyDictionary<string, string> Query { get; }
+        public IDictionary<string, string> Query { get; }
 
         /// <summary>
         /// Request data. This will be null for <see cref="Client.Get"/>s. 
@@ -54,7 +54,7 @@ namespace FaunaDB.Client
             Client client,
             HttpMethodKind method,
             string path,
-            IReadOnlyDictionary<string, string> query,
+            IDictionary<string, string> query,
             Expr requestContent,
             Expr responseContent,
             HttpStatusCode statusCode,

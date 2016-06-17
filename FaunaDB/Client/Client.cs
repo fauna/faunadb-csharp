@@ -1,6 +1,7 @@
 ﻿using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
+using FaunaDB.Utils;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -112,7 +113,7 @@ namespace FaunaDB.Client
         /// </param>
         /// <param name="query">Values to be converted to URL parameters.</param>
         /// <exception cref="FaunaException"/>
-        public Task<Expr> Get(string path, IReadOnlyDictionary<string, string> query = null) =>
+        public Task<Expr> Get(string path, IDictionary<string, string> query = null) =>
             Execute(HttpMethodKind.Get, path, query: query);
 
         /// <summary>
@@ -162,12 +163,11 @@ namespace FaunaDB.Client
         /// </summary>
         /// <exception cref="FaunaException"/>
         public async Task<string> Ping(string scope = null, int? timeout = null) =>
-            (string) await Get("ping", ImmutableUtil.DictWithoutNullValues(
-                new KeyValuePair<string, string>("scope", scope),
-                new KeyValuePair<string, string>("timeout", timeout?.ToString()))).ConfigureAwait(false);
+            (string) await Get("ping", ImmutableDictionary.Of("scope", scope, "timeout", timeout?.ToString()))
+                .ConfigureAwait(false);
         #endregion
 
-        async Task<Expr> Execute(HttpMethodKind action, string path, Expr data = null, IReadOnlyDictionary<string, string> query = null)
+        async Task<Expr> Execute(HttpMethodKind action, string path, Expr data = null, IDictionary<string, string> query = null)
         {
             var startTime = DateTime.UtcNow;
             /*
@@ -194,7 +194,7 @@ namespace FaunaDB.Client
             return ((ObjectV) responseContent)["resource"];
         }
 
-        Task<HttpResponseMessage> PerformRequest(HttpMethodKind action, string path, Expr data, IReadOnlyDictionary<string, string> query)
+        Task<HttpResponseMessage> PerformRequest(HttpMethodKind action, string path, Expr data, IDictionary<string, string> query)
         {
             var dataString = data == null ?  null : new StringContent(data.ToJson());
             var queryString = query == null ? null : QueryString(query);
@@ -214,7 +214,7 @@ namespace FaunaDB.Client
         /// <summary>
         /// Convert query parameters to a URL string.
         /// </summary>
-        internal static string QueryString(IReadOnlyDictionary<string, string> query)
+        internal static string QueryString(IDictionary<string, string> query)
         {
             // Can't just do `new NameValueCollection()` because the one returned by ParseQueryString has a different `ToString` implementation.
             var q = HttpUtility.ParseQueryString("");
