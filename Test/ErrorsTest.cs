@@ -15,7 +15,7 @@ namespace Test
     {
         [Test] public async Task TestRequestResult()
         {
-            var err = await AssertU.Throws<BadRequest>(() => TestClient.Query(UnescapedObject.With("foo", "bar")));
+            var err = await AssertU.Throws<BadRequest>(() => client.Query(UnescapedObject.With("foo", "bar")));
             Assert.AreEqual(err.RequestResult.RequestContent, UnescapedObject.With("foo", "bar"));
         }
 
@@ -31,7 +31,7 @@ namespace Test
         #region HTTP errors
         [Test] public async Task TestHttpBadRequest()
         {
-            await AssertU.Throws<BadRequest>(() => TestClient.Query(UnescapedObject.With("foo", "bar")));
+            await AssertU.Throws<BadRequest>(() => client.Query(UnescapedObject.With("foo", "bar")));
         }
 
         [Test] public async Task TestHttpUnauthorized()
@@ -66,7 +66,7 @@ namespace Test
         [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
-            await TestClient.Query(Create(Ref("classes"), Obj("name", "foofaws")));
+            await client.Query(Create(Ref("classes"), Obj("name", "foofaws")));
             await AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
         }
 
@@ -77,22 +77,22 @@ namespace Test
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
-            await TestClient.Query(Create(Ref("classes"), Obj("name", "duplicates")));
-            var @ref = (Ref) ((ObjectV) (await TestClient.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
+            await client.Query(Create(Ref("classes"), Obj("name", "duplicates")));
+            var @ref = (Ref) ((ObjectV) (await client.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
             await AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", new ArrayV("create"));
         }
         #endregion
 
         [Test] public async Task TestDuplicateValue()
         {
-            await TestClient.Query(Create(Ref("classes"), Obj("name", "gerbils")));
-            await TestClient.Query(Create(Ref("indexes"), Obj(
+            await client.Query(Create(Ref("classes"), Obj("name", "gerbils")));
+            await client.Query(Create(Ref("indexes"), Obj(
                 "name", "gerbils_by_x",
                 "source", Ref("classes/gerbils"),
                 "terms", Arr(Obj("path", "data.x")),
                 "unique", true
             )));
-            await TestClient.Query(Create(Ref("classes/gerbils"), Obj("data", Obj("x", 1))));
+            await client.Query(Create(Ref("classes/gerbils"), Obj("data", Obj("x", 1))));
         }
 
         async Task AssertHttpException<TException>(string code, Func<Task> action) where TException : FaunaException
@@ -112,7 +112,7 @@ namespace Test
         async Task AssertQueryException<TException>(Expr query, string code, Expr position = null)
             where TException  : FaunaException
         {
-            var exception = await AssertU.Throws<TException>(() => TestClient.Query(query));
+            var exception = await AssertU.Throws<TException>(() => client.Query(query));
             AssertException(exception, code, position);
         }
     }

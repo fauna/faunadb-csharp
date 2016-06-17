@@ -7,40 +7,29 @@ namespace FaunaDB.Query
 {
     public partial struct Language
     {
-        public static Expr Ref(string id)
-        {
-            return new Ref(id);
-        }
+        public static Expr Null() =>
+            NullV.Instance;
 
-        public static Expr Ref(Expr classRef, Expr id)
-        {
-            return UnescapedObject.With("ref", classRef, "id", id);
-        }
+        public static Expr Ref(string id) =>
+            new Ref(id);
 
-        public static Expr SetRef(Expr set)
-        {
-            return new SetRef(set);
-        }
+        public static Expr Ref(Expr classRef, Expr id) =>
+            UnescapedObject.With("ref", classRef, "id", id);
 
-        public static Expr Ts(DateTime dateTime)
-        {
-            return new TsV(dateTime);
-        }
+        public static Expr SetRef(Expr set) =>
+            new SetRef(set);
 
-        public static Expr Ts(string iso8601Time)
-        {
-            return new TsV(iso8601Time);
-        }
+        public static Expr Ts(DateTime dateTime) =>
+            new TsV(dateTime);
 
-        public static Expr Dt(DateTime dateTime)
-        {
-            return new DateV(dateTime);
-        }
+        public static Expr Ts(string iso8601Time) =>
+            new TsV(iso8601Time);
 
-        public static Expr Dt(string iso8601Date)
-        {
-            return new DateV(iso8601Date);
-        }
+        public static Expr Dt(DateTime dateTime) =>
+            new DateV(dateTime);
+
+        public static Expr Dt(string iso8601Date) =>
+            new DateV(iso8601Date);
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>

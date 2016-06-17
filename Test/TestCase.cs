@@ -20,7 +20,7 @@ namespace Test
         int? port;
         Client rootClient;
         protected Ref DbRef;
-        protected Client TestClient;
+        protected Client client;
 
         string serverKey;
 
@@ -48,16 +48,22 @@ namespace Test
 
             try {
                 await rootClient.Query(Delete(DbRef));
-            } catch (NotFound) {}
+            } catch (BadRequest) {}
 
             await rootClient.Query(Create(Ref("databases"), Obj("name", dbName)));
 
             var key = (ObjectV) await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "server")));
             serverKey = (string) key["secret"];
-            TestClient = GetClient();
+            client = GetClient();
         }
 
-        public async Task TearDown()
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            TearDownAsync().Wait();
+        }
+
+        async Task TearDownAsync()
         {
             await rootClient.Query(Delete(DbRef));
         }
@@ -76,11 +82,14 @@ namespace Test
             return new Client(domain: domain, scheme: scheme, port: port, clientIO: mock);
         }
 
-        protected static Ref GetRef(Expr v) =>
+        protected static Ref GetRef(Value v) =>
             (Ref) ((ObjectV) v)["ref"];
 
-        protected Task<Expr> Q(Expr query) =>
-            TestClient.Query(query);
+        protected static ObjectV GetData(Value v) =>
+            (ObjectV) ((ObjectV)v)["data"];
+
+        protected Task<Value> Q(Expr query) =>
+            client.Query(query);
     }
 
     class MockClientIO : IClientIO

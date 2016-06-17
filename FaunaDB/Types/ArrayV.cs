@@ -20,7 +20,10 @@ namespace FaunaDB.Types
         public static ArrayV FromEnumerable(IEnumerable<Value> values) =>
             new ArrayV(new List<Value>(values));
 
-        public ArrayV(List<Value> value)
+        public static ArrayV Of(params Value[] values) =>
+            new ArrayV(values);
+
+        internal ArrayV(List<Value> value)
         {
             Value = value;
 

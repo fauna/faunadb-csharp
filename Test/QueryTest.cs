@@ -28,13 +28,13 @@ namespace Test
 
         async Task SetUpAsync()
         {
-            classRef = GetRef(await TestClient.Query(Create(Ref("classes"), Obj("name", "widgets"))));
-            nIndexRef = GetRef(await TestClient.Query(Create(Ref("indexes"), Obj(
+            classRef = GetRef(await client.Query(Create(Ref("classes"), Obj("name", "widgets"))));
+            nIndexRef = GetRef(await client.Query(Create(Ref("indexes"), Obj(
                 "name", "widgets_by_n",
                 "source", classRef,
                 "path", "data.n",
                 "active", true))));
-            mIndexRef = GetRef(await TestClient.Query(Create(Ref("indexes"), Obj(
+            mIndexRef = GetRef(await client.Query(Create(Ref("indexes"), Obj(
                 "name", "widgets_by_m",
                 "source", classRef,
                 "path", "data.m",
@@ -44,7 +44,7 @@ namespace Test
             refM1 = await CreateRef(m: 1);
             refN1M1 = await CreateRef(n: 1, m: 1);
 
-            thimbleClassRef = GetRef(await TestClient.Query(Create(Ref("classes"), Obj("name", "thimbles"))));
+            thimbleClassRef = GetRef(await client.Query(Create(Ref("classes"), Obj("name", "thimbles"))));
         }
         #endregion
 
@@ -328,9 +328,9 @@ namespace Test
 
         [Test] public async Task TestLoginLogout()
         {
-            var instanceRef = GetRef(await TestClient.Query(
+            var instanceRef = GetRef(await client.Query(
                 Create(classRef, Obj("credentials", Obj("password", "sekrit")))));
-            var secret = (string) ((ObjectV) await TestClient.Query(
+            var secret = (string) ((ObjectV) await client.Query(
                 Login(instanceRef, Obj("password", "sekrit"))))["secret"];
             var instanceClient = GetClient(password: secret);
             Assert.AreEqual(instanceRef, await instanceClient.Query(Select("ref", Get(new Ref("classes/widgets/self")))));
@@ -339,7 +339,7 @@ namespace Test
 
         [Test] public async Task TestIdentify()
         {
-            var instanceRef = GetRef(await TestClient.Query(
+            var instanceRef = GetRef(await client.Query(
                 Create(classRef, Obj("credentials", Obj("password", "sekrit")))));
             await AssertQuery(true, Identify(instanceRef, "sekrit"));
         }
