@@ -1,10 +1,9 @@
-﻿using System;
+﻿using FaunaDB.Client;
+using FaunaDB.Types;
+using System;
 using System.Collections.Immutable;
-using System.Net;
 using System.Linq;
-
-using FaunaDB.Client;
-using FaunaDB.Values;
+using System.Net;
 
 namespace FaunaDB.Errors
 {
@@ -28,7 +27,7 @@ namespace FaunaDB.Errors
             if (200 <= ((int) code) && ((int) code) <= 299)
                 return;
             
-            var errors = (from _ in ((ArrayV) ((ObjectV) rr.ResponseContent)["errors"]).Value select (ErrorData) _).ToImmutableArray();
+            var errors = (from _ in ((ArrayV) ((ObjectV) rr.ResponseContent)["errors"]) select (ErrorData) _).ToImmutableArray();
 
             switch (code)
             {

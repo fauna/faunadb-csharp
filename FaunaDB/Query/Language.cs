@@ -1,39 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-
-using FaunaDB.Values;
+﻿using FaunaDB.Types;
+using System;
 using System.Reflection;
-using System.Collections.Immutable;
 
-namespace FaunaDB.Query {
+namespace FaunaDB.Query
+{
     public partial struct Language
     {
-        private static ImmutableDictionary<Type, MethodInfo> ImplictsByType;
-
-        static Language()
-        {
-            var methods = typeof(Expr).GetMethods(BindingFlags.Public | BindingFlags.Static);
-            var implicitsMethods = from m in methods where (m.Name == "op_Implicit") select m;
-
-            var builder = ImmutableDictionary.CreateBuilder<Type, MethodInfo>();
-            foreach (var method in implicitsMethods)
-            {
-                var parameters = method.GetParameters();
-                if (parameters.Length == 1)
-                {
-                    builder.Add(parameters[0].ParameterType, method);
-                }
-            }
-
-            ImplictsByType = builder.ToImmutable();
-        }
-
-        public static Expr Array(params Expr[] values) =>
-            ArrayV.FromEnumerable(values);
-
-        #region Basic forms
+        #region Basic Forms
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
@@ -44,10 +17,12 @@ namespace FaunaDB.Query {
 
         /// <summary>
         /// Use a lambda expression to conveniently define let expressions.
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
         /// </summary>
         /// <example>
-        /// <c>Query.Let(1, a => a)</c> is equivalent to <c>Query.Let(new ObjectV("auto0", 1), Query.Var("auto0"))</c>
+        /// <code>
+        /// <c>Language.Let(1, a => a)</c> is equivalent to <c>Language.Let(new ObjectV("a", 1), Language.Var("a"))</c>
+        /// </code>
         /// </example>
         public static Expr Let(Expr value, Func<Expr, Expr> @in)
         {
@@ -102,55 +77,14 @@ namespace FaunaDB.Query {
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
+        /// This is the raw version. Usually it's easier to use an overload.
         /// </summary>
-        // todo: rename?
-        public static Expr Obj(ObjectV fields) =>
-            Q("object", fields);
-
-        public static Expr Obj(object obj)
-        {
-            var attributes = ImmutableDictionary.CreateBuilder<string, Expr>();
-
-            foreach (var property in obj.GetType().GetProperties())
-            {
-                MethodInfo methodInfo;
-                if (ImplictsByType.TryGetValue(property.PropertyType, out methodInfo))
-                {
-                    var value = property.GetValue(obj);
-                    Expr expr = (Expr) methodInfo.Invoke(null, new object[] { value });
-
-                    attributes.Add(property.Name, expr);
-                }
-            }
-
-            return new ObjectV(attributes.ToImmutable());
-        }
-
-        public static Expr Obj(string key1, Expr value1) =>
-            Obj(new ObjectV(key1, value1));
-
-        public static Expr Obj(string key1, Expr value1, string key2, Expr value2) =>
-            Obj(new ObjectV(key1, value1, key2, value2));
-
-        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            Obj(new ObjectV(key1, value1, key2, value2, key3, value3));
-
-        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            Obj(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4));
-
-        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
-                string key4, Expr value4, string key5, Expr value5) =>
-            Obj(new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
-
-        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3,
-                string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
-            Obj(new ObjectV(
-                key1, value1, key2, value2, key3, value3,
-                key4, value4, key5, value5, key6, value6));
+        public static Expr Lambda(Expr vars, Expr expr) =>
+            Q("lambda", vars, "expr", expr);
 
         #endregion
 
-        #region Collection functions
+        #region Collection Functions
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
@@ -204,7 +138,7 @@ namespace FaunaDB.Query {
             Q("append", elements, "collection", collection);
         #endregion
 
-        #region Read functions
+        #region Read Functions
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
@@ -217,19 +151,19 @@ namespace FaunaDB.Query {
         /// </summary>
         public static Expr Paginate(
             Expr set,
-            Expr size = null,
             Expr ts = null,
             Expr after = null,
             Expr before = null,
+            Expr size = null,
             Expr events = null,
             Expr sources = null) =>
             ObjectV.WithoutNullValues(
                 ObjectV.Pairs("paginate", set),
                 ObjectV.Pairs(
-                    "size", size,
                     "ts", ts,
                     "after", after,
                     "before", before,
+                    "size", size,
                     "events", events,
                     "sources", sources));
 
@@ -246,7 +180,7 @@ namespace FaunaDB.Query {
             events == null ? Q("count", set) : Q("count", set, "events", events);
         #endregion
 
-        #region Write functions
+        #region Write Functions
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
@@ -314,6 +248,12 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
+        public static Expr Distinct(Expr set) =>
+            Q("distinct", set);
+
+        /// <summary>
+        /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
+        /// </summary>
         public static Expr Join(Expr source, Expr target) =>
             Q("join", source, "with", target);
 
@@ -341,20 +281,18 @@ namespace FaunaDB.Query {
             Q("identify", @ref, "password", password);
         #endregion
 
-        #region String functions
+        #region String Functions
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#string_functions">docs</see>. 
         /// </summary>
         public static Expr Concat(Expr strings) =>
-            // todo: helper?
             Q("concat", strings);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#string_functions">docs</see>. 
         /// </summary>
         public static Expr Concat(Expr strings, Expr separator) =>
-            // todo: helper?
             Q("concat", strings, "separator", separator);
 
         /// <summary>
@@ -364,7 +302,7 @@ namespace FaunaDB.Query {
             Q("casefold", @string);
         #endregion
 
-        #region Time and date functions
+        #region Time and Date
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
@@ -385,12 +323,18 @@ namespace FaunaDB.Query {
             Q("date", date);
         #endregion
 
-        #region Miscellaneous functions
+        #region Miscellaneous Functions
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr EqualsExpr(params Expr[] values) =>
+        public static Expr NextId() =>
+            Q("next_id", NullV.Instance);
+
+        /// <summary>
+        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
+        /// </summary>
+        public static Expr Equals(params Expr[] values) =>
             Q("equals", Varargs(values));
 
         /// <summary>
@@ -440,25 +384,25 @@ namespace FaunaDB.Query {
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr Less(params Expr[] values) =>
+        public static Expr LT(params Expr[] values) =>
             Q("lt", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr LessOrEqual(params Expr[] values) =>
+        public static Expr LTE(params Expr[] values) =>
             Q("lte", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr Greater(params Expr[] values) =>
+        public static Expr GT(params Expr[] values) =>
             Q("gt", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr GreaterOrEqual(params Expr[] values) =>
+        public static Expr GTE(params Expr[] values) =>
             Q("gte", Varargs(values));
 
         /// <summary>
@@ -480,24 +424,5 @@ namespace FaunaDB.Query {
             Q("not", boolean);
         #endregion
 
-        #region Helpers
-
-        static Expr Varargs(params Expr[] values) =>
-            values.Count() == 1 ? values[0] : ArrayV.FromEnumerable(values);
-
-        #region Q
-        static Expr Q(string key1, Expr value1) =>
-            new ObjectV(key1, value1);
-
-        static Expr Q(string key1, Expr value1, string key2, Expr value2) =>
-            new ObjectV(key1, value1, key2, value2);
-
-        static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            new ObjectV(key1, value1, key2, value2, key3, value3);
-
-        static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            new ObjectV(key1, value1, key2, value2, key3, value3, key4, value4);
-        #endregion
-        #endregion
     }
 }

@@ -1,10 +1,9 @@
-﻿using NUnit.Framework;
+﻿using FaunaDB;
+using FaunaDB.Query;
+using FaunaDB.Types;
+using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
-
-using FaunaDB;
-using FaunaDB.Values;
-using FaunaDB.Query;
 using static FaunaDB.Query.Language;
 
 namespace Test

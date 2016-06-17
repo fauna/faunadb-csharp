@@ -1,12 +1,11 @@
-﻿using System;
+﻿using FaunaDB.Query;
+using FaunaDB.Types;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
-
-using FaunaDB.Values;
-using FaunaDB.Query;
 using static FaunaDB.Query.Language;
 
 namespace FaunaDB

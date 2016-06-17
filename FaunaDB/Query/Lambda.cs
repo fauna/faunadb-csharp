@@ -1,22 +1,12 @@
-﻿using FaunaDB.Values;
+﻿using FaunaDB.Types;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FaunaDB.Query
 {
     public partial struct Language
     {
-        /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
-        /// This is the raw version. Usually it's easier to use an overload.
-        /// </summary>
-        public static Expr Lambda(Expr vars, Expr expr) =>
-            Q("lambda", vars, "expr", expr);
-
         /// <summary>
         /// Use a lambda expression to tersely define a Lambda query.
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
@@ -39,7 +29,7 @@ namespace FaunaDB.Query
             string p1 = info[1].Name;
 
             return Lambda(
-                Array(p0, p1),
+                Arr(p0, p1),
                 lambda(Var(p0), Var(p1)));
         }
 
@@ -51,7 +41,7 @@ namespace FaunaDB.Query
             string p2 = info[2].Name;
 
             return Lambda(
-                Array(p0, p1, p2),
+                Arr(p0, p1, p2),
                 lambda(Var(p0), Var(p1), Var(p2)));
         }
 
@@ -64,7 +54,7 @@ namespace FaunaDB.Query
             string p3 = info[3].Name;
 
             return Lambda(
-                Array(p0, p1, p2, p3),
+                Arr(p0, p1, p2, p3),
                 lambda(Var(p0), Var(p1), Var(p2), Var(p3)));
         }
 

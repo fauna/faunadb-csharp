@@ -1,16 +1,13 @@
-﻿using NUnit.Framework;
+﻿using FaunaDB.Errors;
+using FaunaDB.Query;
+using FaunaDB.Types;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Net;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-
-using FaunaDB;
-using FaunaDB.Client;
-using FaunaDB.Errors;
-using FaunaDB.Values;
-using FaunaDB.Query;
 using static FaunaDB.Query.Language;
 
 namespace Test
@@ -150,7 +147,7 @@ namespace Test
             var failure = new Failure("code", "desc", new ArrayV("a", "b"));
             var vf = new ValidationFailed("vf_desc", new ArrayV("vf"), (new[] { failure }).ToImmutableArray());
             Assert.AreEqual(
-                "ValidationFailed(vf_desc, ArrayV(StringV(vf)), [Failure(code, desc, ArrayV(StringV(a), StringV(b)))])",
+                "ValidationFailed(vf_desc, Arr(StringV(vf)), [Failure(code, desc, Arr(StringV(a), StringV(b)))])",
                 vf.ToString());
         }
 

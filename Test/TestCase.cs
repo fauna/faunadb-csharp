@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Errors;
-using FaunaDB.Values;
+using FaunaDB.Types;
 using FaunaDB.Query;
 
 namespace Test

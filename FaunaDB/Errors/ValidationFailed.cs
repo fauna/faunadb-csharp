@@ -1,8 +1,7 @@
-﻿using System;
+﻿using FaunaDB.Types;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
-
-using FaunaDB.Values;
 
 namespace FaunaDB.Errors
 {

@@ -3,9 +3,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 
-namespace FaunaDB.Values
+namespace FaunaDB.Types
 {
     /// <summary>
     /// Corresponds to a JSON object.
@@ -126,8 +125,7 @@ namespace FaunaDB.Values
 
         public override string ToString()
         {
-            var props = string.Join(", ", from kv in Value select $"{kv.Key}: {kv.Value}");
-            return $"ObjectV({props})";
+            return $"ObjectV({Value.ToString()})";
         }
         #endregion
     }

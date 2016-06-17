@@ -2,7 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 
-using FaunaDB.Values;
+using FaunaDB.Types;
 using FaunaDB.Query;
 
 namespace FaunaDB.Errors

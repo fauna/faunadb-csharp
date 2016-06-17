@@ -56,16 +56,16 @@
   <ItemGroup>
     <Compile Include="HashUtil.cs" />
     <Compile Include="Query\Expr.cs" />
+    <Compile Include="Query\Helpers.cs" />
     <Compile Include="Query\Lambda.cs" />
     <Compile Include="Query\Language.cs" />
-    <Compile Include="Values\ObjectV.cs" />
-    <Compile Include="Values\ArrayV.cs" />
+    <Compile Include="Types\ObjectV.cs" />
+    <Compile Include="Types\ArrayV.cs" />
     <Compile Include="Page.cs" />
-    <Compile Include="Values\ValueJsonConverter.cs" />
-    <Compile Include="Values\JsonU.cs" />
-    <Compile Include="Values\ScalarValue.cs" />
-    <Compile Include="Values\NullV.cs" />
-    <Compile Include="Values\Value.cs" />
+    <Compile Include="Types\Value.cs" />
+    <Compile Include="Types\Json.cs" />
+    <Compile Include="Types\ScalarValue.cs" />
+    <Compile Include="Types\NullV.cs" />
     <Compile Include="ImmutableUtil.cs" />
     <Compile Include="Errors\Errors.cs" />
     <Compile Include="Errors\Failure.cs" />

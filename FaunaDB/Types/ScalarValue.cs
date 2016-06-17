@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.Globalization;
 
-namespace FaunaDB.Values
+namespace FaunaDB.Types
 {
     /// <summary>
-    /// Base class for Values that simply wrap something, such as <see cref="BoolV"/>. 
+    /// Base class for Values that simply wrap something, such as <see cref="BooleanV"/>. 
     /// </summary>
     public abstract class ScalarValue<TThis, TWrapped> : Value where TThis : ScalarValue<TThis, TWrapped>
     {
@@ -48,15 +48,15 @@ namespace FaunaDB.Values
     /// <summary>
     /// Wrapped boolean.
     /// </summary>
-    public class BoolV : ScalarValue<BoolV, bool>
+    public class BooleanV : ScalarValue<BooleanV, bool>
     {
-        BoolV(bool value) : base(value) {}
+        BooleanV(bool value) : base(value) {}
 
-        public static BoolV Of(bool b) =>
+        public static BooleanV Of(bool b) =>
             b ? True : False;
 
-        public static readonly BoolV True = new BoolV(true);
-        public static readonly BoolV False = new BoolV(false);
+        public static readonly BooleanV True = new BooleanV(true);
+        public static readonly BooleanV False = new BooleanV(false);
     }
 
     /// <summary>
@@ -128,27 +128,27 @@ namespace FaunaDB.Values
     /// FaunaDB timestamp.
     /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
     /// </summary>
-    public sealed class FaunaTime : ScalarValue<FaunaTime, DateTime>
+    public sealed class TsV : ScalarValue<TsV, DateTime>
     {
         /// <summary>
         /// Construct from an iso8601 time string.
         /// It must use the 'Z' time zone.
         /// </summary>
-        public FaunaTime(string iso8601Time) : base(DateTimeUtil.FromIsoTime(iso8601Time, TimeFormat)) { }
+        public TsV(string iso8601Time) : base(DateTimeUtil.FromIsoTime(iso8601Time, TimeFormat)) { }
 
-        public FaunaTime(DateTime dateTime) : base(dateTime) { }
+        public TsV(DateTime dateTime) : base(dateTime) { }
 
         /// <summary>
         /// Convert from a DateTime by rendering as iso8601.
         /// </summary>
-        public static explicit operator FaunaTime(DateTime value) =>
-            new FaunaTime(value);
+        public static explicit operator TsV(DateTime value) =>
+            new TsV(value);
 
         /// <summary>
         /// Convert to DateTime.
         /// Since DateTime has millisecond precision, this is lossy.
         /// </summary>
-        public static implicit operator DateTime(FaunaTime ft) =>
+        public static implicit operator DateTime(TsV ft) =>
             ft.Value;
 
         const string TimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFZ";
@@ -161,7 +161,7 @@ namespace FaunaDB.Values
         #region boilerplate
         public override bool Equals(Expr v)
         {
-            var t = v as FaunaTime;
+            var t = v as TsV;
             return t != null && t.Value == Value;
         }
 
@@ -177,23 +177,23 @@ namespace FaunaDB.Values
     /// FaunaDB date.
     /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
     /// </summary>
-    public sealed class FaunaDate : ScalarValue<FaunaDate, DateTime>
+    public sealed class DateV : ScalarValue<DateV, DateTime>
     {
         /// <summary>
         /// Construct from an iso8601 date string.
         /// </summary>
-        public FaunaDate(string iso8601Date) : base(DateTimeUtil.FromIsoDate(iso8601Date, DateFormat)) { }
+        public DateV(string iso8601Date) : base(DateTimeUtil.FromIsoDate(iso8601Date, DateFormat)) { }
 
-        public FaunaDate(DateTime dateDate) : base(dateDate) { }
+        public DateV(DateTime dateDate) : base(dateDate) { }
 
         /// <summary>
         /// Convert from a DateTime by rendering as iso8601.
         /// This throws out time-of-day data.
         /// </summary>
-        public static explicit operator FaunaDate(DateTime value) =>
-            new FaunaDate(value);
+        public static explicit operator DateV(DateTime value) =>
+            new DateV(value);
 
-        public static implicit operator DateTime(FaunaDate ft) =>
+        public static implicit operator DateTime(DateV ft) =>
             ft.Value;
 
         const string DateFormat = "yyyy-MM-dd";
@@ -206,7 +206,7 @@ namespace FaunaDB.Values
         #region boilerplate
         public override bool Equals(Expr v)
         {
-            var d = v as FaunaDate;
+            var d = v as DateV;
             return d != null && d.Value == Value;
         }
 

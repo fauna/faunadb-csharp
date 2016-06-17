@@ -1,15 +1,10 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-using FaunaDB;
-using FaunaDB.Client;
-using FaunaDB.Errors;
-using FaunaDB.Values;
+﻿using FaunaDB.Errors;
 using FaunaDB.Query;
+using FaunaDB.Types;
+using NUnit.Framework;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using static FaunaDB.Query.Language;
 
 namespace Test
@@ -102,8 +97,8 @@ namespace Test
             await AssertQuery(2, let);
             Assert.AreEqual(let, Let(1, a => Add(a, a)));
             Assert.AreEqual(
-                Let(new ObjectV("a", 1, "b", 2), Array(Var("a"), Var("b"))),
-                Let(1, 2, (a, b) => Array(a, b)));
+                Let(new ObjectV("a", 1, "b", 2), Arr(Var("a"), Var("b"))),
+                Let(1, 2, (a, b) => Arr(a, b)));
         }
 
         [Test] public async Task TestIf()
@@ -132,8 +127,8 @@ namespace Test
 
             Assert.AreEqual(Lambda("a", Add(Var("a"), Var("a"))), Lambda(a => Add(a, a)));
 
-            var expected = Lambda("a", Lambda("b", Lambda("c", Array(Var("a"), Var("b"), Var("c")))));
-            Assert.AreEqual(expected, Lambda(a => Lambda(b => Lambda(c => Array(a, b, c)))));
+            var expected = Lambda("a", Lambda("b", Lambda("c", Arr(Var("a"), Var("b"), Var("c")))));
+            Assert.AreEqual(expected, Lambda(a => Lambda(b => Lambda(c => Arr(a, b, c)))));
 
             // Error in lambda should not affect future queries.
             AssertU.Throws<Exception>(() => {
@@ -145,8 +140,8 @@ namespace Test
 
         [Test] public void TestLambdaMultiVar()
         {
-            var expected = Lambda(Array("a", "b"), Array(Var("a"), Var("b")));
-            Assert.AreEqual(expected, Lambda((a, b) => Array(a, b)));
+            var expected = Lambda(Arr("a", "b"), Arr(Var("a"), Var("b")));
+            Assert.AreEqual(expected, Lambda((a, b) => Arr(a, b)));
         }
         #endregion
 
@@ -171,7 +166,7 @@ namespace Test
 
         [Test] public async Task TestFilter()
         {
-            var evens = Filter(new ArrayV(1, 2, 3, 4), a => EqualsExpr(Modulo(a, 2), 0));
+            var evens = Filter(new ArrayV(1, 2, 3, 4), a => Language.Equals(Modulo(a, 2), 0));
             await AssertQuery(new ArrayV(2, 4), evens);
 
             // Works on page too
@@ -336,7 +331,7 @@ namespace Test
                 Login(instanceRef, Obj("password", "sekrit"))))["secret"];
             var instanceClient = GetClient(password: secret);
             Assert.AreEqual(instanceRef, await instanceClient.Query(Select("ref", Get(new Ref("classes/widgets/self")))));
-            Assert.AreEqual(BoolV.True, await instanceClient.Query(Language.Logout(true)));
+            Assert.AreEqual(BooleanV.True, await instanceClient.Query(Language.Logout(true)));
         }
 
         [Test] public async Task TestIdentify()
@@ -368,22 +363,22 @@ namespace Test
         [Test] public async Task TestTime()
         {
             var time = "1970-01-01T00:00:00.123456789Z";
-            await AssertQuery(new FaunaTime(time), Time(time));
+            await AssertQuery(new TsV(time), Time(time));
 
             // "now" refers to the current time.
-            Assert.IsInstanceOf<FaunaTime>(await Q(Time("now")));
+            Assert.IsInstanceOf<TsV>(await Q(Time("now")));
         }
 
         [Test] public async Task TestEpoch()
         {
-            await AssertQuery(new FaunaTime("1970-01-01T00:00:12.000Z"), Epoch(12, "second"));
+            await AssertQuery(new TsV("1970-01-01T00:00:12.000Z"), Epoch(12, "second"));
             //var nanoTime = new FaunaTime("1970-01-01T00:00:00.0012345Z");
             //await AssertQuery(nanoTime, Epoch(1234567, "nanosecond"));
         }
 
         [Test] public async Task TestDate()
         {
-            await AssertQuery(new FaunaDate("1970-01-01"), Date("1970-01-01"));
+            await AssertQuery(new DateV("1970-01-01"), Date("1970-01-01"));
         }
         #endregion
 
@@ -391,10 +386,10 @@ namespace Test
 
         [Test] public async Task TestEquals()
         {
-            await AssertQuery(true, EqualsExpr(1, 1, 1));
-            await AssertQuery(false, EqualsExpr(1, 1, 2));
-            await AssertQuery(true, EqualsExpr(1));
-            await AssertBadQuery(EqualsExpr());
+            await AssertQuery(true, Language.Equals(1, 1, 1));
+            await AssertQuery(false, Language.Equals(1, 1, 2));
+            await AssertQuery(true, Language.Equals(1));
+            await AssertBadQuery(Language.Equals());
         }
 
         [Test] public async Task TestContains()
@@ -460,22 +455,22 @@ namespace Test
 
         [Test] public async Task TestLess()
         {
-            await AssertQuery(true, Less(1, 2));
+            await AssertQuery(true, LT(1, 2));
         }
 
         [Test] public async Task TestLessOrEqual()
         {
-            await AssertQuery(true, LessOrEqual(1, 1));
+            await AssertQuery(true, LTE(1, 1));
         }
 
         [Test] public async Task TestGreater()
         {
-            await AssertQuery(true, Greater(2, 1));
+            await AssertQuery(true, GT(2, 1));
         }
 
         [Test] public async Task TestGreaterOrEqual()
         {
-            await AssertQuery(true, GreaterOrEqual(1, 1));
+            await AssertQuery(true, GTE(1, 1));
         }
 
         [Test] public async Task TestAnd()

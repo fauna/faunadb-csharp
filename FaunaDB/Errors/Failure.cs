@@ -1,5 +1,5 @@
-﻿using System;
-using FaunaDB.Values;
+﻿using FaunaDB.Types;
+using System;
 
 namespace FaunaDB.Errors
 {

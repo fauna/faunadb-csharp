@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 
 using FaunaDB;
-using FaunaDB.Values;
+using FaunaDB.Types;
 
 namespace Test
 {

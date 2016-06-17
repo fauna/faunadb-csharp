@@ -1,14 +1,14 @@
 ﻿using FaunaDB.Query;
 using Newtonsoft.Json;
 
-namespace FaunaDB.Values
+namespace FaunaDB.Types
 {
     /// <summary>
     /// Type of Value.Null.
     /// </summary>
     public class NullV : Value
     {
-        public static readonly NullV Instance = new NullV();
+        public static readonly Expr Instance = new NullV();
 
         NullV() {}
 
@@ -22,7 +22,7 @@ namespace FaunaDB.Values
             object.ReferenceEquals(this, v);
 
         public override string ToString() =>
-            "Value.Null";
+            "NullV";
 
         protected override int HashCode() =>
             0;

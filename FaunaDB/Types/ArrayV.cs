@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace FaunaDB.Values
+namespace FaunaDB.Types
 {
     /// <summary>
     /// Corresponds to a JSON array.
     /// </summary>
     public sealed class ArrayV : Value, IEnumerable<Expr>
     {
-        #region Construction
         public static readonly ArrayV Empty = new ArrayV(ImmutableArray<Expr>.Empty);
 
-        public ImmutableArray<Expr> Value { get;  }
+        public ImmutableArray<Expr> Value { get; }
 
         public static ArrayV FromEnumerable(IEnumerable<Expr> values) =>
             new ArrayV(values.ToImmutableArray());
@@ -40,13 +39,14 @@ namespace FaunaDB.Values
         /// A lambda <c>(add) => { ... }</c> that calls <c>add</c> for each element to be in the new ArrayV.
         /// </param>
         public ArrayV(Action<Action<Expr>> builder) : this(ImmutableUtil.BuildArray(builder)) {}
-        #endregion
 
         /// <summary>
         /// Get the nth value.
         /// </summary>
         /// <exception cref="IndexOutOfRangeException"/>
         public Expr this[int n] { get { return Value[n]; } }
+
+        public int Length { get { return Value.Length; } }
 
         override internal void WriteJson(JsonWriter writer)
         {
@@ -72,7 +72,7 @@ namespace FaunaDB.Values
             HashUtil.Hash(Value);
 
         public override string ToString() =>
-            $"ArrayV({string.Join(", ", this)})";
+            $"Arr({string.Join(", ", Value)})";
         #endregion
     }
 }

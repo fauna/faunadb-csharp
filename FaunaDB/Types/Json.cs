@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using FaunaDB.Query;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
-using FaunaDB.Query;
-
-namespace FaunaDB.Values
+namespace FaunaDB.Types
 {
     class ValueJsonConverter : JsonConverter
     {
@@ -47,7 +47,7 @@ namespace FaunaDB.Values
                 case JsonToken.String:
                     return new StringV((string) reader.Value);
                 case JsonToken.Boolean:
-                    return BoolV.Of((bool) reader.Value);
+                    return BooleanV.Of((bool) reader.Value);
                 case JsonToken.Null:
                     return NullV.Instance;
                 default:
@@ -94,9 +94,9 @@ namespace FaunaDB.Values
                             NextAndExpect(JsonToken.EndObject);
                             return new SetRef(v);
                         case "@ts":
-                            return new FaunaTime(ReadStringAndEndObject());
+                            return new TsV(ReadStringAndEndObject());
                         case "@date":
-                            return new FaunaDate(ReadStringAndEndObject());
+                            return new DateV(ReadStringAndEndObject());
                         default:
                             return ReadObjectBody(name);
                     }
@@ -158,4 +158,35 @@ namespace FaunaDB.Values
             throw new NotSupportedException(reader.TokenType.ToString());
         }
     }
+
+    static class JsonU
+    {
+        public static void WriteArray(this JsonWriter writer, IEnumerable<Expr> vals)
+        {
+            writer.WriteStartArray();
+            foreach (var _ in vals)
+                _.WriteJson(writer);
+            writer.WriteEndArray();
+        }
+
+        public static void WriteObject(this JsonWriter writer, string name, Expr value)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName(name);
+            value.WriteJson(writer);
+            writer.WriteEndObject();
+        }
+
+        public static void WriteObject(this JsonWriter writer, IEnumerable<KeyValuePair<string, Expr>> props)
+        {
+            writer.WriteStartObject();
+            foreach (var kv in props)
+            {
+                writer.WritePropertyName(kv.Key);
+                kv.Value.WriteJson(writer);
+            }
+            writer.WriteEndObject();
+        }
+    }
+
 }

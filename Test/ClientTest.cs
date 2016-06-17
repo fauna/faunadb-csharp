@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using FaunaDB.Client;
-using FaunaDB.Values;
+using FaunaDB.Types;
 
 namespace Test
 {

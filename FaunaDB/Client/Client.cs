@@ -1,15 +1,13 @@
-﻿using System;
+﻿using FaunaDB.Errors;
+using FaunaDB.Query;
+using FaunaDB.Types;
+using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-
-using FaunaDB.Errors;
-using FaunaDB.Values;
-using FaunaDB.Query;
 
 namespace FaunaDB.Client
 {
@@ -140,7 +138,7 @@ namespace FaunaDB.Client
         /// Like <c>Post</c>, but a <c>PATCH</c> request.
         /// </summary>
         /// <exception cref="FaunaException"/>
-        public Task<Expr> Patch(string path, Value data = null) =>
+        public Task<Expr> Patch(string path, Expr data = null) =>
             Execute(HttpMethodKind.Patch, path, data: data);
 
         /// <summary>

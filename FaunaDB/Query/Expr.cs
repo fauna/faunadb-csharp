@@ -1,5 +1,5 @@
 ﻿using FaunaDB.Errors;
-using FaunaDB.Values;
+using FaunaDB.Types;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Immutable;
@@ -40,13 +40,13 @@ namespace FaunaDB.Query
 
         #region implicit conversions
         public static implicit operator Expr(ImmutableArray<Expr> values) =>
-            new ArrayV(values);
+            values == null ? NullV.Instance : new ArrayV(values);
 
-        public static implicit operator Expr(ImmutableDictionary<string, Expr> d) =>
-            new ObjectV(d);
+        public static implicit operator Expr(ImmutableDictionary<string, Expr> values) =>
+            values == null ? NullV.Instance : new ObjectV(values);
 
         public static implicit operator Expr(bool b) =>
-            BoolV.Of(b);
+            BooleanV.Of(b);
 
         public static implicit operator Expr(double d) =>
             new DoubleV(d);
@@ -58,8 +58,8 @@ namespace FaunaDB.Query
             new LongV(i);
 
         public static implicit operator Expr(string s) =>
-            // todo: null Value is bad...
-            s == null ? null : new StringV(s);
+            s == null ? NullV.Instance : new StringV(s);
+
         #endregion
 
         #region explicit (downcasting) conversions
@@ -70,16 +70,16 @@ namespace FaunaDB.Query
             ((ArrayV) v).Value;
 
         public static explicit operator bool(Expr v) =>
-            ((BoolV)v).Value;
+            ((BooleanV) v).Value;
 
         public static explicit operator double(Expr v) =>
-            ((DoubleV)v).Value;
+            ((DoubleV) v).Value;
 
         public static explicit operator long(Expr v) =>
-            ((LongV)v).Value;
+            ((LongV) v).Value;
 
         public static explicit operator string(Expr v) =>
-            ((StringV)v).Value;
+            ((StringV) v).Value;
         #endregion
 
         #region boilerplate
@@ -130,16 +130,16 @@ namespace FaunaDB.Query
             Language.Or(a, b);
 
         public static Expr operator <(Expr a, Expr b) =>
-            Language.Less(a, b);
+            Language.LT(a, b);
 
         public static Expr operator <=(Expr a, Expr b) =>
-            Language.LessOrEqual(a, b);
+            Language.LTE(a, b);
 
         public static Expr operator >(Expr a, Expr b) =>
-            Language.Greater(a, b);
+            Language.GT(a, b);
 
         public static Expr operator >=(Expr a, Expr b) =>
-            Language.GreaterOrEqual(a, b);
+            Language.GTE(a, b);
 
         #endregion
     }
