@@ -57,25 +57,16 @@ namespace Test
             AssertJsonEqual(Obj("a", Obj("b", Obj("c", "d"))), "{\"object\":{\"a\":{\"object\":{\"b\":{\"object\":{\"c\":\"d\"}}}}}}");
         }
 
-        [Test] public void TestRef()
+        [Test]
+        public void TestAnonymousObj()
         {
-            AssertJsonEqual(Ref("classes"), "{\"@ref\":\"classes\"}");
-
-            AssertJsonEqual(Ref(Ref("classes/people"), "id1"), "{\"ref\":{\"@ref\":\"classes/people\"},\"id\":\"id1\"}");
-        }
-
-        [Test] public void TestObj()
-        {
-            Assert.AreEqual(new ObjectV("@foo", 1), Expr.FromJson("{\"@obj\": {\"@foo\": 1}}"));
-        }
-
-        [Test] public void TestAnonymousObj()
-        {
-            Expr obj = Obj(new {
+            Expr obj = Obj(new
+            {
                 foo = 10,
                 bar = "bar",
                 array = new int[] { 1, 2, 3 },
-                obj = new {
+                obj = new
+                {
                     a = 3.14,
                     b = true
                 }
@@ -89,73 +80,252 @@ namespace Test
                     "a", 3.14,
                     "b", true)
                 ));
+
+            AssertJsonEqual(obj, "{\"object\":{\"foo\":10,\"bar\":\"bar\",\"array\":[1,2,3],\"obj\":{\"object\":{\"a\":3.14,\"b\":true}}}}");
         }
 
-        [Test] public void TestSet()
+        [Test] public void TestRef()
         {
-            Ref @ref = new Ref("classes/frogs/123");
-            const string jsonRef = "{\"@ref\":\"classes/frogs/123\"}";
+            AssertJsonEqual(Ref("classes"), "{\"@ref\":\"classes\"}");
 
-            var index = new Ref("indexes/frogs_by_size");
-            var match = new SetRef(Match(index, @ref));
-            var jsonMatch = $"{{\"@set\":{{\"match\":{index.ToJson()},\"terms\":{jsonRef}}}}}";
-            Assert.AreEqual(match, Expr.FromJson(jsonMatch));
-            Assert.AreEqual(jsonMatch, match.ToJson());
+            AssertJsonEqual(Ref(Ref("classes/people"), "id1"), "{\"ref\":{\"@ref\":\"classes/people\"},\"id\":\"id1\"}");
         }
 
-        [Test] public void TestTimeConversion()
+        [Test] public void TestTimestamp()
         {
-            var dt = DateTime.UtcNow;
-            var ft = (TsV) dt;
-            Assert.AreEqual(dt, (DateTime) ft);
+            AssertJsonEqual(new TsV("1970-01-01T00:00:00Z"), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
 
-            dt = UnixTimestamp(0);
-            ft = (TsV) dt;
-            Assert.AreEqual(ft, new TsV("1970-01-01T00:00:00.0000000Z"));
-            Assert.AreEqual(dt, (DateTime) ft);
+            AssertJsonEqual(new TsV(new DateTime(1970, 1, 1, 0, 0, 0, 0)), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
         }
 
-        [Test] public void TestDateConversion()
+        [Test] public void TetDate()
         {
-            var dt = DateTime.UtcNow.Date;
-            var fd = (DateV) dt;
-            Assert.AreEqual(dt, (DateTime) fd);
+            AssertJsonEqual(new DateV("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
 
-            dt = UnixTimestamp(0).Date;
-            fd = (DateV) dt;
-            Assert.AreEqual(new DateV("1970-01-01"), fd);
-            Assert.AreEqual(dt, (DateTime) fd);
+            AssertJsonEqual(new DateV(new DateTime(2000, 1, 1)), "{\"@date\":\"2000-01-01\"}");
         }
 
-        [Test] public void TestTime()
+        [Test] public void TestLet()
         {
-            var testTs = new TsV("1970-01-01T00:00:00.1234567Z");
-            const string testTsJson = "{\"@ts\":\"1970-01-01T00:00:00.1234567Z\"}";
-            Assert.AreEqual(testTsJson, testTs.ToJson());
-            Assert.AreEqual(testTs, Expr.FromJson(testTsJson));
+            AssertJsonEqual(Let("x", 10).In(Var("x")),
+                "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
+
+            AssertJsonEqual(Let("x", 10).In(x => x),
+                "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
+
+            AssertJsonEqual(Let(10, In: x => x),
+                "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
+
+            ////
+
+            AssertJsonEqual(Let("x", 10, "y", 20).In(Add(Var("x"), Var("y"))),
+                "{\"let\":{\"x\":10,\"y\":20},\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
+
+            AssertJsonEqual(Let("x", 10, "y", 20).In((x, y) => Add(x, y)),
+                "{\"let\":{\"x\":10,\"y\":20},\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
+
+            AssertJsonEqual(Let(10, 20, In: (x, y) => Add(x, y)),
+                "{\"let\":{\"x\":10,\"y\":20},\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
+
         }
 
-        [Test] public void TestDate()
+        [Test] public void TestVar()
         {
-            var testDate = new DateV("1970-01-01");
-            var testDateJson = "{\"@date\":\"1970-01-01\"}";
-            Assert.AreEqual(testDateJson, testDate.ToJson());
-            Assert.AreEqual(testDate, Expr.FromJson(testDateJson));
+            AssertJsonEqual(Var("x"), "{\"var\":\"x\"}");
         }
 
-        DateTime UnixTimestamp(double seconds)
+        [Test] public void TestIf()
         {
-            var dt = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            return dt.AddSeconds(seconds);
+            AssertJsonEqual(If(true, 1, 0), "{\"if\":true,\"then\":1,\"else\":0}");
         }
 
-        [Test] public void TestObjectEquality()
+        [Test] public void TestDo()
         {
-            var o1 = new ObjectV("a", 1, "b", 2);
-            var o2 = new ObjectV("b", 2, "a", 1);
-            var o3 = new ObjectV("x", 0, "y", 0);
-            Assert.AreEqual(o1, o2);
-            Assert.AreNotEqual(o1, o3);
+            AssertJsonEqual(Do(If(true, 1, 0), "a string"), "{\"do\":[{\"if\":true,\"then\":1,\"else\":0},\"a string\"]}");
         }
+
+        [Test] public void TestLamda()
+        {
+            AssertJsonEqual(Lambda("x", Var("x")),
+                "{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}}");
+
+            AssertJsonEqual(Lambda(x => x),
+                "{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}}");
+
+            ////
+
+            AssertJsonEqual(Lambda(Arr("x", "y"), Add(Var("x"), Var("y"))),
+                "{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
+
+            AssertJsonEqual(Lambda((x, y) => Add(x, y)),
+                "{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
+        }
+
+        [Test] public void TestMap()
+        {
+            AssertJsonEqual(Map(Arr(1, 2, 3), Lambda("x", Var("x"))),
+                "{\"map\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Map(Arr(1, 2, 3), x => x),
+                "{\"map\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Map(Arr(Arr(1, 2), Arr(3, 4)), (x, y) => Add(x, y)),
+                "{\"map\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
+        }
+
+        [Test] public void TestForeach()
+        {
+            AssertJsonEqual(Foreach(Arr(1, 2, 3), Lambda("x", Var("x"))),
+                "{\"foreach\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Foreach(Arr(1, 2, 3), x => x),
+                "{\"foreach\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Foreach(Arr(Arr(1, 2), Arr(3, 4)), (x, y) => Add(x, y)),
+                "{\"foreach\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
+        }
+
+        [Test] public void TestFilter()
+        {
+            AssertJsonEqual(Filter(Arr(1, 2, 3), Lambda("x", Var("x"))),
+                "{\"filter\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Filter(Arr(1, 2, 3), x => x),
+                "{\"filter\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Filter(Arr(Arr(1, 2), Arr(3, 4)), (x, y) => Add(x, y)),
+                "{\"filter\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
+        }
+
+        [Test] public void TestTake()
+        {
+            AssertJsonEqual(Take(2, Arr(1, 2, 3)),
+                "{\"take\":2,\"collection\":[1,2,3]}");
+        }
+
+        [Test] public void TestDrop()
+        {
+            AssertJsonEqual(Drop(1, Arr(1, 2, 3)),
+                "{\"drop\":1,\"collection\":[1,2,3]}");
+        }
+
+        [Test] public void TestPrepend()
+        {
+            AssertJsonEqual(Prepend(Arr(1, 2, 3), Arr(4, 5, 6)),
+                "{\"prepend\":[1,2,3],\"collection\":[4,5,6]}");
+        }
+
+        [Test] public void TestAppend()
+        {
+            AssertJsonEqual(Append(Arr(1, 2, 3), Arr(4, 5, 6)),
+                "{\"append\":[1,2,3],\"collection\":[4,5,6]}");
+        }
+
+        [Test] public void TestGet()
+        {
+            AssertJsonEqual(Get(Ref("classes/thing/123456789")),
+                "{\"get\":{\"@ref\":\"classes/thing/123456789\"}}");
+        }
+
+        [Test] public void TestPaginate()
+        {
+            AssertJsonEqual(Paginate(Ref("databases")),
+                "{\"paginate\":{\"@ref\":\"databases\"}}");
+
+            AssertJsonEqual(Paginate(Ref("databases"), after: Ref("databases/thing/123456789")),
+                "{\"paginate\":{\"@ref\":\"databases\"},\"after\":{\"@ref\":\"databases/thing/123456789\"}}");
+
+            AssertJsonEqual(Paginate(Ref("databases"), before: Ref("databases/thing/123456789")),
+                "{\"paginate\":{\"@ref\":\"databases\"},\"before\":{\"@ref\":\"databases/thing/123456789\"}}");
+
+            AssertJsonEqual(Paginate(Ref("databases"), ts: new TsV("1970-01-01T00:00:00Z")),
+                "{\"paginate\":{\"@ref\":\"databases\"},\"ts\":{\"@ts\":\"1970-01-01T00:00:00Z\"}}");
+
+            AssertJsonEqual(Paginate(Ref("databases"), size: 10),
+                "{\"paginate\":{\"@ref\":\"databases\"},\"size\":10}");
+
+            AssertJsonEqual(Paginate(Ref("databases"), events: true),
+                "{\"paginate\":{\"@ref\":\"databases\"},\"events\":true}");
+
+            AssertJsonEqual(Paginate(Ref("databases"), sources: true),
+                "{\"paginate\":{\"@ref\":\"databases\"},\"sources\":true}");
+        }
+
+        [Test] public void TestExists() { }
+
+        [Test] public void TestCount() { }
+
+        [Test] public void TestCreate() { }
+
+        [Test] public void TestUpdate() { }
+
+        [Test] public void TestReplace() { }
+
+        [Test] public void TestDelete() { }
+
+        [Test] public void TestInsert() { }
+
+        [Test] public void TestRemove() { }
+
+        [Test] public void TestMatch() { }
+
+        [Test] public void TestUnion() { }
+
+        [Test] public void TestIntersection() { }
+
+        [Test] public void TestDifference() { }
+
+        [Test] public void TestDistinct() { }
+
+        [Test] public void TestJoin() { }
+
+        [Test] public void TestLogin() { }
+
+        [Test] public void TestLogout() { }
+
+        [Test] public void TestIdentity() { }
+
+        [Test] public void TestConcat() { }
+
+        [Test] public void TestCasefold() { }
+
+        [Test] public void TestTime() { }
+
+        [Test] public void TestEpoch() { }
+
+        [Test] public void TestDate() { }
+
+        [Test] public void TestNextId() { }
+
+        [Test] public void TestEquals() { }
+
+        [Test] public void TestContains() { }
+
+        [Test] public void TestSelect() { }
+
+        [Test] public void TestAdd() { }
+
+        [Test] public void TestMultiply() { }
+
+        [Test] public void TestSubtract() { }
+
+        [Test] public void TestDivide() { }
+
+        [Test] public void TestModulo() { }
+
+        [Test] public void TestLT() { }
+
+        [Test] public void TestLTE() { }
+
+        [Test] public void TestGT() { }
+
+        [Test] public void TestGTE() { }
+
+        [Test] public void TestAnd() { }
+
+        [Test] public void TestOr() { }
+
+        [Test] public void TestNot() { }
+
     }
 }

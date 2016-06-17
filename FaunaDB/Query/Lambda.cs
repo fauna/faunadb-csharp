@@ -58,39 +58,33 @@ namespace FaunaDB.Query
                 lambda(Var(p0), Var(p1), Var(p2), Var(p3)));
         }
 
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
-            LambdaDelegate(lambda);
-
-        private static Expr LambdaDelegate(Delegate lambda)
+        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr> lambda)
         {
             ParameterInfo[] info = lambda.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+            string p2 = info[2].Name;
+            string p3 = info[3].Name;
+            string p4 = info[4].Name;
 
-            Expr vars = ArrayV.FromEnumerable(from v in info select new StringV(v.Name));
-            Expr expr = (Expr)lambda.DynamicInvoke((from v in info select Var(v.Name)).ToArray());
+            return Lambda(
+                Arr(p0, p1, p2, p3, p4),
+                lambda(Var(p0), Var(p1), Var(p2), Var(p3), Var(p4)));
+        }
 
-            return Lambda(vars, expr);
+        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda)
+        {
+            ParameterInfo[] info = lambda.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+            string p2 = info[2].Name;
+            string p3 = info[3].Name;
+            string p4 = info[4].Name;
+            string p5 = info[5].Name;
+
+            return Lambda(
+                Arr(p0, p1, p2, p3, p4, p5),
+                lambda(Var(p0), Var(p1), Var(p2), Var(p3), Var(p4), Var(p5)));
         }
     }
 }

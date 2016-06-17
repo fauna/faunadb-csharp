@@ -123,17 +123,23 @@ namespace FaunaDB.Query
         static Expr Varargs(params Expr[] values) =>
             values.Length == 1 ? values[0] : ArrayV.FromEnumerable(values);
 
-        static Expr Q(string key1, Expr value1) =>
-            new ObjectV(ImmutableDictionary.Of(key1, value1));
+        static ObjectV Q(string k1, Expr v1) =>
+            new ObjectV(ImmutableDictionary.Of(k1, v1));
 
-        static Expr Q(string key1, Expr value1, string key2, Expr value2) =>
-            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2));
+        static ObjectV Q(string k1, Expr v1, string k2, Expr v2) =>
+            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2));
 
-        static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3));
+        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3) =>
+            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3));
 
-        static Expr Q(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4));
+        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4) =>
+            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4));
+
+        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5) =>
+            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5));
+
+        static ObjectV Q(string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5, string k6, Expr v6) =>
+            new ObjectV(ImmutableDictionary.Of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6));
         #endregion
 
     }

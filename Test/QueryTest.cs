@@ -93,12 +93,15 @@ namespace Test
 
         [Test] public async Task TestLetVar()
         {
-            var let = Let(new ObjectV("a", 1), Add(Var("a"), Var("a")));
-            await AssertQuery(2, let);
-            Assert.AreEqual(let, Let(1, a => Add(a, a)));
-            Assert.AreEqual(
-                Let(new ObjectV("a", 1, "b", 2), Arr(Var("a"), Var("b"))),
-                Let(1, 2, (a, b) => Arr(a, b)));
+            await AssertQuery(2, Let(new ObjectV("a", 1), Add(Var("a"), Var("a"))));
+
+            await AssertQuery(2, Let("a", 1).In(Add(Var("a"), Var("a"))));
+            await AssertQuery(2, Let("a", 1).In(a => Add(a, a)));
+
+            await AssertQuery(2, Let("a", 1, "b", 1).In(Add(Var("a"), Var("b"))));
+            await AssertQuery(2, Let("a", 1, "b", 1).In((a, b) => Add(a, b)));
+
+            await AssertQuery(2, Let(1, In: a => Add(a, a)));
         }
 
         [Test] public async Task TestIf()
@@ -117,7 +120,7 @@ namespace Test
         [Test] public async Task TestObject()
         {
             // Unlike Quote, contents are evaluated.
-            await AssertQuery(new ObjectV("x", 1), Obj("x", Let(1, x => x)));
+            await AssertQuery(new ObjectV("x", 1), Obj("x", Let("x", 1).In(x => x)));
         }
 
         [Test] public void TestLambda()
@@ -503,7 +506,7 @@ namespace Test
             // Works for arrays too
             await AssertQuery(10, Add(new ArrayV(2, 3, 5)));
             // Works for a variable equal to an array
-            await AssertQuery(10, Let(new ArrayV(2, 3, 5), a => Add(a)));
+            await AssertQuery(10, Let("a", new ArrayV(2, 3, 5)).In(a => Add(a)));
         }
     }
 }
