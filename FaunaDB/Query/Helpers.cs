@@ -7,14 +7,34 @@ namespace FaunaDB.Query
 {
     public partial struct Language
     {
-        public static Expr Ref(string id)
+        public static Ref Ref(string id)
         {
             return new Ref(id);
         }
 
-        public static Expr Ref(Expr classRef, Expr id)
+        public static ObjectV Ref(Expr classRef, Expr id)
         {
             return Q("ref", classRef, "id", id);
+        }
+
+        public static TsV Ts(DateTime dateTime)
+        {
+            return new TsV(dateTime);
+        }
+
+        public static TsV Ts(string iso8601Time)
+        {
+            return new TsV(iso8601Time);
+        }
+
+        public static DateV Dt(DateTime dateTime)
+        {
+            return new DateV(dateTime);
+        }
+
+        public static DateV Dt(string iso8601Date)
+        {
+            return new DateV(iso8601Date);
         }
 
         /// <summary>
@@ -120,7 +140,19 @@ namespace FaunaDB.Query
                 key4, value4, key5, value5, key6, value6));
 
         #region Helpers
-        static Expr Varargs(params Expr[] values) =>
+        static Expr Varargs(Expr head, Expr[] tail)
+        {
+            if (tail.Length == 0)
+                return head;
+
+            Expr[] values = new Expr[tail.Length + 1];
+            values[0] = head;
+            tail.CopyTo(values, 1);
+
+            return ArrayV.FromEnumerable(values);
+        }
+
+        static Expr Varargs(Expr[] values) =>
             values.Length == 1 ? values[0] : ArrayV.FromEnumerable(values);
 
         static ObjectV Q(string k1, Expr v1) =>

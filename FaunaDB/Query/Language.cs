@@ -293,6 +293,12 @@ namespace FaunaDB.Query
         public static Expr Delete(Expr @ref) =>
             Q("delete", @ref);
 
+        public enum Action
+        {
+            CREATE,
+            DELETE
+        }
+
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
@@ -312,25 +318,25 @@ namespace FaunaDB.Query
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
         public static Expr Match(Expr index, params Expr[] terms) =>
-            Q("match", index, "terms", Varargs(terms));
+            Q("match", index, "terms", terms.Length == 0 ? null : Varargs(terms));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Expr Union(params Expr[] sets) =>
-            Q("union", Varargs(sets));
+        public static Expr Union(Expr head, params Expr[] tail) =>
+            Q("union", Varargs(head, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Expr Intersection(params Expr[] sets) =>
-            Q("intersection", Varargs(sets));
+        public static Expr Intersection(Expr head, params Expr[] tail) =>
+            Q("intersection", Varargs(head, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Expr Difference(params Expr[] sets) =>
-            Q("difference", Varargs(sets));
+        public static Expr Difference(Expr head, params Expr[] tail) =>
+            Q("difference", Varargs(head, tail));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 

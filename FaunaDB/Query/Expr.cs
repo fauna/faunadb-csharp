@@ -38,6 +38,35 @@ namespace FaunaDB.Query
             }
         }
 
+        #region Action
+        public static implicit operator Expr(Language.Action action)
+        {
+            switch (action)
+            {
+                case Language.Action.CREATE:
+                    return new StringV("create");
+
+                case Language.Action.DELETE:
+                    return new StringV("delete");
+            }
+
+            throw new InvalidValueException("Invalid action value");
+        }
+
+        public static explicit operator Language.Action(Expr v)
+        {
+            switch (((StringV)v).Value)
+            {
+                case "create":
+                    return Language.Action.CREATE;
+
+                case "delete":
+                    return Language.Action.DELETE;
+            }
+
+            throw new InvalidValueException("Invalid string value. Should be \"create\" or \"delete\"");
+        }
+        #endregion
 
         #region implicit conversions
         public static implicit operator Expr(List<Expr> values) =>

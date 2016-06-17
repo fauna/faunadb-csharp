@@ -93,16 +93,16 @@ namespace Test
 
         [Test] public void TestTimestamp()
         {
-            AssertJsonEqual(new TsV("1970-01-01T00:00:00Z"), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
+            AssertJsonEqual(Ts("1970-01-01T00:00:00Z"), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
 
-            AssertJsonEqual(new TsV(new DateTime(1970, 1, 1, 0, 0, 0, 0)), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
+            AssertJsonEqual(Ts(new DateTime(1970, 1, 1, 0, 0, 0, 0)), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
         }
 
         [Test] public void TetDate()
         {
-            AssertJsonEqual(new DateV("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
+            AssertJsonEqual(Dt("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
 
-            AssertJsonEqual(new DateV(new DateTime(2000, 1, 1)), "{\"@date\":\"2000-01-01\"}");
+            AssertJsonEqual(Dt(new DateTime(2000, 1, 1)), "{\"@date\":\"2000-01-01\"}");
         }
 
         [Test] public void TestLet()
@@ -238,7 +238,7 @@ namespace Test
             AssertJsonEqual(Paginate(Ref("databases"), before: Ref("databases/thing/123456789")),
                 "{\"paginate\":{\"@ref\":\"databases\"},\"before\":{\"@ref\":\"databases/thing/123456789\"}}");
 
-            AssertJsonEqual(Paginate(Ref("databases"), ts: new TsV("1970-01-01T00:00:00Z")),
+            AssertJsonEqual(Paginate(Ref("databases"), ts: Ts("1970-01-01T00:00:00Z")),
                 "{\"paginate\":{\"@ref\":\"databases\"},\"ts\":{\"@ts\":\"1970-01-01T00:00:00Z\"}}");
 
             AssertJsonEqual(Paginate(Ref("databases"), size: 10),
@@ -251,33 +251,145 @@ namespace Test
                 "{\"paginate\":{\"@ref\":\"databases\"},\"sources\":true}");
         }
 
-        [Test] public void TestExists() { }
+        [Test] public void TestExists()
+        {
+            AssertJsonEqual(Exists(Ref("classes/thing/123456789")),
+                "{\"exists\":{\"@ref\":\"classes/thing/123456789\"}}");
 
-        [Test] public void TestCount() { }
+            AssertJsonEqual(Exists(Ref("classes/thing/123456789"), Ts("1970-01-01T00:00:00.123Z")),
+                "{\"exists\":{\"@ref\":\"classes/thing/123456789\"},\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}}");
+        }
 
-        [Test] public void TestCreate() { }
+        [Test] public void TestCount()
+        {
+            AssertJsonEqual(Count(Ref("databases")),
+                "{\"count\":{\"@ref\":\"databases\"}}");
 
-        [Test] public void TestUpdate() { }
+            AssertJsonEqual(Count(Ref("databases"), true),
+                "{\"count\":{\"@ref\":\"databases\"},\"events\":true}");
+        }
 
-        [Test] public void TestReplace() { }
+        [Test] public void TestCreate()
+        {
+            AssertJsonEqual(Create(Ref("database"), Obj("name", "widgets")),
+                "{\"create\":{\"@ref\":\"database\"},\"params\":{\"object\":{\"name\":\"widgets\"}}}");
+        }
 
-        [Test] public void TestDelete() { }
+        [Test] public void TestUpdate()
+        {
+            AssertJsonEqual(Update(Ref("database/widgets"), Obj("name", "things")),
+                "{\"update\":{\"@ref\":\"database/widgets\"},\"params\":{\"object\":{\"name\":\"things\"}}}");
+        }
 
-        [Test] public void TestInsert() { }
+        [Test] public void TestReplace()
+        {
+            AssertJsonEqual(Replace(Ref("classes/widgets/123456789"), Obj("data", Obj("name", "Computer"))),
+                "{\"replace\":{\"@ref\":\"classes/widgets/123456789\"},\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
+        }
 
-        [Test] public void TestRemove() { }
+        [Test] public void TestDelete()
+        {
+            AssertJsonEqual(Delete(Ref("classes/widgets/123456789")),
+                "{\"delete\":{\"@ref\":\"classes/widgets/123456789\"}}");
+        }
 
-        [Test] public void TestMatch() { }
+        [Test] public void TestInsert()
+        {
+            AssertJsonEqual(Insert(
+                    Ref("classes/widgets/123456789"),
+                    Ts("1970-01-01T00:00:00.123Z"),
+                    "create",
+                    Obj("data", Obj("name", "Computer"))),
+                "{\"insert\":{\"@ref\":\"classes/widgets/123456789\"}," +
+                "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
+                "\"action\":\"create\"," +
+                "\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
 
-        [Test] public void TestUnion() { }
+            AssertJsonEqual(Insert(
+                    Ref("classes/widgets/123456789"),
+                    Ts("1970-01-01T00:00:00.123Z"),
+                    Language.Action.CREATE,
+                    Obj("data", Obj("name", "Computer"))),
+                "{\"insert\":{\"@ref\":\"classes/widgets/123456789\"},"+
+                "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"},"+
+                "\"action\":\"create\","+
+                "\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
+        }
 
-        [Test] public void TestIntersection() { }
+        [Test] public void TestRemove()
+        {
+            AssertJsonEqual(Remove(
+                    Ref("classes/widgets/123456789"),
+                    Ts("1970-01-01T00:00:00.123Z"),
+                    "create"),
+                "{\"remove\":{\"@ref\":\"classes/widgets/123456789\"},"+
+                "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
+                "\"action\":\"create\"}");
 
-        [Test] public void TestDifference() { }
+            AssertJsonEqual(Remove(
+                    Ref("classes/widgets/123456789"),
+                    Ts("1970-01-01T00:00:00.123Z"),
+                    Language.Action.CREATE),
+                "{\"remove\":{\"@ref\":\"classes/widgets/123456789\"}," +
+                "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
+                "\"action\":\"create\"}");
+        }
 
-        [Test] public void TestDistinct() { }
+        [Test] public void TestMatch()
+        {
+            AssertJsonEqual(Match(Ref("indexes/all_the_things")),
+                "{\"match\":{\"@ref\":\"indexes/all_the_things\"}}");
 
-        [Test] public void TestJoin() { }
+            AssertJsonEqual(Match(Ref("indexes/widgets_by_name"), "Computer"),
+                "{\"match\":{\"@ref\":\"indexes/widgets_by_name\"},\"terms\":\"Computer\"}");
+
+            AssertJsonEqual(Match(Ref("indexes/widgets_by_name"), "Computer", "Monitor"),
+                "{\"match\":{\"@ref\":\"indexes/widgets_by_name\"},\"terms\":[\"Computer\",\"Monitor\"]}");
+        }
+
+        [Test] public void TestUnion()
+        {
+            AssertJsonEqual(Union(Ref("databases")),
+                "{\"union\":{\"@ref\":\"databases\"}}");
+
+            AssertJsonEqual(Union(Ref("databases"), Ref("classes/widgets")),
+                "{\"union\":[{\"@ref\":\"databases\"},{\"@ref\":\"classes/widgets\"}]}");
+        }
+
+        [Test] public void TestIntersection()
+        {
+            AssertJsonEqual(Intersection(Ref("databases")),
+                "{\"intersection\":{\"@ref\":\"databases\"}}");
+
+            AssertJsonEqual(Intersection(Ref("databases"), Ref("classes/widgets")),
+                "{\"intersection\":[{\"@ref\":\"databases\"},{\"@ref\":\"classes/widgets\"}]}");
+        }
+
+        [Test] public void TestDifference()
+        {
+            AssertJsonEqual(Difference(Ref("databases")),
+                "{\"difference\":{\"@ref\":\"databases\"}}");
+
+            AssertJsonEqual(Difference(Ref("databases"), Ref("classes/widgets")),
+                "{\"difference\":[{\"@ref\":\"databases\"},{\"@ref\":\"classes/widgets\"}]}");
+        }
+
+        [Test] public void TestDistinct()
+        {
+            AssertJsonEqual(Distinct(Match(Ref("indexes/widgets"))),
+                "{\"distinct\":{\"match\":{\"@ref\":\"indexes/widgets\"}}}");
+        }
+
+        [Test] public void TestJoin()
+        {
+            AssertJsonEqual(Join(Match(Ref("indexes/widgets")), Ref("indexes/other_widgets")),
+                "{\"join\":{\"match\":{\"@ref\":\"indexes/widgets\"}}," +
+                "\"with\":{\"@ref\":\"indexes/other_widgets\"}}");
+
+            AssertJsonEqual(Join(Match(Ref("indexes/widgets")), widget => Match(Ref("indexes/widgets"), widget)),
+                "{\"join\":{\"match\":{\"@ref\":\"indexes/widgets\"}}," +
+                "\"with\":{\"lambda\":\"widget\",\"expr\":{\"match\":{\"@ref\":\"indexes/widgets\"},\"terms\":{\"var\":\"widget\"}}}}");
+        }
 
         [Test] public void TestLogin() { }
 
