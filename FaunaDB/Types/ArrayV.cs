@@ -11,16 +11,16 @@ namespace FaunaDB.Types
     /// <summary>
     /// Corresponds to a JSON array.
     /// </summary>
-    public sealed class ArrayV : Value, IEnumerable<Expr>
+    public sealed class ArrayV : Value, IEnumerable<Value>
     {
-        public static readonly ArrayV Empty = new ArrayV(new List<Expr>());
+        public static readonly ArrayV Empty = new ArrayV(new List<Value>());
 
-        public List<Expr> Value { get; }
+        public List<Value> Value { get; }
 
-        public static ArrayV FromEnumerable(IEnumerable<Expr> values) =>
-            new ArrayV(new List<Expr>(values));
+        public static ArrayV FromEnumerable(IEnumerable<Value> values) =>
+            new ArrayV(new List<Value>(values));
 
-        public ArrayV(List<Expr> value)
+        public ArrayV(List<Value> value)
         {
             Value = value;
 
@@ -31,7 +31,7 @@ namespace FaunaDB.Types
         /// <summary>
         /// Create from values.
         /// </summary>
-        public ArrayV(params Expr[] values) : this(new List<Expr>(values)) {}
+        public ArrayV(params Value[] values) : this(new List<Value>(values)) {}
 
         /// <summary>
         /// Create from a builder expression.
@@ -39,9 +39,9 @@ namespace FaunaDB.Types
         /// <param name="builder">
         /// A lambda <c>(add) => { ... }</c> that calls <c>add</c> for each element to be in the new ArrayV.
         /// </param>
-        public ArrayV(Action<Action<Expr>> builder)
+        public ArrayV(Action<Action<Value>> builder)
         {
-            Value = new List<Expr>();
+            Value = new List<Value>();
             builder(Value.Add);
         }
 
@@ -49,7 +49,7 @@ namespace FaunaDB.Types
         /// Get the nth value.
         /// </summary>
         /// <exception cref="IndexOutOfRangeException"/>
-        public Expr this[int n] { get { return Value[n]; } }
+        public Value this[int n] { get { return Value[n]; } }
 
         public int Length { get { return Value.Count; } }
 
@@ -62,8 +62,8 @@ namespace FaunaDB.Types
         IEnumerator IEnumerable.GetEnumerator() =>
             ((IEnumerable) Value).GetEnumerator();
 
-        IEnumerator<Expr> IEnumerable<Expr>.GetEnumerator() =>
-            ((IEnumerable<Expr>) Value).GetEnumerator();
+        IEnumerator<Value> IEnumerable<Value>.GetEnumerator() =>
+            ((IEnumerable<Value>) Value).GetEnumerator();
         #endregion
 
         #region boilerplate

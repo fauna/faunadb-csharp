@@ -69,7 +69,7 @@ namespace FaunaDB.Query
         #endregion
 
         #region implicit conversions
-        public static implicit operator Expr(List<Expr> values) =>
+        public static implicit operator Expr(List<Value> values) =>
             values == null ? NullV.Instance : ArrayV.FromEnumerable(values);
 
         public static implicit operator Expr(OrderedDictionary<string, Value> values) =>
@@ -93,7 +93,7 @@ namespace FaunaDB.Query
         #endregion
 
         #region explicit (downcasting) conversions
-        public static explicit operator List<Expr>(Expr v) =>
+        public static explicit operator List<Value>(Expr v) =>
             ((ArrayV) v).Value;
 
         public static explicit operator OrderedDictionary<string, Value>(Expr v) =>

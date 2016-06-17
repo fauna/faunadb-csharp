@@ -47,8 +47,8 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
-        public static ArrayV Arr(params Expr[] values) =>
-            ArrayV.FromEnumerable(values);
+        public static Expr Arr(params Expr[] values) =>
+            UnescapedArray.FromEnumerable(values);
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
@@ -83,7 +83,7 @@ namespace FaunaDB.Query
                     exprs[i] = Obj(array.GetValue(i));
                 }
 
-                return ArrayV.FromEnumerable(exprs);
+                return UnescapedArray.FromEnumerable(exprs);
             }
             else
             {
@@ -152,11 +152,11 @@ namespace FaunaDB.Query
             values[0] = head;
             tail.CopyTo(values, 1);
 
-            return ArrayV.FromEnumerable(values);
+            return UnescapedArray.FromEnumerable(values);
         }
 
         static Expr Varargs(Expr[] values) =>
-            values.Length == 1 ? values[0] : ArrayV.FromEnumerable(values);
+            values.Length == 1 ? values[0] : UnescapedArray.FromEnumerable(values);
         #endregion
 
     }

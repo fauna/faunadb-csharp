@@ -75,7 +75,7 @@ namespace Test
             Assert.AreEqual(obj, Obj(
                 "foo", 10,
                 "bar", "bar",
-                "array", new ArrayV(1, 2, 3),
+                "array", Arr(1, 2, 3),
                 "obj", Obj(
                     "a", 3.14,
                     "b", true)

@@ -73,9 +73,9 @@ namespace Test
             return (ArrayV) ((ObjectV) res)["data"];
         }
 
-        async Task AssertSet(Expr set, params Expr[] expectedSetValues)
+        async Task AssertSet(Expr set, params Value[] expectedSetValues)
         {
-            Assert.AreEqual(new ArrayV(expectedSetValues), await SetToArray(set));
+            Assert.AreEqual(ArrayV.FromEnumerable(expectedSetValues), await SetToArray(set));
         }
 
         async Task AssertBadQuery(Expr expression)
@@ -213,13 +213,13 @@ namespace Test
         [Test] [Ignore("improve assertion")] public async Task TestPaginate()
         {
             var testSet = NSet(1);
-            await AssertQuery(ObjectV.With("data", Arr(refN1, refN1M1)), Paginate(testSet));
-            await AssertQuery(ObjectV.With("data", Arr(refN1), "after", Arr(refN1M1)), Paginate(testSet, size: 1));
+            await AssertQuery(UnescapedObject.With("data", Arr(refN1, refN1M1)), Paginate(testSet));
+            await AssertQuery(UnescapedObject.With("data", Arr(refN1), "after", Arr(refN1M1)), Paginate(testSet, size: 1));
 
             var sources = Arr(SetRef(testSet));
-            var page = ObjectV.With("data", Arr(
-                    ObjectV.With("sources", sources, "value", refN1),
-                    ObjectV.With("sources", sources, "value", refN1M1)));
+            var page = UnescapedObject.With("data", Arr(
+                    UnescapedObject.With("sources", sources, "value", refN1),
+                    UnescapedObject.With("sources", sources, "value", refN1M1)));
             await AssertQuery(page, Paginate(testSet, sources: true));
         }
 

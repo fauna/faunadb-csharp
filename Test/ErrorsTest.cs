@@ -60,7 +60,7 @@ namespace Test
 
         [Test] public async Task TestInvalidArgument()
         {
-            await AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", Arr("add", 1));
+            await AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", new ArrayV("add", 1));
         }
 
         [Test] public async Task TestInstanceNotFound()
@@ -79,7 +79,7 @@ namespace Test
         {
             await TestClient.Query(Create(Ref("classes"), Obj("name", "duplicates")));
             var @ref = (Ref) ((ObjectV) (await TestClient.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
-            await AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", Arr("create"));
+            await AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", new ArrayV("create"));
         }
         #endregion
 
@@ -95,25 +95,13 @@ namespace Test
             await TestClient.Query(Create(Ref("classes/gerbils"), Obj("data", Obj("x", 1))));
         }
 
-        [Test] public void TestToString()
-        {
-            var err = new ErrorData("code", "desc", null);
-            Assert.AreEqual(err.ToString(), "ErrorData(code, desc, null)");
-
-            var failure = new Failure("code", "desc", Arr("a", "b"));
-            var vf = new ValidationFailed("vf_desc", Arr("vf"), (new[] { failure }.ToList()));
-            Assert.AreEqual(
-                "ValidationFailed(vf_desc, Arr(StringV(vf)), [Failure(code, desc, Arr(StringV(a), StringV(b)))])",
-                vf.ToString());
-        }
-
         async Task AssertHttpException<TException>(string code, Func<Task> action) where TException : FaunaException
         {
             var exception = await AssertU.Throws<TException>(action);
             AssertException(exception, code);
         }
 
-        void AssertException(FaunaException exception, string code, ArrayV position = null)
+        void AssertException(FaunaException exception, string code, Expr position = null)
         {
             Assert.AreEqual(1, exception.Errors.Count());
             var error = exception.Errors.First();
@@ -121,7 +109,7 @@ namespace Test
             Assert.AreEqual(position, error.Position);
         }
 
-        async Task AssertQueryException<TException>(Expr query, string code, ArrayV position = null)
+        async Task AssertQueryException<TException>(Expr query, string code, Expr position = null)
             where TException  : FaunaException
         {
             var exception = await AssertU.Throws<TException>(() => TestClient.Query(query));

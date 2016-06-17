@@ -2,6 +2,8 @@
 using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace FaunaDB.Query
 {
@@ -35,7 +37,7 @@ namespace FaunaDB.Query
         public override string ToString()
         {
             var props = string.Join(",", from kv in Values select $"{kv.Key}: {kv.Value}");
-            return $"FnObject({props})";
+            return $"UObject({props})";
         }
 
         public static UnescapedObject With() =>
@@ -61,5 +63,41 @@ namespace FaunaDB.Query
 
         public static UnescapedObject With(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6, string key7, Expr value7) =>
             new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6, key7, value7));
+    }
+
+    public class UnescapedArray : Expr
+    {
+        public static readonly UnescapedArray Empty = new UnescapedArray(new List<Expr>());
+
+        public List<Expr> Value { get; }
+
+        public static UnescapedArray FromEnumerable(IEnumerable<Expr> values) =>
+            new UnescapedArray(new List<Expr>(values));
+
+        public UnescapedArray(List<Expr> value)
+        {
+            Value = value;
+
+            if (Value == null)
+                throw new NullReferenceException();
+        }
+
+        public override bool Equals(Expr v)
+        {
+            var other = v as UnescapedArray;
+            return other != null && Value.SequenceEqual(other.Value);
+        }
+
+        protected override int HashCode() =>
+            Value.GetHashCode();
+
+        override internal void WriteJson(JsonWriter writer)
+        {
+            writer.WriteArray(Value);
+        }
+
+        public override string ToString() =>
+            $"UArr({string.Join(", ", Value)})";
+
     }
 }
