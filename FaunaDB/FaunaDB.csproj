@@ -51,13 +51,21 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Query\Expr.Operators.cs" />
+    <Compile Include="Query\Language.Authentication.cs" />
+    <Compile Include="Query\Language.Basic.cs" />
+    <Compile Include="Query\Language.Collection.cs" />
+    <Compile Include="Query\Language.Miscellaneous.cs" />
+    <Compile Include="Query\Language.Read.cs" />
+    <Compile Include="Query\Language.Sets.cs" />
+    <Compile Include="Query\Language.String.cs" />
+    <Compile Include="Query\Language.TimeDate.cs" />
+    <Compile Include="Query\Language.Write.cs" />
     <Compile Include="Query\Unescaped.cs" />
-    <Compile Include="Query\LetBinding.cs" />
+    <Compile Include="Query\Language.Basic.Let.cs" />
     <Compile Include="Utils\HashUtil.cs" />
     <Compile Include="Query\Expr.cs" />
-    <Compile Include="Query\Helpers.cs" />
-    <Compile Include="Query\Lambda.cs" />
-    <Compile Include="Query\Language.cs" />
+    <Compile Include="Query\Language.Values.cs" />
     <Compile Include="Types\ObjectV.cs" />
     <Compile Include="Types\ArrayV.cs" />
     <Compile Include="Query\Pagination.cs" />

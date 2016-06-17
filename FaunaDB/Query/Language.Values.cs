@@ -2,11 +2,9 @@
 using FaunaDB.Utils;
 using System;
 using System.Reflection;
-using Newtonsoft.Json;
 
 namespace FaunaDB.Query
 {
-
     public partial struct Language
     {
         public static Expr Ref(string id)
@@ -24,22 +22,22 @@ namespace FaunaDB.Query
             return new SetRef(set);
         }
 
-        public static TsV Ts(DateTime dateTime)
+        public static Expr Ts(DateTime dateTime)
         {
             return new TsV(dateTime);
         }
 
-        public static TsV Ts(string iso8601Time)
+        public static Expr Ts(string iso8601Time)
         {
             return new TsV(iso8601Time);
         }
 
-        public static DateV Dt(DateTime dateTime)
+        public static Expr Dt(DateTime dateTime)
         {
             return new DateV(dateTime);
         }
 
-        public static DateV Dt(string iso8601Date)
+        public static Expr Dt(string iso8601Date)
         {
             return new DateV(iso8601Date);
         }

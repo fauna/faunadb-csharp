@@ -92,5 +92,92 @@ namespace FaunaDB.Query
 
                 return fn(a0, a1, a2, a3, a4, a5);
             });
+
+        #region Inline functions
+
+        /// <summary>
+        /// Use a lambda expression to conveniently define let expressions.
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// <c>Language.Let(1, a => a)</c> is equivalent to <c>Language.Let(new ObjectV("a", 1), Language.Var("a"))</c>
+        /// </code>
+        /// </example>
+        public static Expr Let(Expr v0, Func<Expr, Expr> In)
+        {
+            ParameterInfo[] info = In.Method.GetParameters();
+            string p0 = info[0].Name;
+
+            return Let(
+                UnescapedObject.With(p0, v0),
+                In(Var(p0)));
+        }
+
+        public static Expr Let(Expr v0, Expr v1, Func<Expr, Expr, Expr> In)
+        {
+            ParameterInfo[] info = In.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+
+            return Let(
+                UnescapedObject.With(p0, v0, p1, v1),
+                In(Var(p0), Var(p1)));
+        }
+
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Func<Expr, Expr, Expr, Expr> In)
+        {
+            ParameterInfo[] info = In.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+            string p2 = info[2].Name;
+
+            return Let(
+                UnescapedObject.With(p0, v0, p1, v1, p2, v2),
+                In(Var(p0), Var(p1), Var(p2)));
+        }
+
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Func<Expr, Expr, Expr, Expr, Expr> In)
+        {
+            ParameterInfo[] info = In.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+            string p2 = info[2].Name;
+            string p3 = info[3].Name;
+
+            return Let(
+                UnescapedObject.With(p0, v0, p1, v1, p2, v2, p3, v3),
+                In(Var(p0), Var(p1), Var(p2), Var(p3)));
+        }
+
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Expr v4, Func<Expr, Expr, Expr, Expr, Expr, Expr> In)
+        {
+            ParameterInfo[] info = In.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+            string p2 = info[2].Name;
+            string p3 = info[3].Name;
+            string p4 = info[4].Name;
+
+            return Let(
+                UnescapedObject.With(p0, v0, p1, v1, p2, v2, p3, v3, p4, v4),
+                In(Var(p0), Var(p1), Var(p2), Var(p3), Var(p4)));
+        }
+
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Expr v4, Expr v5, Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> In)
+        {
+            ParameterInfo[] info = In.Method.GetParameters();
+            string p0 = info[0].Name;
+            string p1 = info[1].Name;
+            string p2 = info[2].Name;
+            string p3 = info[3].Name;
+            string p4 = info[4].Name;
+            string p5 = info[5].Name;
+
+            return Let(
+                UnescapedObject.With(p0, v0, p1, v1, p2, v2, p3, v3, p4, v4, p5, v5),
+                In(Var(p0), Var(p1), Var(p2), Var(p3), Var(p4), Var(p5)));
+        }
+        #endregion
     }
 }
