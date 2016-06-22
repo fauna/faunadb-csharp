@@ -9,6 +9,8 @@ namespace FaunaDB.Types
         Result<U> FlatMap<U>(Func<T, Result<U>> func);
 
         U Match<U>(Func<T, U> Success, Func<U> Failure);
+
+        void Match(Action<T> Success, Action Failure);
     }
 
     public class Result
@@ -49,6 +51,9 @@ namespace FaunaDB.Types
 
         public U Match<U>(Func<T, U> Success, Func<U> Failure) =>
             Success(value);
+
+        public void Match(Action<T> Success, Action Failure) =>
+            Success(value);
     }
 
     internal class Failure<T> : Result<T>
@@ -79,6 +84,9 @@ namespace FaunaDB.Types
             reason;
 
         public U Match<U>(Func<T, U> Success, Func<U> Failure) =>
+            Failure();
+
+        public void Match(Action<T> Success, Action Failure) =>
             Failure();
     }
 }

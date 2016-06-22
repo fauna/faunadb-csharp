@@ -1,4 +1,5 @@
-﻿using FaunaDB.Types;
+﻿using FaunaDB.Collections;
+using FaunaDB.Types;
 using NUnit.Framework;
 
 namespace Test
@@ -93,6 +94,33 @@ namespace Test
 
             Assert.AreEqual(Result.Success("a string"),
                 obj.Get(Field.At("foo").At(Field.At(2)).At(Field.At("bar").To(Codec.STRING))));
+        }
+
+        [Test] public void TestCollect()
+        {
+            var array = ArrayV.Of("John", "Bill");
+
+            Assert.AreEqual(Result.Success(ImmutableList.Of("John", "Bill")),
+                array.Collect(Field.To(Codec.STRING)));
+
+            var obj = ObjectV.With("arrayOfNames", array);
+
+            Assert.AreEqual(Result.Success(ImmutableList.Of("John", "Bill")),
+                obj.Get(Field.At("arrayOfNames").Collect(Field.To(Codec.STRING))));
+
+            Assert.AreEqual(Result.Fail<ArrayList<string>>("Cannot convert ObjectV to ArrayV"),
+                obj.Collect(Field.To(Codec.STRING)));
+        }
+
+        [Test] public void TestCollectComplex()
+        {
+            var array = ArrayV.Of(
+                    ObjectV.With("name", ArrayV.Of("John")),
+                    ObjectV.With("name", ArrayV.Of("Bill"))
+                );
+
+            Assert.AreEqual(Result.Success(ImmutableList.Of("John", "Bill")),
+                array.Collect(Field.At("name").At(Field.At(0)).To(Codec.STRING)));
         }
     }
 }

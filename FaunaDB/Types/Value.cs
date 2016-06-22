@@ -12,6 +12,9 @@ namespace FaunaDB.Types
         public Result<T> Get<T>(Field<T> field) =>
             field.Get(this);
 
+        public Result<ArrayList<T>> Collect<T>(Field<T> field) =>
+            Field.Root.Collect(field).Get(this);
+
         #region implicit conversions
         public static implicit operator Value(ArrayList<Value> values) =>
             values == null ? NullV.Instance : ArrayV.Of(values);
