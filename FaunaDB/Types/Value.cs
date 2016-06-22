@@ -9,6 +9,9 @@ namespace FaunaDB.Types
         public Result<T> To<T>(Func<Value, Result<T>> codec) =>
             codec(this);
 
+        public Result<T> Get<T>(Field<T> field) =>
+            field.Get(this);
+
         #region implicit conversions
         public static implicit operator Value(ArrayList<Value> values) =>
             values == null ? NullV.Instance : ArrayV.Of(values);

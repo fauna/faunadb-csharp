@@ -61,13 +61,13 @@
     <Compile Include="AssertU.cs" />
     <Compile Include="CodecTest.cs" />
     <Compile Include="DeserializationTest.cs" />
-    <Compile Include="PathTest.cs" />
+    <Compile Include="PageTest.cs" />
+    <Compile Include="FieldTest.cs" />
     <Compile Include="QueryTest.cs" />
     <Compile Include="ClientTest.cs" />
     <Compile Include="SerializationTest.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="ErrorsTest.cs" />
-    <Compile Include="PageTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

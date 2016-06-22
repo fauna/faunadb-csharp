@@ -1,13 +1,12 @@
 ﻿using FaunaDB.Collections;
-using System;
 
 namespace FaunaDB.Types
 {
-    public sealed class Path
+    internal sealed class Path
     {
         public static readonly Path Empty = new Path(new ArrayList<Segment>());
 
-        public static Path From(params string[] values)
+        internal static Path From(params string[] values)
         {
             ArrayList<Segment> segments = new ArrayList<Segment>();
             foreach (var field in values)
@@ -15,7 +14,7 @@ namespace FaunaDB.Types
             return new Path(segments);
         }
 
-        public static Path From(params int[] values)
+        internal static Path From(params int[] values)
         {
             ArrayList<Segment> segments = new ArrayList<Segment>();
             foreach (var index in values)
@@ -30,7 +29,7 @@ namespace FaunaDB.Types
             this.segments = segments;
         }
 
-        public Path SubPath(Path other)
+        internal Path SubPath(Path other)
         {
             ArrayList<Segment> list = new ArrayList<Segment>();
             foreach (var s in segments) list.Add(s);
@@ -38,7 +37,7 @@ namespace FaunaDB.Types
             return new Path(list);
         }
 
-        public Result<Value> Get(Value root)
+        internal Result<Value> Get(Value root)
         {
             Result<Value> result = Result.Success(root);
 
