@@ -42,13 +42,11 @@ namespace FaunaDB.Types
             Result<Value> result = Result.Success(root);
 
             foreach (var s in segments)
-            {
                 result = result.FlatMap(value => s.Get(value));
-                if (result.IsFailure)
-                    return Result.Fail<Value>($"Cannot find path \"{this}\". {result}");
-            }
 
-            return result;
+            return result.Match(
+                Success: Result.Success,
+                Failure: () => Result.Fail<Value>($"Cannot find path \"{this}\". {result}"));
         }
 
         public override bool Equals(object obj)

@@ -67,6 +67,7 @@
     <Compile Include="Types\Codec.cs" />
     <Compile Include="Types\Field.cs" />
     <Compile Include="Types\Path.cs" />
+    <Compile Include="Types\Result.cs" />
     <Compile Include="Utils\HashUtil.cs" />
     <Compile Include="Query\Expr.cs" />
     <Compile Include="Query\Language.Values.cs" />
