@@ -51,6 +51,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\ArrayList.cs" />
     <Compile Include="Query\Expr.Operators.cs" />
     <Compile Include="Query\Language.Authentication.cs" />
     <Compile Include="Query\Language.Basic.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Types\Json.cs" />
     <Compile Include="Types\ScalarValue.cs" />
     <Compile Include="Types\NullV.cs" />
-    <Compile Include="Utils\OrderedDictionary.cs" />
+    <Compile Include="Collections\OrderedDictionary.cs" />
     <Compile Include="Errors\Errors.cs" />
     <Compile Include="Errors\Failure.cs" />
     <Compile Include="Errors\ValidationFailed.cs" />

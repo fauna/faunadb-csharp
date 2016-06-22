@@ -37,7 +37,7 @@ namespace Test
 
         [Test] public void TestArray()
         {
-            Assert.AreEqual(new ArrayV(LongV.Of(1), StringV.Of("a string"), DoubleV.Of(3.14), BooleanV.True, NullV.Instance),
+            Assert.AreEqual(ArrayV.Of(LongV.Of(1), StringV.Of("a string"), DoubleV.Of(3.14), BooleanV.True, NullV.Instance),
                 Value.FromJson("[1, \"a string\", 3.14, true, null]"));
         }
 
@@ -53,7 +53,7 @@ namespace Test
 
         [Test] public void TestObject()
         {
-            Assert.AreEqual(ObjectV.With("foo", ObjectV.With("bar", new ArrayV(BooleanV.True, NullV.Instance))),
+            Assert.AreEqual(ObjectV.With("foo", ObjectV.With("bar", ArrayV.Of(BooleanV.True, NullV.Instance))),
                 Value.FromJson("{\"foo\":{\"bar\":[true,null]}}"));
         }
 

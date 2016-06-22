@@ -1,4 +1,5 @@
-﻿using FaunaDB.Errors;
+﻿using FaunaDB.Collections;
+using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using FaunaDB.Utils;

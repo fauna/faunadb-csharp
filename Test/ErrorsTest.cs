@@ -60,7 +60,7 @@ namespace Test
 
         [Test] public async Task TestInvalidArgument()
         {
-            await AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", new ArrayV("add", 1));
+            await AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", ArrayV.Of("add", 1));
         }
 
         [Test] public async Task TestInstanceNotFound()
@@ -79,7 +79,7 @@ namespace Test
         {
             await client.Query(Create(Ref("classes"), Obj("name", "duplicates")));
             var @ref = (Ref) ((ObjectV) (await client.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
-            await AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", new ArrayV("create"));
+            await AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", ArrayV.Of("create"));
         }
         #endregion
 

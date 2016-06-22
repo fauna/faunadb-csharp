@@ -75,7 +75,7 @@ namespace Test
 
         async Task AssertSet(Expr set, params Value[] expectedSetValues)
         {
-            Assert.AreEqual(ArrayV.FromEnumerable(expectedSetValues), await SetToArray(set));
+            Assert.AreEqual(ArrayV.Of(expectedSetValues), await SetToArray(set));
         }
 
         async Task AssertBadQuery(Expr expression)
@@ -152,16 +152,16 @@ namespace Test
 
         [Test] public async Task TestMap()
         {
-            await AssertQuery(new ArrayV(2, 4, 6), Map(new ArrayV(1, 2, 3), a => Multiply(2, a)));
+            await AssertQuery(ArrayV.Of(2, 4, 6), Map(ArrayV.Of(1, 2, 3), a => Multiply(2, a)));
 
             var page = Paginate(NSet(1));
-            var ns = Map(page, a => Select(new ArrayV("data", "n"), Get(a)));
-            await AssertQuery(ObjectV.With("data", new ArrayV(1, 1)), ns);
+            var ns = Map(page, a => Select(ArrayV.Of("data", "n"), Get(a)));
+            await AssertQuery(ObjectV.With("data", ArrayV.Of(1, 1)), ns);
         }
 
         [Test] public async Task TestForeach()
         {
-            var refs = new ArrayV(await CreateRef(), await CreateRef());
+            var refs = ArrayV.Of(await CreateRef(), await CreateRef());
             await Q(Foreach(refs, Delete));
             foreach (var @ref in refs)
                 await AssertQuery(false, Exists(@ref));
@@ -169,36 +169,36 @@ namespace Test
 
         [Test] public async Task TestFilter()
         {
-            var evens = Filter(new ArrayV(1, 2, 3, 4), a => Language.EqualsFn(Modulo(a, 2), 0));
-            await AssertQuery(new ArrayV(2, 4), evens);
+            var evens = Filter(ArrayV.Of(1, 2, 3, 4), a => Language.EqualsFn(Modulo(a, 2), 0));
+            await AssertQuery(ArrayV.Of(2, 4), evens);
 
             // Works on page too
             var page = Paginate(NSet(1));
-            var refsWithM = Filter(page, a => Contains(new ArrayV("data", "m"), Get(a)));
-            await AssertQuery(ObjectV.With("data", new ArrayV(refN1M1)), refsWithM);
+            var refsWithM = Filter(page, a => Contains(ArrayV.Of("data", "m"), Get(a)));
+            await AssertQuery(ObjectV.With("data", ArrayV.Of(refN1M1)), refsWithM);
         }
 
         [Test] public async Task TestTake()
         {
-            await AssertQuery(new ArrayV(1), Take(1, new ArrayV(1, 2)));
-            await AssertQuery(new ArrayV(1, 2), Take(3, new ArrayV(1, 2)));
-            await AssertQuery(ArrayV.Empty, Take(-1, new ArrayV(1, 2)));
+            await AssertQuery(ArrayV.Of(1), Take(1, ArrayV.Of(1, 2)));
+            await AssertQuery(ArrayV.Of(1, 2), Take(3, ArrayV.Of(1, 2)));
+            await AssertQuery(ArrayV.Empty, Take(-1, ArrayV.Of(1, 2)));
         }
 
         [Test] public async Task TestDrop()
         {
-            await AssertQuery(new ArrayV(2), Drop(1, new ArrayV(1, 2)));
-            await AssertQuery(ArrayV.Empty, Drop(3, new ArrayV(1, 2)));
-            await AssertQuery(new ArrayV(1, 2), Drop(-1, new ArrayV(1, 2)));
+            await AssertQuery(ArrayV.Of(2), Drop(1, ArrayV.Of(1, 2)));
+            await AssertQuery(ArrayV.Empty, Drop(3, ArrayV.Of(1, 2)));
+            await AssertQuery(ArrayV.Of(1, 2), Drop(-1, ArrayV.Of(1, 2)));
         }
 
         [Test] public async Task TestPrepend()
         {
-            await AssertQuery(new ArrayV(1, 2, 3, 4, 5, 6), Prepend(new ArrayV(1, 2, 3), new ArrayV(4, 5, 6)));
+            await AssertQuery(ArrayV.Of(1, 2, 3, 4, 5, 6), Prepend(ArrayV.Of(1, 2, 3), ArrayV.Of(4, 5, 6)));
         }
 
         [Test] public async Task TestAppend() {
-            await AssertQuery(new ArrayV(1, 2, 3, 4, 5, 6), Append(new ArrayV(4, 5, 6), new ArrayV(1, 2, 3)));
+            await AssertQuery(ArrayV.Of(1, 2, 3, 4, 5, 6), Append(ArrayV.Of(4, 5, 6), ArrayV.Of(1, 2, 3)));
         }
         #endregion
 
@@ -312,8 +312,8 @@ namespace Test
 
         [Test] public async Task TestJoin()
         {
-            var referenced = new ArrayV(await CreateRef(n: 12), await CreateRef(n: 12));
-            var referencers = new ArrayV(await CreateRef(m: referenced[0]), await CreateRef(m: referenced[1]));
+            var referenced = ArrayV.Of(await CreateRef(n: 12), await CreateRef(n: 12));
+            var referencers = ArrayV.Of(await CreateRef(m: referenced[0]), await CreateRef(m: referenced[1]));
 
             var source = NSet(12);
             Assert.AreEqual(referenced, await SetToArray(source));
@@ -350,9 +350,9 @@ namespace Test
 
         [Test] public async Task TestConcat()
         {
-            await AssertQuery("abc", Concat(new ArrayV("a", "b", "c")));
+            await AssertQuery("abc", Concat(ArrayV.Of("a", "b", "c")));
             await AssertQuery("", Concat(ArrayV.Empty));
-            await AssertQuery("a.b.c", Concat(new ArrayV("a", "b", "c"), "."));
+            await AssertQuery("a.b.c", Concat(ArrayV.Of("a", "b", "c"), "."));
         }
 
         [Test] public async Task TestCaseFold()
@@ -397,23 +397,23 @@ namespace Test
         [Test] public async Task TestContains()
         {
             var obj = Obj("a", Obj("b", 1));
-            await AssertQuery(true, Contains(new ArrayV("a", "b"), obj));
+            await AssertQuery(true, Contains(ArrayV.Of("a", "b"), obj));
             await AssertQuery(true, Contains("a", obj));
-            await AssertQuery(false, Contains(new ArrayV("a", "c"), obj));
+            await AssertQuery(false, Contains(ArrayV.Of("a", "c"), obj));
         }
 
         [Test] public async Task TestSelect()
         {
             var obj = Obj("a", Obj("b", 1));
             await AssertQuery(ObjectV.With("b", 1), Select("a", obj));
-            await AssertQuery(1, Select(new ArrayV("a", "b"), obj));
+            await AssertQuery(1, Select(ArrayV.Of("a", "b"), obj));
             await AssertQuery(NullV.Instance, Select("c", obj, NullV.Instance));
             await AssertU.Throws<NotFound>(() => Q(Select("c", obj)));
         }
 
         [Test] public async Task TestSelectArray()
         {
-            var arr = new ArrayV(1, 2, 3);
+            var arr = ArrayV.Of(1, 2, 3);
             await AssertQuery(3, Select(2, arr));
             await AssertU.Throws<NotFound>(() => Q(Select(3, arr)));
         }
@@ -496,9 +496,9 @@ namespace Test
         [Test] public async Task TestVarargs()
         {
             // Works for arrays too
-            await AssertQuery(10, Add(new ArrayV(2, 3, 5)));
+            await AssertQuery(10, Add(ArrayV.Of(2, 3, 5)));
             // Works for a variable equal to an array
-            await AssertQuery(10, Let("a", new ArrayV(2, 3, 5)).In(a => Add(a)));
+            await AssertQuery(10, Let("a", ArrayV.Of(2, 3, 5)).In(a => Add(a)));
         }
     }
 }

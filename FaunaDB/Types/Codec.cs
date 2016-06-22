@@ -1,9 +1,5 @@
-﻿using FaunaDB.Utils;
+﻿using FaunaDB.Collections;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FaunaDB.Types
 {
@@ -41,7 +37,7 @@ namespace FaunaDB.Types
         public bool Equals(Result<T> other)
         {
             Success<T> s = other as Success<T>;
-            return s != null && value.Equals(s.value);
+            return s != null && object.Equals(value, s.value);
         }
 
         public override string ToString() =>
@@ -107,8 +103,8 @@ namespace FaunaDB.Types
         public static readonly Func<Value, Result<DateTime>> TS =
             Cast.MapTo(Cast.ScalarValue<TsV, DateTime>());
 
-        public static readonly Func<Value, Result<List<Value>>> ARRAY =
-            Cast.MapTo<ArrayV, List<Value>>(input => input.Value);
+        public static readonly Func<Value, Result<ArrayList<Value>>> ARRAY =
+            Cast.MapTo<ArrayV, ArrayList<Value>>(input => input.Value);
 
         public static readonly Func<Value, Result<OrderedDictionary<string, Value>>> OBJECT =
             Cast.MapTo<ObjectV, OrderedDictionary<string, Value>>(input => input.Value);

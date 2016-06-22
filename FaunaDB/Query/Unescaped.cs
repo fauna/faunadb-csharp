@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using FaunaDB.Collections;
 
 namespace FaunaDB.Query
 {

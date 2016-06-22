@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace FaunaDB.Utils
+namespace FaunaDB.Collections
 {
     public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
@@ -139,7 +139,7 @@ namespace FaunaDB.Utils
             return other != null && DictEquals(this, other);
         }
 
-        public static bool DictEquals(OrderedDictionary<TKey, TValue> a, OrderedDictionary<TKey, TValue> b)
+        private static bool DictEquals(OrderedDictionary<TKey, TValue> a, OrderedDictionary<TKey, TValue> b)
         {
             if (a.Count != b.Count)
                 return false;
@@ -155,7 +155,8 @@ namespace FaunaDB.Utils
         }
     }
 
-    public class ImmutableDictionary {
+    public sealed class ImmutableDictionary
+    {
         public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();

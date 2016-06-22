@@ -9,9 +9,9 @@ namespace Test
     {
         [Test] public void TestPage()
         {
-            var data = new ArrayV(1);
-            var before = new Cursor(new ArrayV(new Ref("before")));
-            var after = new Cursor(new ArrayV(new Ref("after")));
+            var data = ArrayV.Of(1);
+            var before = new Cursor(ArrayV.Of(new Ref("before")));
+            var after = new Cursor(ArrayV.Of(new Ref("after")));
             var page = new Pagination(data, before, after);
             var value = ObjectV.With("data", data, "before", before, "after", after);
             Assert.AreEqual(page, (Pagination) value);

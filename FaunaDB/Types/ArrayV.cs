@@ -1,4 +1,5 @@
-﻿using FaunaDB.Query;
+﻿using FaunaDB.Collections;
+using FaunaDB.Query;
 using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
@@ -13,28 +14,23 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class ArrayV : Value, IEnumerable<Value>
     {
-        public static readonly ArrayV Empty = new ArrayV(new List<Value>());
+        public static readonly ArrayV Empty = new ArrayV(new Value[0]);
 
-        public List<Value> Value { get; }
-
-        public static ArrayV FromEnumerable(IEnumerable<Value> values) =>
-            new ArrayV(new List<Value>(values));
+        public ArrayList<Value> Value { get; }
 
         public static ArrayV Of(params Value[] values) =>
             new ArrayV(values);
 
-        internal ArrayV(List<Value> value)
+        //public static ArrayV Of(IEnumerable<Value> values) =>
+        //    new ArrayV(values.ToArray());
+
+        internal ArrayV(params Value[] value)
         {
-            Value = value;
+            Value = new ArrayList<Value>(value);
 
             if (Value == null)
                 throw new NullReferenceException();
         }
-
-        /// <summary>
-        /// Create from values.
-        /// </summary>
-        public ArrayV(params Value[] values) : this(new List<Value>(values)) {}
 
         /// <summary>
         /// Create from a builder expression.
@@ -44,7 +40,7 @@ namespace FaunaDB.Types
         /// </param>
         public ArrayV(Action<Action<Value>> builder)
         {
-            Value = new List<Value>();
+            Value = new ArrayList<Value>();
             builder(Value.Add);
         }
 
@@ -80,7 +76,7 @@ namespace FaunaDB.Types
             HashUtil.Hash(Value);
 
         public override string ToString() =>
-            $"Arr({string.Join(", ", Value)})";
+            $"Arr({string.Join(", ", Value.GetEnumerator())})";
         #endregion
     }
 }

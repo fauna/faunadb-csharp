@@ -1,4 +1,5 @@
-﻿using FaunaDB.Types;
+﻿using FaunaDB.Collections;
+using FaunaDB.Types;
 using FaunaDB.Utils;
 using System;
 using System.Reflection;

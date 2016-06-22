@@ -1,8 +1,7 @@
-﻿using FaunaDB.Types;
-using FaunaDB.Utils;
+﻿using FaunaDB.Collections;
+using FaunaDB.Types;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 
 namespace Test
 {
@@ -57,12 +56,12 @@ namespace Test
             Assert.AreEqual(Result.fail<DateTime>("Cannot convert ObjectV to DateV"), Codec.DATE(ObjectV.Empty));
         }
 
-        [Test] [Ignore("fix List.Equals")] public void TestArray()
+        [Test] public void TestArray()
         {
-            Value[] array = { "a string", true, 10 };
+            var array = ImmutableArray.Of<Value>("a string", true, 10);
 
-            Assert.AreEqual(Result.success(new List<Value>(array)), Codec.ARRAY(ArrayV.Of("a string", true, 10)));
-            Assert.AreEqual(Result.fail<List<Value>>("Cannot convert ObjectV to ArrayV"), Codec.ARRAY(ObjectV.Empty));
+            Assert.AreEqual(Result.success(array), Codec.ARRAY(ArrayV.Of("a string", true, 10)));
+            Assert.AreEqual(Result.fail<ArrayList<Value>>("Cannot convert ObjectV to ArrayV"), Codec.ARRAY(ObjectV.Empty));
         }
 
         [Test] public void TestObject()

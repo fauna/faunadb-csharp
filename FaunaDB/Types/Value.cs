@@ -1,5 +1,5 @@
-﻿using FaunaDB.Query;
-using FaunaDB.Utils;
+﻿using FaunaDB.Collections;
+using FaunaDB.Query;
 using System.Collections.Generic;
 
 namespace FaunaDB.Types
@@ -7,8 +7,8 @@ namespace FaunaDB.Types
     public abstract class Value : Expr
     {
         #region implicit conversions
-        public static implicit operator Value(List<Value> values) =>
-            values == null ? NullV.Instance : ArrayV.FromEnumerable(values);
+        public static implicit operator Value(ArrayList<Value> values) =>
+            values == null ? NullV.Instance : ArrayV.Of(values);
 
         public static implicit operator Value(OrderedDictionary<string, Value> values) =>
             values == null ? NullV.Instance : new ObjectV(values);
@@ -31,7 +31,7 @@ namespace FaunaDB.Types
         #endregion
 
         #region explicit (downcasting) conversions
-        public static explicit operator List<Value>(Value v) =>
+        public static explicit operator ArrayList<Value>(Value v) =>
             ((ArrayV)v).Value;
 
         public static explicit operator OrderedDictionary<string, Value>(Value v) =>
