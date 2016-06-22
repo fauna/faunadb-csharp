@@ -1,6 +1,9 @@
 ﻿using FaunaDB.Collections;
 using FaunaDB.Types;
 using NUnit.Framework;
+using System;
+
+using static FaunaDB.Types.Option;
 
 namespace Test
 {
@@ -10,53 +13,63 @@ namespace Test
         {
             var obj = ObjectV.With("foo", "bar");
 
-            Assert.AreEqual(Result.Success<Value>("bar"),
+            Assert.AreEqual(StringV.Of("bar"),
                 obj.Get(Field.At("foo")));
 
-            Assert.AreEqual(Result.Fail<Value>("Cannot find path \"nonexistent\". Object key \"nonexistent\" not found"),
-                obj.Get(Field.At("nonexistent")));
+            Assert.AreEqual(None<Value>(),
+                obj.GetOption(Field.At("nonexistent")));
+
+            Assert.Throws(typeof(InvalidOperationException),
+                () => obj.Get(Field.At("nonexistent")),
+                "Cannot find path \"nonexistent\". Object key \"nonexistent\" not found");
         }
 
         [Test] public void TestArrayIndex()
         {
             var array = ArrayV.Of("a string", 10);
 
-            Assert.AreEqual(Result.Success<Value>(StringV.Of("a string")),
+            Assert.AreEqual(StringV.Of("a string"),
                 array.Get(Field.At(0)));
 
-            Assert.AreEqual(Result.Success<Value>(LongV.Of(10)),
+            Assert.AreEqual(LongV.Of(10),
                 array.Get(Field.At(1)));
 
-            Assert.AreEqual(Result.Fail<Value>("Cannot find path \"1234\". Array index \"1234\" not found"),
-                array.Get(Field.At(1234)));
+            Assert.AreEqual(None<Value>(),
+                array.GetOption(Field.At(1234)));
+
+            Assert.Throws(typeof(InvalidOperationException),
+                () => array.Get(Field.At(1234)),
+                "Cannot find path \"1234\". Array index \"1234\" not found");
         }
 
         [Test] public void TestNestedObject()
         {
             var nested = ObjectV.With("foo", ObjectV.With("bar", "a string"));
 
-            Assert.AreEqual(Result.Success<Value>(StringV.Of("a string")),
+            Assert.AreEqual(StringV.Of("a string"),
                 nested.Get(Field.At("foo", "bar")));
 
-            Assert.AreEqual(Result.Fail<Value>("Cannot find path \"foo/nonexistent\". Object key \"nonexistent\" not found"),
-                nested.Get(Field.At("foo", "nonexistent")));
+            Assert.Throws(typeof(InvalidOperationException),
+                () => nested.Get(Field.At("foo", "nonexistent")),
+                "Cannot find path \"foo/nonexistent\". Object key \"nonexistent\" not found");
         }
 
         [Test] public void TestNestedArray()
         {
             var nested = ArrayV.Of(10, ArrayV.Of(1234, ArrayV.Of(4321)));
 
-            Assert.AreEqual(Result.Success<Value>(LongV.Of(10)),
+            Assert.AreEqual(LongV.Of(10),
                 nested.Get(Field.At(0)));
 
-            Assert.AreEqual(Result.Success<Value>(LongV.Of(1234)),
+            Assert.AreEqual(LongV.Of(1234),
                 nested.Get(Field.At(1, 0)));
 
-            Assert.AreEqual(Result.Success<Value>(LongV.Of(4321)),
+            Assert.AreEqual(LongV.Of(4321),
                 nested.Get(Field.At(1, 1, 0)));
 
-            Assert.AreEqual(Result.Fail<Value>("Cannot find path \"1/1/1\". Array index \"1\" not found"),
-                nested.Get(Field.At(1, 1, 1)));
+            Assert.Throws(typeof(InvalidOperationException),
+                () => nested.Get(Field.At(1, 1, 1)),
+                "Cannot find path \"1/1/1\". Array index \"1\" not found");
         }
 
         [Test] public void TestCodecConvertion()
@@ -69,22 +82,22 @@ namespace Test
                 "ref", new Ref("databases"),
                 "setref", new SetRef("databases"));
 
-            Assert.AreEqual(Result.Success("a string"),
+            Assert.AreEqual("a string",
                 obj.Get(Field.At("string").To(Codec.STRING)));
 
-            Assert.AreEqual(Result.Success(true),
+            Assert.AreEqual(true,
                 obj.Get(Field.At("bool").To(Codec.BOOLEAN)));
 
-            Assert.AreEqual(Result.Success(3.14),
+            Assert.AreEqual(3.14,
                 obj.Get(Field.At("double").To(Codec.DOUBLE)));
 
-            Assert.AreEqual(Result.Success(1234L),
+            Assert.AreEqual(1234L,
                 obj.Get(Field.At("long").To(Codec.LONG)));
 
-            Assert.AreEqual(Result.Success(new Ref("databases")),
+            Assert.AreEqual(new Ref("databases"),
                 obj.Get(Field.At("ref").To(Codec.REF)));
 
-            Assert.AreEqual(Result.Success(new SetRef("databases")),
+            Assert.AreEqual(new SetRef("databases"),
                 obj.Get(Field.At("setref").To(Codec.SETREF)));
         }
 
@@ -92,7 +105,7 @@ namespace Test
         {
             var obj = ObjectV.With("foo", ArrayV.Of(1, 2, ObjectV.With("bar", "a string")));
 
-            Assert.AreEqual(Result.Success("a string"),
+            Assert.AreEqual("a string",
                 obj.Get(Field.At("foo").At(Field.At(2)).At(Field.At("bar").To(Codec.STRING))));
         }
 
@@ -100,16 +113,17 @@ namespace Test
         {
             var array = ArrayV.Of("John", "Bill");
 
-            Assert.AreEqual(Result.Success(ImmutableList.Of("John", "Bill")),
-                array.Collect(Field.To(Codec.STRING)));
+            Assert.AreEqual(ImmutableList.Of("John", "Bill"),
+                array.Collect(Field.As(Codec.STRING)));
 
             var obj = ObjectV.With("arrayOfNames", array);
 
-            Assert.AreEqual(Result.Success(ImmutableList.Of("John", "Bill")),
-                obj.Get(Field.At("arrayOfNames").Collect(Field.To(Codec.STRING))));
+            Assert.AreEqual(ImmutableList.Of("John", "Bill"),
+                obj.Get(Field.At("arrayOfNames").Collect(Field.As(Codec.STRING))));
 
-            Assert.AreEqual(Result.Fail<ArrayList<string>>("Cannot convert ObjectV to ArrayV"),
-                obj.Collect(Field.To(Codec.STRING)));
+            Assert.Throws(typeof(InvalidOperationException),
+                () => obj.Collect(Field.As(Codec.STRING)),
+                "Cannot convert ObjectV to ArrayV");
         }
 
         [Test] public void TestCollectComplex()
@@ -119,7 +133,7 @@ namespace Test
                     ObjectV.With("name", ArrayV.Of("Bill"))
                 );
 
-            Assert.AreEqual(Result.Success(ImmutableList.Of("John", "Bill")),
+            Assert.AreEqual(ImmutableList.Of("John", "Bill"),
                 array.Collect(Field.At("name").At(Field.At(0)).To(Codec.STRING)));
         }
     }

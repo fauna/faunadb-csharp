@@ -46,7 +46,7 @@ namespace FaunaDB.Types
 
             return result.Match(
                 Success: Result.Success,
-                Failure: () => Result.Fail<Value>($"Cannot find path \"{this}\". {result}"));
+                Failure: reason => Result.Fail<Value>($"Cannot find path \"{this}\". {reason}"));
         }
 
         public override bool Equals(object obj)

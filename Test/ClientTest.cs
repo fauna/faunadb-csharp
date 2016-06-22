@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Client;
+using FaunaDB.Collections;
 using FaunaDB.Errors;
 using FaunaDB.Types;
 using NUnit.Framework;
@@ -7,12 +8,23 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
 using static FaunaDB.Query.Language;
+using static FaunaDB.Types.Option;
 
 namespace Test
 {
     [TestFixture] public class ClientTest : TestCase
     {
+        private static Field<Value> DATA = Field.At("data");
+        private static Field<Ref> REF_FIELD = Field.At("ref").To(Codec.REF);
+        private static Field<ArrayList<Ref>> REF_LIST = DATA.Collect(Field.As(Codec.REF));
+
+        private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To(Codec.STRING);
+        private static Field<string> ELEMENT_FIELD = DATA.At(Field.At("element")).To(Codec.STRING);
+        private static Field<Value> ELEMENTS_LIST = DATA.At(Field.At("elements"));
+        private static Field<long> COST_FIELD = DATA.At(Field.At("cost")).To(Codec.LONG);
+
         private static Ref magicMissile;
         private static Ref fireball;
         private static Ref faerieFire;
@@ -141,7 +153,7 @@ namespace Test
         [Test]
         public async Task TestCreateAComplexInstance()
         {
-            Value instance = GetData(await client.Query(
+            Value instance = await client.Query(
                 Create(await RandomClass(),
                     Obj("data",
                         Obj("testField",
@@ -151,25 +163,23 @@ namespace Test
                                 "num", 1234,
                                 "string", "sup",
                                 "float", 1.234)
-                            )))));
+                            ))));
 
-            Assert.AreEqual(Value.FromJson("{\"testField\":{" +
-                "\"array\": [1, \"2\", 3.4, {\"name\": \"JR\"}]," +
-                "\"bool\": true," +
-                "\"num\": 1234," +
-                "\"string\": \"sup\"," +
-                "\"float\": 1.234" +
-                "}}"), instance);
+            Value testField = instance.Get(DATA).At("testField");
+            Assert.AreEqual(Some("sup"), testField.At("string").To(Codec.STRING).Get());
+            Assert.AreEqual(Some(1234L), testField.At("num").To(Codec.LONG).Get());
+            Assert.AreEqual(Some(true), testField.At("bool").To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(None<string>(), testField.At("bool").To(Codec.STRING).Get());
+            Assert.AreEqual(None<Value>(), testField.At("credentials").To(Codec.VALUE).Get());
+            Assert.AreEqual(None<string>(), testField.At("credentials", "password").To(Codec.STRING).Get());
 
-            Assert.AreEqual(ObjectV.With("testField",
-                ObjectV.With(
-                    "array", ArrayV.Of(1, "2", 3.4, ObjectV.With("name", "JR")),
-                    "bool", true,
-                    "num", 1234,
-                    "string", "sup",
-                    "float", 1.234
-                    )),
-                instance);
+            Value array = testField.At("array");
+            Assert.AreEqual(4, array.To(Codec.ARRAY).Get().Value.Count);
+            Assert.AreEqual(Some(1L), array.At(0).To(Codec.LONG).Get());
+            Assert.AreEqual(Some("2"), array.At(1).To(Codec.STRING).Get());
+            Assert.AreEqual(Some(3.4), array.At(2).To(Codec.DOUBLE).Get());
+            Assert.AreEqual(Some("JR"), array.At(3).At("name").To(Codec.STRING).Get());
+            Assert.AreEqual(None<Value>(), array.At(4).To(Codec.VALUE).Get());
         }
 
         [Test] public async Task TestGetAnInstance()

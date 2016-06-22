@@ -8,9 +8,11 @@ namespace FaunaDB.Types
 
         Result<U> FlatMap<U>(Func<T, Result<U>> func);
 
-        U Match<U>(Func<T, U> Success, Func<U> Failure);
+        U Match<U>(Func<T, U> Success, Func<string, U> Failure);
 
-        void Match(Action<T> Success, Action Failure);
+        void Match(Action<T> Success, Action<string> Failure);
+
+        Option<T> Get();
     }
 
     public class Result
@@ -49,11 +51,14 @@ namespace FaunaDB.Types
         public override string ToString() =>
             value.ToString();
 
-        public U Match<U>(Func<T, U> Success, Func<U> Failure) =>
+        public U Match<U>(Func<T, U> Success, Func<string, U> Failure) =>
             Success(value);
 
-        public void Match(Action<T> Success, Action Failure) =>
+        public void Match(Action<T> Success, Action<string> Failure) =>
             Success(value);
+
+        public Option<T> Get() =>
+            Option.Some(value);
     }
 
     internal class Failure<T> : Result<T>
@@ -83,10 +88,13 @@ namespace FaunaDB.Types
         public override string ToString() =>
             reason;
 
-        public U Match<U>(Func<T, U> Success, Func<U> Failure) =>
-            Failure();
+        public U Match<U>(Func<T, U> Success, Func<string, U> Failure) =>
+            Failure(reason);
 
-        public void Match(Action<T> Success, Action Failure) =>
-            Failure();
+        public void Match(Action<T> Success, Action<string> Failure) =>
+            Failure(reason);
+
+        public Option<T> Get() =>
+            Option.None<T>();
     }
 }

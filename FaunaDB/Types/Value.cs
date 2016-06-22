@@ -6,14 +6,51 @@ namespace FaunaDB.Types
 {
     public abstract class Value : Expr
     {
+        public Value At(params string[] values) =>
+            Field.At(values).Get(this).Match(
+                Success: value => value,
+                Failure: reason => NullV.Instance
+                );
+
+        public Value At(params int[] values) =>
+            Field.At(values).Get(this).Match(
+                Success: value => value,
+                Failure: reason => NullV.Instance
+                );
+
         public Result<T> To<T>(Func<Value, Result<T>> codec) =>
             codec(this);
 
-        public Result<T> Get<T>(Field<T> field) =>
-            field.Get(this);
+        public ArrayList<T> Collect<T>(Field<T> field) =>
+            Field.Root.Collect(field).Get(this).Match(
+                Success: value => value,
+                Failure: reason => { throw new InvalidOperationException(reason); }
+                );
 
-        public Result<ArrayList<T>> Collect<T>(Field<T> field) =>
-            Field.Root.Collect(field).Get(this);
+        public T Get<T>(Field<T> field) =>
+            field.Get(this).Match(
+                Success: value => value,
+                Failure: reason => { throw new InvalidOperationException(reason); }
+                );
+
+        public Option<T> GetOption<T>(Field<T> field) =>
+            field.Get(this).Match(
+                Success: value => Option.Some<T>(value),
+                Failure: reason => Option.None<T>()
+                );
+
+        public bool TryGet<T>(Field<T> field, out T outValue)
+        {
+            outValue = field.Get(this).Match(
+                Success: value => value,
+                Failure: reason => default(T)
+                );
+
+            return field.Get(this).Match(
+                Success: value => true,
+                Failure: reason => false
+                );
+        }
 
         #region implicit conversions
         public static implicit operator Value(ArrayList<Value> values) =>

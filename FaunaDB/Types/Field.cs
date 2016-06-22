@@ -23,9 +23,9 @@ namespace FaunaDB.Types
 
                     result.Match(
                         Success: x => success.Add(x),
-                        Failure: () => {
+                        Failure: reason => {
                             Path subPath = path.SubPath(Path.From(i)).SubPath(field.path);
-                            failures.Add($"\"{subPath}\" {result}");
+                            failures.Add($"\"{subPath}\" {reason}");
                         });
                 }
 
@@ -81,7 +81,7 @@ namespace FaunaDB.Types
         public static Field<Value> At(params int[] values) =>
             new Field<Value>(Path.From(values), Codec.VALUE);
 
-        public static Field<T> To<T>(Func<Value, Result<T>> codec) =>
+        public static Field<T> As<T>(Func<Value, Result<T>> codec) =>
             new Field<T>(Path.Empty, codec);
     }
 }
