@@ -90,6 +90,9 @@ namespace FaunaDB.Collections
             var other = obj as ArrayList<T>;
             return other != null && list.SequenceEqual(other.list);
         }
+
+        public override string ToString() =>
+            $"[{string.Join(", ", list)}]";
     }
 
     public sealed class ImmutableList
