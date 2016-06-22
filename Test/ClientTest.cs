@@ -184,8 +184,8 @@ namespace Test
 
         [Test] public async Task TestGetAnInstance()
         {
-            ObjectV instance = GetData(await client.Query(Get(magicMissile)));
-            Assert.AreEqual(StringV.Of("Magic Missile"), instance["name"]);
+            Value instance = await client.Query(Get(magicMissile));
+            Assert.AreEqual("Magic Missile", instance.Get(NAME_FIELD));
         }
 
         //todo batch query
@@ -200,17 +200,112 @@ namespace Test
                             "element", "arcane",
                             "cost", 10))));
 
-            ObjectV updatedInstance = GetData(await client.Query(
+            Value updatedInstance = await client.Query(
                 Update(GetRef(createdInstance),
                     Obj("data",
                         Obj(
                         "name", "Faerie Fire",
-                        "cost", Null())))));
+                        "cost", Null()))));
 
-            Assert.AreEqual(StringV.Of("Faerie Fire"), updatedInstance["name"]);
-            Assert.AreEqual(StringV.Of("arcane"), updatedInstance["element"]);
-            //Assert.AreEqual(NullV.Instance, updatedInstance["cost"]);
+            Assert.AreEqual(createdInstance.Get(REF_FIELD), updatedInstance.Get(REF_FIELD));
+            Assert.AreEqual("Faerie Fire", updatedInstance.Get(NAME_FIELD));
+            Assert.AreEqual("arcane", updatedInstance.Get(ELEMENT_FIELD));
+            Assert.AreEqual(None<long>(), updatedInstance.GetOption(COST_FIELD));
         }
+
+        [Test] public async Task TestReplaceAnInstancesData()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                    Obj("data",
+                        Obj(
+                            "name", "Magic Missile",
+                            "element", "arcane",
+                            "cost", 10))));
+
+            Value replacedInstance = await client.Query(
+                Replace(createdInstance.Get(REF_FIELD),
+                    Obj("data",
+                        Obj(
+                            "name", "Volcano",
+                            "elements", Arr("fire", "earth"),
+                            "cost", 10)))
+            );
+
+            Assert.AreEqual(createdInstance.Get(REF_FIELD), replacedInstance.Get(REF_FIELD));
+            Assert.AreEqual("Volcano", replacedInstance.Get(NAME_FIELD));
+            Assert.AreEqual(10L, replacedInstance.Get(COST_FIELD));
+            Assert.AreEqual(ImmutableList.Of("fire", "earth"), replacedInstance.Get(ELEMENTS_LIST).Collect(Field.As(Codec.STRING)));
+        }
+
+        [Test] public async Task TestDeleteAnInstance()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                Obj("data", Obj("name", "Magic Missile"))));
+
+            Value @ref = createdInstance.Get(REF_FIELD);
+            await client.Query(Delete(@ref));
+
+            Value exists = await client.Query(Exists(@ref));
+            Assert.AreEqual(Some(false), exists.To(Codec.BOOLEAN).Get());
+
+            Assert.ThrowsAsync<NotFound>(async() => await client.Query(Get(@ref)));
+        }
+
+        [Test] public async Task TestInsertAndRemoveEvents()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                    Obj("data", Obj("name", "Magic Missile"))));
+
+            Value insertedEvent = await client.Query(
+                Insert(createdInstance.Get(REF_FIELD), 1L, FaunaDB.Query.Language.Action.CREATE,
+                    Obj("data", Obj("cooldown", 5L))));
+
+            Assert.AreEqual(createdInstance.Get(REF_FIELD), insertedEvent.Get(REF_FIELD));
+            Assert.AreEqual(1, insertedEvent.Get(DATA).To(Codec.OBJECT).Get().Value.Count);
+            Assert.AreEqual(Some(5L), insertedEvent.Get(DATA).At("cooldown").To(Codec.LONG).Get());
+
+            Value removedEvent = await client.Query(
+                Remove(createdInstance.Get(REF_FIELD), 2L, FaunaDB.Query.Language.Action.DELETE)
+            );
+
+            Assert.AreEqual(Null(), removedEvent);
+        }
+
+        [Test] public async Task TestHandleConstraintViolations()
+        {
+            Ref classRef = await RandomClass();
+
+            await client.Query(
+                Create(Ref("indexes"),
+                    Obj(
+                        "name", RandomStartingWith("class_index_"),
+                        "source", classRef,
+                        "terms", Arr(Obj("field", Arr("data", "uniqueField"))),
+                        "unique", true)));
+
+            await client.Query(
+                Create(classRef,
+                    Obj("data", Obj("uniqueField", "same value"))));
+
+            Assert.ThrowsAsync<BadRequest>(async () =>
+            {
+                await client.Query(
+                    Create(classRef,
+                        Obj("data", Obj("uniqueField", "same value"))));
+            });
+        }
+
+        [Test] public async Task TestFindASingleInstanceFromIndex()
+        {
+            Value singleMatch = await client.Query(
+                Paginate(Match(Ref("indexes/spells_by_element"), "fire")));
+
+            Assert.AreEqual(ImmutableList.Of(fireball), singleMatch.Get(REF_LIST));
+        }
+
 
         [Test] public async Task TestPing()
         {
