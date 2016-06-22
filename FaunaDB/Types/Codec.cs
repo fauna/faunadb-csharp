@@ -3,8 +3,12 @@ using System;
 
 namespace FaunaDB.Types
 {
-    public interface Result<T> : IEquatable<Result<T>>
+    public interface Result<T>
     {
+        bool IsSuccess { get; }
+
+        bool IsFailure { get; }
+
         Result<U> Map<U>(Func<T, U> func);
 
         Result<U> FlatMap<U>(Func<T, Result<U>> func);
@@ -12,10 +16,10 @@ namespace FaunaDB.Types
 
     public class Result
     {
-        public static Result<T> success<T>(T value) =>
+        public static Result<T> Success<T>(T value) =>
             new Success<T>(value);
 
-        public static Result<T> fail<T>(string reason) =>
+        public static Result<T> Fail<T>(string reason) =>
             new Failure<T>(reason);
     }
 
@@ -28,20 +32,27 @@ namespace FaunaDB.Types
             this.value = value;
         }
 
+        public bool IsSuccess { get { return true; } }
+
+        public bool IsFailure { get { return false; } }
+
         public Result<U> Map<U>(Func<T, U> func) =>
             new Success<U>(func(value));
 
         public Result<U> FlatMap<U>(Func<T, Result<U>> func) =>
             func(value);
 
-        public bool Equals(Result<T> other)
+        public override bool Equals(object obj)
         {
-            Success<T> s = other as Success<T>;
-            return s != null && object.Equals(value, s.value);
+            Success<T> other = obj as Success<T>;
+            return other != null && object.Equals(value, other.value);
         }
 
+        public override int GetHashCode() =>
+            value.GetHashCode();
+
         public override string ToString() =>
-            $"Success({value})";
+            value.ToString();
     }
 
     internal class Failure<T> : Result<T>
@@ -53,20 +64,27 @@ namespace FaunaDB.Types
             this.reason = reason;
         }
 
+        public bool IsSuccess { get { return false; } }
+
+        public bool IsFailure { get { return true; } }
+
         public Result<U> Map<U>(Func<T, U> func) =>
             new Failure<U>(reason);
 
         public Result<U> FlatMap<U>(Func<T, Result<U>> func) =>
             new Failure<U>(reason);
 
-        public bool Equals(Result<T> other)
+        public override bool Equals(object obj)
         {
-            Failure<T> f = other as Failure<T>;
-            return f != null && reason.Equals(f.reason);
+            Failure<T> other = obj as Failure<T>;
+            return other != null && reason.Equals(other.reason);
         }
 
+        public override int GetHashCode() =>
+            reason.GetHashCode();
+
         public override string ToString() =>
-            $"Failure({reason})";
+            reason;
     }
 
     public struct Codec
@@ -74,9 +92,9 @@ namespace FaunaDB.Types
         public static readonly Func<Value, Result<Value>> VALUE = value =>
         {
             if (value == NullV.Instance)
-                return Result.fail<Value>("Value is null");
+                return Result.Fail<Value>("Value is null");
 
-            return Result.success(value);
+            return Result.Success(value);
         };
 
         public static readonly Func<Value, Result<Ref>> REF =
@@ -120,9 +138,9 @@ namespace FaunaDB.Types
         public static Result<O> DoCast<O>(Value input) where O : Value
         {
             if (typeof(O).IsAssignableFrom(input.GetType()))
-                return Result.success((O) input);
+                return Result.Success((O) input);
 
-            return Result.fail<O>($"Cannot convert {input.GetType().Name} to {typeof(O).Name}");
+            return Result.Fail<O>($"Cannot convert {input.GetType().Name} to {typeof(O).Name}");
         }
 
         public static Func<T, R> ScalarValue<T, R>() where T : ScalarValue<T, R>

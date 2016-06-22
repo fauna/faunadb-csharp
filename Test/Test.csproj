@@ -61,6 +61,7 @@
     <Compile Include="AssertU.cs" />
     <Compile Include="CodecTest.cs" />
     <Compile Include="DeserializationTest.cs" />
+    <Compile Include="PathTest.cs" />
     <Compile Include="QueryTest.cs" />
     <Compile Include="ClientTest.cs" />
     <Compile Include="SerializationTest.cs" />

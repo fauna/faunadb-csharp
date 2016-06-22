@@ -1,11 +1,14 @@
 ﻿using FaunaDB.Collections;
 using FaunaDB.Query;
-using System.Collections.Generic;
+using System;
 
 namespace FaunaDB.Types
 {
     public abstract class Value : Expr
     {
+        public Result<T> To<T>(Func<Value, Result<T>> codec) =>
+            codec(this);
+
         #region implicit conversions
         public static implicit operator Value(ArrayList<Value> values) =>
             values == null ? NullV.Instance : ArrayV.Of(values);

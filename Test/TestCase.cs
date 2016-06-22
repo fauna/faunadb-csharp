@@ -118,10 +118,10 @@ namespace Test
             */
             string directory = System.AppDomain.CurrentDomain.BaseDirectory;
 
-            while (!File.Exists(Path.Combine(directory, "testConfig.json")))
-                directory = Path.GetDirectoryName(directory);
+            while (!File.Exists(System.IO.Path.Combine(directory, "testConfig.json")))
+                directory = System.IO.Path.GetDirectoryName(directory);
 
-            string configPath = Path.Combine(directory, "testConfig.json");
+            string configPath = System.IO.Path.Combine(directory, "testConfig.json");
 
             if (File.Exists(configPath)) {
                 string text = await File.OpenText(configPath).ReadToEndAsync();

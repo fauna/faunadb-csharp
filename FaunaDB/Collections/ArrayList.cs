@@ -92,7 +92,7 @@ namespace FaunaDB.Collections
         }
     }
 
-    public sealed class ImmutableArray
+    public sealed class ImmutableList
     {
         public static ArrayList<T> Of<T>(params T[] values)
         {

@@ -9,67 +9,67 @@ namespace Test
     {
         [Test] public void TestRef()
         {
-            Assert.AreEqual(Result.success(new Ref("databases")), Codec.REF(new Ref("databases")));
-            Assert.AreEqual(Result.fail<Ref>("Cannot convert StringV to Ref"), Codec.REF(StringV.Of("a string")));
+            Assert.AreEqual(Result.Success(new Ref("databases")), new Ref("databases").To(Codec.REF));
+            Assert.AreEqual(Result.Fail<Ref>("Cannot convert StringV to Ref"), StringV.Of("a string").To(Codec.REF));
         }
 
         [Test] public void TestSetRef()
         {
-            Assert.AreEqual(Result.success(new SetRef("databases")), Codec.SETREF(new SetRef("databases")));
-            Assert.AreEqual(Result.fail<SetRef>("Cannot convert StringV to SetRef"), Codec.SETREF(StringV.Of("a string")));
+            Assert.AreEqual(Result.Success(new SetRef("databases")), new SetRef("databases").To(Codec.SETREF));
+            Assert.AreEqual(Result.Fail<SetRef>("Cannot convert StringV to SetRef"), StringV.Of("a string").To(Codec.SETREF));
         }
 
         [Test] public void TestLong()
         {
-            Assert.AreEqual(Result.success(1L), Codec.LONG(LongV.Of(1)));
-            Assert.AreEqual(Result.fail<long>("Cannot convert StringV to LongV"), Codec.LONG(StringV.Of("a string")));
+            Assert.AreEqual(Result.Success(1L), LongV.Of(1).To(Codec.LONG));
+            Assert.AreEqual(Result.Fail<long>("Cannot convert StringV to LongV"), StringV.Of("a string").To(Codec.LONG));
         }
 
         [Test] public void TestString()
         {
-            Assert.AreEqual(Result.success("a string"), Codec.STRING(StringV.Of("a string")));
-            Assert.AreEqual(Result.fail<string>("Cannot convert ObjectV to StringV"), Codec.STRING(ObjectV.Empty));
+            Assert.AreEqual(Result.Success("a string"), StringV.Of("a string").To(Codec.STRING));
+            Assert.AreEqual(Result.Fail<string>("Cannot convert ObjectV to StringV"), ObjectV.Empty.To(Codec.STRING));
         }
 
         [Test] public void TestBoolean()
         {
-            Assert.AreEqual(Result.success(true), Codec.BOOLEAN(BooleanV.True));
-            Assert.AreEqual(Result.success(false), Codec.BOOLEAN(BooleanV.False));
-            Assert.AreEqual(Result.fail<bool>("Cannot convert ObjectV to BooleanV"), Codec.BOOLEAN(ObjectV.Empty));
+            Assert.AreEqual(Result.Success(true), BooleanV.True.To(Codec.BOOLEAN));
+            Assert.AreEqual(Result.Success(false), BooleanV.False.To(Codec.BOOLEAN));
+            Assert.AreEqual(Result.Fail<bool>("Cannot convert ObjectV to BooleanV"), ObjectV.Empty.To(Codec.BOOLEAN));
         }
 
         [Test] public void TestDouble()
         {
-            Assert.AreEqual(Result.success(3.14), Codec.DOUBLE(DoubleV.Of(3.14)));
-            Assert.AreEqual(Result.fail<double>("Cannot convert ObjectV to DoubleV"), Codec.DOUBLE(ObjectV.Empty));
+            Assert.AreEqual(Result.Success(3.14), DoubleV.Of(3.14).To(Codec.DOUBLE));
+            Assert.AreEqual(Result.Fail<double>("Cannot convert ObjectV to DoubleV"), ObjectV.Empty.To(Codec.DOUBLE));
         }
 
         [Test] public void TestTimestamp()
         {
-            Assert.AreEqual(Result.success(new DateTime(2000, 1, 1, 0, 0, 0, 123)), Codec.TS(new TsV("2000-01-01T00:00:00.123Z")));
-            Assert.AreEqual(Result.fail<DateTime>("Cannot convert ObjectV to TsV"), Codec.TS(ObjectV.Empty));
+            Assert.AreEqual(Result.Success(new DateTime(2000, 1, 1, 0, 0, 0, 123)), new TsV("2000-01-01T00:00:00.123Z").To(Codec.TS));
+            Assert.AreEqual(Result.Fail<DateTime>("Cannot convert ObjectV to TsV"), ObjectV.Empty.To(Codec.TS));
         }
 
         [Test] public void TestDate()
         {
-            Assert.AreEqual(Result.success(new DateTime(2000, 1, 1)), Codec.DATE(new DateV("2000-01-01")));
-            Assert.AreEqual(Result.fail<DateTime>("Cannot convert ObjectV to DateV"), Codec.DATE(ObjectV.Empty));
+            Assert.AreEqual(Result.Success(new DateTime(2000, 1, 1)), new DateV("2000-01-01").To(Codec.DATE));
+            Assert.AreEqual(Result.Fail<DateTime>("Cannot convert ObjectV to DateV"), ObjectV.Empty.To(Codec.DATE));
         }
 
         [Test] public void TestArray()
         {
-            var array = ImmutableArray.Of<Value>("a string", true, 10);
+            var array = ImmutableList.Of<Value>("a string", true, 10);
 
-            Assert.AreEqual(Result.success(array), Codec.ARRAY(ArrayV.Of("a string", true, 10)));
-            Assert.AreEqual(Result.fail<ArrayList<Value>>("Cannot convert ObjectV to ArrayV"), Codec.ARRAY(ObjectV.Empty));
+            Assert.AreEqual(Result.Success(array), ArrayV.Of("a string", true, 10).To(Codec.ARRAY));
+            Assert.AreEqual(Result.Fail<ArrayList<Value>>("Cannot convert ObjectV to ArrayV"), ObjectV.Empty.To(Codec.ARRAY));
         }
 
         [Test] public void TestObject()
         {
             var obj = ImmutableDictionary.Of<string, Value>("foo", StringV.Of("bar"));
 
-            Assert.AreEqual(Result.success(obj), Codec.OBJECT(ObjectV.With("foo", "bar")));
-            Assert.AreEqual(Result.fail<OrderedDictionary<string, Value>>("Cannot convert StringV to ObjectV"), Codec.OBJECT(StringV.Of("a string")));
+            Assert.AreEqual(Result.Success(obj), ObjectV.With("foo", "bar").To(Codec.OBJECT));
+            Assert.AreEqual(Result.Fail<OrderedDictionary<string, Value>>("Cannot convert StringV to ObjectV"), StringV.Of("a string").To(Codec.OBJECT));
         }
     }
 }
