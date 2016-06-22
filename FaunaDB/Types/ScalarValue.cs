@@ -8,7 +8,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Base class for Values that simply wrap something, such as <see cref="BooleanV"/>. 
     /// </summary>
-    public abstract class ScalarValue<TThis, TWrapped> : Value where TThis : ScalarValue<TThis, TWrapped>
+    public abstract class ScalarValue<TWrapped> : Value
     {
         /// <summary>
         /// Wrapped value.
@@ -33,7 +33,7 @@ namespace FaunaDB.Types
         #region boilerplate
         public override bool Equals(Expr v)
         {
-            var w = v as TThis;
+            var w = v as ScalarValue<TWrapped>;
             return w != null && w.Value.Equals(Value);
         }
 
@@ -48,7 +48,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped boolean.
     /// </summary>
-    public class BooleanV : ScalarValue<BooleanV, bool>
+    public class BooleanV : ScalarValue<bool>
     {
         internal BooleanV(bool value) : base(value) {}
 
@@ -62,7 +62,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped double.
     /// </summary>
-    public class DoubleV : ScalarValue<DoubleV, double>
+    public class DoubleV : ScalarValue<double>
     {
         internal DoubleV(double value) : base(value) {}
 
@@ -73,7 +73,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped long. This is any JSON number with no fractional part.
     /// </summary>
-    public class LongV : ScalarValue<LongV, long>
+    public class LongV : ScalarValue<long>
     {
         internal LongV(long value) : base(value) {}
 
@@ -84,7 +84,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped string.
     /// </summary>
-    public class StringV : ScalarValue<StringV, string>
+    public class StringV : ScalarValue<string>
     {
         internal StringV(string value) : base(value)
         {
@@ -99,7 +99,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// FaunaDB ref. See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
     /// </summary>
-    public sealed class Ref : ScalarValue<Ref, string>
+    public sealed class Ref : ScalarValue<string>
     {
         /// <summary>
         /// Create a Ref from a string, such as <c>new Ref("databases/prydain")</c>.
@@ -123,7 +123,7 @@ namespace FaunaDB.Types
     /// This represents a set returned as part of a response. This looks like <c>{"@set": set_query}</c>.
     /// For query sets see <see cref="Language"/>.
     /// </remarks>
-    public sealed class SetRef : ScalarValue<SetRef, Expr>
+    public sealed class SetRef : ScalarValue<Expr>
     {
         public SetRef(Expr q) : base(q) { }
 
@@ -137,7 +137,7 @@ namespace FaunaDB.Types
     /// FaunaDB timestamp.
     /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
     /// </summary>
-    public sealed class TsV : ScalarValue<TsV, DateTime>
+    public sealed class TsV : ScalarValue<DateTime>
     {
         /// <summary>
         /// Construct from an iso8601 time string.
@@ -186,7 +186,7 @@ namespace FaunaDB.Types
     /// FaunaDB date.
     /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
     /// </summary>
-    public sealed class DateV : ScalarValue<DateV, DateTime>
+    public sealed class DateV : ScalarValue<DateTime>
     {
         /// <summary>
         /// Construct from an iso8601 date string.

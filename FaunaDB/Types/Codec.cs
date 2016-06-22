@@ -5,51 +5,49 @@ namespace FaunaDB.Types
 {
     public struct Codec
     {
-        public static readonly Func<Value, Result<Value>> VALUE = value =>
+        public static Result<Value> VALUE(Value value)
         {
             if (value == NullV.Instance)
                 return Result.Fail<Value>("Value is null");
 
             return Result.Success(value);
-        };
+        }
 
-        public static readonly Func<Value, Result<Ref>> REF =
-            input => Cast.DoCast<Ref>(input);
+        public static Result<Ref> REF(Value input) =>
+            Cast.DoCast<Ref>(input);
 
-        public static readonly Func<Value, Result<SetRef>> SETREF =
-            input => Cast.DoCast<SetRef>(input);
+        public static Result<SetRef> SETREF(Value input) =>
+            Cast.DoCast<SetRef>(input);
 
-        public static readonly Func<Value, Result<long>> LONG =
-            Cast.MapTo(Cast.ScalarValue<LongV, long>());
+        public static Result<long> LONG(Value input) =>
+            Cast.MapTo<LongV, long>(input, Cast.ScalarValue);
 
-        public static readonly Func<Value, Result<string>> STRING =
-            Cast.MapTo(Cast.ScalarValue<StringV, string>());
+        public static Result<string> STRING(Value input) =>
+            Cast.MapTo<StringV, string>(input, Cast.ScalarValue);
 
-        public static readonly Func<Value, Result<bool>> BOOLEAN =
-            Cast.MapTo(Cast.ScalarValue<BooleanV, bool>());
+        public static Result<bool> BOOLEAN(Value input) =>
+            Cast.MapTo<BooleanV, bool>(input, Cast.ScalarValue);
 
-        public static readonly Func<Value, Result<double>> DOUBLE =
-            Cast.MapTo(Cast.ScalarValue<DoubleV, double>());
+        public static Result<double> DOUBLE(Value input) =>
+            Cast.MapTo<DoubleV, double>(input, Cast.ScalarValue);
 
-        public static readonly Func<Value, Result<DateTime>> DATE =
-            Cast.MapTo(Cast.ScalarValue<DateV, DateTime>());
+        public static Result<DateTime> DATE(Value input) =>
+            Cast.MapTo<DateV, DateTime>(input, Cast.ScalarValue);
 
-        public static readonly Func<Value, Result<DateTime>> TS =
-            Cast.MapTo(Cast.ScalarValue<TsV, DateTime>());
+        public static Result<DateTime> TS(Value input) =>
+            Cast.MapTo<TsV, DateTime>(input, Cast.ScalarValue);
 
-        public static readonly Func<Value, Result<ArrayList<Value>>> ARRAY =
-            Cast.MapTo<ArrayV, ArrayList<Value>>(input => input.Value);
+        public static Result<ArrayList<Value>> ARRAY(Value input) =>
+            Cast.MapTo<ArrayV, ArrayList<Value>>(input, x => x.Value);
 
-        public static readonly Func<Value, Result<OrderedDictionary<string, Value>>> OBJECT =
-            Cast.MapTo<ObjectV, OrderedDictionary<string, Value>>(input => input.Value);
+        public static Result<OrderedDictionary<string, Value>> OBJECT(Value input) =>
+            Cast.MapTo<ObjectV, OrderedDictionary<string, Value>>(input, x => x.Value);
     }
 
     struct Cast
     {
-        public static Func<Value, Result<O>> MapTo<I, O>(Func<I, O> func) where I : Value
-        {
-            return input => DoCast<I>(input).Map(func);
-        }
+        public static Result<O> MapTo<I, O>(Value input, Func<I, O> func) where I : Value =>
+            DoCast<I>(input).Map(func);
 
         public static Result<O> DoCast<O>(Value input) where O : Value
         {
@@ -59,9 +57,7 @@ namespace FaunaDB.Types
             return Result.Fail<O>($"Cannot convert {input.GetType().Name} to {typeof(O).Name}");
         }
 
-        public static Func<T, R> ScalarValue<T, R>() where T : ScalarValue<T, R>
-        {
-            return input => input.Value;
-        }
+        public static R ScalarValue<R>(ScalarValue<R> input) =>
+            input.Value;
     }
 }
