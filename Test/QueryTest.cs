@@ -210,19 +210,6 @@ namespace Test
             await AssertQuery(instance, Get(GetRef(instance)));
         }
 
-        [Test] [Ignore("improve assertion")] public async Task TestPaginate()
-        {
-            var testSet = NSet(1);
-            await AssertQuery(UnescapedObject.With("data", Arr(refN1, refN1M1)), Paginate(testSet));
-            await AssertQuery(UnescapedObject.With("data", Arr(refN1), "after", Arr(refN1M1)), Paginate(testSet, size: 1));
-
-            var sources = Arr(SetRef(testSet));
-            var page = UnescapedObject.With("data", Arr(
-                    UnescapedObject.With("sources", sources, "value", refN1),
-                    UnescapedObject.With("sources", sources, "value", refN1M1)));
-            await AssertQuery(page, Paginate(testSet, sources: true));
-        }
-
         [Test] public async Task TestExists()
         {
             var rf = await CreateRef();

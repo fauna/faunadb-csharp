@@ -15,7 +15,8 @@ namespace Test
 
         [Test] public void TestSetRef()
         {
-            Assert.AreEqual(Result.Success(new SetRef("databases")), new SetRef("databases").To(Codec.SETREF));
+            var dic = ImmutableDictionary.Of<string, Value>("@ref", "databases");
+            Assert.AreEqual(Result.Success(new SetRef(dic)), new SetRef(dic).To(Codec.SETREF));
             Assert.AreEqual(Result.Fail<SetRef>("Cannot convert StringV to SetRef"), StringV.Of("a string").To(Codec.SETREF));
         }
 

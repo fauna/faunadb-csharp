@@ -17,9 +17,6 @@ namespace FaunaDB.Query
         public static Expr Ref(Expr classRef, Expr id) =>
             UnescapedObject.With("ref", classRef, "id", id);
 
-        public static Expr SetRef(Expr set) =>
-            new SetRef(set);
-
         public static Expr Ts(DateTime dateTime) =>
             new TsV(dateTime);
 

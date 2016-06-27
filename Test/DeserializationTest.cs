@@ -1,4 +1,5 @@
-﻿using FaunaDB.Query;
+﻿using FaunaDB.Collections;
+using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
 
@@ -71,7 +72,7 @@ namespace Test
         [Test] public void TestSetRef()
         {
             
-            Assert.AreEqual(new SetRef(ObjectV.With("match", new Ref("indexes/spells_by_element"), "terms", StringV.Of("fire"))),
+            Assert.AreEqual(new SetRef(ImmutableDictionary.Of<string, Value>("match", new Ref("indexes/spells_by_element"), "terms", StringV.Of("fire"))),
                 Value.FromJson("{" +
                 "  \"@set\": {" +
                 "    \"match\": { \"@ref\": \"indexes/spells_by_element\" }," +

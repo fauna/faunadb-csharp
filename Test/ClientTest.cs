@@ -306,6 +306,162 @@ namespace Test
             Assert.AreEqual(ImmutableList.Of(fireball), singleMatch.Get(REF_LIST));
         }
 
+        [Test] public async Task TestCountElementsOnAIndex()
+        {
+            Value count = await client.Query(Count(Match(Ref("indexes/all_spells"))));
+            Assert.AreEqual(Some(6L), count.To(Codec.LONG).Get());
+        }
+
+        [Test] public async Task TestListAllItensOnAClassIndex()
+        {
+            Value allInstances = await client.Query(
+                Paginate(Match(Ref("indexes/all_spells"))));
+
+            Assert.AreEqual(
+                ImmutableList.Of(magicMissile, fireball, faerieFire, summon, thorSpell1, thorSpell2),
+                allInstances.Get(REF_LIST));
+        }
+
+        [Test] public async Task TestPaginateOverAnIndex()
+        {
+            Value page1 = await client.Query(
+                Paginate(Match(Ref("indexes/all_spells")), size: 3));
+
+            Assert.AreEqual(3, page1.Get(DATA).To(Codec.ARRAY).Get().Value.Count);
+            Assert.NotNull(page1.At("after"));
+            Assert.AreEqual(None<Value>(), page1.At("before").To(Codec.VALUE).Get());
+
+            Value page2 = await client.Query(
+              Paginate(Match(Ref("indexes/all_spells")), after: page1.At("after"), size: 3));
+
+            Assert.AreEqual(3, page2.Get(DATA).To(Codec.ARRAY).Get().Value.Count);
+            Assert.AreNotEqual(page1.At("data"), page2.Get(DATA));
+            Assert.NotNull(page2.At("before"));
+            Assert.AreEqual(None<Value>(), page2.At("after").To(Codec.VALUE).Get());
+        }
+
+        [Test] public async Task TestDealWithSetRef()
+        {
+            Value res = await client.Query(
+                Match(Ref("indexes/spells_by_element"), "arcane"));
+
+            OrderedDictionary<string, Value> set = res.To(Codec.SETREF).Get().Value.Value;
+            Assert.AreEqual(Some("arcane"), set["terms"].To(Codec.STRING).Get());
+            Assert.AreEqual(Some(new Ref("indexes/spells_by_element")), set["match"].To(Codec.REF).Get());
+        }
+
+        [Test] public async Task TestEvalLetExpression()
+        {
+            Value res = await client.Query(
+                Let("x", 1, "y", 2).In(Arr(Var("y"), Var("x")))
+            );
+
+            Assert.AreEqual(ImmutableList.Of(2L, 1L), res.Collect(Field.As(Codec.LONG)));
+        }
+
+        [Test] public async Task TestEvalIfExpression()
+        {
+            Value res = await client.Query(
+                If(true, "was true", "was false"));
+
+            Assert.AreEqual(Some("was true"), res.To(Codec.STRING).Get());
+        }
+
+        [Test] public async Task TestEvalDoExpression()
+        {
+            Ref @ref = new Ref(RandomStartingWith((await RandomClass()).Value, "/"));
+
+            Value res = await client.Query(
+                Do(Create(@ref, Obj("data", Obj("name", "Magic Missile"))),
+                    Get(@ref))
+            );
+
+            Assert.AreEqual(@ref, res.Get(REF_FIELD));
+        }
+
+        [Test] public async Task TestEchoAnObjectBack()
+        {
+            Value res = await client.Query(Obj("name", "Hen Wen", "age", 123));
+            Assert.AreEqual(Some("Hen Wen"), res.At("name").To(Codec.STRING).Get());
+            Assert.AreEqual(Some(123L), res.At("age").To(Codec.LONG).Get());
+
+            res = await client.Query(res);
+            Assert.AreEqual(Some("Hen Wen"), res.At("name").To(Codec.STRING).Get());
+            Assert.AreEqual(Some(123L), res.At("age").To(Codec.LONG).Get());
+        }
+
+        [Test] public async Task TestMapOverCollections()
+        {
+            Value res = await client.Query(
+                Map(Arr(1, 2, 3),
+                    Lambda("i", Add(Var("i"), 1))));
+
+            Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L), res.Collect(Field.As(Codec.LONG)));
+        }
+
+        [Test] public async Task TestExecuteForeachExpression()
+        {
+            Value res = await client.Query(
+                Foreach(Arr("Fireball Level 1", "Fireball Level 2"),
+                    Lambda("spell", Create(await RandomClass(), Obj("data", Obj("name", Var("spell"))))))
+            );
+
+            Assert.AreEqual(ImmutableList.Of("Fireball Level 1", "Fireball Level 2"),
+                res.Collect(Field.As(Codec.STRING)));
+        }
+
+        [Test] public async Task TestFilterACollection()
+        {
+            Value filtered = await client.Query(
+                Filter(Arr(1, 2, 3),
+                    Lambda("i", EqualsFn(0, Modulo(Var("i"), 2))))
+            );
+
+            Assert.AreEqual(ImmutableList.Of(2L),
+                filtered.Collect(Field.As(Codec.LONG)));
+        }
+
+        [Test] public async Task TestTakeElementsFromCollection()
+        {
+            Value taken = await client.Query(Take(2, Arr(1, 2, 3)));
+            Assert.AreEqual(ImmutableList.Of(1L, 2L), taken.Collect(Field.As(Codec.LONG)));
+        }
+
+        [Test] public async Task shouldDropElementsFromCollection()
+        {
+            Value dropped = await client.Query(Drop(2, Arr(1, 2, 3)));
+            Assert.AreEqual(ImmutableList.Of(3L), dropped.Collect(Field.As(Codec.LONG)));
+        }
+
+        [Test] public async Task TestPrependElementsInACollection()
+        {
+            Value prepended = await client.Query(
+                Prepend(Arr(1, 2), Arr(3, 4))
+            );
+
+            Assert.AreEqual(ImmutableList.Of(1L, 2L, 3L, 4L),
+                prepended.Collect(Field.As(Codec.LONG)));
+        }
+
+        [Test] public async Task TestAppendElementsInACollection()
+        {
+            Value appended = await client.Query(
+                Append(Arr(3, 4), Arr(1, 2))
+            );
+
+            Assert.AreEqual(ImmutableList.Of(1L, 2L, 3L, 4L),
+                appended.Collect(Field.As(Codec.LONG)));
+        }
+
+        [Test] public async Task TestReadEventsFromIndex()
+        {
+            Value events = await client.Query(
+                Paginate(Match(Ref("indexes/spells_by_element"), "arcane"), events: true)
+            );
+
+            Assert.AreEqual(ImmutableList.Of(magicMissile, faerieFire),
+                events.Get(DATA).Collect(Field.At("resource").To(Codec.REF)));
+        }
 
         [Test] public async Task TestPing()
         {

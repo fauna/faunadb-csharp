@@ -74,13 +74,14 @@ namespace Test
 
         [Test] public void TestCodecConvertion()
         {
+            var setRef = ImmutableDictionary.Of<string, Value>("@ref", "databases");
             var obj = ObjectV.With(
                 "string", "a string",
                 "bool", true,
                 "double", 3.14,
                 "long", 1234,
                 "ref", new Ref("databases"),
-                "setref", new SetRef("databases"));
+                "setref", new SetRef(setRef));
 
             Assert.AreEqual("a string",
                 obj.Get(Field.At("string").To(Codec.STRING)));
@@ -97,7 +98,7 @@ namespace Test
             Assert.AreEqual(new Ref("databases"),
                 obj.Get(Field.At("ref").To(Codec.REF)));
 
-            Assert.AreEqual(new SetRef("databases"),
+            Assert.AreEqual(new SetRef(setRef),
                 obj.Get(Field.At("setref").To(Codec.SETREF)));
         }
 
