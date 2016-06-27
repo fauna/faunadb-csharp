@@ -110,8 +110,6 @@ namespace FaunaDB.Query
             }
             else if (type.IsArray)
             {
-                Type arrayType = type.GetElementType();
-
                 Array array = (Array)obj;
                 Expr[] exprs = new Expr[array.Length];
                 for (int i = 0; i < array.Length; i++)

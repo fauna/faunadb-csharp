@@ -134,14 +134,14 @@ namespace Test
             ));
         }
 
-        [Test] public async Task TestUnauthorizedOnInvalidSecret()
+        [Test] public void TestUnauthorizedOnInvalidSecret()
         {
             Assert.ThrowsAsync<Unauthorized>(async() =>
                 await GetClient(password: "invalid secret").Query(Ref("classes/spells/1234"))
             );
         }
 
-        [Test] public async Task TestNotFoundWhenInstanceDoesntExists()
+        [Test] public void TestNotFoundWhenInstanceDoesntExists()
         {
             Assert.ThrowsAsync<NotFound>(async() =>
                 await client.Query(Get(Ref("classes/spells/1234")))

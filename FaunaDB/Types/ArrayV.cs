@@ -14,19 +14,24 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class ArrayV : Value, IEnumerable<Value>
     {
-        public static readonly ArrayV Empty = new ArrayV(new Value[0]);
+        public static readonly ArrayV Empty = new ArrayV(new ArrayList<Value>());
 
         public ArrayList<Value> Value { get; }
 
         public static ArrayV Of(params Value[] values) =>
             new ArrayV(values);
 
-        //public static ArrayV Of(IEnumerable<Value> values) =>
-        //    new ArrayV(values.ToArray());
-
         internal ArrayV(params Value[] value)
         {
             Value = new ArrayList<Value>(value);
+
+            if (Value == null)
+                throw new NullReferenceException();
+        }
+
+        internal ArrayV(ArrayList<Value> value)
+        {
+            Value = value;
 
             if (Value == null)
                 throw new NullReferenceException();

@@ -10,7 +10,7 @@ namespace FaunaDB.Query
     {
         #region implicit conversions
         public static implicit operator Expr(ArrayList<Value> values) =>
-            values == null ? NullV.Instance : ArrayV.Of(values);
+            values == null ? NullV.Instance : new ArrayV(values);
 
         public static implicit operator Expr(OrderedDictionary<string, Value> values) =>
             values == null ? NullV.Instance : new ObjectV(values);
@@ -19,16 +19,16 @@ namespace FaunaDB.Query
             BooleanV.Of(b);
 
         public static implicit operator Expr(double d) =>
-            new DoubleV(d);
+            DoubleV.Of(d);
 
         public static implicit operator Expr(long l) =>
-            new LongV(l);
+            LongV.Of(l);
 
         public static implicit operator Expr(int i) =>
-            new LongV(i);
+            LongV.Of(i);
 
         public static implicit operator Expr(string s) =>
-            s == null ? NullV.Instance : new StringV(s);
+            s == null ? NullV.Instance : StringV.Of(s);
 
         public static implicit operator Expr(ActionType action)
         {
