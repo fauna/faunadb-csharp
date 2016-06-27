@@ -136,15 +136,15 @@ namespace Test
 
         [Test] public async Task TestUnauthorizedOnInvalidSecret()
         {
-            await AssertU.Throws<Unauthorized>(() =>
-                GetClient(password: "invalid secret").Query(Ref("classes/spells/1234"))
+            Assert.ThrowsAsync<Unauthorized>(async() =>
+                await GetClient(password: "invalid secret").Query(Ref("classes/spells/1234"))
             );
         }
 
         [Test] public async Task TestNotFoundWhenInstanceDoesntExists()
         {
-            await AssertU.Throws<NotFound>(() =>
-                client.Query(Get(Ref("classes/spells/1234")))
+            Assert.ThrowsAsync<NotFound>(async() =>
+                await client.Query(Get(Ref("classes/spells/1234")))
             );
         }
 

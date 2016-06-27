@@ -13,73 +13,70 @@ namespace Test
 {
     [TestFixture] public class ErrorsTest : TestCase
     {
-        [Test] public async Task TestRequestResult()
+        [Test] public void TestRequestResult()
         {
-            var err = await AssertU.Throws<BadRequest>(() => client.Query(UnescapedObject.With("foo", "bar")));
+            var err = Assert.ThrowsAsync<BadRequest>(async () => await client.Query(UnescapedObject.With("foo", "bar")));
             Assert.AreEqual(err.RequestResult.RequestContent, UnescapedObject.With("foo", "bar"));
         }
 
-        [Test] public async Task TestInvalidResponse()
+        [Test] public void TestInvalidResponse()
         {
-            // Response must be valid JSON
-            await AssertU.Throws<InvalidResponseException>(() => MockClient("I like fine wine").Query(Get(Ref(""))));
-            // Response must have "resource"
-            //todo: is this the right error to throw?
-            await AssertU.Throws<KeyNotFoundException>(() => MockClient("{\"resoars\": 1}").Query(Get(Ref(""))));
+            Assert.ThrowsAsync<InvalidResponseException>(async() => await MockClient("I like fine wine").Query(Get(Ref(""))));
+            Assert.ThrowsAsync<KeyNotFoundException>(async() => await MockClient("{\"resoars\": 1}").Query(Get(Ref(""))));
         }
 
         #region HTTP errors
-        [Test] public async Task TestHttpBadRequest()
+        [Test] public void TestHttpBadRequest()
         {
-            await AssertU.Throws<BadRequest>(() => client.Query(UnescapedObject.With("foo", "bar")));
+            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(UnescapedObject.With("foo", "bar")));
         }
 
-        [Test] public async Task TestHttpUnauthorized()
+        [Test] public void TestHttpUnauthorized()
         {
             var client = GetClient(password: "bad_key");
-            await AssertHttpException<Unauthorized>("unauthorized", () => client.Query(Get(DbRef)));
+            Assert.ThrowsAsync<Unauthorized>(async() => await client.Query(Get(DbRef)), "unauthorized");
         }
 
-        [Test] public async Task TestUnavailableError()
+        [Test] public void TestUnavailableError()
         {
             var client = MockClient("{\"errors\": [{\"code\": \"unavailable\", \"description\": \"on vacation\"}]}", HttpStatusCode.ServiceUnavailable);
-            await AssertHttpException<UnavailableError>("unavailable", () => client.Query(Get(Ref(""))));
+            Assert.ThrowsAsync<UnavailableError>(async() => await client.Query(Get(Ref(""))), "unavailable");
         }
         #endregion
 
         #region ErrorData
-        [Test] public async Task TestInvalidExpression()
+        [Test] public void TestInvalidExpression()
         {
-            await AssertQueryException<BadRequest>(UnescapedObject.With("foo", "bar"), "invalid expression", ArrayV.Empty);
+            AssertQueryException<BadRequest>(UnescapedObject.With("foo", "bar"), "invalid expression", ArrayV.Empty);
         }
 
-        [Test] public async Task TestUnboundVariable()
+        [Test] public void TestUnboundVariable()
         {
-            await AssertQueryException<BadRequest>(Var("x"), "unbound variable", ArrayV.Empty);
+            AssertQueryException<BadRequest>(Var("x"), "unbound variable", ArrayV.Empty);
         }
 
-        [Test] public async Task TestInvalidArgument()
+        [Test] public void TestInvalidArgument()
         {
-            await AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", ArrayV.Of("add", 1));
+            AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", ArrayV.Of("add", 1));
         }
 
         [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
             await client.Query(Create(Ref("classes"), Obj("name", "foofaws")));
-            await AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
+            AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
         }
 
-        [Test] public async Task TestValueNotFound()
+        [Test] public void TestValueNotFound()
         {
-            await AssertQueryException<NotFound>(Select("a", Obj()), "value not found", ArrayV.Empty);
+            AssertQueryException<NotFound>(Select("a", Obj()), "value not found", ArrayV.Empty);
         }
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
             await client.Query(Create(Ref("classes"), Obj("name", "duplicates")));
             var @ref = (Ref) ((ObjectV) (await client.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
-            await AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", ArrayV.Of("create"));
+            AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", ArrayV.Of("create"));
         }
         #endregion
 
@@ -95,12 +92,6 @@ namespace Test
             await client.Query(Create(Ref("classes/gerbils"), Obj("data", Obj("x", 1))));
         }
 
-        async Task AssertHttpException<TException>(string code, Func<Task> action) where TException : FaunaException
-        {
-            var exception = await AssertU.Throws<TException>(action);
-            AssertException(exception, code);
-        }
-
         void AssertException(FaunaException exception, string code, Expr position = null)
         {
             Assert.AreEqual(1, exception.Errors.Count());
@@ -109,10 +100,10 @@ namespace Test
             Assert.AreEqual(position, error.Position);
         }
 
-        async Task AssertQueryException<TException>(Expr query, string code, Expr position = null)
+        void AssertQueryException<TException>(Expr query, string code, Expr position = null)
             where TException  : FaunaException
         {
-            var exception = await AssertU.Throws<TException>(() => client.Query(query));
+            var exception = Assert.ThrowsAsync<TException>(async() => await client.Query(query));
             AssertException(exception, code, position);
         }
     }

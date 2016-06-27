@@ -58,12 +58,9 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssertU.cs" />
     <Compile Include="CodecTest.cs" />
     <Compile Include="DeserializationTest.cs" />
-    <Compile Include="PageTest.cs" />
     <Compile Include="FieldTest.cs" />
-    <Compile Include="QueryTest.cs" />
     <Compile Include="ClientTest.cs" />
     <Compile Include="SerializationTest.cs" />
     <Compile Include="TestCase.cs" />
