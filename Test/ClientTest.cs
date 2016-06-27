@@ -460,7 +460,7 @@ namespace Test
             Assert.AreEqual(ImmutableList.Of(1L, 2L), taken.Collect(Field.As(Codec.LONG)));
         }
 
-        [Test] public async Task shouldDropElementsFromCollection()
+        [Test] public async Task TestDropElementsFromCollection()
         {
             Value dropped = await client.Query(Drop(2, Arr(1, 2, 3)));
             Assert.AreEqual(ImmutableList.Of(3L), dropped.Collect(Field.As(Codec.LONG)));
