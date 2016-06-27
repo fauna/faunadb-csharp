@@ -24,8 +24,8 @@ namespace FaunaDB.Query
                 Let(vars, invoker(@in));
         }
 
-        public static LetBinding<Func<Expr, Expr>> Let(string k0, Expr v0) =>
-            new LetBinding<Func<Expr, Expr>>(UnescapedObject.With(k0, v0), fn => {
+        public static LetBinding<Func<Var, Expr>> Let(string k0, Expr v0) =>
+            new LetBinding<Func<Var, Expr>>(UnescapedObject.With(k0, v0), fn => {
                 ParameterInfo[] info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
@@ -33,8 +33,8 @@ namespace FaunaDB.Query
                 return fn(a0);
             });
 
-        public static LetBinding<Func<Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1) =>
-            new LetBinding<Func<Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1), fn => {
+        public static LetBinding<Func<Var, Var, Expr>> Let(string k0, Expr v0, string k1, Expr v1) =>
+            new LetBinding<Func<Var, Var, Expr>>(UnescapedObject.With(k0, v0, k1, v1), fn => {
                 ParameterInfo[] info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
@@ -43,8 +43,8 @@ namespace FaunaDB.Query
                 return fn(a0, a1);
             });
 
-        public static LetBinding<Func<Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2) =>
-            new LetBinding<Func<Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2), fn => {
+        public static LetBinding<Func<Var, Var, Var, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2) =>
+            new LetBinding<Func<Var, Var, Var, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2), fn => {
                 ParameterInfo[] info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
@@ -54,8 +54,8 @@ namespace FaunaDB.Query
                 return fn(a0, a1, a2);
             });
 
-        public static LetBinding<Func<Expr, Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3) =>
-            new LetBinding<Func<Expr, Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3), fn => {
+        public static LetBinding<Func<Var, Var, Var, Var, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3) =>
+            new LetBinding<Func<Var, Var, Var, Var, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3), fn => {
                 ParameterInfo[] info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
@@ -66,8 +66,8 @@ namespace FaunaDB.Query
                 return fn(a0, a1, a2, a3);
             });
 
-        public static LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4) =>
-            new LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3, k4, v4), fn => {
+        public static LetBinding<Func<Var, Var, Var, Var, Var, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4) =>
+            new LetBinding<Func<Var, Var, Var, Var, Var, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3, k4, v4), fn => {
                 ParameterInfo[] info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
@@ -79,8 +79,8 @@ namespace FaunaDB.Query
                 return fn(a0, a1, a2, a3, a4);
             });
 
-        public static LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5) =>
-            new LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5), fn => {
+        public static LetBinding<Func<Var, Var, Var, Var, Var, Var, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5) =>
+            new LetBinding<Func<Var, Var, Var, Var, Var, Var, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5), fn => {
                 ParameterInfo[] info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
@@ -104,7 +104,7 @@ namespace FaunaDB.Query
         /// <c>Language.Let(1, a => a)</c> is equivalent to <c>Language.Let(new ObjectV("a", 1), Language.Var("a"))</c>
         /// </code>
         /// </example>
-        public static Expr Let(Expr v0, Func<Expr, Expr> In)
+        public static Expr Let(Expr v0, Func<Var, Expr> In)
         {
             ParameterInfo[] info = In.Method.GetParameters();
             string p0 = info[0].Name;
@@ -114,7 +114,7 @@ namespace FaunaDB.Query
                 In(Var(p0)));
         }
 
-        public static Expr Let(Expr v0, Expr v1, Func<Expr, Expr, Expr> In)
+        public static Expr Let(Expr v0, Expr v1, Func<Var, Var, Expr> In)
         {
             ParameterInfo[] info = In.Method.GetParameters();
             string p0 = info[0].Name;
@@ -125,7 +125,7 @@ namespace FaunaDB.Query
                 In(Var(p0), Var(p1)));
         }
 
-        public static Expr Let(Expr v0, Expr v1, Expr v2, Func<Expr, Expr, Expr, Expr> In)
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Func<Var, Var, Var, Expr> In)
         {
             ParameterInfo[] info = In.Method.GetParameters();
             string p0 = info[0].Name;
@@ -137,7 +137,7 @@ namespace FaunaDB.Query
                 In(Var(p0), Var(p1), Var(p2)));
         }
 
-        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Func<Expr, Expr, Expr, Expr, Expr> In)
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Func<Var, Var, Var, Var, Expr> In)
         {
             ParameterInfo[] info = In.Method.GetParameters();
             string p0 = info[0].Name;
@@ -150,7 +150,7 @@ namespace FaunaDB.Query
                 In(Var(p0), Var(p1), Var(p2), Var(p3)));
         }
 
-        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Expr v4, Func<Expr, Expr, Expr, Expr, Expr, Expr> In)
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Expr v4, Func<Var, Var, Var, Var, Var, Expr> In)
         {
             ParameterInfo[] info = In.Method.GetParameters();
             string p0 = info[0].Name;
@@ -164,7 +164,7 @@ namespace FaunaDB.Query
                 In(Var(p0), Var(p1), Var(p2), Var(p3), Var(p4)));
         }
 
-        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Expr v4, Expr v5, Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> In)
+        public static Expr Let(Expr v0, Expr v1, Expr v2, Expr v3, Expr v4, Expr v5, Func<Var, Var, Var, Var, Var, Var, Expr> In)
         {
             ParameterInfo[] info = In.Method.GetParameters();
             string p0 = info[0].Name;
