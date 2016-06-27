@@ -28,7 +28,7 @@
         public static Expr Delete(Expr @ref) =>
             UnescapedObject.With("delete", @ref);
 
-        public enum Action
+        public enum ActionType
         {
             CREATE,
             DELETE

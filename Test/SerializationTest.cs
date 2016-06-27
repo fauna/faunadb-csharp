@@ -308,7 +308,7 @@ namespace Test
             AssertJsonEqual(Insert(
                     Ref("classes/widgets/123456789"),
                     Ts("1970-01-01T00:00:00.123Z"),
-                    Language.Action.CREATE,
+                    ActionType.CREATE,
                     Obj("data", Obj("name", "Computer"))),
                 "{\"insert\":{\"@ref\":\"classes/widgets/123456789\"},"+
                 "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"},"+
@@ -329,7 +329,7 @@ namespace Test
             AssertJsonEqual(Remove(
                     Ref("classes/widgets/123456789"),
                     Ts("1970-01-01T00:00:00.123Z"),
-                    Language.Action.CREATE),
+                    ActionType.CREATE),
                 "{\"remove\":{\"@ref\":\"classes/widgets/123456789\"}," +
                 "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
                 "\"action\":\"create\"}");

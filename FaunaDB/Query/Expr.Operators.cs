@@ -1,7 +1,8 @@
 ﻿using FaunaDB.Collections;
 using FaunaDB.Errors;
 using FaunaDB.Types;
-using System.Collections.Generic;
+
+using static FaunaDB.Query.Language;
 
 namespace FaunaDB.Query
 {
@@ -29,14 +30,14 @@ namespace FaunaDB.Query
         public static implicit operator Expr(string s) =>
             s == null ? NullV.Instance : new StringV(s);
 
-        public static implicit operator Expr(Language.Action action)
+        public static implicit operator Expr(ActionType action)
         {
             switch (action)
             {
-                case Language.Action.CREATE:
+                case ActionType.CREATE:
                     return new StringV("create");
 
-                case Language.Action.DELETE:
+                case ActionType.DELETE:
                     return new StringV("delete");
             }
 
@@ -63,15 +64,15 @@ namespace FaunaDB.Query
         public static explicit operator string(Expr v) =>
             ((StringV)v).Value;
 
-        public static explicit operator Language.Action(Expr v)
+        public static explicit operator ActionType(Expr v)
         {
             switch (((StringV)v).Value)
             {
                 case "create":
-                    return Language.Action.CREATE;
+                    return ActionType.CREATE;
 
                 case "delete":
-                    return Language.Action.DELETE;
+                    return ActionType.DELETE;
             }
 
             throw new InvalidValueException("Invalid string value. Should be \"create\" or \"delete\"");

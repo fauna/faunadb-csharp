@@ -258,7 +258,7 @@ namespace Test
                     Obj("data", Obj("name", "Magic Missile"))));
 
             Value insertedEvent = await client.Query(
-                Insert(createdInstance.Get(REF_FIELD), 1L, FaunaDB.Query.Language.Action.CREATE,
+                Insert(createdInstance.Get(REF_FIELD), 1L, ActionType.CREATE,
                     Obj("data", Obj("cooldown", 5L))));
 
             Assert.AreEqual(createdInstance.Get(REF_FIELD), insertedEvent.Get(REF_FIELD));
@@ -266,7 +266,7 @@ namespace Test
             Assert.AreEqual(Some(5L), insertedEvent.Get(DATA).At("cooldown").To(Codec.LONG).Get());
 
             Value removedEvent = await client.Query(
-                Remove(createdInstance.Get(REF_FIELD), 2L, FaunaDB.Query.Language.Action.DELETE)
+                Remove(createdInstance.Get(REF_FIELD), 2L, ActionType.DELETE)
             );
 
             Assert.AreEqual(Null(), removedEvent);
