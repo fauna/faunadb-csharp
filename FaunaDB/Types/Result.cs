@@ -12,7 +12,9 @@ namespace FaunaDB.Types
 
         void Match(Action<T> Success, Action<string> Failure);
 
-        Option<T> Get();
+        T Value { get; }
+
+        Option<T> ValueOption { get; }
     }
 
     public class Result
@@ -57,8 +59,9 @@ namespace FaunaDB.Types
         public void Match(Action<T> Success, Action<string> Failure) =>
             Success(value);
 
-        public Option<T> Get() =>
-            Option.Some(value);
+        public T Value { get { return value; } }
+
+        public Option<T> ValueOption { get { return Option.Some(value); } }
     }
 
     internal class Failure<T> : Result<T>
@@ -94,7 +97,8 @@ namespace FaunaDB.Types
         public void Match(Action<T> Success, Action<string> Failure) =>
             Failure(reason);
 
-        public Option<T> Get() =>
-            Option.None<T>();
+        public T Value { get { throw new InvalidOperationException(reason); } }
+
+        public Option<T> ValueOption { get { return Option.None<T>(); } }
     }
 }

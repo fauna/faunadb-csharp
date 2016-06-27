@@ -22,35 +22,13 @@ namespace FaunaDB.Types
             codec(this);
 
         public ArrayList<T> Collect<T>(Field<T> field) =>
-            Field.Root.Collect(field).Get(this).Match(
-                Success: value => value,
-                Failure: reason => { throw new InvalidOperationException(reason); }
-                );
+            Field.Root.Collect(field).Get(this).Value;
 
         public T Get<T>(Field<T> field) =>
-            field.Get(this).Match(
-                Success: value => value,
-                Failure: reason => { throw new InvalidOperationException(reason); }
-                );
+            field.Get(this).Value;
 
         public Option<T> GetOption<T>(Field<T> field) =>
-            field.Get(this).Match(
-                Success: value => Option.Some<T>(value),
-                Failure: reason => Option.None<T>()
-                );
-
-        public bool TryGet<T>(Field<T> field, out T outValue)
-        {
-            outValue = field.Get(this).Match(
-                Success: value => value,
-                Failure: reason => default(T)
-                );
-
-            return field.Get(this).Match(
-                Success: value => true,
-                Failure: reason => false
-                );
-        }
+            field.Get(this).ValueOption;
 
         #region implicit conversions
         public static implicit operator Value(ArrayList<Value> values) =>

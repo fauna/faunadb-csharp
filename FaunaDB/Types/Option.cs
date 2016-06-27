@@ -2,30 +2,45 @@
 
 namespace FaunaDB.Types
 {
-    public interface IOption
+    public abstract class IOption
     {
-        bool HasValue { get; }
+        internal bool IsSome { get; set; }
     }
 
     public class Option<T> : IOption
     {
-        private T _value;
+        private T value;
         public T Value
         {
             private set
             {
-                _value = value;
+                this.value = value;
             }
             get
             {
-                if (!HasValue)
-                    throw new ArgumentNullException("");
+                if (!IsSome)
+                    throw new InvalidOperationException("Trying to get value from None()");
 
-                return _value;
+                return value;
             }
         }
 
-        public bool HasValue { get; private set; }
+        public Option<U> Map<U>(Func<T, U> func) =>
+            IsSome ? new Option<U>(func(value)) : new Option<U>();
+
+        public Option<U> FlatMap<U>(Func<T, Option<U>> func) =>
+            IsSome ? func(value) : new Option<U>();
+
+        public U Match<U>(Func<T, U> Some, Func<U> None) =>
+            IsSome ? Some(value) : None();
+
+        public void Match(Action<T> Some, Action None)
+        {
+            if (IsSome)
+                Some(value);
+            else
+                None();
+        }
 
         internal Option(T value)
         {
@@ -33,30 +48,30 @@ namespace FaunaDB.Types
                 throw new ArgumentNullException("value");
 
             Value = value;
-            HasValue = true;
+            IsSome = true;
         }
 
         internal Option()
         {
             Value = default(T);
-            HasValue = false;
+            IsSome = false;
         }
 
         public override bool Equals(object obj)
         {
             IOption other0 = obj as IOption;
-            if (!HasValue && !other0.HasValue)
+            if (!IsSome && !other0.IsSome)
                 return true;
 
             Option<T> other1 = obj as Option<T>;
-            return other1 != null && HasValue == other1.HasValue && Equals(Value, other1.Value);
+            return other1 != null && IsSome == other1.IsSome && Equals(Value, other1.Value);
         }
 
         public override int GetHashCode() =>
-            HasValue ? Value.GetHashCode() : 0;
+            IsSome ? Value.GetHashCode() : 0;
 
         public override string ToString() =>
-            HasValue ? $"Some({Value.ToString()})" : "None()";
+            IsSome ? $"Some({Value.ToString()})" : "None()";
     }
 
     public class Option

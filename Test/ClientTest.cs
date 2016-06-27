@@ -164,20 +164,20 @@ namespace Test
                             ))));
 
             Value testField = instance.Get(DATA).At("testField");
-            Assert.AreEqual(Some("sup"), testField.At("string").To(Codec.STRING).Get());
-            Assert.AreEqual(Some(1234L), testField.At("num").To(Codec.LONG).Get());
-            Assert.AreEqual(Some(true), testField.At("bool").To(Codec.BOOLEAN).Get());
-            Assert.AreEqual(None<string>(), testField.At("bool").To(Codec.STRING).Get());
-            Assert.AreEqual(None<Value>(), testField.At("credentials").To(Codec.VALUE).Get());
-            Assert.AreEqual(None<string>(), testField.At("credentials", "password").To(Codec.STRING).Get());
+            Assert.AreEqual(Some("sup"), testField.At("string").To(Codec.STRING).ValueOption);
+            Assert.AreEqual(Some(1234L), testField.At("num").To(Codec.LONG).ValueOption);
+            Assert.AreEqual(Some(true), testField.At("bool").To(Codec.BOOLEAN).ValueOption);
+            Assert.AreEqual(None<string>(), testField.At("bool").To(Codec.STRING).ValueOption);
+            Assert.AreEqual(None<Value>(), testField.At("credentials").To(Codec.VALUE).ValueOption);
+            Assert.AreEqual(None<string>(), testField.At("credentials", "password").To(Codec.STRING).ValueOption);
 
             Value array = testField.At("array");
-            Assert.AreEqual(4, array.To(Codec.ARRAY).Get().Value.Count);
-            Assert.AreEqual(Some(1L), array.At(0).To(Codec.LONG).Get());
-            Assert.AreEqual(Some("2"), array.At(1).To(Codec.STRING).Get());
-            Assert.AreEqual(Some(3.4), array.At(2).To(Codec.DOUBLE).Get());
-            Assert.AreEqual(Some("JR"), array.At(3).At("name").To(Codec.STRING).Get());
-            Assert.AreEqual(None<Value>(), array.At(4).To(Codec.VALUE).Get());
+            Assert.AreEqual(4, array.To(Codec.ARRAY).ValueOption.Value.Count);
+            Assert.AreEqual(Some(1L), array.At(0).To(Codec.LONG).ValueOption);
+            Assert.AreEqual(Some("2"), array.At(1).To(Codec.STRING).ValueOption);
+            Assert.AreEqual(Some(3.4), array.At(2).To(Codec.DOUBLE).ValueOption);
+            Assert.AreEqual(Some("JR"), array.At(3).At("name").To(Codec.STRING).ValueOption);
+            Assert.AreEqual(None<Value>(), array.At(4).To(Codec.VALUE).ValueOption);
         }
 
         [Test] public async Task TestGetAnInstance()
@@ -246,7 +246,7 @@ namespace Test
             await client.Query(Delete(@ref));
 
             Value exists = await client.Query(Exists(@ref));
-            Assert.AreEqual(Some(false), exists.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(false), exists.To(Codec.BOOLEAN).ValueOption);
 
             Assert.ThrowsAsync<NotFound>(async() => await client.Query(Get(@ref)));
         }
@@ -262,8 +262,8 @@ namespace Test
                     Obj("data", Obj("cooldown", 5L))));
 
             Assert.AreEqual(createdInstance.Get(REF_FIELD), insertedEvent.Get(REF_FIELD));
-            Assert.AreEqual(1, insertedEvent.Get(DATA).To(Codec.OBJECT).Get().Value.Count);
-            Assert.AreEqual(Some(5L), insertedEvent.Get(DATA).At("cooldown").To(Codec.LONG).Get());
+            Assert.AreEqual(1, insertedEvent.Get(DATA).To(Codec.OBJECT).ValueOption.Value.Count);
+            Assert.AreEqual(Some(5L), insertedEvent.Get(DATA).At("cooldown").To(Codec.LONG).ValueOption);
 
             Value removedEvent = await client.Query(
                 Remove(createdInstance.Get(REF_FIELD), 2L, ActionType.DELETE)
@@ -307,7 +307,7 @@ namespace Test
         [Test] public async Task TestCountElementsOnAIndex()
         {
             Value count = await client.Query(Count(Match(Ref("indexes/all_spells"))));
-            Assert.AreEqual(Some(6L), count.To(Codec.LONG).Get());
+            Assert.AreEqual(Some(6L), count.To(Codec.LONG).ValueOption);
         }
 
         [Test] public async Task TestListAllItensOnAClassIndex()
@@ -325,17 +325,17 @@ namespace Test
             Value page1 = await client.Query(
                 Paginate(Match(Ref("indexes/all_spells")), size: 3));
 
-            Assert.AreEqual(3, page1.Get(DATA).To(Codec.ARRAY).Get().Value.Count);
+            Assert.AreEqual(3, page1.Get(DATA).To(Codec.ARRAY).ValueOption.Value.Count);
             Assert.NotNull(page1.At("after"));
-            Assert.AreEqual(None<Value>(), page1.At("before").To(Codec.VALUE).Get());
+            Assert.AreEqual(None<Value>(), page1.At("before").To(Codec.VALUE).ValueOption);
 
             Value page2 = await client.Query(
               Paginate(Match(Ref("indexes/all_spells")), after: page1.At("after"), size: 3));
 
-            Assert.AreEqual(3, page2.Get(DATA).To(Codec.ARRAY).Get().Value.Count);
+            Assert.AreEqual(3, page2.Get(DATA).To(Codec.ARRAY).ValueOption.Value.Count);
             Assert.AreNotEqual(page1.At("data"), page2.Get(DATA));
             Assert.NotNull(page2.At("before"));
-            Assert.AreEqual(None<Value>(), page2.At("after").To(Codec.VALUE).Get());
+            Assert.AreEqual(None<Value>(), page2.At("after").To(Codec.VALUE).ValueOption);
         }
 
         [Test] public async Task TestDealWithSetRef()
@@ -343,9 +343,9 @@ namespace Test
             Value res = await client.Query(
                 Match(Ref("indexes/spells_by_element"), "arcane"));
 
-            OrderedDictionary<string, Value> set = res.To(Codec.SETREF).Get().Value.Value;
-            Assert.AreEqual(Some("arcane"), set["terms"].To(Codec.STRING).Get());
-            Assert.AreEqual(Some(new Ref("indexes/spells_by_element")), set["match"].To(Codec.REF).Get());
+            OrderedDictionary<string, Value> set = res.To(Codec.SETREF).ValueOption.Value.Value;
+            Assert.AreEqual(Some("arcane"), set["terms"].To(Codec.STRING).ValueOption);
+            Assert.AreEqual(Some(new Ref("indexes/spells_by_element")), set["match"].To(Codec.REF).ValueOption);
         }
 
         [Test] public async Task TestEvalLetExpression()
@@ -371,7 +371,7 @@ namespace Test
                 If(true, "was true", "was false")
             );
 
-            Assert.AreEqual(Some("was true"), res.To(Codec.STRING).Get());
+            Assert.AreEqual(Some("was true"), res.To(Codec.STRING).ValueOption);
         }
 
         [Test] public async Task TestEvalDoExpression()
@@ -389,12 +389,12 @@ namespace Test
         [Test] public async Task TestEchoAnObjectBack()
         {
             Value res = await client.Query(Obj("name", "Hen Wen", "age", 123));
-            Assert.AreEqual(Some("Hen Wen"), res.At("name").To(Codec.STRING).Get());
-            Assert.AreEqual(Some(123L), res.At("age").To(Codec.LONG).Get());
+            Assert.AreEqual(Some("Hen Wen"), res.At("name").To(Codec.STRING).ValueOption);
+            Assert.AreEqual(Some(123L), res.At("age").To(Codec.LONG).ValueOption);
 
             res = await client.Query(res);
-            Assert.AreEqual(Some("Hen Wen"), res.At("name").To(Codec.STRING).Get());
-            Assert.AreEqual(Some(123L), res.At("age").To(Codec.LONG).Get());
+            Assert.AreEqual(Some("Hen Wen"), res.At("name").To(Codec.STRING).ValueOption);
+            Assert.AreEqual(Some(123L), res.At("age").To(Codec.LONG).ValueOption);
         }
 
         [Test] public async Task TestMapOverCollections()
@@ -567,25 +567,25 @@ namespace Test
         [Test] public async Task TestEvalEqualsExpression()
         {
             Value equals = await client.Query(EqualsFn("fire", "fire"));
-            Assert.AreEqual(Some(true), equals.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), equals.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalConcatExpression()
         {
             Value simpleConcat = await client.Query(Concat(Arr("Magic", "Missile")));
-            Assert.AreEqual(Some("MagicMissile"), simpleConcat.To(Codec.STRING).Get());
+            Assert.AreEqual(Some("MagicMissile"), simpleConcat.To(Codec.STRING).ValueOption);
 
             Value concatWithSeparator = await client.Query(
                 Concat(Arr("Magic", "Missile"), " ")
             );
 
-            Assert.AreEqual(Some("Magic Missile"), concatWithSeparator.To(Codec.STRING).Get());
+            Assert.AreEqual(Some("Magic Missile"), concatWithSeparator.To(Codec.STRING).ValueOption);
         }
 
         [Test] public async Task TestEvalCasefoldExpression()
         {
             Value res = await client.Query(CaseFold("Hen Wen"));
-            Assert.AreEqual(Some("hen wen"), res.To(Codec.STRING).Get());
+            Assert.AreEqual(Some("hen wen"), res.To(Codec.STRING).ValueOption);
         }
 
         [Test] public async Task TestEvalContainsExpression()
@@ -597,7 +597,7 @@ namespace Test
                         Obj("foods", Arr("crunchings", "munchings"))))
             );
 
-            Assert.AreEqual(Some(true), contains.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), contains.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalSelectExpression()
@@ -610,103 +610,103 @@ namespace Test
                 )
             );
 
-            Assert.AreEqual(Some("munchings"), selected.To(Codec.STRING).Get());
+            Assert.AreEqual(Some("munchings"), selected.To(Codec.STRING).ValueOption);
         }
 
         [Test] public async Task TestEvalLTExpression()
         {
             Value res = await client.Query(LT(Arr(1, 2, 3)));
-            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalLTEExpression()
         {
             Value res = await client.Query(LTE(Arr(1, 2, 2)));
-            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalGTxpression()
         {
             Value res = await client.Query(GT(Arr(3, 2, 1)));
-            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalGTExpression()
         {
             Value res = await client.Query(GTE(Arr(3, 2, 2)));
-            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalAddExpression()
         {
             Value res = await client.Query(Add(100, 10));
-            Assert.AreEqual(Some(110L), res.To(Codec.LONG).Get());
+            Assert.AreEqual(Some(110L), res.To(Codec.LONG).ValueOption);
         }
 
         [Test] public async Task TestEvalMultiplyExpression()
         {
             Value res = await client.Query(Multiply(100, 10));
-            Assert.AreEqual(Some(1000L), res.To(Codec.LONG).Get());
+            Assert.AreEqual(Some(1000L), res.To(Codec.LONG).ValueOption);
         }
 
         [Test] public async Task TestEvalSubtractExpression()
         {
             Value res = await client.Query(Subtract(100, 10));
-            Assert.AreEqual(Some(90L), res.To(Codec.LONG).Get());
+            Assert.AreEqual(Some(90L), res.To(Codec.LONG).ValueOption);
         }
 
         [Test] public async Task TestEvalDivideExpression()
         {
             Value res = await client.Query(Divide(100, 10));
-            Assert.AreEqual(Some(10L), res.To(Codec.LONG).Get());
+            Assert.AreEqual(Some(10L), res.To(Codec.LONG).ValueOption);
         }
 
         [Test] public async Task TestEvalModuloExpression()
         {
             Value res = await client.Query(Modulo(101, 10));
-            Assert.AreEqual(Some(1L), res.To(Codec.LONG).Get());
+            Assert.AreEqual(Some(1L), res.To(Codec.LONG).ValueOption);
         }
 
         [Test] public async Task TestEvalAndExpression()
         {
             Value res = await client.Query(And(true, false));
-            Assert.AreEqual(Some(false), res.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(false), res.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalOrExpression()
         {
             Value res = await client.Query(Or(true, false));
-            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalNotExpression()
         {
             Value notR = await client.Query(Not(false));
-            Assert.AreEqual(Some(true), notR.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), notR.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestEvalTimeExpression()
         {
             Value res = await client.Query(Time("1970-01-01T00:00:00-04:00"));
-            Assert.AreEqual(Some(new DateTime(1970, 1, 1, 4, 0, 0)), res.To(Codec.TS).Get());
+            Assert.AreEqual(Some(new DateTime(1970, 1, 1, 4, 0, 0)), res.To(Codec.TS).ValueOption);
         }
 
         [Test] public async Task TestEvalEpochExpression()
         {
             Value res = await client.Query(Epoch(30, "second"));
-            Assert.AreEqual(Some(new DateTime(1970, 1, 1, 0, 0, 30)), res.To(Codec.TS).Get());
+            Assert.AreEqual(Some(new DateTime(1970, 1, 1, 0, 0, 30)), res.To(Codec.TS).ValueOption);
         }
 
         [Test] public async Task TestEvalDateExpression()
         {
             Value res = await client.Query(Date("1970-01-02"));
-            Assert.AreEqual(Some(new DateTime(1970, 1, 2)), res.To(Codec.DATE).Get());
+            Assert.AreEqual(Some(new DateTime(1970, 1, 2)), res.To(Codec.DATE).ValueOption);
         }
 
         [Test] public async Task TestGetNextId()
         {
             Value res = await client.Query(NextId());
-            Assert.IsNotNull(res.To(Codec.STRING).Get());
+            Assert.IsNotNull(res.To(Codec.STRING).ValueOption);
         }
 
         [Test] public async Task TestAuthenticateSession()
@@ -723,16 +723,16 @@ namespace Test
                     Obj("password", "abcdefg"))
             );
 
-            Client sessionClient = GetClient(password: auth.At("secret").To(Codec.STRING).Get().Value);
+            Client sessionClient = GetClient(password: auth.At("secret").To(Codec.STRING).ValueOption.Value);
 
             Value loggedOut = await sessionClient.Query(Logout(true));
-            Assert.AreEqual(Some(true), loggedOut.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(true), loggedOut.To(Codec.BOOLEAN).ValueOption);
 
             Value identified = await client.Query(
                 Identify(createdInstance.Get(REF_FIELD), "wrong-password")
             );
 
-            Assert.AreEqual(Some(false), identified.To(Codec.BOOLEAN).Get());
+            Assert.AreEqual(Some(false), identified.To(Codec.BOOLEAN).ValueOption);
         }
 
         [Test] public async Task TestPing()
