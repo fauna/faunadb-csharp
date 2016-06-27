@@ -35,10 +35,10 @@ namespace FaunaDB.Query
             switch (action)
             {
                 case ActionType.CREATE:
-                    return new StringV("create");
+                    return StringV.Of("create");
 
                 case ActionType.DELETE:
-                    return new StringV("delete");
+                    return StringV.Of("delete");
             }
 
             throw new InvalidValueException("Invalid action value");
@@ -47,10 +47,10 @@ namespace FaunaDB.Query
 
         #region explicit (downcasting) conversions
         public static explicit operator ArrayList<Value>(Expr v) =>
-            ((ArrayV)v).Value;
+            v == NullV.Instance ? null : ((ArrayV)v).Value;
 
         public static explicit operator OrderedDictionary<string, Value>(Expr v) =>
-            ((ObjectV)v).Value;
+            v == NullV.Instance ? null : ((ObjectV)v).Value;
 
         public static explicit operator bool(Expr v) =>
             ((BooleanV)v).Value;
@@ -62,7 +62,7 @@ namespace FaunaDB.Query
             ((LongV)v).Value;
 
         public static explicit operator string(Expr v) =>
-            ((StringV)v).Value;
+            v == NullV.Instance ? null : ((StringV)v).Value;
 
         public static explicit operator ActionType(Expr v)
         {

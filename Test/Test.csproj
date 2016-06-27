@@ -62,6 +62,7 @@
     <Compile Include="DeserializationTest.cs" />
     <Compile Include="FieldTest.cs" />
     <Compile Include="ClientTest.cs" />
+    <Compile Include="OperatorTest.cs" />
     <Compile Include="SerializationTest.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="ErrorsTest.cs" />

@@ -27,5 +27,8 @@ namespace FaunaDB.Query
             writer.WriteValue(name);
             writer.WriteEndObject();
         }
+
+        public override string ToString() =>
+            $"Var({name})";
     }
 }
