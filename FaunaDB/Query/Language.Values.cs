@@ -1,13 +1,61 @@
 ﻿using FaunaDB.Collections;
 using FaunaDB.Types;
-using FaunaDB.Utils;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace FaunaDB.Query
 {
     public partial struct Language
     {
+        public struct PathSelector
+        {
+            private ArrayList<Expr> segments;
+
+            public Expr Segments { get { return Arr(segments); } }
+
+            internal PathSelector(ArrayList<Expr> segments)
+            {
+                this.segments = segments;
+            }
+
+            internal PathSelector(params string[] segments)
+            {
+                this.segments = new ArrayList<Expr>();
+                foreach (var s in segments)
+                    this.segments.Add(s);
+            }
+
+            internal PathSelector(params int[] segments)
+            {
+                this.segments = new ArrayList<Expr>();
+                foreach (var s in segments)
+                    this.segments.Add(s);
+            }
+
+            public PathSelector At(params string[] others)
+            {
+                ArrayList<Expr> all = new ArrayList<Expr>(segments);
+                foreach (var s in others)
+                    all.Add(s);
+                return new PathSelector(all);
+            }
+
+            public PathSelector At(params int[] others)
+            {
+                ArrayList<Expr> all = new ArrayList<Expr>(segments);
+                foreach (var s in others)
+                    all.Add(s);
+                return new PathSelector(all);
+            }
+        }
+
+        public static PathSelector Path(params string[] segments) =>
+            new PathSelector(segments);
+
+        public static PathSelector Path(params int[] segments) =>
+            new PathSelector(segments);
+
         public static Expr Null() =>
             NullV.Instance;
 
@@ -33,7 +81,10 @@ namespace FaunaDB.Query
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Arr(params Expr[] values) =>
-            UnescapedArray.FromEnumerable(values);
+            UnescapedArray.Of(values);
+
+        public static Expr Arr(IEnumerable<Expr> values) =>
+            UnescapedArray.Of(values);
 
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
@@ -68,7 +119,7 @@ namespace FaunaDB.Query
                     exprs[i] = Obj(array.GetValue(i));
                 }
 
-                return UnescapedArray.FromEnumerable(exprs);
+                return UnescapedArray.Of(exprs);
             }
             else
             {
@@ -137,11 +188,11 @@ namespace FaunaDB.Query
             values[0] = head;
             tail.CopyTo(values, 1);
 
-            return UnescapedArray.FromEnumerable(values);
+            return UnescapedArray.Of(values);
         }
 
         static Expr Varargs(Expr[] values) =>
-            values.Length == 1 ? values[0] : UnescapedArray.FromEnumerable(values);
+            values.Length == 1 ? values[0] : UnescapedArray.Of(values);
         #endregion
 
     }

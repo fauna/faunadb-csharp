@@ -24,11 +24,17 @@ namespace FaunaDB.Query
         public static Expr Contains(Expr path, Expr @in) =>
             UnescapedObject.With("contains", path, "in", @in);
 
+        public static Expr Contains(PathSelector path, Expr @in) =>
+            UnescapedObject.With("contains", path.Segments, "in", @in);
+
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
         public static Expr Select(Expr path, Expr @from, Expr @default = null) =>
             UnescapedObject.With("select", path, "from", @from, "default", @default);
+
+        public static Expr Select(PathSelector path, Expr @from, Expr @default = null) =>
+            UnescapedObject.With("select", path.Segments, "from", @from, "default", @default);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 

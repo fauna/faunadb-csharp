@@ -4,9 +4,7 @@ using FaunaDB.Errors;
 using FaunaDB.Types;
 using NUnit.Framework;
 using System;
-using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using static FaunaDB.Query.Language;
@@ -356,13 +354,22 @@ namespace Test
                 Let("x", 1, "y", 2).In(Arr(Var("y"), Var("x")))
             );
 
-            Assert.AreEqual(ImmutableList.Of(2L, 1L), res.Collect(Field.As(Codec.LONG)));
+            Assert.AreEqual(ImmutableList.Of(2L, 1L),
+                res.Collect(Field.As(Codec.LONG)));
+
+            res = await client.Query(
+                Let("x", 1, "y", 2).In((x, y) => Arr(y, x))
+            );
+
+            Assert.AreEqual(ImmutableList.Of(2L, 1L),
+                res.Collect(Field.As(Codec.LONG)));
         }
 
         [Test] public async Task TestEvalIfExpression()
         {
             Value res = await client.Query(
-                If(true, "was true", "was false"));
+                If(true, "was true", "was false")
+            );
 
             Assert.AreEqual(Some("was true"), res.To(Codec.STRING).Get());
         }
@@ -396,7 +403,15 @@ namespace Test
                 Map(Arr(1, 2, 3),
                     Lambda("i", Add(Var("i"), 1))));
 
-            Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L), res.Collect(Field.As(Codec.LONG)));
+            Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L),
+                res.Collect(Field.As(Codec.LONG)));
+
+            res = await client.Query(
+                Map(Arr(1, 2, 3),
+                    Lambda(i => Add(i, 1))));
+
+            Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L),
+                res.Collect(Field.As(Codec.LONG)));
         }
 
         [Test] public async Task TestExecuteForeachExpression()
@@ -408,6 +423,16 @@ namespace Test
 
             Assert.AreEqual(ImmutableList.Of("Fireball Level 1", "Fireball Level 2"),
                 res.Collect(Field.As(Codec.STRING)));
+
+            var clazz = await RandomClass();
+
+            res = await client.Query(
+                Foreach(Arr("Fireball Level 1", "Fireball Level 2"),
+                    Lambda(spell => Create(clazz, Obj("data", Obj("name", spell)))))
+            );
+
+            Assert.AreEqual(ImmutableList.Of("Fireball Level 1", "Fireball Level 2"),
+                res.Collect(Field.As(Codec.STRING)));
         }
 
         [Test] public async Task TestFilterACollection()
@@ -415,6 +440,14 @@ namespace Test
             Value filtered = await client.Query(
                 Filter(Arr(1, 2, 3),
                     Lambda("i", EqualsFn(0, Modulo(Var("i"), 2))))
+            );
+
+            Assert.AreEqual(ImmutableList.Of(2L),
+                filtered.Collect(Field.As(Codec.LONG)));
+
+            filtered = await client.Query(
+                Filter(Arr(1, 2, 3),
+                    Lambda(i => EqualsFn(0, Modulo(i, 2))))
             );
 
             Assert.AreEqual(ImmutableList.Of(2L),
@@ -463,46 +496,248 @@ namespace Test
                 events.Get(DATA).Collect(Field.At("resource").To(Codec.REF)));
         }
 
+        [Test] public async Task TestPaginateUnion()
+        {
+            Value union = await client.Query(
+                Paginate(
+                    Union(
+                        Match(Ref("indexes/spells_by_element"), "arcane"),
+                        Match(Ref("indexes/spells_by_element"), "fire"))
+                )
+            );
+
+            Assert.AreEqual(ImmutableList.Of(magicMissile, fireball, faerieFire),
+                union.Get(REF_LIST));
+        }
+
+        [Test] public async Task TestPaginateIntersection()
+        {
+            Value intersection = await client.Query(
+                Paginate(
+                    Intersection(
+                        Match(Ref("indexes/spells_by_element"), "arcane"),
+                        Match(Ref("indexes/spells_by_element"), "nature")
+                    )
+                )
+            );
+
+            Assert.AreEqual(ImmutableList.Of(faerieFire),
+                intersection.Get(REF_LIST));
+        }
+
+        [Test] public async Task TestPaginateDifference()
+        {
+            Value difference = await client.Query(
+                Paginate(
+                    Difference(
+                        Match(Ref("indexes/spells_by_element"), "nature"),
+                        Match(Ref("indexes/spells_by_element"), "arcane")
+                    )
+                )
+            );
+
+            Assert.AreEqual(ImmutableList.Of(summon), difference.Get(REF_LIST));
+        }
+
+        [Test] public async Task TestPaginateDistinctSets()
+        {
+            Value distinct = await client.Query(
+                Paginate(Distinct(Match(Ref("indexes/elements_of_spells"))))
+            );
+
+            Assert.AreEqual(ImmutableList.Of("arcane", "fire", "nature"),
+                distinct.Get(DATA).Collect(Field.As(Codec.STRING)));
+        }
+
+        [Test] public async Task TestPaginateJoin()
+        {
+            Value join = await client.Query(
+                Paginate(
+                    Join(
+                        Match(Ref("indexes/spellbooks_by_owner"), thor),
+                        Lambda(spellbook => Match(Ref("indexes/spells_by_spellbook"), spellbook))
+                    )
+                )
+            );
+
+            Assert.AreEqual(ImmutableList.Of(thorSpell1, thorSpell2),
+                join.Get(REF_LIST));
+        }
+
+        [Test] public async Task TestEvalEqualsExpression()
+        {
+            Value equals = await client.Query(EqualsFn("fire", "fire"));
+            Assert.AreEqual(Some(true), equals.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalConcatExpression()
+        {
+            Value simpleConcat = await client.Query(Concat(Arr("Magic", "Missile")));
+            Assert.AreEqual(Some("MagicMissile"), simpleConcat.To(Codec.STRING).Get());
+
+            Value concatWithSeparator = await client.Query(
+                Concat(Arr("Magic", "Missile"), " ")
+            );
+
+            Assert.AreEqual(Some("Magic Missile"), concatWithSeparator.To(Codec.STRING).Get());
+        }
+
+        [Test] public async Task TestEvalCasefoldExpression()
+        {
+            Value res = await client.Query(CaseFold("Hen Wen"));
+            Assert.AreEqual(Some("hen wen"), res.To(Codec.STRING).Get());
+        }
+
+        [Test] public async Task TestEvalContainsExpression()
+        {
+            Value contains = await client.Query(
+                Contains(
+                    Path("favorites", "foods"),
+                    Obj("favorites",
+                        Obj("foods", Arr("crunchings", "munchings"))))
+            );
+
+            Assert.AreEqual(Some(true), contains.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalSelectExpression()
+        {
+            Value selected = await client.Query(
+                Select(
+                    Path("favorites", "foods").At(1),
+                    Obj("favorites",
+                        Obj("foods", Arr("crunchings", "munchings", "lunchings")))
+                )
+            );
+
+            Assert.AreEqual(Some("munchings"), selected.To(Codec.STRING).Get());
+        }
+
+        [Test] public async Task TestEvalLTExpression()
+        {
+            Value res = await client.Query(LT(Arr(1, 2, 3)));
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalLTEExpression()
+        {
+            Value res = await client.Query(LTE(Arr(1, 2, 2)));
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalGTxpression()
+        {
+            Value res = await client.Query(GT(Arr(3, 2, 1)));
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalGTExpression()
+        {
+            Value res = await client.Query(GTE(Arr(3, 2, 2)));
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalAddExpression()
+        {
+            Value res = await client.Query(Add(100, 10));
+            Assert.AreEqual(Some(110L), res.To(Codec.LONG).Get());
+        }
+
+        [Test] public async Task TestEvalMultiplyExpression()
+        {
+            Value res = await client.Query(Multiply(100, 10));
+            Assert.AreEqual(Some(1000L), res.To(Codec.LONG).Get());
+        }
+
+        [Test] public async Task TestEvalSubtractExpression()
+        {
+            Value res = await client.Query(Subtract(100, 10));
+            Assert.AreEqual(Some(90L), res.To(Codec.LONG).Get());
+        }
+
+        [Test] public async Task TestEvalDivideExpression()
+        {
+            Value res = await client.Query(Divide(100, 10));
+            Assert.AreEqual(Some(10L), res.To(Codec.LONG).Get());
+        }
+
+        [Test] public async Task TestEvalModuloExpression()
+        {
+            Value res = await client.Query(Modulo(101, 10));
+            Assert.AreEqual(Some(1L), res.To(Codec.LONG).Get());
+        }
+
+        [Test] public async Task TestEvalAndExpression()
+        {
+            Value res = await client.Query(And(true, false));
+            Assert.AreEqual(Some(false), res.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalOrExpression()
+        {
+            Value res = await client.Query(Or(true, false));
+            Assert.AreEqual(Some(true), res.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalNotExpression()
+        {
+            Value notR = await client.Query(Not(false));
+            Assert.AreEqual(Some(true), notR.To(Codec.BOOLEAN).Get());
+        }
+
+        [Test] public async Task TestEvalTimeExpression()
+        {
+            Value res = await client.Query(Time("1970-01-01T00:00:00-04:00"));
+            Assert.AreEqual(Some(new DateTime(1970, 1, 1, 4, 0, 0)), res.To(Codec.TS).Get());
+        }
+
+        [Test] public async Task TestEvalEpochExpression()
+        {
+            Value res = await client.Query(Epoch(30, "second"));
+            Assert.AreEqual(Some(new DateTime(1970, 1, 1, 0, 0, 30)), res.To(Codec.TS).Get());
+        }
+
+        [Test] public async Task TestEvalDateExpression()
+        {
+            Value res = await client.Query(Date("1970-01-02"));
+            Assert.AreEqual(Some(new DateTime(1970, 1, 2)), res.To(Codec.DATE).Get());
+        }
+
+        [Test] public async Task TestGetNextId()
+        {
+            Value res = await client.Query(NextId());
+            Assert.IsNotNull(res.To(Codec.STRING).Get());
+        }
+
+        [Test] public async Task TestAuthenticateSession()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                    Obj("credentials",
+                        Obj("password", "abcdefg")))
+            );
+
+            Value auth = await client.Query(
+                Login(
+                    createdInstance.Get(REF_FIELD),
+                    Obj("password", "abcdefg"))
+            );
+
+            Client sessionClient = GetClient(password: auth.At("secret").To(Codec.STRING).Get().Value);
+
+            Value loggedOut = await sessionClient.Query(Logout(true));
+            Assert.AreEqual(Some(true), loggedOut.To(Codec.BOOLEAN).Get());
+
+            Value identified = await client.Query(
+                Identify(createdInstance.Get(REF_FIELD), "wrong-password")
+            );
+
+            Assert.AreEqual(Some(false), identified.To(Codec.BOOLEAN).Get());
+        }
+
         [Test] public async Task TestPing()
         {
             Assert.AreEqual("Scope all is OK", await client.Ping("all"));
-        }
-
-        [Test] public async Task TestLogging()
-        {
-            string logged = null;
-            Action<string> log = str => {
-                Assert.AreEqual(null, logged);
-                logged = str;
-            };
-            var client = GetClient();
-            client.OnResponse += ClientLogger.Logger(log);
-            await client.Ping();
-
-            Func<string> readLine = new StringReader(logged).ReadLine;
-            Action<string> AssertRead = str => Assert.AreEqual(str, readLine());
-            Action<string> AssertRgx = rgx => Assert.That(new Regex(rgx).IsMatch(readLine()));
-
-            AssertRead("Fauna GET /ping");
-            AssertRgx("^  Credentials: ");
-            AssertRead("  Response headers:");
-            // Skip through headers
-            while (true)
-            {
-                var line = readLine();
-                if (!line.StartsWith("    "))
-                {
-                    Assert.AreEqual(line, "  Response JSON:");
-                    break;
-                }
-            }
-            //todo: this should be flush with "response json: "
-            AssertRead("    {");
-            AssertRead("      \"object\": {");
-            AssertRead("        \"resource\": \"Scope global is OK\"");
-            AssertRead("      }");
-            AssertRead("    }");
-            AssertRgx("^  Response \\(OK\\): API processing (\\d+ms|N/A), network latency \\d+ms$");
         }
 
         private async Task<Ref> RandomClass()

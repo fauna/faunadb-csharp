@@ -1,5 +1,4 @@
 ﻿using FaunaDB.Types;
-using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System.Linq;
 using System;
@@ -68,14 +67,14 @@ namespace FaunaDB.Query
 
     public class UnescapedArray : Expr
     {
-        public static readonly UnescapedArray Empty = new UnescapedArray(new List<Expr>());
+        public static readonly UnescapedArray Empty = new UnescapedArray(new ArrayList<Expr>());
 
-        public List<Expr> Value { get; }
+        public ArrayList<Expr> Value { get; }
 
-        public static UnescapedArray FromEnumerable(IEnumerable<Expr> values) =>
-            new UnescapedArray(new List<Expr>(values));
+        public static UnescapedArray Of(IEnumerable<Expr> values) =>
+            new UnescapedArray(new ArrayList<Expr>(values));
 
-        public UnescapedArray(List<Expr> value)
+        public UnescapedArray(ArrayList<Expr> value)
         {
             Value = value;
 
