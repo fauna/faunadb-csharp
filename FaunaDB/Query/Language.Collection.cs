@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FaunaDB.Query
 {
@@ -16,22 +12,22 @@ namespace FaunaDB.Query
         public static Expr Map(Expr collection, Expr lambda) =>
             UnescapedObject.With("map", lambda, "collection", collection);
 
-        public static Expr Map(Expr collection, Func<Expr, Expr> lambda) =>
+        public static Expr Map(Expr collection, Func<Var, Expr> lambda) =>
             Map(collection, Lambda(lambda));
 
-        public static Expr Map(Expr collection, Func<Expr, Expr, Expr> lambda) =>
+        public static Expr Map(Expr collection, Func<Var, Var, Expr> lambda) =>
             Map(collection, Lambda(lambda));
 
-        public static Expr Map(Expr collection, Func<Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Map(Expr collection, Func<Var, Var, Var, Expr> lambda) =>
             Map(collection, Lambda(lambda));
 
-        public static Expr Map(Expr collection, Func<Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Map(Expr collection, Func<Var, Var, Var, Var, Expr> lambda) =>
             Map(collection, Lambda(lambda));
 
-        public static Expr Map(Expr collection, Func<Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Map(Expr collection, Func<Var, Var, Var, Var, Var, Expr> lambda) =>
             Map(collection, Lambda(lambda));
 
-        public static Expr Map(Expr collection, Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Map(Expr collection, Func<Var, Var, Var, Var, Var, Var, Expr> lambda) =>
             Map(collection, Lambda(lambda));
 
         /// <summary>
@@ -40,22 +36,22 @@ namespace FaunaDB.Query
         public static Expr Foreach(Expr collection, Expr lambda) =>
             UnescapedObject.With("foreach", lambda, "collection", collection);
 
-        public static Expr Foreach(Expr collection, Func<Expr, Expr> lambda) =>
+        public static Expr Foreach(Expr collection, Func<Var, Expr> lambda) =>
             Foreach(collection, Lambda(lambda));
 
-        public static Expr Foreach(Expr collection, Func<Expr, Expr, Expr> lambda) =>
+        public static Expr Foreach(Expr collection, Func<Var, Var, Expr> lambda) =>
             Foreach(collection, Lambda(lambda));
 
-        public static Expr Foreach(Expr collection, Func<Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Foreach(Expr collection, Func<Var, Var, Var, Expr> lambda) =>
             Foreach(collection, Lambda(lambda));
 
-        public static Expr Foreach(Expr collection, Func<Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Foreach(Expr collection, Func<Var, Var, Var, Var, Expr> lambda) =>
             Foreach(collection, Lambda(lambda));
 
-        public static Expr Foreach(Expr collection, Func<Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Foreach(Expr collection, Func<Var, Var, Var, Var, Var, Expr> lambda) =>
             Foreach(collection, Lambda(lambda));
 
-        public static Expr Foreach(Expr collection, Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Foreach(Expr collection, Func<Var, Var, Var, Var, Var, Var, Expr> lambda) =>
             Foreach(collection, Lambda(lambda));
 
         /// <summary>
@@ -64,22 +60,22 @@ namespace FaunaDB.Query
         public static Expr Filter(Expr collection, Expr lambda) =>
             UnescapedObject.With("filter", lambda, "collection", collection);
 
-        public static Expr Filter(Expr collection, Func<Expr, Expr> lambda) =>
+        public static Expr Filter(Expr collection, Func<Var, Expr> lambda) =>
             Filter(collection, Lambda(lambda));
 
-        public static Expr Filter(Expr collection, Func<Expr, Expr, Expr> lambda) =>
+        public static Expr Filter(Expr collection, Func<Var, Var, Expr> lambda) =>
             Filter(collection, Lambda(lambda));
 
-        public static Expr Filter(Expr collection, Func<Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Filter(Expr collection, Func<Var, Var, Var, Expr> lambda) =>
             Filter(collection, Lambda(lambda));
 
-        public static Expr Filter(Expr collection, Func<Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Filter(Expr collection, Func<Var, Var, Var, Var, Expr> lambda) =>
             Filter(collection, Lambda(lambda));
 
-        public static Expr Filter(Expr collection, Func<Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Filter(Expr collection, Func<Var, Var, Var, Var, Var, Expr> lambda) =>
             Filter(collection, Lambda(lambda));
 
-        public static Expr Filter(Expr collection, Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda) =>
+        public static Expr Filter(Expr collection, Func<Var, Var, Var, Var, Var, Var, Expr> lambda) =>
             Filter(collection, Lambda(lambda));
 
         /// <summary>

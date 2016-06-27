@@ -20,8 +20,8 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
-        public static Expr Var(string varName) =>
-            UnescapedObject.With("var", varName);
+        public static Var Var(string varName) =>
+            new Var(varName);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
@@ -49,7 +49,7 @@ namespace FaunaDB.Query
         /// <example>
         /// <c>Query.Lambda(a => a)</c> is equivalent to <c>Query.Lambda("auto0", Query.Var("auto0"))</c>.
         /// </example>
-        public static Expr Lambda(Func<Expr, Expr> lambda)
+        public static Expr Lambda(Func<Var, Expr> lambda)
         {
             ParameterInfo[] info = lambda.Method.GetParameters();
             string p0 = info[0].Name;
@@ -57,7 +57,7 @@ namespace FaunaDB.Query
             return Lambda(p0, lambda(Var(p0)));
         }
 
-        public static Expr Lambda(Func<Expr, Expr, Expr> lambda)
+        public static Expr Lambda(Func<Var, Var, Expr> lambda)
         {
             ParameterInfo[] info = lambda.Method.GetParameters();
             string p0 = info[0].Name;
@@ -68,7 +68,7 @@ namespace FaunaDB.Query
                 lambda(Var(p0), Var(p1)));
         }
 
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr> lambda)
+        public static Expr Lambda(Func<Var, Var, Var, Expr> lambda)
         {
             ParameterInfo[] info = lambda.Method.GetParameters();
             string p0 = info[0].Name;
@@ -80,7 +80,7 @@ namespace FaunaDB.Query
                 lambda(Var(p0), Var(p1), Var(p2)));
         }
 
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr> lambda)
+        public static Expr Lambda(Func<Var, Var, Var, Var, Expr> lambda)
         {
             ParameterInfo[] info = lambda.Method.GetParameters();
             string p0 = info[0].Name;
@@ -93,7 +93,7 @@ namespace FaunaDB.Query
                 lambda(Var(p0), Var(p1), Var(p2), Var(p3)));
         }
 
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr> lambda)
+        public static Expr Lambda(Func<Var, Var, Var, Var, Var, Expr> lambda)
         {
             ParameterInfo[] info = lambda.Method.GetParameters();
             string p0 = info[0].Name;
@@ -107,7 +107,7 @@ namespace FaunaDB.Query
                 lambda(Var(p0), Var(p1), Var(p2), Var(p3), Var(p4)));
         }
 
-        public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda)
+        public static Expr Lambda(Func<Var, Var, Var, Var, Var, Var, Expr> lambda)
         {
             ParameterInfo[] info = lambda.Method.GetParameters();
             string p0 = info[0].Name;
