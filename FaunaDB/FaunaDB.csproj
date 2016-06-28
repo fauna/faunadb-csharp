@@ -45,6 +45,7 @@
     <Compile Include="Query\Language.Basic.cs" />
     <Compile Include="Query\Language.Basic.Lambda.cs" />
     <Compile Include="Query\Language.Collection.cs" />
+    <Compile Include="Query\Language.Collection.Filter.cs" />
     <Compile Include="Query\Language.Collection.Foreach.cs" />
     <Compile Include="Query\Language.Collection.Map.cs" />
     <Compile Include="Query\Language.Miscellaneous.cs" />

@@ -24,24 +24,6 @@ namespace FaunaDB.Query
         public static Expr Filter(Expr collection, Expr lambda) =>
             UnescapedObject.With("filter", lambda, "collection", collection);
 
-        public static Expr Filter(Expr collection, Func<Var, Expr> lambda) =>
-            Filter(collection, Lambda(lambda));
-
-        public static Expr Filter(Expr collection, Func<Var, Var, Expr> lambda) =>
-            Filter(collection, Lambda(lambda));
-
-        public static Expr Filter(Expr collection, Func<Var, Var, Var, Expr> lambda) =>
-            Filter(collection, Lambda(lambda));
-
-        public static Expr Filter(Expr collection, Func<Var, Var, Var, Var, Expr> lambda) =>
-            Filter(collection, Lambda(lambda));
-
-        public static Expr Filter(Expr collection, Func<Var, Var, Var, Var, Var, Expr> lambda) =>
-            Filter(collection, Lambda(lambda));
-
-        public static Expr Filter(Expr collection, Func<Var, Var, Var, Var, Var, Var, Expr> lambda) =>
-            Filter(collection, Lambda(lambda));
-
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
