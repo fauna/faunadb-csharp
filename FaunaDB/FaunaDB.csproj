@@ -43,6 +43,7 @@
     <Compile Include="Query\Expr.Operators.cs" />
     <Compile Include="Query\Language.Authentication.cs" />
     <Compile Include="Query\Language.Basic.cs" />
+    <Compile Include="Query\Language.Basic.Lambda.cs" />
     <Compile Include="Query\Language.Collection.cs" />
     <Compile Include="Query\Language.Miscellaneous.cs" />
     <Compile Include="Query\Language.Read.cs" />
