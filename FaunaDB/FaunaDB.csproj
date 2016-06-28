@@ -53,6 +53,7 @@
     <Compile Include="Query\Language.Sets.cs" />
     <Compile Include="Query\Language.String.cs" />
     <Compile Include="Query\Language.TimeDate.cs" />
+    <Compile Include="Query\Language.Values.Obj.cs" />
     <Compile Include="Query\Language.Write.cs" />
     <Compile Include="Query\Unescaped.cs" />
     <Compile Include="Query\Language.Basic.Let.cs" />
