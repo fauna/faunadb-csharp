@@ -1,6 +1,8 @@
 ﻿using FaunaDB.Collections;
 using System;
 
+using static FaunaDB.Types.Result;
+
 namespace FaunaDB.Types
 {
     public struct Codec
@@ -8,9 +10,9 @@ namespace FaunaDB.Types
         public static Result<Value> VALUE(Value value)
         {
             if (value == NullV.Instance)
-                return Result.Fail<Value>("Value is null");
+                return Fail<Value>("Value is null");
 
-            return Result.Success(value);
+            return Success(value);
         }
 
         public static Result<Ref> REF(Value input) =>
@@ -52,9 +54,9 @@ namespace FaunaDB.Types
         public static Result<O> DoCast<O>(Value input) where O : Value
         {
             if (typeof(O).IsAssignableFrom(input.GetType()))
-                return Result.Success((O) input);
+                return Success((O) input);
 
-            return Result.Fail<O>($"Cannot convert {input.GetType().Name} to {typeof(O).Name}");
+            return Fail<O>($"Cannot convert {input.GetType().Name} to {typeof(O).Name}");
         }
 
         public static R ScalarValue<R>(ScalarValue<R> input) =>

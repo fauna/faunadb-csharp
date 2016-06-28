@@ -1,6 +1,8 @@
 ﻿using FaunaDB.Collections;
 using System;
 
+using static FaunaDB.Types.Result;
+
 namespace FaunaDB.Types
 {
     public sealed class Field<T>
@@ -30,9 +32,9 @@ namespace FaunaDB.Types
                 }
 
                 if (failures.Count > 0)
-                    return Result.Fail<ArrayList<V>>($"Failed to collect values: {string.Join(", ", failures)}");
+                    return Fail<ArrayList<V>>($"Failed to collect values: {string.Join(", ", failures)}");
 
-                return Result.Success(success.ToImmutable());
+                return Success(success.ToImmutable());
             };
         }
 

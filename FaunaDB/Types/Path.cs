@@ -1,5 +1,7 @@
 ﻿using FaunaDB.Collections;
 
+using static FaunaDB.Types.Result;
+
 namespace FaunaDB.Types
 {
     internal sealed class Path
@@ -39,14 +41,14 @@ namespace FaunaDB.Types
 
         internal Result<Value> Get(Value root)
         {
-            Result<Value> result = Result.Success(root);
+            Result<Value> result = Success(root);
 
             foreach (var s in segments)
                 result = result.FlatMap(value => s.Get(value));
 
             return result.Match(
-                Success: Result.Success,
-                Failure: reason => Result.Fail<Value>($"Cannot find path \"{this}\". {reason}"));
+                Success: value => Success(value),
+                Failure: reason => Fail<Value>($"Cannot find path \"{this}\". {reason}"));
         }
 
         public override bool Equals(object obj)
@@ -80,9 +82,9 @@ namespace FaunaDB.Types
                 return root.To(Codec.OBJECT).FlatMap(obj => {
                     Value value;
                     if (obj.TryGetValue(field, out value))
-                        return Result.Success(value);
+                        return Success(value);
 
-                    return Result.Fail<Value>($"Object key \"{field}\" not found");
+                    return Fail<Value>($"Object key \"{field}\" not found");
                 });
             }
 
@@ -112,9 +114,9 @@ namespace FaunaDB.Types
             {
                 return root.To(Codec.ARRAY).FlatMap(array => {
                     if (index >= 0 && index < array.Count)
-                        return Result.Success(array[index]);
+                        return Success(array[index]);
                     
-                    return Result.Fail<Value>($"Array index \"{index}\" not found");
+                    return Fail<Value>($"Array index \"{index}\" not found");
                 });
             }
 
