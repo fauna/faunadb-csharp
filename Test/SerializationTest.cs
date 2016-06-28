@@ -112,9 +112,6 @@ namespace Test
             AssertJsonEqual(Let("x", 10).In(x => x),
                 "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
 
-            AssertJsonEqual(Let(10, In: x => x),
-                "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
-
             ////
 
             AssertJsonEqual(Let("x", 10, "y", 20).In(Add(Var("x"), Var("y"))),
@@ -122,10 +119,6 @@ namespace Test
 
             AssertJsonEqual(Let("x", 10, "y", 20).In((x, y) => Add(x, y)),
                 "{\"let\":{\"x\":10,\"y\":20},\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
-
-            AssertJsonEqual(Let(10, 20, In: (x, y) => Add(x, y)),
-                "{\"let\":{\"x\":10,\"y\":20},\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
-
         }
 
         [Test] public void TestVar()
