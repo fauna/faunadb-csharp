@@ -97,7 +97,7 @@ namespace Test
             AssertJsonEqual(Ts(new DateTime(1970, 1, 1, 0, 0, 0, 0)), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
         }
 
-        [Test] public void TetDate()
+        [Test] public void TestDate()
         {
             AssertJsonEqual(Dt("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
 
@@ -444,7 +444,7 @@ namespace Test
                 "{\"epoch\":0,\"unit\":\"second\"}");
         }
 
-        [Test] public void TestDate()
+        [Test] public void TestDateFn()
         {
             AssertJsonEqual(Date("1970-01-01"),
                 "{\"date\":\"1970-01-01\"}");
