@@ -1,9 +1,8 @@
 ﻿using FaunaDB.Query;
 using FaunaDB.Types;
-using FaunaDB.Utils;
 using NUnit.Framework;
 using System;
-using System.Collections.Specialized;
+
 using static FaunaDB.Query.Language;
 
 namespace Test
@@ -12,7 +11,7 @@ namespace Test
     {
         private static void AssertJsonEqual(Expr expr, string value)
         {
-            Assert.AreEqual(expr.ToJson(), value);
+            Assert.AreEqual(value, expr.ToJson());
         }
 
         [Test] public void TestLiteralValues()

@@ -1,9 +1,7 @@
 ﻿using FaunaDB.Errors;
 using FaunaDB.Types;
-using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 
 namespace FaunaDB.Query
 {

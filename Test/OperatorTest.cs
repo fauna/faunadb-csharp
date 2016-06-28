@@ -2,7 +2,7 @@
 using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
-using System;
+
 using static FaunaDB.Query.Language;
 
 namespace Test

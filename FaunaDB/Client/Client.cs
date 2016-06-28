@@ -2,7 +2,6 @@
 using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
-using FaunaDB.Utils;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
