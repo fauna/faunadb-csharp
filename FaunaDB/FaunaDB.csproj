@@ -68,7 +68,6 @@
     <Compile Include="Query\Language.Values.cs" />
     <Compile Include="Types\ObjectV.cs" />
     <Compile Include="Types\ArrayV.cs" />
-    <Compile Include="Query\Pagination.cs" />
     <Compile Include="Types\Value.cs" />
     <Compile Include="Types\Json.cs" />
     <Compile Include="Types\ScalarValue.cs" />
