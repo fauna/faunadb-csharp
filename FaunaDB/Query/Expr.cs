@@ -1,11 +1,9 @@
-﻿using FaunaDB.Errors;
-using FaunaDB.Types;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 
 namespace FaunaDB.Query
 {
-    [JsonConverter(typeof(ValueJsonConverter))]
+    [JsonConverter(typeof(ExprJsonConverter))]
     public abstract partial class Expr : IEquatable<Expr>
     {
         internal abstract void WriteJson(JsonWriter writer);
@@ -16,26 +14,6 @@ namespace FaunaDB.Query
         /// <param name="pretty">If true, output with helpful whitespace.</param>
         public string ToJson(bool pretty = false) =>
             JsonConvert.SerializeObject(this, pretty ? Formatting.Indented : Formatting.None);
-
-        /// <summary>
-        /// Read a Value from JSON.
-        /// </summary>
-        /// <exception cref="Errors.InvalidResponseException"/>
-        //todo: Should we convert invalid Value downcasts and missing field exceptions to InvalidResponseException?
-        public static Expr FromJson(string json)
-        {
-            // We handle dates ourselves. Don't want them automatically parsed.
-            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            try
-            {
-                return JsonConvert.DeserializeObject<Expr>(json, settings);
-            }
-            catch (JsonReaderException j)
-            {
-                throw new InvalidResponseException($"Bad JSON: {j}");
-            }
-        }
-
 
         #region boilerplate
         public override bool Equals(object obj)
@@ -58,6 +36,19 @@ namespace FaunaDB.Query
         // Force subclasses to implement hash code.
         protected abstract int HashCode();
         #endregion
+    }
 
+    internal class ExprJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType) =>
+            typeof(Expr).IsAssignableFrom(objectType);
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
+            ((Expr)value).WriteJson(writer);
     }
 }

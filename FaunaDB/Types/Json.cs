@@ -7,17 +7,14 @@ namespace FaunaDB.Types
 {
     class ValueJsonConverter : JsonConverter
     {
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            ((Expr) value).WriteJson(writer);
-        }
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
+            ((Value)value).WriteJson(writer);
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
-            // For some reason, reader starts with one token already read.
             ValueReader.HandleValue(reader);
 
         public override bool CanConvert(Type objectType) =>
-            typeof(Expr).IsAssignableFrom(objectType);
+            typeof(Value).IsAssignableFrom(objectType);
     }
 
     class ValueReader
@@ -41,11 +38,11 @@ namespace FaunaDB.Types
                 case JsonToken.StartArray:
                     return ReadArray();
                 case JsonToken.Integer:
-                    return new LongV((long) reader.Value);
+                    return LongV.Of((long) reader.Value);
                 case JsonToken.Float:
-                    return new DoubleV((double) reader.Value);
+                    return DoubleV.Of((double) reader.Value);
                 case JsonToken.String:
-                    return new StringV((string) reader.Value);
+                    return StringV.Of((string) reader.Value);
                 case JsonToken.Boolean:
                     return BooleanV.Of((bool) reader.Value);
                 case JsonToken.Null:
@@ -188,5 +185,4 @@ namespace FaunaDB.Types
             writer.WriteEndObject();
         }
     }
-
 }
