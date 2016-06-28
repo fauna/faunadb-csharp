@@ -12,24 +12,6 @@ namespace FaunaDB.Query
         public static Expr Map(Expr collection, Expr lambda) =>
             UnescapedObject.With("map", lambda, "collection", collection);
 
-        public static Expr Map(Expr collection, Func<Var, Expr> lambda) =>
-            Map(collection, Lambda(lambda));
-
-        public static Expr Map(Expr collection, Func<Var, Var, Expr> lambda) =>
-            Map(collection, Lambda(lambda));
-
-        public static Expr Map(Expr collection, Func<Var, Var, Var, Expr> lambda) =>
-            Map(collection, Lambda(lambda));
-
-        public static Expr Map(Expr collection, Func<Var, Var, Var, Var, Expr> lambda) =>
-            Map(collection, Lambda(lambda));
-
-        public static Expr Map(Expr collection, Func<Var, Var, Var, Var, Var, Expr> lambda) =>
-            Map(collection, Lambda(lambda));
-
-        public static Expr Map(Expr collection, Func<Var, Var, Var, Var, Var, Var, Expr> lambda) =>
-            Map(collection, Lambda(lambda));
-
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#collection_functions">docs</see>. 
         /// </summary>
