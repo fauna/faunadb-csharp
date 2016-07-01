@@ -74,8 +74,6 @@ namespace FaunaDB.Client
         }
 
         public TimeSpan TimeTaken { get { return EndTime - StartTime; } }
-
-        public Tuple<string, string> Auth { get { return new Tuple<string, string>(Client.User, Client.Password); } }
     }
 
     /// <summary>

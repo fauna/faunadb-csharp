@@ -26,13 +26,13 @@ namespace FaunaDB.Client
         // http://stackoverflow.com/questions/15705092/do-httpclient-and-httpclienthandler-have-to-be-disposed
         readonly HttpClient client = new HttpClient();
 
-        public DefaultClientIO(Uri domain, TimeSpan timeout, string user, string password)
+        public DefaultClientIO(Uri domain, TimeSpan timeout, string secret)
         {
             client.BaseAddress = domain;
             client.Timeout = timeout;
             client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("Authorization", AuthString(user, password));
+            client.DefaultRequestHeaders.Add("Authorization", AuthString(secret));
         }
 
         public Task<HttpResponseMessage> DoRequest(HttpRequestMessage rq) =>
@@ -40,12 +40,11 @@ namespace FaunaDB.Client
 
         // NetworkCredentials doesn't work, so have to do this.
         // Based on: http://stackoverflow.com/questions/19851474/networkcredential-working-for-post-but-not-get
-        static string AuthString(string user, string password)
+        static string AuthString(string secret)
         {
-            var cred = user == null ? password : $"{user}:{password}";
-            byte[] bytes = Encoding.ASCII.GetBytes(cred);
+            byte[] bytes = Encoding.ASCII.GetBytes(secret);
             string base64 = Convert.ToBase64String(bytes);
-            return "Basic " + base64;
+            return $"Basic {base64}";
         }
     }
 
@@ -56,51 +55,25 @@ namespace FaunaDB.Client
     {
         readonly IClientIO clientIO;
 
-        /// <summary>
-        /// Username passed into constructor.
-        /// </summary>
-        public string User { get; }
-
-        /// <summary>
-        /// Password passed into constructor.
-        /// </summary>
-        public string Password { get; }
-
-        /// <summary>
-        /// Called every time a response comes back from the server.
-        /// </summary>
-        //todo: this is called whether there's an error or not, do we want to do better?
-        //todo: what to do in case of timeout?
-        public event EventHandler<RequestResult> OnResponse;
-
         /// <param name="domain">Base URL for the FaunaDB server.</param>
         /// <param name="scheme">Scheme of the FaunaDB server. Should be "http" or "https".</param>
         /// <param name="port">Port of the FaunaDB server.</param>
         /// <param name="timeout">Timeout. Defaults to 1 minute.</param>
-        /// <param name="user">
-        /// User name for authorization.
-        /// This is useful for root access to a cloud account.
-        /// Otherwise, you should use the Key API to get a password and just use the <c>password</c> parameter.
-        /// </param>
-        /// <param name="password">Auth token for the FaunaDB server.</param>
+        /// <param name="secret">Auth token for the FaunaDB server.</param>
         /// <param name="clientIO">Optional IInnerClient. Used only for testing.</param>"> 
         public Client(
             string domain = "rest.faunadb.com",
             string scheme = "https",
             int? port = null,
             TimeSpan? timeout = null,
-            string user = null,
-            string password = null,
+            string secret = null,
             IClientIO clientIO = null)
         {
             if (port == null)
                 port = scheme == "https" ? 443 : 80;
 
-            User = user;
-            Password = password;
-
             this.clientIO = clientIO ??
-                new DefaultClientIO(new Uri(scheme + "://" + domain + ":" + port), timeout ?? TimeSpan.FromSeconds(60), user, password);
+                new DefaultClientIO(new Uri(scheme + "://" + domain + ":" + port), timeout ?? TimeSpan.FromSeconds(60), secret);
         }
 
         /// <summary>
@@ -141,8 +114,6 @@ namespace FaunaDB.Client
                 responseContent, responseHttp.StatusCode, responseHttp.Headers,
                 startTime, endTime);
 
-            FireEvent(rr);
-
             FaunaException.RaiseForStatusCode(rr);
             return ((ObjectV) responseContent)["resource"];
         }
@@ -154,14 +125,6 @@ namespace FaunaDB.Client
             if (queryString != null)
                 path = $"{path}?{queryString}";
             return clientIO.DoRequest(new HttpRequestMessage(new HttpMethod(action.Name()), path) { Content = dataString });
-        }
-
-        void FireEvent(RequestResult rr)
-        {
-            // MSDN recommends making a copy to prevent race conditions. (https://msdn.microsoft.com/en-us/library/w369ty8x.aspx)
-            var handler = OnResponse;
-            if (handler != null)
-                handler(this, rr);
         }
 
         /// <summary>

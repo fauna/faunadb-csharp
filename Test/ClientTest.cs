@@ -137,7 +137,7 @@ namespace Test
         [Test] public void TestUnauthorizedOnInvalidSecret()
         {
             Assert.ThrowsAsync<Unauthorized>(async() =>
-                await GetClient(password: "invalid secret").Query(Ref("classes/spells/1234"))
+                await GetClient(secret: "invalid secret").Query(Ref("classes/spells/1234"))
             );
         }
 
@@ -723,7 +723,7 @@ namespace Test
                     Obj("password", "abcdefg"))
             );
 
-            Client sessionClient = GetClient(password: auth.At("secret").To(Codec.STRING).ValueOption.Value);
+            Client sessionClient = GetClient(secret: auth.At("secret").To(Codec.STRING).ValueOption.Value);
 
             Value loggedOut = await sessionClient.Query(Logout(true));
             Assert.AreEqual(Some(true), loggedOut.To(Codec.BOOLEAN).ValueOption);

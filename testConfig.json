@@ -2,6 +2,5 @@
   "domain": "localhost",
   "scheme": "http",
   "port": 8443,
-  "user": null,
-  "password": "secret"
+  "secret": "secret"
 }

@@ -33,7 +33,7 @@ namespace Test
 
         [Test] public void TestHttpUnauthorized()
         {
-            var client = GetClient(password: "bad_key");
+            var client = GetClient(secret: "bad_key");
             Assert.ThrowsAsync<Unauthorized>(async() => await client.Query(Get(DbRef)), "unauthorized");
         }
 

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Types;
-using FaunaDB.Query;
 
 using static FaunaDB.Query.Language;
 
@@ -41,7 +40,7 @@ namespace Test
                 scheme = "https";
             port = cfg.Port;
 
-            rootClient = GetClient(user: cfg.User, password: cfg.Password);
+            rootClient = GetClient(secret: cfg.Secret);
 
             const string dbName = "faunadb-csharp-test";
             DbRef = new Ref($"databases/{dbName}");
@@ -68,8 +67,8 @@ namespace Test
             await rootClient.Query(Delete(DbRef));
         }
 
-        protected Client GetClient(string user = null, string password = null) =>
-            new Client(domain: domain, scheme: scheme, port: port, user: user, password: password ?? serverKey);
+        protected Client GetClient(string secret = null) =>
+            new Client(domain: domain, scheme: scheme, port: port, secret: secret ?? serverKey);
 
         protected Client MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
@@ -84,12 +83,6 @@ namespace Test
 
         protected static Ref GetRef(Value v) =>
             (Ref) ((ObjectV) v)["ref"];
-
-        protected static ObjectV GetData(Value v) =>
-            (ObjectV) ((ObjectV)v)["data"];
-
-        protected Task<Value> Q(Expr query) =>
-            client.Query(query);
     }
 
     class MockClientIO : IClientIO
@@ -123,21 +116,20 @@ namespace Test
 
             string configPath = System.IO.Path.Combine(directory, "testConfig.json");
 
-            if (File.Exists(configPath)) {
+            if (File.Exists(configPath))
+            {
                 string text = await File.OpenText(configPath).ReadToEndAsync();
                 return JsonConvert.DeserializeObject<Config>(text);
-            } else
-                // use Client defaults.
-                return new Config();
+            }
+            return new Config();
         }
 
         public string Domain { get; set; }
         public string Scheme { get; set; }
         public int? Port { get; set; }
-        public string User { get; set; }
-        public string Password { get; set; }
+        public string Secret { get; set; }
 
         public override string ToString() =>
-            $"Config(domain: {Domain}, scheme: {Scheme}, port: {Port}, user: {User}, password: {Password})";
+            $"Config(domain: {Domain}, scheme: {Scheme}, port: {Port}, secret: {Secret})";
     }
 }
