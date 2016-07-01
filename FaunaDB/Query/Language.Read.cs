@@ -8,7 +8,7 @@
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
         public static Expr Get(Expr @ref, Expr ts = null) =>
-            ts == null ? UnescapedObject.With("get", @ref) : UnescapedObject.With("get", @ref, "ts", ts);
+            UnescapedObject.With("get", @ref, "ts", ts);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
@@ -34,13 +34,13 @@
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
         public static Expr Exists(Expr @ref, Expr ts = null) =>
-            ts == null ? UnescapedObject.With("exists", @ref) : UnescapedObject.With("exists", @ref, "ts", ts);
+            UnescapedObject.With("exists", @ref, "ts", ts);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
         /// </summary>
         public static Expr Count(Expr set, Expr events = null) =>
-            events == null ? UnescapedObject.With("count", set) : UnescapedObject.With("count", set, "events", events);
+            UnescapedObject.With("count", set, "events", events);
         #endregion
     }
 }
