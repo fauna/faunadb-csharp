@@ -38,14 +38,14 @@ namespace FaunaDB.Query
         #endregion
     }
 
-    internal class ExprJsonConverter : JsonConverter
+    class ExprJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType) =>
             typeof(Expr).IsAssignableFrom(objectType);
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException($"You are not allowed to deserialize objects of type {objectType.Name}");
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
