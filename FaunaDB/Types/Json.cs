@@ -1,10 +1,33 @@
-﻿using FaunaDB.Query;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using FaunaDB.Errors;
+using FaunaDB.Query;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Types
 {
+    public static class Json
+    {
+        /// <summary>
+        /// Read a Value from JSON.
+        /// </summary>
+        /// <exception cref="InvalidResponseException"/>
+        public static Value FromJson(string json)
+        {
+            // We handle dates ourselves. Don't want them automatically parsed.
+            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
+            try
+            {
+                return JsonConvert.DeserializeObject<Value>(json, settings);
+            }
+            catch (JsonReaderException j)
+            {
+                throw new InvalidResponseException($"Bad JSON: {j}");
+            }
+        }
+
+    }
+
     class ValueJsonConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
@@ -21,7 +44,7 @@ namespace FaunaDB.Types
     {
         readonly JsonReader reader;
 
-        public static Expr HandleValue(JsonReader reader) =>
+        public static Value HandleValue(JsonReader reader) =>
             new ValueReader(reader).HandleValue();
 
         ValueReader(JsonReader reader)

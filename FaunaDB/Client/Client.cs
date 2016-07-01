@@ -68,8 +68,8 @@ namespace FaunaDB.Client
 
             RaiseForStatusCode(responseHttp);
 
-            var responseContent = Value.FromJson(responseHttp.ResponseContent);
-            return ((ObjectV) responseContent)["resource"];
+            ObjectV responseContent = (ObjectV)Json.FromJson(responseHttp.ResponseContent);
+            return responseContent["resource"];
         }
 
         internal static void RaiseForStatusCode(RequestResult rr)
@@ -79,8 +79,8 @@ namespace FaunaDB.Client
             if (code >= 200 && code < 300)
                 return;
 
-            var responseContent = Value.FromJson(rr.ResponseContent);
-            var errors = (from _ in ((ArrayV) ((ObjectV) responseContent)["errors"]) select (ErrorData) _).ToList();
+            ObjectV responseContent = (ObjectV)Json.FromJson(rr.ResponseContent);
+            var errors = (from _ in ((ArrayV) responseContent["errors"]) select (ErrorData) _).ToList();
 
             switch (code)
             {

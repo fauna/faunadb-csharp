@@ -33,25 +33,6 @@ namespace FaunaDB.Types
         public Option<T> GetOption<T>(Field<T> field) =>
             field.Get(this).ValueOption;
 
-        /// <summary>
-        /// Read a Value from JSON.
-        /// </summary>
-        /// <exception cref="Errors.InvalidResponseException"/>
-        //todo: Should we convert invalid Value downcasts and missing field exceptions to InvalidResponseException?
-        public static Value FromJson(string json)
-        {
-            // We handle dates ourselves. Don't want them automatically parsed.
-            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            try
-            {
-                return JsonConvert.DeserializeObject<Value>(json, settings);
-            }
-            catch (JsonReaderException j)
-            {
-                throw new InvalidResponseException($"Bad JSON: {j}");
-            }
-        }
-
         #region implicit conversions
         public static implicit operator Value(ArrayList<Value> values) =>
             values == null ? NullV.Instance : ArrayV.Of(values);
