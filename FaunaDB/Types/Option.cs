@@ -1,4 +1,5 @@
 ﻿using System;
+using FaunaDB.Errors;
 
 namespace FaunaDB.Types
 {
@@ -81,5 +82,13 @@ namespace FaunaDB.Types
 
         public static Option<T> None<T>() =>
             new Option<T>();
+
+        public static Option<T> Of<T>(T value)
+        {
+            if (value != null)
+                return Some(value);
+
+            return None<T>();
+        }
     }
 }

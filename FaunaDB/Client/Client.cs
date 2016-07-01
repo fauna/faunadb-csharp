@@ -6,6 +6,7 @@ using FaunaDB.Collections;
 using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Client
 {
@@ -72,34 +73,40 @@ namespace FaunaDB.Client
             return responseContent["resource"];
         }
 
-        internal static void RaiseForStatusCode(RequestResult rr)
+        internal struct ErrorsWrapper
         {
-            var code = rr.StatusCode;
+            public IReadOnlyList<QueryError> Errors;
+        }
 
-            if (code >= 200 && code < 300)
+        internal static void RaiseForStatusCode(RequestResult resultRequest)
+        {
+            var statusCode = resultRequest.StatusCode;
+
+            if (statusCode >= 200 && statusCode < 300)
                 return;
 
-            ObjectV responseContent = (ObjectV)Json.FromJson(rr.ResponseContent);
-            var errors = (from _ in ((ArrayV) responseContent["errors"]) select (ErrorData) _).ToList();
+            var wrapper = JsonConvert.DeserializeObject<ErrorsWrapper>(resultRequest.ResponseContent);
 
-            switch (code)
+            var response = new QueryErrorResponse(statusCode, wrapper.Errors);
+
+            switch (statusCode)
             {
                 case 400:
-                    throw new BadRequest(rr, errors);
+                    throw new BadRequest(response);
                 case 401:
-                    throw new Unauthorized(rr, errors);
+                    throw new Unauthorized(response);
                 case 403:
-                    throw new PermissionDenied(rr, errors);
+                    throw new PermissionDenied(response);
                 case 404:
-                    throw new NotFound(rr, errors);
+                    throw new NotFound(response);
                 case 405:
-                    throw new MethodNotAllowed(rr, errors);
+                    throw new MethodNotAllowed(response);
                 case 500:
-                    throw new InternalError(rr, errors);
+                    throw new InternalError(response);
                 case 503:
-                    throw new UnavailableError(rr, errors);
+                    throw new UnavailableError(response);
                 default:
-                    throw new UnknowException(rr, errors);
+                    throw new UnknowException(response);
             }
         }
 

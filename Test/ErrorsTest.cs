@@ -8,17 +8,12 @@ using System.Net;
 using System.Threading.Tasks;
 
 using static FaunaDB.Query.Language;
+using FaunaDB.Collections;
 
 namespace Test
 {
     [TestFixture] public class ErrorsTest : TestCase
     {
-        [Test] public void TestRequestResult()
-        {
-            var err = Assert.ThrowsAsync<BadRequest>(async () => await client.Query(UnescapedObject.With("foo", "bar")));
-            Assert.AreEqual("{\"foo\":\"bar\"}", err.RequestResult.RequestContent);
-        }
-
         [Test] public void TestInvalidResponse()
         {
             Assert.ThrowsAsync<InvalidResponseException>(async() => await MockClient("I like fine wine").Query(Get(Ref(""))));
@@ -47,36 +42,36 @@ namespace Test
         #region ErrorData
         [Test] public void TestInvalidExpression()
         {
-            AssertQueryException<BadRequest>(UnescapedObject.With("foo", "bar"), "invalid expression", ArrayV.Empty);
+            AssertQueryException<BadRequest>(UnescapedObject.With("foo", "bar"), "invalid expression");
         }
 
         [Test] public void TestUnboundVariable()
         {
-            AssertQueryException<BadRequest>(Var("x"), "unbound variable", ArrayV.Empty);
+            AssertQueryException<BadRequest>(Var("x"), "unbound variable");
         }
 
         [Test] public void TestInvalidArgument()
         {
-            AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", ArrayV.Of("add", 1));
+            AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", new List<string> { "add", "1" });
         }
 
         [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
             await client.Query(Create(Ref("classes"), Obj("name", "foofaws")));
-            AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found", ArrayV.Empty);
+            AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found");
         }
 
         [Test] public void TestValueNotFound()
         {
-            AssertQueryException<NotFound>(Select("a", Obj()), "value not found", ArrayV.Empty);
+            AssertQueryException<NotFound>(Select("a", Obj()), "value not found");
         }
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
             await client.Query(Create(Ref("classes"), Obj("name", "duplicates")));
             var @ref = (Ref) ((ObjectV) (await client.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
-            AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", ArrayV.Of("create"));
+            AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", new List<string> { "create" });
         }
         #endregion
 
@@ -92,15 +87,16 @@ namespace Test
             await client.Query(Create(Ref("classes/gerbils"), Obj("data", Obj("x", 1))));
         }
 
-        void AssertException(FaunaException exception, string code, Expr position = null)
+        void AssertException(FaunaException exception, string code, IReadOnlyList<string> position = null)
         {
             Assert.AreEqual(1, exception.Errors.Count());
             var error = exception.Errors.First();
             Assert.AreEqual(code, error.Code);
-            Assert.AreEqual(position, error.Position);
+            if (position != null)
+                Assert.True(position.SequenceEqual(error.Position));
         }
 
-        void AssertQueryException<TException>(Expr query, string code, Expr position = null)
+        void AssertQueryException<TException>(Expr query, string code, IReadOnlyList<string> position = null)
             where TException  : FaunaException
         {
             var exception = Assert.ThrowsAsync<TException>(async() => await client.Query(query));

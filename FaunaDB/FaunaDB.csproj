@@ -74,15 +74,15 @@
     <Compile Include="Types\NullV.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
     <Compile Include="Errors\Errors.cs" />
-    <Compile Include="Errors\Failure.cs" />
-    <Compile Include="Errors\ValidationFailed.cs" />
-    <Compile Include="Errors\ErrorData.cs" />
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\RequestResult.cs" />
     <Compile Include="Errors\FaunaException.cs" />
     <Compile Include="Client\HttpMethodKind.cs" />
     <Compile Include="Client\DefaultClientIO.cs" />
     <Compile Include="Client\IClientIO.cs" />
+    <Compile Include="Errors\QueryError.cs" />
+    <Compile Include="Errors\ValidationFailure.cs" />
+    <Compile Include="Errors\QueryErrorResponse.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>
