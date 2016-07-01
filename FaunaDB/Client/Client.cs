@@ -1,53 +1,14 @@
-﻿using FaunaDB.Collections;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FaunaDB.Collections;
 using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace FaunaDB.Client
 {
-    /// <summary>
-    /// Handles actual I/O for a Client. This can be changed for testing.
-    /// </summary>
-    public interface IClientIO
-    {
-        Task<HttpResponseMessage> DoRequest(HttpRequestMessage rq);
-    }
-
-    class DefaultClientIO : IClientIO
-    {
-        // HttpClient is IDisposable, but we don't dispose of it.
-        // http://stackoverflow.com/questions/15705092/do-httpclient-and-httpclienthandler-have-to-be-disposed
-        readonly HttpClient client = new HttpClient();
-
-        public DefaultClientIO(Uri domain, TimeSpan timeout, string secret)
-        {
-            client.BaseAddress = domain;
-            client.Timeout = timeout;
-            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("Authorization", AuthString(secret));
-        }
-
-        public Task<HttpResponseMessage> DoRequest(HttpRequestMessage rq) =>
-            client.SendAsync(rq);
-
-        // NetworkCredentials doesn't work, so have to do this.
-        // Based on: http://stackoverflow.com/questions/19851474/networkcredential-working-for-post-but-not-get
-        static string AuthString(string secret)
-        {
-            byte[] bytes = Encoding.ASCII.GetBytes(secret);
-            string base64 = Convert.ToBase64String(bytes);
-            return $"Basic {base64}";
-        }
-    }
-
     /// <summary>
     /// Directly communicates with FaunaDB via JSON.
     /// </summary>
@@ -95,7 +56,6 @@ namespace FaunaDB.Client
 
         async Task<Value> Execute(HttpMethodKind action, string path, Expr data = null, IDictionary<string, string> query = null)
         {
-            var startTime = DateTime.UtcNow;
             /*
             `ConfigureAwait(false)` should be used on on all `await` calls in the FaunaDB package.
             http://stackoverflow.com/questions/13489065/best-practice-to-call-configureawait-for-all-server-side-code
@@ -103,40 +63,45 @@ namespace FaunaDB.Client
             https://channel9.msdn.com/Series/Three-Essential-Tips-for-Async/Async-library-methods-should-consider-using-Task-ConfigureAwait-false-
             http://www.tugberkugurlu.com/archive/the-perfect-recipe-to-shoot-yourself-in-the-foot-ending-up-with-a-deadlock-using-the-c-sharp-5-0-asynchronous-language-features
             */
-            var responseHttp = await PerformRequest(action, path, data, query).ConfigureAwait(false);
-            var responseText = await responseHttp.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var endTime = DateTime.UtcNow;
-            var responseContent = Value.FromJson(responseText);
+            var dataString = data == null ?  null : data.ToJson();
+            var responseHttp = await clientIO.DoRequest(action, path, dataString, query);
 
-            var rr = new RequestResult(
-                this,
-                action, path, query, data,
-                responseContent, responseHttp.StatusCode, responseHttp.Headers,
-                startTime, endTime);
+            RaiseForStatusCode(responseHttp);
 
-            FaunaException.RaiseForStatusCode(rr);
+            var responseContent = Value.FromJson(responseHttp.ResponseContent);
             return ((ObjectV) responseContent)["resource"];
         }
 
-        Task<HttpResponseMessage> PerformRequest(HttpMethodKind action, string path, Expr data, IDictionary<string, string> query)
+        internal static void RaiseForStatusCode(RequestResult rr)
         {
-            var dataString = data == null ?  null : new StringContent(data.ToJson());
-            var queryString = query == null ? null : QueryString(query);
-            if (queryString != null)
-                path = $"{path}?{queryString}";
-            return clientIO.DoRequest(new HttpRequestMessage(new HttpMethod(action.Name()), path) { Content = dataString });
+            var code = rr.StatusCode;
+
+            if (code >= 200 && code < 300)
+                return;
+
+            var responseContent = Value.FromJson(rr.ResponseContent);
+            var errors = (from _ in ((ArrayV) ((ObjectV) responseContent)["errors"]) select (ErrorData) _).ToList();
+
+            switch (code)
+            {
+                case 400:
+                    throw new BadRequest(rr, errors);
+                case 401:
+                    throw new Unauthorized(rr, errors);
+                case 403:
+                    throw new PermissionDenied(rr, errors);
+                case 404:
+                    throw new NotFound(rr, errors);
+                case 405:
+                    throw new MethodNotAllowed(rr, errors);
+                case 500:
+                    throw new InternalError(rr, errors);
+                case 503:
+                    throw new UnavailableError(rr, errors);
+                default:
+                    throw new UnknowException(rr, errors);
+            }
         }
 
-        /// <summary>
-        /// Convert query parameters to a URL string.
-        /// </summary>
-        internal static string QueryString(IDictionary<string, string> query)
-        {
-            // Can't just do `new NameValueCollection()` because the one returned by ParseQueryString has a different `ToString` implementation.
-            var q = HttpUtility.ParseQueryString("");
-            foreach (var kv in query)
-                q[kv.Key] = kv.Value;
-            return q.ToString();
-        }
     }
 }

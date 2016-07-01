@@ -16,7 +16,7 @@ namespace Test
         [Test] public void TestRequestResult()
         {
             var err = Assert.ThrowsAsync<BadRequest>(async () => await client.Query(UnescapedObject.With("foo", "bar")));
-            Assert.AreEqual(err.RequestResult.RequestContent, UnescapedObject.With("foo", "bar"));
+            Assert.AreEqual("{\"foo\":\"bar\"}", err.RequestResult.RequestContent);
         }
 
         [Test] public void TestInvalidResponse()

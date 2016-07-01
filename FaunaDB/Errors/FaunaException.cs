@@ -1,10 +1,8 @@
 ﻿using FaunaDB.Client;
-using FaunaDB.Types;
 using FaunaDB.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 
 namespace FaunaDB.Errors
 {
@@ -20,36 +18,6 @@ namespace FaunaDB.Errors
         public List<ErrorData> Errors { get; }
 
         public RequestResult RequestResult { get; }
-
-        internal static void RaiseForStatusCode(RequestResult rr)
-        {
-            var code = rr.StatusCode;
-
-            if (200 <= ((int) code) && ((int) code) <= 299)
-                return;
-            
-            var errors = (from _ in ((ArrayV) ((ObjectV) rr.ResponseContent)["errors"]) select (ErrorData) _).ToList();
-
-            switch (code)
-            {
-                case HttpStatusCode.BadRequest:
-                    throw new BadRequest(rr, errors);
-                case HttpStatusCode.Unauthorized:
-                    throw new Unauthorized(rr, errors);
-                case HttpStatusCode.Forbidden:
-                    throw new PermissionDenied(rr, errors);
-                case HttpStatusCode.NotFound:
-                    throw new NotFound(rr, errors);
-                case HttpStatusCode.MethodNotAllowed:
-                    throw new MethodNotAllowed(rr, errors);
-                case HttpStatusCode.InternalServerError:
-                    throw new InternalError(rr, errors);
-                case HttpStatusCode.ServiceUnavailable:
-                    throw new UnavailableError(rr, errors);
-                default:
-                    throw new FaunaException(rr, errors);
-            }
-        }
 
         protected FaunaException(RequestResult rr, List<ErrorData> errors) : base(errors.FirstOrDefault()?.Description)
         {
@@ -129,6 +97,11 @@ namespace FaunaDB.Errors
     public class UnavailableError : FaunaException
     {
         internal UnavailableError(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
+    }
+
+    public class UnknowException : FaunaException
+    {
+        internal UnknowException(RequestResult rr, List<ErrorData> errors) : base(rr, errors) {}
     }
 }
 

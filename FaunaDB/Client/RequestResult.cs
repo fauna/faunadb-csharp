@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http.Headers;
-
-using FaunaDB.Query;
 
 namespace FaunaDB.Client
 {
@@ -12,11 +8,6 @@ namespace FaunaDB.Client
     /// </summary>
     public class RequestResult
     {
-        /// <summary>
-        /// The client.
-        /// </summary>
-        public Client Client { get; }
-
         /// <summary>
         /// HTTP method that was used.
         /// </summary>
@@ -35,33 +26,31 @@ namespace FaunaDB.Client
         /// <summary>
         /// Request data. This will be null for <see cref="Client.Get"/>s. 
         /// </summary>
-        public Expr RequestContent { get; }
+        public string RequestContent { get; }
 
         /// <summary>
         /// Value returned by the response. Includes "resource" wrapper object, or may be an "errors" object instead.
         /// </summary>
-        public Expr ResponseContent { get; }
+        public string ResponseContent { get; }
 
-        public HttpStatusCode StatusCode { get; }
+        public int StatusCode { get; }
 
-        public HttpResponseHeaders ResponseHeaders { get; }
+        public IDictionary<string, IEnumerable<string>> ResponseHeaders { get; }
 
         public DateTime StartTime { get; }
         public DateTime EndTime { get; }
 
         public RequestResult(
-            Client client,
             HttpMethodKind method,
             string path,
             IDictionary<string, string> query,
-            Expr requestContent,
-            Expr responseContent,
-            HttpStatusCode statusCode,
-            HttpResponseHeaders responseHeaders,
+            string requestContent,
+            string responseContent,
+            int statusCode,
+            IDictionary<string, IEnumerable<string>> responseHeaders,
             DateTime startTime,
             DateTime endTime)
         {
-            Client = client;
             Method = method;
             Path = path;
             Query = query;
@@ -74,43 +63,6 @@ namespace FaunaDB.Client
         }
 
         public TimeSpan TimeTaken { get { return EndTime - StartTime; } }
-    }
-
-    /// <summary>
-    /// A method used by the <see cref="Client"/>.
-    /// </summary>
-    public enum HttpMethodKind
-    {
-        Get,
-        Post,
-        Put,
-        Patch,
-        Delete
-    }
-
-    public static class HttpMethodUtil
-    {
-        /// <summary>
-        /// All-caps name of the method.
-        /// </summary>
-        public static string Name(this HttpMethodKind method)
-        {
-            switch (method)
-            {
-                case HttpMethodKind.Get:
-                    return "GET";
-                case HttpMethodKind.Post:
-                    return "POST";
-                case HttpMethodKind.Put:
-                    return "PUT";
-                case HttpMethodKind.Patch:
-                    return "PATCH";
-                case HttpMethodKind.Delete:
-                    return "DELETE";
-                default:
-                    throw new Exception($"Bad value: {method}");
-            }
-        }
     }
 }
 

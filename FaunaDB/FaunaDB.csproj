@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F668B011-79C7-474B-8594-E0D2785F83F8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>FaunaDB</RootNamespace>
@@ -80,6 +80,9 @@
     <Compile Include="Client\Client.cs" />
     <Compile Include="Client\RequestResult.cs" />
     <Compile Include="Errors\FaunaException.cs" />
+    <Compile Include="Client\HttpMethodKind.cs" />
+    <Compile Include="Client\DefaultClientIO.cs" />
+    <Compile Include="Client\IClientIO.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

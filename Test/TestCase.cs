@@ -9,6 +9,9 @@ using FaunaDB.Errors;
 using FaunaDB.Types;
 
 using static FaunaDB.Query.Language;
+using FaunaDB.Query;
+using System.Collections.Generic;
+using System;
 
 namespace Test
 {
@@ -72,11 +75,7 @@ namespace Test
 
         protected Client MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
-            //var req = new HttpRequestMessage(new HttpMethod(action.Name()), path) { Content = dataString == null ? null : new StringContent(dataString) };
-            var resp = new HttpResponseMessage(statusCode) { Content = new StringContent(responseText) };
-            //IClientIO mock = Mock.Of<IClientIO>(_ =>
-            //    _.DoRequest(rq) == res);
-            // Values other than clientIO don't really matter.
+            var resp = new RequestResult(HttpMethodKind.Get, "", null, "", responseText, (int)statusCode, null, DateTime.UtcNow, DateTime.UtcNow);
             var mock = new MockClientIO(resp);
             return new Client(domain: domain, scheme: scheme, port: port, clientIO: mock);
         }
@@ -87,16 +86,15 @@ namespace Test
 
     class MockClientIO : IClientIO
     {
-        HttpResponseMessage resp;
+        RequestResult resp;
 
-        public MockClientIO(HttpResponseMessage resp)
+        public MockClientIO(RequestResult resp)
         {
             this.resp = resp;
         }
 
-        public Task<HttpResponseMessage> DoRequest(HttpRequestMessage req) =>
-            Task.FromResult(this.resp);
-
+        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IDictionary<string, string> query = null) =>
+            Task.FromResult(resp);
     }
 
     // Use a class to make conversion from Json easier.
