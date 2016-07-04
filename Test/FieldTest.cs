@@ -115,15 +115,15 @@ namespace Test
             var array = ArrayV.Of("John", "Bill");
 
             Assert.AreEqual(ImmutableList.Of("John", "Bill"),
-                array.Collect(Field.As(Codec.STRING)));
+                array.Collect(Field.To(Codec.STRING)));
 
             var obj = ObjectV.With("arrayOfNames", array);
 
             Assert.AreEqual(ImmutableList.Of("John", "Bill"),
-                obj.Get(Field.At("arrayOfNames").Collect(Field.As(Codec.STRING))));
+                obj.Get(Field.At("arrayOfNames").Collect(Field.To(Codec.STRING))));
 
             Assert.Throws(typeof(InvalidOperationException),
-                () => obj.Collect(Field.As(Codec.STRING)),
+                () => obj.Collect(Field.To(Codec.STRING)),
                 "Cannot convert ObjectV to ArrayV");
         }
 

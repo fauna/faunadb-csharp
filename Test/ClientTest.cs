@@ -16,7 +16,7 @@ namespace Test
     {
         private static Field<Value> DATA = Field.At("data");
         private static Field<Ref> REF_FIELD = Field.At("ref").To(Codec.REF);
-        private static Field<ArrayList<Ref>> REF_LIST = DATA.Collect(Field.As(Codec.REF));
+        private static Field<ArrayList<Ref>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
 
         private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To(Codec.STRING);
         private static Field<string> ELEMENT_FIELD = DATA.At(Field.At("element")).To(Codec.STRING);
@@ -233,7 +233,7 @@ namespace Test
             Assert.AreEqual(createdInstance.Get(REF_FIELD), replacedInstance.Get(REF_FIELD));
             Assert.AreEqual("Volcano", replacedInstance.Get(NAME_FIELD));
             Assert.AreEqual(10L, replacedInstance.Get(COST_FIELD));
-            Assert.AreEqual(ImmutableList.Of("fire", "earth"), replacedInstance.Get(ELEMENTS_LIST).Collect(Field.As(Codec.STRING)));
+            Assert.AreEqual(ImmutableList.Of("fire", "earth"), replacedInstance.Get(ELEMENTS_LIST).Collect(Field.To(Codec.STRING)));
         }
 
         [Test] public async Task TestDeleteAnInstance()
@@ -355,14 +355,14 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of(2L, 1L),
-                res.Collect(Field.As(Codec.LONG)));
+                res.Collect(Field.To(Codec.LONG)));
 
             res = await client.Query(
                 Let("x", 1, "y", 2).In((x, y) => Arr(y, x))
             );
 
             Assert.AreEqual(ImmutableList.Of(2L, 1L),
-                res.Collect(Field.As(Codec.LONG)));
+                res.Collect(Field.To(Codec.LONG)));
         }
 
         [Test] public async Task TestEvalIfExpression()
@@ -404,14 +404,14 @@ namespace Test
                     Lambda("i", Add(Var("i"), 1))));
 
             Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L),
-                res.Collect(Field.As(Codec.LONG)));
+                res.Collect(Field.To(Codec.LONG)));
 
             res = await client.Query(
                 Map(Arr(1, 2, 3),
                     Lambda(i => Add(i, 1))));
 
             Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L),
-                res.Collect(Field.As(Codec.LONG)));
+                res.Collect(Field.To(Codec.LONG)));
         }
 
         [Test] public async Task TestExecuteForeachExpression()
@@ -422,7 +422,7 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of("Fireball Level 1", "Fireball Level 2"),
-                res.Collect(Field.As(Codec.STRING)));
+                res.Collect(Field.To(Codec.STRING)));
 
             var clazz = await RandomClass();
 
@@ -432,7 +432,7 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of("Fireball Level 1", "Fireball Level 2"),
-                res.Collect(Field.As(Codec.STRING)));
+                res.Collect(Field.To(Codec.STRING)));
         }
 
         [Test] public async Task TestFilterACollection()
@@ -443,7 +443,7 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of(2L),
-                filtered.Collect(Field.As(Codec.LONG)));
+                filtered.Collect(Field.To(Codec.LONG)));
 
             filtered = await client.Query(
                 Filter(Arr(1, 2, 3),
@@ -451,19 +451,19 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of(2L),
-                filtered.Collect(Field.As(Codec.LONG)));
+                filtered.Collect(Field.To(Codec.LONG)));
         }
 
         [Test] public async Task TestTakeElementsFromCollection()
         {
             Value taken = await client.Query(Take(2, Arr(1, 2, 3)));
-            Assert.AreEqual(ImmutableList.Of(1L, 2L), taken.Collect(Field.As(Codec.LONG)));
+            Assert.AreEqual(ImmutableList.Of(1L, 2L), taken.Collect(Field.To(Codec.LONG)));
         }
 
         [Test] public async Task TestDropElementsFromCollection()
         {
             Value dropped = await client.Query(Drop(2, Arr(1, 2, 3)));
-            Assert.AreEqual(ImmutableList.Of(3L), dropped.Collect(Field.As(Codec.LONG)));
+            Assert.AreEqual(ImmutableList.Of(3L), dropped.Collect(Field.To(Codec.LONG)));
         }
 
         [Test] public async Task TestPrependElementsInACollection()
@@ -473,7 +473,7 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of(1L, 2L, 3L, 4L),
-                prepended.Collect(Field.As(Codec.LONG)));
+                prepended.Collect(Field.To(Codec.LONG)));
         }
 
         [Test] public async Task TestAppendElementsInACollection()
@@ -483,7 +483,7 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of(1L, 2L, 3L, 4L),
-                appended.Collect(Field.As(Codec.LONG)));
+                appended.Collect(Field.To(Codec.LONG)));
         }
 
         [Test] public async Task TestReadEventsFromIndex()
@@ -546,7 +546,7 @@ namespace Test
             );
 
             Assert.AreEqual(ImmutableList.Of("arcane", "fire", "nature"),
-                distinct.Get(DATA).Collect(Field.As(Codec.STRING)));
+                distinct.Get(DATA).Collect(Field.To(Codec.STRING)));
         }
 
         [Test] public async Task TestPaginateJoin()
