@@ -9,9 +9,9 @@ namespace FaunaDB.Query
     {
         public struct PathSelector
         {
-            private ArrayList<Expr> segments;
+            ArrayList<Expr> segments;
 
-            public Expr Segments { get { return Arr(segments); } }
+            internal Expr Segments { get { return Arr(segments); } }
 
             internal PathSelector(ArrayList<Expr> segments)
             {
