@@ -1,89 +1,97 @@
 ﻿using System;
-using FaunaDB.Errors;
 
 namespace FaunaDB.Types
 {
-    public abstract class IOption
+    public interface IOption<T>
     {
-        internal bool IsSome { get; set; }
+        T Value { get; }
+
+        IOption<U> Map<U>(Func<T, U> func);
+
+        IOption<U> FlatMap<U>(Func<T, IOption<U>> func);
+
+        U Match<U>(Func<T, U> Some, Func<U> None);
+
+        void Match(Action<T> Some, Action None);
     }
 
-    public class Option<T> : IOption
+    public class Some<T> : IOption<T>
     {
-        private T value;
-        public T Value
-        {
-            private set
-            {
-                this.value = value;
-            }
-            get
-            {
-                if (!IsSome)
-                    throw new InvalidOperationException("Trying to get value from None()");
+        T value;
 
-                return value;
-            }
+        public Some(T value)
+        {
+            this.value = value;
         }
 
-        public Option<U> Map<U>(Func<T, U> func) =>
-            IsSome ? new Option<U>(func(value)) : new Option<U>();
+        public T Value { get { return value; } }
 
-        public Option<U> FlatMap<U>(Func<T, Option<U>> func) =>
-            IsSome ? func(value) : new Option<U>();
+        public IOption<U> Map<U>(Func<T, U> func) =>
+            new Some<U>(func(value));
+
+        public IOption<U> FlatMap<U>(Func<T, IOption<U>> func) =>
+            func(value);
 
         public U Match<U>(Func<T, U> Some, Func<U> None) =>
-            IsSome ? Some(value) : None();
+            Some(value);
 
-        public void Match(Action<T> Some, Action None)
-        {
-            if (IsSome)
-                Some(value);
-            else
-                None();
-        }
-
-        internal Option(T value)
-        {
-            if (value == null)
-                throw new ArgumentNullException("value");
-
-            Value = value;
-            IsSome = true;
-        }
-
-        internal Option()
-        {
-            Value = default(T);
-            IsSome = false;
-        }
+        public void Match(Action<T> Some, Action None) =>
+            Some(value);
 
         public override bool Equals(object obj)
         {
-            IOption other0 = obj as IOption;
-            if (!IsSome && !other0.IsSome)
-                return true;
-
-            Option<T> other1 = obj as Option<T>;
-            return other1 != null && IsSome == other1.IsSome && Equals(Value, other1.Value);
+            Some<T> other = obj as Some<T>;
+            return other != null && object.Equals(value, other.value);
         }
 
         public override int GetHashCode() =>
-            IsSome ? Value.GetHashCode() : 0;
+            value.GetHashCode();
 
         public override string ToString() =>
-            IsSome ? $"Some({Value.ToString()})" : "None()";
+            $"Some({value})";
+    }
+
+    public interface INone { }
+
+    public class None<T> : IOption<T>, INone
+    {
+        public T Value { get { throw new InvalidOperationException(); } }
+
+        public IOption<U> Map<U>(Func<T, U> func) =>
+            new None<U>();
+
+        public IOption<U> FlatMap<U>(Func<T, IOption<U>> func) =>
+            new None<U>();
+
+        public U Match<U>(Func<T, U> Some, Func<U> None) =>
+            None();
+
+        public void Match(Action<T> Some, Action None) =>
+            None();
+
+        public override bool Equals(object obj)
+        {
+            INone other = obj as INone;
+
+            return other != null;
+        }
+
+        public override int GetHashCode() =>
+            0;
+
+        public override string ToString() =>
+            $"None()";
     }
 
     public class Option
     {
-        public static Option<T> Some<T>(T value) =>
-            new Option<T>(value);
+        public static IOption<T> Some<T>(T value) =>
+            new Some<T>(value);
 
-        public static Option<T> None<T>() =>
-            new Option<T>();
+        public static IOption<T> None<T>() =>
+            new None<T>();
 
-        public static Option<T> Of<T>(T value)
+        public static IOption<T> Of<T>(T value)
         {
             if (value != null)
                 return Some(value);

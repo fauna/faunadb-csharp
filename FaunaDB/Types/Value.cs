@@ -21,7 +21,7 @@ namespace FaunaDB.Types
                 Failure: reason => NullV.Instance
                 );
 
-        public Result<T> To<T>(Func<Value, Result<T>> codec) =>
+        public IResult<T> To<T>(Func<Value, IResult<T>> codec) =>
             codec(this);
 
         public ArrayList<T> Collect<T>(Field<T> field) =>
@@ -30,7 +30,7 @@ namespace FaunaDB.Types
         public T Get<T>(Field<T> field) =>
             field.Get(this).Value;
 
-        public Option<T> GetOption<T>(Field<T> field) =>
+        public IOption<T> GetOption<T>(Field<T> field) =>
             field.Get(this).ValueOption;
 
         #region implicit conversions

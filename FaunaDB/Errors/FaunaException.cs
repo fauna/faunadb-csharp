@@ -13,7 +13,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class FaunaException : Exception
     {
-        Option<QueryErrorResponse> queryErrorResponse;
+        IOption<QueryErrorResponse> queryErrorResponse;
 
         /// <summary>
         /// List of all errors sent by the server.

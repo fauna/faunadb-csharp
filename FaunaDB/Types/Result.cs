@@ -2,11 +2,11 @@
 
 namespace FaunaDB.Types
 {
-    public interface Result<T>
+    public interface IResult<T>
     {
-        Result<U> Map<U>(Func<T, U> func);
+        IResult<U> Map<U>(Func<T, U> func);
 
-        Result<U> FlatMap<U>(Func<T, Result<U>> func);
+        IResult<U> FlatMap<U>(Func<T, IResult<U>> func);
 
         U Match<U>(Func<T, U> Success, Func<string, U> Failure);
 
@@ -14,32 +14,33 @@ namespace FaunaDB.Types
 
         T Value { get; }
 
-        Option<T> ValueOption { get; }
+        IOption<T> ValueOption { get; }
     }
 
-    public class Result
+    class Success<T> : IResult<T>
     {
-        public static Result<T> Success<T>(T value) =>
-            new Success<T>(value);
-
-        public static Result<T> Fail<T>(string reason) =>
-            new Failure<T>(reason);
-    }
-
-    internal class Success<T> : Result<T>
-    {
-        private T value;
+        T value;
 
         internal Success(T value)
         {
             this.value = value;
         }
 
-        public Result<U> Map<U>(Func<T, U> func) =>
+        public IResult<U> Map<U>(Func<T, U> func) =>
             new Success<U>(func(value));
 
-        public Result<U> FlatMap<U>(Func<T, Result<U>> func) =>
+        public IResult<U> FlatMap<U>(Func<T, IResult<U>> func) =>
             func(value);
+
+        public U Match<U>(Func<T, U> Success, Func<string, U> Failure) =>
+            Success(value);
+
+        public void Match(Action<T> Success, Action<string> Failure) =>
+            Success(value);
+
+        public T Value { get { return value; } }
+
+        public IOption<T> ValueOption { get { return Option.Some(value); } }
 
         public override bool Equals(object obj)
         {
@@ -52,32 +53,32 @@ namespace FaunaDB.Types
 
         public override string ToString() =>
             value.ToString();
-
-        public U Match<U>(Func<T, U> Success, Func<string, U> Failure) =>
-            Success(value);
-
-        public void Match(Action<T> Success, Action<string> Failure) =>
-            Success(value);
-
-        public T Value { get { return value; } }
-
-        public Option<T> ValueOption { get { return Option.Some(value); } }
     }
 
-    internal class Failure<T> : Result<T>
+    class Failure<T> : IResult<T>
     {
-        private string reason;
+        string reason;
 
         internal Failure(string reason)
         {
             this.reason = reason;
         }
 
-        public Result<U> Map<U>(Func<T, U> func) =>
+        public IResult<U> Map<U>(Func<T, U> func) =>
             new Failure<U>(reason);
 
-        public Result<U> FlatMap<U>(Func<T, Result<U>> func) =>
+        public IResult<U> FlatMap<U>(Func<T, IResult<U>> func) =>
             new Failure<U>(reason);
+
+        public U Match<U>(Func<T, U> Success, Func<string, U> Failure) =>
+            Failure(reason);
+
+        public void Match(Action<T> Success, Action<string> Failure) =>
+            Failure(reason);
+
+        public T Value { get { throw new InvalidOperationException(reason); } }
+
+        public IOption<T> ValueOption { get { return Option.None<T>(); } }
 
         public override bool Equals(object obj)
         {
@@ -90,15 +91,14 @@ namespace FaunaDB.Types
 
         public override string ToString() =>
             reason;
+    }
 
-        public U Match<U>(Func<T, U> Success, Func<string, U> Failure) =>
-            Failure(reason);
+    public class Result
+    {
+        public static IResult<T> Success<T>(T value) =>
+            new Success<T>(value);
 
-        public void Match(Action<T> Success, Action<string> Failure) =>
-            Failure(reason);
-
-        public T Value { get { throw new InvalidOperationException(reason); } }
-
-        public Option<T> ValueOption { get { return Option.None<T>(); } }
+        public static IResult<T> Fail<T>(string reason) =>
+            new Failure<T>(reason);
     }
 }

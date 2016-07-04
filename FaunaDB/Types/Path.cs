@@ -39,9 +39,9 @@ namespace FaunaDB.Types
             return new Path(list);
         }
 
-        internal Result<Value> Get(Value root)
+        internal IResult<Value> Get(Value root)
         {
-            Result<Value> result = Success(root);
+            IResult<Value> result = Success(root);
 
             foreach (var s in segments)
                 result = result.FlatMap(value => s.Get(value));
@@ -65,7 +65,7 @@ namespace FaunaDB.Types
 
         interface Segment
         {
-            Result<Value> Get(Value root);
+            IResult<Value> Get(Value root);
         }
 
         class ObjectKey : Segment
@@ -77,7 +77,7 @@ namespace FaunaDB.Types
                 this.field = field;
             }
 
-            public Result<Value> Get(Value root)
+            public IResult<Value> Get(Value root)
             {
                 return root.To(Codec.OBJECT).FlatMap(obj => {
                     Value value;
@@ -110,7 +110,7 @@ namespace FaunaDB.Types
                 this.index = index;
             }
 
-            public Result<Value> Get(Value root)
+            public IResult<Value> Get(Value root)
             {
                 return root.To(Codec.ARRAY).FlatMap(array => {
                     if (index >= 0 && index < array.Count)

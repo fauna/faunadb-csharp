@@ -7,12 +7,12 @@ namespace FaunaDB.Types
 {
     public sealed class Field<T>
     {
-        private static Func<Value, Result<ArrayList<V>>> ToCollection<V>(Path path, Field<V> field)
+        private static Func<Value, IResult<ArrayList<V>>> ToCollection<V>(Path path, Field<V> field)
         {
             return input => input.To(Codec.ARRAY).FlatMap(ToList(path, field));
         }
 
-        private static Func<ArrayList<Value>, Result<ArrayList<V>>> ToList<V>(Path path, Field<V> field)
+        private static Func<ArrayList<Value>, IResult<ArrayList<V>>> ToList<V>(Path path, Field<V> field)
         {
             return values =>
             {
@@ -21,7 +21,7 @@ namespace FaunaDB.Types
 
                 for (int i = 0; i < values.Count; i++)
                 {
-                    Result<V> result = field.Get(values[i]);
+                    IResult<V> result = field.Get(values[i]);
 
                     result.Match(
                         Success: x => success.Add(x),
@@ -39,9 +39,9 @@ namespace FaunaDB.Types
         }
 
         private Path path;
-        private Func<Value, Result<T>> codec;
+        private Func<Value, IResult<T>> codec;
 
-        internal Field(Path path, Func<Value, Result<T>> codec)
+        internal Field(Path path, Func<Value, IResult<T>> codec)
         {
             this.path = path;
             this.codec = codec;
@@ -50,13 +50,13 @@ namespace FaunaDB.Types
         public Field<U> At<U>(Field<U> other) =>
             new Field<U>(path.SubPath(other.path), other.codec);
 
-        public Field<U> To<U>(Func<Value, Result<U>> codec) =>
+        public Field<U> To<U>(Func<Value, IResult<U>> codec) =>
             new Field<U>(path, codec);
 
         public Field<ArrayList<U>> Collect<U>(Field<U> field) =>
             new Field<ArrayList<U>>(path, ToCollection(path, field));
 
-        internal Result<T> Get(Value root) =>
+        internal IResult<T> Get(Value root) =>
             path.Get(root).FlatMap(codec);
 
         public override bool Equals(object obj)
@@ -83,7 +83,7 @@ namespace FaunaDB.Types
         public static Field<Value> At(params int[] values) =>
             new Field<Value>(Path.From(values), Codec.VALUE);
 
-        public static Field<T> As<T>(Func<Value, Result<T>> codec) =>
+        public static Field<T> As<T>(Func<Value, IResult<T>> codec) =>
             new Field<T>(Path.Empty, codec);
     }
 }
