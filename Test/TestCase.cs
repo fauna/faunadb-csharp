@@ -93,7 +93,7 @@ namespace Test
             this.resp = resp;
         }
 
-        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IDictionary<string, string> query = null) =>
+        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             Task.FromResult(resp);
     }
 

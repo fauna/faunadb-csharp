@@ -24,10 +24,10 @@ namespace FaunaDB.Client
             client.DefaultRequestHeaders.Add("Authorization", AuthString(secret));
         }
 
-        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IDictionary<string, string> query = null) =>
+        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             DoRequestAsync(method, path, data, query);
 
-        async Task<RequestResult> DoRequestAsync(HttpMethodKind method, string path, string data, IDictionary<string, string> query = null)
+        async Task<RequestResult> DoRequestAsync(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null)
         {
             var dataString = data == null ?  null : new StringContent(data);
             var queryString = query == null ? null : QueryString(query);
@@ -44,9 +44,9 @@ namespace FaunaDB.Client
             return new RequestResult(method, path, query, data, response, (int)httpResponse.StatusCode, ToDictionary(httpResponse.Headers), startTime, endTime);
         }
 
-        static IDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers)
+        static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers)
         {
-            IDictionary<string, IEnumerable<string>> dic = new OrderedDictionary<string, IEnumerable<string>>();
+            OrderedDictionary<string, IEnumerable<string>> dic = new OrderedDictionary<string, IEnumerable<string>>();
 
             foreach (var kv in headers)
                 dic.Add(kv.Key, kv.Value);
@@ -66,7 +66,7 @@ namespace FaunaDB.Client
         /// <summary>
         /// Convert query parameters to a URL string.
         /// </summary>
-        static string QueryString(IDictionary<string, string> query)
+        static string QueryString(IReadOnlyDictionary<string, string> query)
         {
             // Can't just do `new NameValueCollection()` because the one returned by ParseQueryString has a different `ToString` implementation.
             var q = HttpUtility.ParseQueryString("");

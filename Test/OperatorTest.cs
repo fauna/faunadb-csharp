@@ -1,4 +1,5 @@
-﻿using FaunaDB.Collections;
+﻿using System.Collections.Generic;
+using FaunaDB.Collections;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
@@ -20,10 +21,6 @@ namespace Test
             Assert.AreEqual(StringV.Of("create"), (Expr)ActionType.CREATE);
             Assert.AreEqual(StringV.Of("delete"), (Expr)ActionType.DELETE);
             Assert.AreEqual(NullV.Instance, (Expr)(string)null);
-            Assert.AreEqual(NullV.Instance, (Expr)(ArrayList<Value>)null);
-            Assert.AreEqual(NullV.Instance, (Expr)(OrderedDictionary<string, Value>)null);
-            Assert.AreEqual(ArrayV.Of("string", 10), (Expr)ImmutableList.Of<Value>("string", 10));
-            Assert.AreEqual(ObjectV.With("foo", "bar"), (Expr)ImmutableDictionary.Of<string, Value>("foo", "bar"));
         }
 
         [Test] public void TestExplicit()
@@ -37,10 +34,6 @@ namespace Test
             Assert.AreEqual(ActionType.CREATE, (ActionType)StringV.Of("create"));
             Assert.AreEqual(ActionType.DELETE, (ActionType)StringV.Of("delete"));
             Assert.AreEqual(null, (string)(Expr)NullV.Instance);
-            Assert.AreEqual(null, (ArrayList<Value>)(Expr)NullV.Instance);
-            Assert.AreEqual(null, (OrderedDictionary<string, Value>)(Expr)NullV.Instance);
-            Assert.AreEqual(ImmutableList.Of<Value>("string", 10), (ArrayList<Value>)ArrayV.Of("string", 10));
-            Assert.AreEqual(ImmutableDictionary.Of<string, Value>("foo", "bar"), (OrderedDictionary<string, Value>)ObjectV.With("foo", "bar"));
         }
 
         [Test] public void TestOperators()

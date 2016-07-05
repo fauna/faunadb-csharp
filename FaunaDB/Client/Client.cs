@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FaunaDB.Collections;
 using FaunaDB.Errors;
@@ -46,7 +45,7 @@ namespace FaunaDB.Client
         public Task<Value> Query(Expr expression) =>
             Execute(HttpMethodKind.Post, "", expression);
 
-        public Task<ArrayList<Value>> Query(params Expr[] expressions) =>
+        public Task<IReadOnlyList<Value>> Query(params Expr[] expressions) =>
             ExecuteBatch(HttpMethodKind.Post, "", expressions);
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace FaunaDB.Client
             (string)await Execute(HttpMethodKind.Get, "ping", query: ImmutableDictionary.Of("scope", scope, "timeout", timeout?.ToString()))
                 .ConfigureAwait(false);
 
-        async Task<Value> Execute(HttpMethodKind action, string path, Expr data = null, IDictionary<string, string> query = null)
+        async Task<Value> Execute(HttpMethodKind action, string path, Expr data = null, IReadOnlyDictionary<string, string> query = null)
         {
             var dataString = data == null ?  null : data.ToJson();
             var responseHttp = await clientIO.DoRequest(action, path, dataString, query);
@@ -69,7 +68,7 @@ namespace FaunaDB.Client
             return responseContent["resource"];
         }
 
-        async Task<ArrayList<Value>> ExecuteBatch(HttpMethodKind action, string path, Expr[] data = null, IDictionary<string, string> query = null)
+        async Task<IReadOnlyList<Value>> ExecuteBatch(HttpMethodKind action, string path, Expr[] data = null, IReadOnlyDictionary<string, string> query = null)
         {
             var dataString = data == null ?  null : UnescapedArray.Of(data).ToJson();
             var responseHttp = await clientIO.DoRequest(action, path, dataString, query);

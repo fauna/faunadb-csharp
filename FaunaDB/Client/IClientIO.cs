@@ -8,6 +8,6 @@ namespace FaunaDB.Client
     /// </summary>
     public interface IClientIO
     {
-        Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IDictionary<string, string> query = null);
+        Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null);
     }
 }

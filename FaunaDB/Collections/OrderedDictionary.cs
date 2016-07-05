@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
 namespace FaunaDB.Collections
 {
-    public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+    public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     {
         private OrderedDictionary dictionary;
 
@@ -14,9 +15,6 @@ namespace FaunaDB.Collections
         }
 
         public OrderedDictionary() : this(new OrderedDictionary()) { }
-
-        public OrderedDictionary<TKey, TValue> ToImmutable() =>
-            new OrderedDictionary<TKey, TValue>(dictionary.AsReadOnly());
 
         public TValue this[TKey key]
         {
@@ -67,6 +65,22 @@ namespace FaunaDB.Collections
                 TValue[] array = new TValue[dictionary.Values.Count];
                 dictionary.Values.CopyTo(array, 0);
                 return new List<TValue>(array);
+            }
+        }
+
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
+        {
+            get
+            {
+                return Keys;
+            }
+        }
+
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
+        {
+            get
+            {
+                return Values;
             }
         }
 
@@ -157,41 +171,41 @@ namespace FaunaDB.Collections
 
     public sealed class ImmutableDictionary
     {
-        public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0)
+        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
-            return dic.ToImmutable();
+            return dic;
         }
 
-        public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1)
+        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
-            return dic.ToImmutable();
+            return dic;
         }
 
-        public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2)
+        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             dic.Add(k2, v2);
-            return dic.ToImmutable();
+            return dic;
         }
 
-        public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3)
+        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             dic.Add(k2, v2);
             dic.Add(k3, v3);
-            return dic.ToImmutable();
+            return dic;
         }
 
-        public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4)
+        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
@@ -199,10 +213,10 @@ namespace FaunaDB.Collections
             dic.Add(k2, v2);
             dic.Add(k3, v3);
             dic.Add(k4, v4);
-            return dic.ToImmutable();
+            return dic;
         }
 
-        public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5)
+        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
@@ -211,10 +225,10 @@ namespace FaunaDB.Collections
             dic.Add(k3, v3);
             dic.Add(k4, v4);
             dic.Add(k5, v5);
-            return dic.ToImmutable();
+            return dic;
         }
 
-        public static OrderedDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5, TKey1 k6, TValue1 v6)
+        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5, TKey1 k6, TValue1 v6)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
@@ -224,7 +238,7 @@ namespace FaunaDB.Collections
             dic.Add(k4, v4);
             dic.Add(k5, v5);
             dic.Add(k6, v6);
-            return dic.ToImmutable();
+            return dic;
         }
 
     }

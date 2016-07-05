@@ -9,12 +9,6 @@ namespace FaunaDB.Query
     public abstract partial class Expr
     {
         #region implicit conversions
-        public static implicit operator Expr(ArrayList<Value> values) =>
-            values == null ? NullV.Instance : new ArrayV(values);
-
-        public static implicit operator Expr(OrderedDictionary<string, Value> values) =>
-            values == null ? NullV.Instance : new ObjectV(values);
-
         public static implicit operator Expr(bool b) =>
             BooleanV.Of(b);
 
@@ -46,12 +40,6 @@ namespace FaunaDB.Query
         #endregion
 
         #region explicit (downcasting) conversions
-        public static explicit operator ArrayList<Value>(Expr v) =>
-            v == NullV.Instance ? null : ((ArrayV)v).Value;
-
-        public static explicit operator OrderedDictionary<string, Value>(Expr v) =>
-            v == NullV.Instance ? null : ((ObjectV)v).Value;
-
         public static explicit operator bool(Expr v) =>
             ((BooleanV)v).Value;
 

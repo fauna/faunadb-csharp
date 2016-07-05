@@ -11,11 +11,11 @@ namespace FaunaDB.Query
     {
         public static readonly UnescapedObject Empty = new UnescapedObject(new OrderedDictionary<string, Expr>());
 
-        private OrderedDictionary<string, Expr> Values;
+        private IReadOnlyDictionary<string, Expr> Values;
 
         public UnescapedObject() : this(new OrderedDictionary<string, Expr>()) { }
 
-        public UnescapedObject(OrderedDictionary<string, Expr> values)
+        public UnescapedObject(IReadOnlyDictionary<string, Expr> values)
         {
             Values = values;
         }

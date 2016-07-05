@@ -16,11 +16,11 @@ namespace FaunaDB.Types
         #region Construction
         public static readonly ObjectV Empty = new ObjectV(new OrderedDictionary<string, Value>());
 
-        public OrderedDictionary<string, Value> Value { get; }
+        public IReadOnlyDictionary<string, Value> Value { get; }
 
         public ObjectV() : this(Empty.Value) { }
 
-        public ObjectV(OrderedDictionary<string, Value> value)
+        public ObjectV(IReadOnlyDictionary<string, Value> value)
         {
             Value = value;
 
@@ -36,9 +36,9 @@ namespace FaunaDB.Types
         /// </param>
         public ObjectV(Action<Action<string, Value>> builder)
         {
-            var d = new OrderedDictionary<string, Value>();
-            builder((k, v) => d.Add(new KeyValuePair<string, Value>(k, v)));
-            Value = d.ToImmutable();
+            var dic = new OrderedDictionary<string, Value>();
+            builder((k, v) => dic.Add(new KeyValuePair<string, Value>(k, v)));
+            Value = dic;
         }
 
         #endregion

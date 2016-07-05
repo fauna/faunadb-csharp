@@ -2,6 +2,7 @@
 using FaunaDB.Types;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 using static FaunaDB.Types.Result;
 
@@ -64,7 +65,7 @@ namespace Test
             var array = ImmutableList.Of<Value>("a string", true, 10);
 
             Assert.AreEqual(Success(array), ArrayV.Of("a string", true, 10).To(Codec.ARRAY));
-            Assert.AreEqual(Fail<ArrayList<Value>>("Cannot convert ObjectV to ArrayV"), ObjectV.Empty.To(Codec.ARRAY));
+            Assert.AreEqual(Fail<IReadOnlyList<Value>>("Cannot convert ObjectV to ArrayV"), ObjectV.Empty.To(Codec.ARRAY));
         }
 
         [Test] public void TestObject()
@@ -72,7 +73,7 @@ namespace Test
             var obj = ImmutableDictionary.Of<string, Value>("foo", StringV.Of("bar"));
 
             Assert.AreEqual(Success(obj), ObjectV.With("foo", "bar").To(Codec.OBJECT));
-            Assert.AreEqual(Fail<OrderedDictionary<string, Value>>("Cannot convert StringV to ObjectV"), StringV.Of("a string").To(Codec.OBJECT));
+            Assert.AreEqual(Fail<IReadOnlyDictionary<string, Value>>("Cannot convert StringV to ObjectV"), StringV.Of("a string").To(Codec.OBJECT));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace FaunaDB.Client
         /// <summary>
         /// Query data. This is only valid for <see cref="Client.Get"/> (which is also called by <see cref="Client.Ping"/> .
         /// </summary>
-        public IDictionary<string, string> Query { get; }
+        public IReadOnlyDictionary<string, string> Query { get; }
 
         /// <summary>
         /// Request data. This will be null for <see cref="Client.Get"/>s. 
@@ -35,7 +35,7 @@ namespace FaunaDB.Client
 
         public int StatusCode { get; }
 
-        public IDictionary<string, IEnumerable<string>> ResponseHeaders { get; }
+        public IReadOnlyDictionary<string, IEnumerable<string>> ResponseHeaders { get; }
 
         public DateTime StartTime { get; }
         public DateTime EndTime { get; }
@@ -43,11 +43,11 @@ namespace FaunaDB.Client
         public RequestResult(
             HttpMethodKind method,
             string path,
-            IDictionary<string, string> query,
+            IReadOnlyDictionary<string, string> query,
             string requestContent,
             string responseContent,
             int statusCode,
-            IDictionary<string, IEnumerable<string>> responseHeaders,
+            IReadOnlyDictionary<string, IEnumerable<string>> responseHeaders,
             DateTime startTime,
             DateTime endTime)
         {

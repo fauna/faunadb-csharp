@@ -45,7 +45,7 @@ namespace FaunaDB.Query
                     attributes.Add(property.Name, Obj(value));
                 }
 
-                return Obj(new UnescapedObject(attributes.ToImmutable()));
+                return Obj(new UnescapedObject(attributes));
             }
         }
 

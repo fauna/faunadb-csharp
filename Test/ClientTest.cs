@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
@@ -16,7 +17,7 @@ namespace Test
     {
         private static Field<Value> DATA = Field.At("data");
         private static Field<Ref> REF_FIELD = Field.At("ref").To(Codec.REF);
-        private static Field<ArrayList<Ref>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
+        private static Field<IReadOnlyList<Ref>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
 
         private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To(Codec.STRING);
         private static Field<string> ELEMENT_FIELD = DATA.At(Field.At("element")).To(Codec.STRING);
@@ -148,8 +149,7 @@ namespace Test
             );
         }
 
-        [Test]
-        public async Task TestCreateAComplexInstance()
+        [Test] public async Task TestCreateAComplexInstance()
         {
             Value instance = await client.Query(
                 Create(await RandomClass(),
@@ -357,7 +357,7 @@ namespace Test
             Value res = await client.Query(
                 Match(Ref("indexes/spells_by_element"), "arcane"));
 
-            OrderedDictionary<string, Value> set = res.To(Codec.SETREF).ValueOption.Value.Value;
+            IReadOnlyDictionary<string, Value> set = res.To(Codec.SETREF).ValueOption.Value.Value;
             Assert.AreEqual(Some("arcane"), set["terms"].To(Codec.STRING).ValueOption);
             Assert.AreEqual(Some(new Ref("indexes/spells_by_element")), set["match"].To(Codec.REF).ValueOption);
         }

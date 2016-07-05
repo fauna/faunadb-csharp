@@ -3,6 +3,7 @@ using FaunaDB.Query;
 using Newtonsoft.Json;
 using System;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace FaunaDB.Types
 {
@@ -124,13 +125,16 @@ namespace FaunaDB.Types
     /// This represents a set returned as part of a response. This looks like <c>{"@set": set_query}</c>.
     /// For query sets see <see cref="Language"/>.
     /// </remarks>
-    public sealed class SetRef : ScalarValue<OrderedDictionary<string, Value>>
+    public sealed class SetRef : ScalarValue<IReadOnlyDictionary<string, Value>>
     {
-        public SetRef(OrderedDictionary<string, Value> q) : base(q) { }
+        public SetRef(IReadOnlyDictionary<string, Value> q) : base(q) { }
 
         override internal void WriteJson(JsonWriter writer)
         {
-            writer.WriteObject("@set", Value);
+            writer.WriteStartObject();
+            writer.WritePropertyName("@set");
+            writer.WriteObject(Value);
+            writer.WriteEndObject();
         }
     }
 

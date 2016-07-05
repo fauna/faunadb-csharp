@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Collections;
+using System.Collections.Generic;
 using System;
 
 using static FaunaDB.Types.Result;
@@ -7,12 +8,12 @@ namespace FaunaDB.Types
 {
     public sealed class Field<T>
     {
-        private static Func<Value, IResult<ArrayList<V>>> ToCollection<V>(Path path, Field<V> field)
+        private static Func<Value, IResult<IReadOnlyList<V>>> ToCollection<V>(Path path, Field<V> field)
         {
             return input => input.To(Codec.ARRAY).FlatMap(ToList(path, field));
         }
 
-        private static Func<ArrayList<Value>, IResult<ArrayList<V>>> ToList<V>(Path path, Field<V> field)
+        private static Func<IReadOnlyList<Value>, IResult<IReadOnlyList<V>>> ToList<V>(Path path, Field<V> field)
         {
             return values =>
             {
@@ -32,9 +33,9 @@ namespace FaunaDB.Types
                 }
 
                 if (failures.Count > 0)
-                    return Fail<ArrayList<V>>($"Failed to collect values: {string.Join(", ", failures)}");
+                    return Fail<IReadOnlyList<V>>($"Failed to collect values: {string.Join(", ", failures)}");
 
-                return Success(success.ToImmutable());
+                return Success<IReadOnlyList<V>>(success);
             };
         }
 
@@ -53,8 +54,8 @@ namespace FaunaDB.Types
         public Field<U> To<U>(Func<Value, IResult<U>> codec) =>
             new Field<U>(path, codec);
 
-        public Field<ArrayList<U>> Collect<U>(Field<U> field) =>
-            new Field<ArrayList<U>>(path, ToCollection(path, field));
+        public Field<IReadOnlyList<U>> Collect<U>(Field<U> field) =>
+            new Field<IReadOnlyList<U>>(path, ToCollection(path, field));
 
         internal IResult<T> Get(Value root) =>
             path.Get(root).FlatMap(codec);

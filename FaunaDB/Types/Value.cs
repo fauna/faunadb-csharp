@@ -1,8 +1,8 @@
-﻿using FaunaDB.Collections;
-using FaunaDB.Errors;
+﻿using System;
+using System.Collections.Generic;
+using FaunaDB.Collections;
 using FaunaDB.Query;
 using Newtonsoft.Json;
-using System;
 
 namespace FaunaDB.Types
 {
@@ -24,7 +24,7 @@ namespace FaunaDB.Types
         public IResult<T> To<T>(Func<Value, IResult<T>> codec) =>
             codec(this);
 
-        public ArrayList<T> Collect<T>(Field<T> field) =>
+        public IReadOnlyList<T> Collect<T>(Field<T> field) =>
             Field.Root.Collect(field).Get(this).Value;
 
         public T Get<T>(Field<T> field) =>
@@ -34,12 +34,6 @@ namespace FaunaDB.Types
             field.Get(this).ValueOption;
 
         #region implicit conversions
-        public static implicit operator Value(ArrayList<Value> values) =>
-            values == null ? NullV.Instance : ArrayV.Of(values);
-
-        public static implicit operator Value(OrderedDictionary<string, Value> values) =>
-            values == null ? NullV.Instance : new ObjectV(values);
-
         public static implicit operator Value(bool b) =>
             BooleanV.Of(b);
 
@@ -58,12 +52,6 @@ namespace FaunaDB.Types
         #endregion
 
         #region explicit (downcasting) conversions
-        public static explicit operator ArrayList<Value>(Value v) =>
-            ((ArrayV)v).Value;
-
-        public static explicit operator OrderedDictionary<string, Value>(Value v) =>
-            ((ObjectV)v).Value;
-
         public static explicit operator bool(Value v) =>
             ((BooleanV)v).Value;
 

@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FaunaDB.Collections
 {
-    public class ArrayList<T> : IList<T>
+    public class ArrayList<T> : IList<T>, IReadOnlyList<T>
     {
         private List<T> list;
 
@@ -16,11 +16,6 @@ namespace FaunaDB.Collections
         public ArrayList() : this(new List<T>()) { }
 
         public ArrayList(IEnumerable<T> values) : this(new List<T>(values)) { }
-
-        public ArrayList<T> ToImmutable()
-        {
-            return new ArrayList<T>(list.AsReadOnly());
-        }
 
         public T this[int index]
         {
@@ -96,7 +91,7 @@ namespace FaunaDB.Collections
 
     public sealed class ImmutableList
     {
-        public static ArrayList<T> Of<T>(params T[] values)
+        public static IReadOnlyList<T> Of<T>(params T[] values)
         {
             List<T> list = new List<T>(values);
             return new ArrayList<T>(list.AsReadOnly());

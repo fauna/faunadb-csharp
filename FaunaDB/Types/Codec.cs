@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Collections;
+using System.Collections.Generic;
 using System;
 
 using static FaunaDB.Types.Result;
@@ -39,11 +40,11 @@ namespace FaunaDB.Types
         public static IResult<DateTime> TS(Value input) =>
             Cast.MapTo<TsV, DateTime>(input, Cast.ScalarValue);
 
-        public static IResult<ArrayList<Value>> ARRAY(Value input) =>
-            Cast.MapTo<ArrayV, ArrayList<Value>>(input, x => x.Value);
+        public static IResult<IReadOnlyList<Value>> ARRAY(Value input) =>
+            Cast.MapTo<ArrayV, IReadOnlyList<Value>>(input, x => x.Value);
 
-        public static IResult<OrderedDictionary<string, Value>> OBJECT(Value input) =>
-            Cast.MapTo<ObjectV, OrderedDictionary<string, Value>>(input, x => x.Value);
+        public static IResult<IReadOnlyDictionary<string, Value>> OBJECT(Value input) =>
+            Cast.MapTo<ObjectV, IReadOnlyDictionary<string, Value>>(input, x => x.Value);
     }
 
     struct Cast
