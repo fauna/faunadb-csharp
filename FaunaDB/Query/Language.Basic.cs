@@ -13,8 +13,8 @@
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 
         /// </summary>
-        public static Var Var(string varName) =>
-            new Var(varName);
+        public static Expr Var(string varName) =>
+            UnescapedObject.With("var", varName);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>. 

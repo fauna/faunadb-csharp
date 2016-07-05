@@ -57,7 +57,6 @@
     <Compile Include="Query\Language.Write.cs" />
     <Compile Include="Query\Unescaped.cs" />
     <Compile Include="Query\Language.Basic.Let.cs" />
-    <Compile Include="Query\Var.cs" />
     <Compile Include="Types\Codec.cs" />
     <Compile Include="Types\Field.cs" />
     <Compile Include="Types\Option.cs" />
