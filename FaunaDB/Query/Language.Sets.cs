@@ -14,20 +14,20 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Expr Union(Expr head, params Expr[] tail) =>
-            UnescapedObject.With("union", Varargs(head, tail));
+        public static Expr Union(params Expr[] values) =>
+            UnescapedObject.With("union", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Expr Intersection(Expr head, params Expr[] tail) =>
-            UnescapedObject.With("intersection", Varargs(head, tail));
+        public static Expr Intersection(params Expr[] values) =>
+            UnescapedObject.With("intersection", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 
         /// </summary>
-        public static Expr Difference(Expr head, params Expr[] tail) =>
-            UnescapedObject.With("difference", Varargs(head, tail));
+        public static Expr Difference(params Expr[] values) =>
+            UnescapedObject.With("difference", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>. 

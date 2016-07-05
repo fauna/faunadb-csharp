@@ -8,7 +8,6 @@ using System.Net;
 using System.Threading.Tasks;
 
 using static FaunaDB.Query.Language;
-using FaunaDB.Collections;
 
 namespace Test
 {
@@ -42,36 +41,55 @@ namespace Test
         #region ErrorData
         [Test] public void TestInvalidExpression()
         {
-            AssertQueryException<BadRequest>(UnescapedObject.With("foo", "bar"), "invalid expression");
+            AssertQueryException<BadRequest>(UnescapedObject.With("foo", "bar"), "invalid expression", "No form/function found, or invalid argument keys: { foo }.");
         }
 
         [Test] public void TestUnboundVariable()
         {
-            AssertQueryException<BadRequest>(Var("x"), "unbound variable");
+            AssertQueryException<BadRequest>(Var("x"), "unbound variable", "No variable 'x' in scope.");
         }
 
         [Test] public void TestInvalidArgument()
         {
-            AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", new List<string> { "add", "1" });
+            AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", "Number expected, String provided.", new List<string> { "add", "1" });
+        }
+
+        [Test] public void TestNonEmptyArray()
+        {
+            AssertQueryException<BadRequest>(EqualsFn(), "invalid argument", "Non-empty array expected.", new List<string> { "equals" });
+            AssertQueryException<BadRequest>(Add(), "invalid argument", "Non-empty array expected.", new List<string> { "add" });
+            AssertQueryException<BadRequest>(Multiply(), "invalid argument", "Non-empty array expected.", new List<string> { "multiply" });
+            AssertQueryException<BadRequest>(Subtract(), "invalid argument", "Non-empty array expected.", new List<string> { "subtract" });
+            AssertQueryException<BadRequest>(Divide(), "invalid argument", "Non-empty array expected.", new List<string> { "divide" });
+            AssertQueryException<BadRequest>(Modulo(), "invalid argument", "Non-empty array expected.", new List<string> { "modulo" });
+            AssertQueryException<BadRequest>(LT(), "invalid argument", "Non-empty array expected.", new List<string> { "lt" });
+            AssertQueryException<BadRequest>(LTE(), "invalid argument", "Non-empty array expected.", new List<string> { "lte" });
+            AssertQueryException<BadRequest>(GT(), "invalid argument", "Non-empty array expected.", new List<string> { "gt" });
+            AssertQueryException<BadRequest>(GTE(), "invalid argument", "Non-empty array expected.", new List<string> { "gte" });
+            AssertQueryException<BadRequest>(And(), "invalid argument", "Non-empty array expected.", new List<string> { "and" });
+            AssertQueryException<BadRequest>(Or(), "invalid argument", "Non-empty array expected.", new List<string> { "or" });
+            AssertQueryException<BadRequest>(Union(), "invalid argument", "Non-empty array expected.", new List<string> { "union" });
+            AssertQueryException<BadRequest>(Intersection(), "invalid argument", "Non-empty array expected.", new List<string> { "intersection" });
+            AssertQueryException<BadRequest>(Difference(), "invalid argument", "Non-empty array expected.", new List<string> { "difference" });
         }
 
         [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
             await client.Query(Create(Ref("classes"), Obj("name", "foofaws")));
-            AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found");
+            AssertQueryException<NotFound>(Get(Ref("classes/foofaws/123")), "instance not found", "Instance not found.");
         }
 
         [Test] public void TestValueNotFound()
         {
-            AssertQueryException<NotFound>(Select("a", Obj()), "value not found");
+            AssertQueryException<NotFound>(Select("a", Obj()), "value not found", "Value not found.");
         }
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
             await client.Query(Create(Ref("classes"), Obj("name", "duplicates")));
             var @ref = (Ref) ((ObjectV) (await client.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
-            AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", new List<string> { "create" });
+            AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", "Instance already exists.", new List<string> { "create" });
         }
         #endregion
 
@@ -87,20 +105,21 @@ namespace Test
             await client.Query(Create(Ref("classes/gerbils"), Obj("data", Obj("x", 1))));
         }
 
-        void AssertException(FaunaException exception, string code, IReadOnlyList<string> position = null)
+        void AssertException(FaunaException exception, string code, string description, IReadOnlyList<string> position = null)
         {
             Assert.AreEqual(1, exception.Errors.Count());
             var error = exception.Errors.First();
             Assert.AreEqual(code, error.Code);
+            Assert.AreEqual(description, error.Description);
             if (position != null)
                 Assert.True(position.SequenceEqual(error.Position));
         }
 
-        void AssertQueryException<TException>(Expr query, string code, IReadOnlyList<string> position = null)
+        void AssertQueryException<TException>(Expr query, string code, string description, IReadOnlyList<string> position = null)
             where TException  : FaunaException
         {
             var exception = Assert.ThrowsAsync<TException>(async() => await client.Query(query));
-            AssertException(exception, code, position);
+            AssertException(exception, code, description, position);
         }
     }
 }

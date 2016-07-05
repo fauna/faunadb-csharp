@@ -92,18 +92,6 @@ namespace FaunaDB.Query
             UnescapedObject.With("object", fields);
 
         #region Helpers
-        static Expr Varargs(Expr head, Expr[] tail)
-        {
-            if (tail.Length == 0)
-                return head;
-
-            Expr[] values = new Expr[tail.Length + 1];
-            values[0] = head;
-            tail.CopyTo(values, 1);
-
-            return UnescapedArray.Of(values);
-        }
-
         static Expr Varargs(Expr[] values) =>
             values.Length == 1 ? values[0] : UnescapedArray.Of(values);
         #endregion

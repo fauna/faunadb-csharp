@@ -15,8 +15,8 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr EqualsFn(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("equals", Varargs(first, tail));
+        public static Expr EqualsFn(params Expr[] values) =>
+            UnescapedObject.With("equals", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
@@ -39,68 +39,68 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Add(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("add", Varargs(first, tail));
+        public static Expr Add(params Expr[] values) =>
+            UnescapedObject.With("add", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Multiply(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("multiply", Varargs(first, tail));
+        public static Expr Multiply(params Expr[] values) =>
+            UnescapedObject.With("multiply", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Subtract(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("subtract", Varargs(first, tail));
+        public static Expr Subtract(params Expr[] values) =>
+            UnescapedObject.With("subtract", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Divide(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("divide", Varargs(first, tail));
+        public static Expr Divide(params Expr[] values) =>
+            UnescapedObject.With("divide", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Modulo(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("modulo", Varargs(first, tail));
+        public static Expr Modulo(params Expr[] values) =>
+            UnescapedObject.With("modulo", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr LT(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("lt", Varargs(first, tail));
+        public static Expr LT(params Expr[] values) =>
+            UnescapedObject.With("lt", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr LTE(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("lte", Varargs(first, tail));
+        public static Expr LTE(params Expr[] values) =>
+            UnescapedObject.With("lte", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr GT(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("gt", Varargs(first, tail));
+        public static Expr GT(params Expr[] values) =>
+            UnescapedObject.With("gt", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>.
         /// </summary>
-        public static Expr GTE(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("gte", Varargs(first, tail));
+        public static Expr GTE(params Expr[] values) =>
+            UnescapedObject.With("gte", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr And(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("and", Varargs(first, tail));
+        public static Expr And(params Expr[] values) =>
+            UnescapedObject.With("and", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
         /// </summary>
-        public static Expr Or(Expr first, params Expr[] tail) =>
-            UnescapedObject.With("or", Varargs(first, tail));
+        public static Expr Or(params Expr[] values) =>
+            UnescapedObject.With("or", Varargs(values));
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">docs</see>. 
