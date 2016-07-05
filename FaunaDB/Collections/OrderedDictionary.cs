@@ -7,7 +7,9 @@ namespace FaunaDB.Collections
 {
     public class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
     {
-        private OrderedDictionary dictionary;
+        public static readonly OrderedDictionary<TKey, TValue> Empty = new OrderedDictionary<TKey, TValue>();
+
+        OrderedDictionary dictionary;
 
         internal OrderedDictionary(OrderedDictionary dictionary)
         {
@@ -171,6 +173,9 @@ namespace FaunaDB.Collections
 
     public sealed class ImmutableDictionary
     {
+        public static IReadOnlyDictionary<TKey, TValue> Empty<TKey, TValue>() =>
+            OrderedDictionary<TKey, TValue>.Empty;
+
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0)
         {
             OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();

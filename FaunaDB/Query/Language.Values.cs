@@ -88,8 +88,8 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
-        public static Expr Obj(Expr fields) =>
-            UnescapedObject.With("object", fields);
+        public static Expr Obj(IReadOnlyDictionary<string, Expr> fields) =>
+            UnescapedObject.With("object", new UnescapedObject(fields));
 
         #region Helpers
         static Expr Varargs(Expr[] values) =>

@@ -9,9 +9,10 @@ namespace FaunaDB.Query
 {
     public class UnescapedObject : Expr
     {
-        public static readonly UnescapedObject Empty = new UnescapedObject(new OrderedDictionary<string, Expr>());
+        public static readonly UnescapedObject Empty =
+            new UnescapedObject(ImmutableDictionary.Empty<string, Expr>());
 
-        private IReadOnlyDictionary<string, Expr> Values;
+        IReadOnlyDictionary<string, Expr> Values;
 
         public UnescapedObject() : this(new OrderedDictionary<string, Expr>()) { }
 
@@ -40,9 +41,6 @@ namespace FaunaDB.Query
             return $"UObject({props})";
         }
 
-        public static UnescapedObject With() =>
-            new UnescapedObject();
-
         public static UnescapedObject With(string key1, Expr value1) =>
             new UnescapedObject(ImmutableDictionary.Of(key1, value1));
 
@@ -67,14 +65,15 @@ namespace FaunaDB.Query
 
     public class UnescapedArray : Expr
     {
-        public static readonly UnescapedArray Empty = new UnescapedArray(new ArrayList<Expr>());
+        public static readonly UnescapedArray Empty =
+            new UnescapedArray(ImmutableList.Empty<Expr>());
 
-        public ArrayList<Expr> Value { get; }
+        public IReadOnlyList<Expr> Value { get; }
 
         public static UnescapedArray Of(IEnumerable<Expr> values) =>
             new UnescapedArray(new ArrayList<Expr>(values));
 
-        public UnescapedArray(ArrayList<Expr> value)
+        public UnescapedArray(IReadOnlyList<Expr> value)
         {
             Value = value;
 

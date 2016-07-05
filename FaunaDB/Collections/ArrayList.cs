@@ -6,7 +6,9 @@ namespace FaunaDB.Collections
 {
     public class ArrayList<T> : IList<T>, IReadOnlyList<T>
     {
-        private List<T> list;
+        public static readonly ArrayList<T> Empty = new ArrayList<T>();
+
+        List<T> list;
 
         internal ArrayList(List<T> list)
         {
@@ -91,6 +93,9 @@ namespace FaunaDB.Collections
 
     public sealed class ImmutableList
     {
+        public static IReadOnlyList<T> Empty<T>() =>
+            ArrayList<T>.Empty;
+
         public static IReadOnlyList<T> Of<T>(params T[] values)
         {
             List<T> list = new List<T>(values);
