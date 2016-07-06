@@ -7,7 +7,7 @@ using FaunaDB.Collections;
 
 namespace FaunaDB.Query
 {
-    public class UnescapedObject : Expr
+    class UnescapedObject : Expr
     {
         public static readonly UnescapedObject Empty =
             new UnescapedObject(ImmutableDictionary.Empty<string, Expr>());
@@ -30,7 +30,7 @@ namespace FaunaDB.Query
         protected override int HashCode() =>
             Values.GetHashCode();
 
-        override internal void WriteJson(JsonWriter writer)
+        protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteObject(Values);
         }
@@ -63,7 +63,7 @@ namespace FaunaDB.Query
             new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6, key7, value7));
     }
 
-    public class UnescapedArray : Expr
+    class UnescapedArray : Expr
     {
         public static readonly UnescapedArray Empty =
             new UnescapedArray(ImmutableList.Empty<Expr>());
@@ -90,7 +90,7 @@ namespace FaunaDB.Query
         protected override int HashCode() =>
             Value.GetHashCode();
 
-        override internal void WriteJson(JsonWriter writer)
+        protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteArray(Value);
         }

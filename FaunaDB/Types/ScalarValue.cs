@@ -27,7 +27,7 @@ namespace FaunaDB.Types
             Value = value;
         }
 
-        internal override void WriteJson(JsonWriter writer)
+        protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteValue(Value);
         }
@@ -109,7 +109,7 @@ namespace FaunaDB.Types
         /// <param name="value">Value.</param>
         public Ref(string value) : base(value) { }
 
-        override internal void WriteJson(JsonWriter writer)
+        protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteObject("@ref", Value);
         }
@@ -129,7 +129,7 @@ namespace FaunaDB.Types
     {
         public SetRef(IReadOnlyDictionary<string, Value> q) : base(q) { }
 
-        override internal void WriteJson(JsonWriter writer)
+        protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("@set");
@@ -167,7 +167,7 @@ namespace FaunaDB.Types
 
         const string TimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFZ";
 
-        internal override void WriteJson(JsonWriter writer)
+        protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteObject("@ts", Value.ToIso(TimeFormat));
         }
@@ -212,7 +212,7 @@ namespace FaunaDB.Types
 
         const string DateFormat = "yyyy-MM-dd";
 
-        internal override void WriteJson(JsonWriter writer)
+        protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteObject("@date", Value.ToIso(DateFormat));
         }

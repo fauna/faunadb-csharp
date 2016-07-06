@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 using static FaunaDB.Query.Language;
 
@@ -22,7 +23,7 @@ namespace Test
         #region HTTP errors
         [Test] public void TestHttpBadRequest()
         {
-            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(UnescapedObject.With("foo", "bar")));
+            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(new InvalidExpression()));
         }
 
         [Test] public void TestHttpUnauthorized()
@@ -41,7 +42,7 @@ namespace Test
         #region ErrorData
         [Test] public void TestInvalidExpression()
         {
-            AssertQueryException<BadRequest>(UnescapedObject.With("foo", "bar"), "invalid expression", "No form/function found, or invalid argument keys: { foo }.");
+            AssertQueryException<BadRequest>(new InvalidExpression(), "invalid expression", "No form/function found, or invalid argument keys: { foo }.");
         }
 
         [Test] public void TestUnboundVariable()
@@ -120,6 +121,20 @@ namespace Test
         {
             var exception = Assert.ThrowsAsync<TException>(async() => await client.Query(query));
             AssertException(exception, code, description, position);
+        }
+    }
+
+    public class InvalidExpression : Expr
+    {
+        public override bool Equals(Expr v) => true;
+        protected override int HashCode() => 0;
+
+        protected override void WriteJson(JsonWriter writer)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("foo");
+            writer.WriteValue("bar");
+            writer.WriteEndObject();
         }
     }
 }

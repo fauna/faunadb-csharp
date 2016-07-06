@@ -6,7 +6,10 @@ namespace FaunaDB.Query
     [JsonConverter(typeof(ExprJsonConverter))]
     public abstract partial class Expr : IEquatable<Expr>
     {
-        internal abstract void WriteJson(JsonWriter writer);
+        protected abstract void WriteJson(JsonWriter writer);
+
+        internal void WriteJsonIntern(JsonWriter writer) =>
+            WriteJson(writer);
 
         /// <summary>
         /// Convert to a JSON string.
@@ -49,6 +52,6 @@ namespace FaunaDB.Query
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
-            ((Expr)value).WriteJson(writer);
+            ((Expr)value).WriteJsonIntern(writer);
     }
 }

@@ -10,7 +10,7 @@ namespace FaunaDB.Query
             private UnescapedObject vars;
             private Func<TFunc, Expr> invoker;
 
-            public LetBinding(UnescapedObject vars, Func<TFunc, Expr> invoker)
+            internal LetBinding(UnescapedObject vars, Func<TFunc, Expr> invoker)
             {
                 this.vars = vars;
                 this.invoker = invoker;
