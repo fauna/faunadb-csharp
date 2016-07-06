@@ -1,4 +1,4 @@
-﻿using FaunaDB.Collections;
+﻿using System;
 using FaunaDB.Errors;
 using FaunaDB.Types;
 
@@ -28,14 +28,34 @@ namespace FaunaDB.Query
         {
             switch (action)
             {
-                case ActionType.CREATE:
+                case ActionType.Create:
                     return StringV.Of("create");
 
-                case ActionType.DELETE:
+                case ActionType.Delete:
                     return StringV.Of("delete");
             }
 
-            throw new InvalidValueException("Invalid action value");
+            throw new ArgumentException("Invalid action value");
+        }
+
+        public static implicit operator Expr(TimeUnit unit)
+        {
+            switch (unit)
+            {
+                case TimeUnit.Microsecond:
+                    return "microsecond";
+
+                case TimeUnit.Millisecond:
+                    return "millisecond";
+
+                case TimeUnit.Nanosecond:
+                    return "nanosecond";
+
+                case TimeUnit.Second:
+                    return "second";
+            }
+
+            throw new ArgumentException("Invalid time unit value");
         }
         #endregion
 
@@ -57,15 +77,34 @@ namespace FaunaDB.Query
             switch (((StringV)v).Value)
             {
                 case "create":
-                    return ActionType.CREATE;
+                    return ActionType.Create;
 
                 case "delete":
-                    return ActionType.DELETE;
+                    return ActionType.Delete;
             }
 
-            throw new InvalidValueException("Invalid string value. Should be \"create\" or \"delete\"");
+            throw new ArgumentException("Invalid string value. Should be \"create\" or \"delete\"");
         }
 
+        public static explicit operator TimeUnit(Expr unit)
+        {
+            switch (((StringV)unit).Value)
+            {
+                case "microsecond":
+                    return TimeUnit.Microsecond;
+
+                case "millisecond":
+                    return TimeUnit.Millisecond;
+
+                case "nanosecond":
+                    return TimeUnit.Nanosecond;
+
+                case "second":
+                    return TimeUnit.Second;
+            }
+
+            throw new ArgumentException("Invalid string value. Should be \"second\", \"millisecond\", \"microsecond\" or \"nanosecond\"");
+        }
         #endregion
 
         #region Operators

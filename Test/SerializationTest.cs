@@ -300,7 +300,7 @@ namespace Test
             AssertJsonEqual(Insert(
                     Ref("classes/widgets/123456789"),
                     Ts("1970-01-01T00:00:00.123Z"),
-                    ActionType.CREATE,
+                    ActionType.Create,
                     Obj("data", Obj("name", "Computer"))),
                 "{\"insert\":{\"@ref\":\"classes/widgets/123456789\"},"+
                 "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"},"+
@@ -321,7 +321,7 @@ namespace Test
             AssertJsonEqual(Remove(
                     Ref("classes/widgets/123456789"),
                     Ts("1970-01-01T00:00:00.123Z"),
-                    ActionType.CREATE),
+                    ActionType.Create),
                 "{\"remove\":{\"@ref\":\"classes/widgets/123456789\"}," +
                 "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
                 "\"action\":\"create\"}");
@@ -433,8 +433,29 @@ namespace Test
 
         [Test] public void TestEpoch()
         {
-            AssertJsonEqual(Epoch(0, "second"),
-                "{\"epoch\":0,\"unit\":\"second\"}");
+            AssertJsonEqual(Epoch(1, "second"),
+                "{\"epoch\":1,\"unit\":\"second\"}");
+
+            AssertJsonEqual(Epoch(1, "millisecond"),
+                "{\"epoch\":1,\"unit\":\"millisecond\"}");
+
+            AssertJsonEqual(Epoch(1, "microsecond"),
+                "{\"epoch\":1,\"unit\":\"microsecond\"}");
+
+            AssertJsonEqual(Epoch(1, "nanosecond"),
+                "{\"epoch\":1,\"unit\":\"nanosecond\"}");
+
+            AssertJsonEqual(Epoch(1, TimeUnit.Second),
+                "{\"epoch\":1,\"unit\":\"second\"}");
+
+            AssertJsonEqual(Epoch(1, TimeUnit.Millisecond),
+                "{\"epoch\":1,\"unit\":\"millisecond\"}");
+
+            AssertJsonEqual(Epoch(1, TimeUnit.Microsecond),
+                "{\"epoch\":1,\"unit\":\"microsecond\"}");
+
+            AssertJsonEqual(Epoch(1, TimeUnit.Nanosecond),
+                "{\"epoch\":1,\"unit\":\"nanosecond\"}");
         }
 
         [Test] public void TestDateFn()

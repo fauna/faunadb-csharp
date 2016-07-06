@@ -30,15 +30,27 @@
 
         public enum ActionType
         {
-            CREATE,
-            DELETE
+            Create,
+            Delete
         }
+
+        /// <summary>
+        /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
+        /// </summary>
+        public static Expr Insert(Expr @ref, Expr ts, ActionType action, Expr @params) =>
+            Insert(@ref, ts, (Expr)action, @params);
 
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
         public static Expr Insert(Expr @ref, Expr ts, Expr action, Expr @params) =>
             UnescapedObject.With("insert", @ref, "ts", ts, "action", action, "params", @params);
+
+        /// <summary>
+        /// <see cref="Remove"/> that takes an <see cref="Event"/> object instead of separate parameters.
+        /// </summary>
+        public static Expr Remove(Expr @ref, Expr ts, ActionType action) =>
+            Remove(@ref, ts, (Expr)action);
 
         /// <summary>
         /// <see cref="Remove"/> that takes an <see cref="Event"/> object instead of separate parameters.

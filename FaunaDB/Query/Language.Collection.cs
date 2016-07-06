@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FaunaDB.Query
+﻿namespace FaunaDB.Query
 {
     public partial struct Language
     {

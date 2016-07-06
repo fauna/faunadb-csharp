@@ -10,6 +10,20 @@
         public static Expr Time(Expr time) =>
             UnescapedObject.With("time", time);
 
+        public enum TimeUnit
+        {
+            Second,
+            Millisecond,
+            Microsecond,
+            Nanosecond
+        }
+
+        /// <summary>
+        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
+        /// </summary>
+        public static Expr Epoch(Expr number, TimeUnit unit) =>
+            Epoch(number, (Expr)unit);
+
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
         /// </summary>

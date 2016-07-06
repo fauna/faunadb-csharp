@@ -272,7 +272,7 @@ namespace Test
                     Obj("data", Obj("name", "Magic Missile"))));
 
             Value insertedEvent = await client.Query(
-                Insert(createdInstance.Get(REF_FIELD), 1L, ActionType.CREATE,
+                Insert(createdInstance.Get(REF_FIELD), 1L, ActionType.Create,
                     Obj("data", Obj("cooldown", 5L))));
 
             Assert.AreEqual(createdInstance.Get(REF_FIELD), insertedEvent.Get(REF_FIELD));
@@ -280,7 +280,7 @@ namespace Test
             Assert.AreEqual(5L, insertedEvent.Get(DATA).At("cooldown").To(Codec.LONG).Value);
 
             Value removedEvent = await client.Query(
-                Remove(createdInstance.Get(REF_FIELD), 2L, ActionType.DELETE)
+                Remove(createdInstance.Get(REF_FIELD), 2L, ActionType.Delete)
             );
 
             Assert.AreEqual(Null(), removedEvent);
@@ -707,8 +707,20 @@ namespace Test
 
         [Test] public async Task TestEvalEpochExpression()
         {
-            Value res = await client.Query(Epoch(30, "second"));
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 30), res.To(Codec.TS).Value);
+            Func<long, long> TicksToMicro = ticks => ticks / 10;
+            Func<long, long> TicksToNano = ticks => ticks * 100;
+
+            IReadOnlyList<Value> res = await client.Query(
+                Epoch(30, "second"),
+                Epoch(500, TimeUnit.Millisecond),
+                Epoch(TicksToMicro(1000), TimeUnit.Microsecond),
+                Epoch(TicksToNano(2), TimeUnit.Nanosecond)
+            );
+
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 30), res[0].To(Codec.TS).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 500), res[1].To(Codec.TS).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(1000), res[2].To(Codec.TS).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(2), res[3].To(Codec.TS).Value);
         }
 
         [Test] public async Task TestEvalDateExpression()
