@@ -12,8 +12,8 @@ namespace Test
     {
         [Test] public void TestRef()
         {
-            Assert.AreEqual(Success(new Ref("databases")), new Ref("databases").To(Codec.REF));
-            Assert.AreEqual(Fail<Ref>("Cannot convert StringV to Ref"), StringV.Of("a string").To(Codec.REF));
+            Assert.AreEqual(Success(new RefV("databases")), new RefV("databases").To(Codec.REF));
+            Assert.AreEqual(Fail<RefV>("Cannot convert StringV to RefV"), StringV.Of("a string").To(Codec.REF));
         }
 
         [Test] public void TestSetRef()
@@ -50,8 +50,8 @@ namespace Test
 
         [Test] public void TestTimestamp()
         {
-            Assert.AreEqual(Success(new DateTime(2000, 1, 1, 0, 0, 0, 123)), new TsV("2000-01-01T00:00:00.123Z").To(Codec.TS));
-            Assert.AreEqual(Fail<DateTime>("Cannot convert ObjectV to TsV"), ObjectV.Empty.To(Codec.TS));
+            Assert.AreEqual(Success(new DateTime(2000, 1, 1, 0, 0, 0, 123)), new TimeV("2000-01-01T00:00:00.123Z").To(Codec.TS));
+            Assert.AreEqual(Fail<DateTime>("Cannot convert ObjectV to TimeV"), ObjectV.Empty.To(Codec.TS));
         }
 
         [Test] public void TestDate()

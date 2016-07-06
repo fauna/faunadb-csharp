@@ -61,16 +61,16 @@ namespace FaunaDB.Query
             NullV.Instance;
 
         public static Expr Ref(string id) =>
-            new Ref(id);
+            new RefV(id);
 
         public static Expr Ref(Expr classRef, Expr id) =>
             UnescapedObject.With("ref", classRef, "id", id);
 
         public static Expr Ts(DateTime dateTime) =>
-            new TsV(dateTime);
+            new TimeV(dateTime);
 
         public static Expr Ts(string iso8601Time) =>
-            new TsV(iso8601Time);
+            new TimeV(iso8601Time);
 
         public static Expr Dt(DateTime dateTime) =>
             new DateV(dateTime);

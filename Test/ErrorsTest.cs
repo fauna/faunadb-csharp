@@ -89,7 +89,7 @@ namespace Test
         [Test] public async Task TestInstanceAlreadyExists()
         {
             await client.Query(Create(Ref("classes"), Obj("name", "duplicates")));
-            var @ref = (Ref) ((ObjectV) (await client.Query(Create(Ref("classes/duplicates"), Obj()))))["ref"];
+            var @ref = (await client.Query(Create(Ref("classes/duplicates"), Obj()))).At("ref");
             AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", "Instance already exists.", new List<string> { "create" });
         }
         #endregion

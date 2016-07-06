@@ -103,7 +103,7 @@ namespace FaunaDB.Types
                     switch (name)
                     {
                         case "@ref":
-                            return new Ref(ReadStringAndEndObject());
+                            return new RefV(ReadStringAndEndObject());
                         case "@obj":
                             NextAndExpect(JsonToken.StartObject);
                             var obj = ReadObjectBody(ReadPropertyName());
@@ -114,7 +114,7 @@ namespace FaunaDB.Types
                             NextAndExpect(JsonToken.EndObject);
                             return new SetRef(((ObjectV)v).Value);
                         case "@ts":
-                            return new TsV(ReadStringAndEndObject());
+                            return new TimeV(ReadStringAndEndObject());
                         case "@date":
                             return new DateV(ReadStringAndEndObject());
                         default:
@@ -174,8 +174,7 @@ namespace FaunaDB.Types
 
         Value Unexpected()
         {
-            //todo: FaunaException for invalid json
-            throw new NotSupportedException(reader.TokenType.ToString());
+            throw new InvalidResponseException(reader.TokenType.ToString());
         }
     }
 

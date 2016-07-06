@@ -31,7 +31,7 @@ namespace Test
 
         [Test] public void TestRef()
         {
-            Assert.AreEqual(new Ref("classes"), Json.FromJson("{\"@ref\":\"classes\"}"));
+            Assert.AreEqual(new RefV("classes"), Json.FromJson("{\"@ref\":\"classes\"}"));
         }
 
         [Test] public void TestArray()
@@ -47,7 +47,7 @@ namespace Test
 
         [Test] public void TestTimestamp()
         {
-            Assert.AreEqual(new TsV("2000-01-01T01:10:30.123Z"), Json.FromJson("{\"@ts\":\"2000-01-01T01:10:30.123Z\"}"));
+            Assert.AreEqual(new TimeV("2000-01-01T01:10:30.123Z"), Json.FromJson("{\"@ts\":\"2000-01-01T01:10:30.123Z\"}"));
         }
 
         [Test] public void TestObject()
@@ -70,7 +70,7 @@ namespace Test
         [Test] public void TestSetRef()
         {
             
-            Assert.AreEqual(new SetRef(ImmutableDictionary.Of<string, Value>("match", new Ref("indexes/spells_by_element"), "terms", StringV.Of("fire"))),
+            Assert.AreEqual(new SetRef(ImmutableDictionary.Of<string, Value>("match", new RefV("indexes/spells_by_element"), "terms", StringV.Of("fire"))),
                 Json.FromJson("{" +
                 "  \"@set\": {" +
                 "    \"match\": { \"@ref\": \"indexes/spells_by_element\" }," +

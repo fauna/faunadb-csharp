@@ -16,8 +16,8 @@ namespace FaunaDB.Types
             return Success(value);
         }
 
-        public static IResult<Ref> REF(Value input) =>
-            Cast.DoCast<Ref>(input);
+        public static IResult<RefV> REF(Value input) =>
+            Cast.DoCast<RefV>(input);
 
         public static IResult<SetRef> SETREF(Value input) =>
             Cast.DoCast<SetRef>(input);
@@ -38,7 +38,7 @@ namespace FaunaDB.Types
             Cast.MapTo<DateV, DateTime>(input, Cast.ScalarValue);
 
         public static IResult<DateTime> TS(Value input) =>
-            Cast.MapTo<TsV, DateTime>(input, Cast.ScalarValue);
+            Cast.MapTo<TimeV, DateTime>(input, Cast.ScalarValue);
 
         public static IResult<IReadOnlyList<Value>> ARRAY(Value input) =>
             Cast.MapTo<ArrayV, IReadOnlyList<Value>>(input, x => x.Value);

@@ -7,11 +7,11 @@ namespace FaunaDB.Types
 {
     sealed class Path
     {
-        public static readonly Path Empty = new Path(ArrayList<Segment>.Empty);
+        public static readonly Path Empty = new Path(ArrayList<ISegment>.Empty);
 
         internal static Path From(params string[] values)
         {
-            var segments = new ArrayList<Segment>();
+            var segments = new ArrayList<ISegment>();
             foreach (var field in values)
                 segments.Add(new ObjectKey(field));
             return new Path(segments);
@@ -19,22 +19,22 @@ namespace FaunaDB.Types
 
         internal static Path From(params int[] values)
         {
-            var segments = new ArrayList<Segment>();
+            var segments = new ArrayList<ISegment>();
             foreach (var index in values)
                 segments.Add(new ArrayIndex(index));
             return new Path(segments);
         }
 
-        IReadOnlyList<Segment> segments;
+        IReadOnlyList<ISegment> segments;
 
-        Path(IReadOnlyList<Segment> segments)
+        Path(IReadOnlyList<ISegment> segments)
         {
             this.segments = segments;
         }
 
         internal Path SubPath(Path other)
         {
-            var list = new ArrayList<Segment>();
+            var list = new ArrayList<ISegment>();
             foreach (var s in segments) list.Add(s);
             foreach (var s in other.segments) list.Add(s);
             return new Path(list);
@@ -64,12 +64,12 @@ namespace FaunaDB.Types
         public override string ToString() =>
             string.Join("/", segments);
 
-        interface Segment
+        interface ISegment
         {
             IResult<Value> Get(Value root);
         }
 
-        class ObjectKey : Segment
+        class ObjectKey : ISegment
         {
             private string field;
 
@@ -102,7 +102,7 @@ namespace FaunaDB.Types
                 field.ToString();
         }
 
-        class ArrayIndex : Segment
+        class ArrayIndex : ISegment
         {
             private int index;
 

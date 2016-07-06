@@ -101,20 +101,20 @@ namespace FaunaDB.Types
     /// <summary>
     /// FaunaDB ref. See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
     /// </summary>
-    public sealed class Ref : ScalarValue<string>
+    public sealed class RefV : ScalarValue<string>
     {
         /// <summary>
         /// Create a Ref from a string, such as <c>new Ref("databases/prydain")</c>.
         /// </summary>
         /// <param name="value">Value.</param>
-        public Ref(string value) : base(value) { }
+        public RefV(string value) : base(value) { }
 
         protected override void WriteJson(JsonWriter writer)
         {
             writer.WriteObject("@ref", Value);
         }
 
-        public static implicit operator string(Ref r) =>
+        public static implicit operator string(RefV r) =>
             r.Value;
     }
 
@@ -142,27 +142,27 @@ namespace FaunaDB.Types
     /// FaunaDB timestamp.
     /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
     /// </summary>
-    public sealed class TsV : ScalarValue<DateTime>
+    public sealed class TimeV : ScalarValue<DateTime>
     {
         /// <summary>
         /// Construct from an iso8601 time string.
         /// It must use the 'Z' time zone.
         /// </summary>
-        public TsV(string iso8601Time) : base(DateTimeUtil.FromIsoTime(iso8601Time, TimeFormat)) { }
+        public TimeV(string iso8601Time) : base(DateTimeUtil.FromIsoTime(iso8601Time, TimeFormat)) { }
 
-        public TsV(DateTime dateTime) : base(dateTime) { }
+        public TimeV(DateTime dateTime) : base(dateTime) { }
 
         /// <summary>
         /// Convert from a DateTime by rendering as iso8601.
         /// </summary>
-        public static explicit operator TsV(DateTime value) =>
-            new TsV(value);
+        public static explicit operator TimeV(DateTime value) =>
+            new TimeV(value);
 
         /// <summary>
         /// Convert to DateTime.
         /// Since DateTime has millisecond precision, this is lossy.
         /// </summary>
-        public static implicit operator DateTime(TsV ft) =>
+        public static implicit operator DateTime(TimeV ft) =>
             ft.Value;
 
         const string TimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFZ";
@@ -175,7 +175,7 @@ namespace FaunaDB.Types
         #region boilerplate
         public override bool Equals(Expr v)
         {
-            var t = v as TsV;
+            var t = v as TimeV;
             return t != null && t.Value == Value;
         }
 
@@ -259,14 +259,12 @@ namespace FaunaDB.Types
             }
 
             var dt = DateTime.ParseExact(iso, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-            //todo: On Mono, dt will not be in UTC even though we specified AssumeUniversal. Test again on windows.
             return dt.ToUniversalTime();
         }
 
         public static DateTime FromIsoDate(string iso, string format)
         {
             var dt = DateTime.ParseExact(iso, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-            //todo: On Mono, dt will not be in UTC even though we specified AssumeUniversal. Test again on windows.
             return dt.ToUniversalTime();
         }
 

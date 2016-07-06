@@ -21,7 +21,7 @@ namespace Test
         string scheme;
         int? port;
         Client rootClient;
-        protected Ref DbRef;
+        protected RefV DbRef;
         protected Client client;
 
         string serverKey;
@@ -46,7 +46,7 @@ namespace Test
             rootClient = GetClient(secret: cfg.Secret);
 
             const string dbName = "faunadb-csharp-test";
-            DbRef = new Ref($"databases/{dbName}");
+            DbRef = new RefV($"databases/{dbName}");
 
             try {
                 await rootClient.Query(Delete(DbRef));
@@ -79,9 +79,6 @@ namespace Test
             var mock = new MockClientIO(resp);
             return new Client(domain: domain, scheme: scheme, port: port, clientIO: mock);
         }
-
-        protected static Ref GetRef(Value v) =>
-            (Ref) ((ObjectV) v)["ref"];
     }
 
     class MockClientIO : IClientIO

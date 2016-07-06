@@ -16,21 +16,24 @@ namespace Test
     [TestFixture] public class ClientTest : TestCase
     {
         private static Field<Value> DATA = Field.At("data");
-        private static Field<Ref> REF_FIELD = Field.At("ref").To(Codec.REF);
-        private static Field<IReadOnlyList<Ref>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
+        private static Field<RefV> REF_FIELD = Field.At("ref").To(Codec.REF);
+        private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
 
         private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To(Codec.STRING);
         private static Field<string> ELEMENT_FIELD = DATA.At(Field.At("element")).To(Codec.STRING);
         private static Field<Value> ELEMENTS_LIST = DATA.At(Field.At("elements"));
         private static Field<long> COST_FIELD = DATA.At(Field.At("cost")).To(Codec.LONG);
 
-        private static Ref magicMissile;
-        private static Ref fireball;
-        private static Ref faerieFire;
-        private static Ref summon;
-        private static Ref thor;
-        private static Ref thorSpell1;
-        private static Ref thorSpell2;
+        private static RefV magicMissile;
+        private static RefV fireball;
+        private static RefV faerieFire;
+        private static RefV summon;
+        private static RefV thor;
+        private static RefV thorSpell1;
+        private static RefV thorSpell2;
+
+        RefV GetRef(Value v) =>
+            v.Get(REF_FIELD);
 
         [OneTimeSetUp] new public void SetUp()
         {
@@ -116,7 +119,7 @@ namespace Test
                 Obj("data", Obj("name", "Thor")))
             ));
 
-            Ref thorsSpellbook = GetRef(await client.Query(
+            RefV thorsSpellbook = GetRef(await client.Query(
               Create(Ref("classes/spellbooks"),
                 Obj("data",
                   Obj("owner", thor)))
@@ -288,7 +291,7 @@ namespace Test
 
         [Test] public async Task TestHandleConstraintViolations()
         {
-            Ref classRef = await RandomClass();
+            RefV classRef = await RandomClass();
 
             await client.Query(
                 Create(Ref("indexes"),
@@ -359,7 +362,7 @@ namespace Test
 
             IReadOnlyDictionary<string, Value> set = res.To(Codec.SETREF).Value.Value;
             Assert.AreEqual("arcane", set["terms"].To(Codec.STRING).Value);
-            Assert.AreEqual(new Ref("indexes/spells_by_element"), set["match"].To(Codec.REF).Value);
+            Assert.AreEqual(new RefV("indexes/spells_by_element"), set["match"].To(Codec.REF).Value);
         }
 
         [Test] public async Task TestEvalLetExpression()
@@ -390,7 +393,7 @@ namespace Test
 
         [Test] public async Task TestEvalDoExpression()
         {
-            Ref @ref = new Ref(RandomStartingWith((await RandomClass()).Value, "/"));
+            RefV @ref = new RefV(RandomStartingWith((await RandomClass()).Value, "/"));
 
             Value res = await client.Query(
                 Do(Create(@ref, Obj("data", Obj("name", "Magic Missile"))),
@@ -766,7 +769,7 @@ namespace Test
             Assert.AreEqual("Scope all is OK", await client.Ping("all"));
         }
 
-        private async Task<Ref> RandomClass()
+        private async Task<RefV> RandomClass()
         {
             Value clazz = await client.Query(
               Create(Ref("classes"),
