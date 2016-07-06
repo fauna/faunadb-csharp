@@ -8,7 +8,7 @@ namespace FaunaDB.Collections
     {
         public static readonly ArrayList<T> Empty = new ArrayList<T>();
 
-        List<T> list;
+        readonly List<T> list;
 
         internal ArrayList(List<T> list)
         {
@@ -91,15 +91,12 @@ namespace FaunaDB.Collections
             $"[{string.Join(", ", list)}]";
     }
 
-    public sealed class ImmutableList
+    public static class ImmutableList
     {
         public static IReadOnlyList<T> Empty<T>() =>
             ArrayList<T>.Empty;
 
-        public static IReadOnlyList<T> Of<T>(params T[] values)
-        {
-            List<T> list = new List<T>(values);
-            return new ArrayList<T>(list.AsReadOnly());
-        }
+        public static IReadOnlyList<T> Of<T>(params T[] values) =>
+            new ArrayList<T>(values);
     }
 }

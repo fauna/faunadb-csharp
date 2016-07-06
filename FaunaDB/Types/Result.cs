@@ -19,7 +19,7 @@ namespace FaunaDB.Types
 
     class Success<T> : IResult<T>
     {
-        T value;
+        readonly T value;
 
         internal Success(T value)
         {
@@ -44,8 +44,8 @@ namespace FaunaDB.Types
 
         public override bool Equals(object obj)
         {
-            Success<T> other = obj as Success<T>;
-            return other != null && object.Equals(value, other.value);
+            var other = obj as Success<T>;
+            return other != null && Equals(value, other.value);
         }
 
         public override int GetHashCode() =>
@@ -57,7 +57,7 @@ namespace FaunaDB.Types
 
     class Failure<T> : IResult<T>
     {
-        string reason;
+        readonly string reason;
 
         internal Failure(string reason)
         {
@@ -82,8 +82,8 @@ namespace FaunaDB.Types
 
         public override bool Equals(object obj)
         {
-            Failure<T> other = obj as Failure<T>;
-            return other != null && reason.Equals(other.reason);
+            var other = obj as Failure<T>;
+            return other != null && Equals(reason, other.reason);
         }
 
         public override int GetHashCode() =>
@@ -93,7 +93,7 @@ namespace FaunaDB.Types
             reason;
     }
 
-    public class Result
+    public static class Result
     {
         public static IResult<T> Success<T>(T value) =>
             new Success<T>(value);

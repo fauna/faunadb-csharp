@@ -68,7 +68,7 @@ namespace FaunaDB.Types
             ((IEnumerable) Value).GetEnumerator();
 
         IEnumerator<Value> IEnumerable<Value>.GetEnumerator() =>
-            ((IEnumerable<Value>) Value).GetEnumerator();
+            Value.GetEnumerator();
         #endregion
 
         #region boilerplate

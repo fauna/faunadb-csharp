@@ -71,7 +71,7 @@ namespace FaunaDB.Types
 
         class ObjectKey : ISegment
         {
-            private string field;
+            readonly string field;
 
             public ObjectKey(string field)
             {
@@ -91,7 +91,7 @@ namespace FaunaDB.Types
 
             public override bool Equals(object obj)
             {
-                ObjectKey other = obj as ObjectKey;
+                var other = obj as ObjectKey;
                 return other != null && field == other.field;
             }
 
@@ -99,12 +99,12 @@ namespace FaunaDB.Types
                 field.GetHashCode();
 
             public override string ToString() =>
-                field.ToString();
+                field;
         }
 
         class ArrayIndex : ISegment
         {
-            private int index;
+            readonly int index;
 
             public ArrayIndex(int index)
             {
@@ -123,7 +123,7 @@ namespace FaunaDB.Types
 
             public override bool Equals(object obj)
             {
-                ArrayIndex other = obj as ArrayIndex;
+                var other = obj as ArrayIndex;
                 return other != null && index == other.index;
             }
 

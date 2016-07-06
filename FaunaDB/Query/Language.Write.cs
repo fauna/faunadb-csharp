@@ -47,13 +47,13 @@
             UnescapedObject.With("insert", @ref, "ts", ts, "action", action, "params", @params);
 
         /// <summary>
-        /// <see cref="Remove"/> that takes an <see cref="Event"/> object instead of separate parameters.
+        /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
         public static Expr Remove(Expr @ref, Expr ts, ActionType action) =>
             Remove(@ref, ts, (Expr)action);
 
         /// <summary>
-        /// <see cref="Remove"/> that takes an <see cref="Event"/> object instead of separate parameters.
+        /// See the <see href="https://faunadb.com/documentation/queries#write_functions">docs</see>. 
         /// </summary>
         public static Expr Remove(Expr @ref, Expr ts, Expr action) =>
             UnescapedObject.With("remove", @ref, "ts", ts, "action", action);

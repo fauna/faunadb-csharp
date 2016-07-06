@@ -79,7 +79,7 @@ namespace FaunaDB.Query
             new DateV(iso8601Date);
 
         /// <summary>
-        /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Arr(params Expr[] values) =>
             UnescapedArray.Of(values);
@@ -88,7 +88,7 @@ namespace FaunaDB.Query
             UnescapedArray.Of(values);
 
         /// <summary>
-        /// See the <see cref="https://faunadb.com/documentation/queries#values">docs</see>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
         public static Expr Obj(IReadOnlyDictionary<string, Expr> fields) =>
             UnescapedObject.With("object", new UnescapedObject(fields));

@@ -34,9 +34,9 @@ namespace FaunaDB.Client
                     return "PATCH";
                 case HttpMethodKind.Delete:
                     return "DELETE";
-                default:
-                    throw new Exception($"Bad value: {method}");
             }
+
+            throw new ArgumentException($"Bad value: {method}");
         }
     }
 }

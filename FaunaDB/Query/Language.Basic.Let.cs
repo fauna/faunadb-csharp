@@ -7,8 +7,8 @@ namespace FaunaDB.Query
     {
         public struct LetBinding<TFunc>
         {
-            private UnescapedObject vars;
-            private Func<TFunc, Expr> invoker;
+            UnescapedObject vars;
+            Func<TFunc, Expr> invoker;
 
             internal LetBinding(UnescapedObject vars, Func<TFunc, Expr> invoker)
             {
@@ -25,7 +25,7 @@ namespace FaunaDB.Query
 
         public static LetBinding<Func<Expr, Expr>> Let(string k0, Expr v0) =>
             new LetBinding<Func<Expr, Expr>>(UnescapedObject.With(k0, v0), fn => {
-                ParameterInfo[] info = fn.Method.GetParameters();
+                var info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
 
@@ -34,7 +34,7 @@ namespace FaunaDB.Query
 
         public static LetBinding<Func<Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1) =>
             new LetBinding<Func<Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1), fn => {
-                ParameterInfo[] info = fn.Method.GetParameters();
+                var info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
                 var a1 = Var(info[1].Name);
@@ -44,7 +44,7 @@ namespace FaunaDB.Query
 
         public static LetBinding<Func<Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2) =>
             new LetBinding<Func<Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2), fn => {
-                ParameterInfo[] info = fn.Method.GetParameters();
+                var info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
                 var a1 = Var(info[1].Name);
@@ -55,7 +55,7 @@ namespace FaunaDB.Query
 
         public static LetBinding<Func<Expr, Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3) =>
             new LetBinding<Func<Expr, Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3), fn => {
-                ParameterInfo[] info = fn.Method.GetParameters();
+                var info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
                 var a1 = Var(info[1].Name);
@@ -67,7 +67,7 @@ namespace FaunaDB.Query
 
         public static LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4) =>
             new LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3, k4, v4), fn => {
-                ParameterInfo[] info = fn.Method.GetParameters();
+                var info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
                 var a1 = Var(info[1].Name);
@@ -80,7 +80,7 @@ namespace FaunaDB.Query
 
         public static LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>> Let(string k0, Expr v0, string k1, Expr v1, string k2, Expr v2, string k3, Expr v3, string k4, Expr v4, string k5, Expr v5) =>
             new LetBinding<Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>>(UnescapedObject.With(k0, v0, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5), fn => {
-                ParameterInfo[] info = fn.Method.GetParameters();
+                var info = fn.Method.GetParameters();
 
                 var a0 = Var(info[0].Name);
                 var a1 = Var(info[1].Name);

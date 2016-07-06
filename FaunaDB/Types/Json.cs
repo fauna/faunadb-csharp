@@ -20,9 +20,9 @@ namespace FaunaDB.Types
             {
                 return JsonConvert.DeserializeObject<Value>(json, settings);
             }
-            catch (JsonReaderException j)
+            catch (JsonReaderException ex)
             {
-                throw new InvalidResponseException($"Bad JSON: {j}");
+                throw new InvalidResponseException($"Bad JSON: {ex}");
             }
         }
 

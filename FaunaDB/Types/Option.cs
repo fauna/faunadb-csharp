@@ -40,8 +40,8 @@ namespace FaunaDB.Types
 
         public override bool Equals(object obj)
         {
-            Some<T> other = obj as Some<T>;
-            return other != null && object.Equals(value, other.value);
+            var other = obj as Some<T>;
+            return other != null && Equals(value, other.value);
         }
 
         public override int GetHashCode() =>
@@ -71,7 +71,7 @@ namespace FaunaDB.Types
 
         public override bool Equals(object obj)
         {
-            INone other = obj as INone;
+            var other = obj as INone;
 
             return other != null;
         }
@@ -83,7 +83,7 @@ namespace FaunaDB.Types
             $"None()";
     }
 
-    public class Option
+    public static class Option
     {
         public static IOption<T> Some<T>(T value) =>
             new Some<T>(value);

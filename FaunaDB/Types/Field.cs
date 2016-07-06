@@ -8,12 +8,12 @@ namespace FaunaDB.Types
 {
     public sealed class Field<T>
     {
-        private static Func<Value, IResult<IReadOnlyList<V>>> ToCollection<V>(Path path, Field<V> field)
+        static Func<Value, IResult<IReadOnlyList<V>>> ToCollection<V>(Path path, Field<V> field)
         {
             return input => input.To(Codec.ARRAY).FlatMap(ToList(path, field));
         }
 
-        private static Func<IReadOnlyList<Value>, IResult<IReadOnlyList<V>>> ToList<V>(Path path, Field<V> field)
+        static Func<IReadOnlyList<Value>, IResult<IReadOnlyList<V>>> ToList<V>(Path path, Field<V> field)
         {
             return values =>
             {
@@ -39,8 +39,8 @@ namespace FaunaDB.Types
             };
         }
 
-        private Path path;
-        private Func<Value, IResult<T>> codec;
+        Path path;
+        Func<Value, IResult<T>> codec;
 
         internal Field(Path path, Func<Value, IResult<T>> codec)
         {
@@ -62,7 +62,7 @@ namespace FaunaDB.Types
 
         public override bool Equals(object obj)
         {
-            Field<T> other = obj as Field<T>;
+            var other = obj as Field<T>;
             return other != null && path.Equals(other.path);
         }
 
@@ -73,7 +73,7 @@ namespace FaunaDB.Types
             path.ToString();
     }
 
-    public sealed class Field
+    public static class Field
     {
         public static readonly Field<Value> Root =
             new Field<Value>(Path.Empty, Codec.VALUE);

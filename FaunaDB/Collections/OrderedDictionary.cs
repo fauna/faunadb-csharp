@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
@@ -9,7 +8,7 @@ namespace FaunaDB.Collections
     {
         public static readonly OrderedDictionary<TKey, TValue> Empty = new OrderedDictionary<TKey, TValue>();
 
-        OrderedDictionary dictionary;
+        readonly OrderedDictionary dictionary;
 
         internal OrderedDictionary(OrderedDictionary dictionary)
         {
@@ -164,28 +163,28 @@ namespace FaunaDB.Collections
                 TValue valueB;
                 if (!b.TryGetValue(kv.Key, out valueB))
                     return false;
-                if (!object.Equals(kv.Value, valueB))
+                if (!Equals(kv.Value, valueB))
                     return false;
             }
             return true;
         }
     }
 
-    public sealed class ImmutableDictionary
+    public static class ImmutableDictionary
     {
         public static IReadOnlyDictionary<TKey, TValue> Empty<TKey, TValue>() =>
             OrderedDictionary<TKey, TValue>.Empty;
 
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0)
         {
-            OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
+            var dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             return dic;
         }
 
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1)
         {
-            OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
+            var dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             return dic;
@@ -193,7 +192,7 @@ namespace FaunaDB.Collections
 
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2)
         {
-            OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
+            var dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             dic.Add(k2, v2);
@@ -202,7 +201,7 @@ namespace FaunaDB.Collections
 
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3)
         {
-            OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
+            var dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             dic.Add(k2, v2);
@@ -212,7 +211,7 @@ namespace FaunaDB.Collections
 
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4)
         {
-            OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
+            var dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             dic.Add(k2, v2);
@@ -223,7 +222,7 @@ namespace FaunaDB.Collections
 
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5)
         {
-            OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
+            var dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             dic.Add(k2, v2);
@@ -235,7 +234,7 @@ namespace FaunaDB.Collections
 
         public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5, TKey1 k6, TValue1 v6)
         {
-            OrderedDictionary<TKey1, TValue1> dic = new OrderedDictionary<TKey1, TValue1>();
+            var dic = new OrderedDictionary<TKey1, TValue1>();
             dic.Add(k0, v0);
             dic.Add(k1, v1);
             dic.Add(k2, v2);

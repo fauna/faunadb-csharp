@@ -1,5 +1,4 @@
 ﻿using System;
-using FaunaDB.Errors;
 using FaunaDB.Types;
 
 using static FaunaDB.Query.Language;
@@ -109,40 +108,40 @@ namespace FaunaDB.Query
 
         #region Operators
         public static Expr operator !(Expr a) =>
-            Language.Not(a);
+            Not(a);
 
         public static Expr operator +(Expr a, Expr b) =>
-            Language.Add(a, b);
+            Add(a, b);
 
         public static Expr operator -(Expr a, Expr b) =>
-            Language.Subtract(a, b);
+            Subtract(a, b);
 
         public static Expr operator *(Expr a, Expr b) =>
-            Language.Multiply(a, b);
+            Multiply(a, b);
 
         public static Expr operator /(Expr a, Expr b) =>
-            Language.Divide(a, b);
+            Divide(a, b);
 
         public static Expr operator %(Expr a, Expr b) =>
-            Language.Modulo(a, b);
+            Modulo(a, b);
 
         public static Expr operator &(Expr a, Expr b) =>
-            Language.And(a, b);
+            And(a, b);
 
         public static Expr operator |(Expr a, Expr b) =>
-            Language.Or(a, b);
+            Or(a, b);
 
         public static Expr operator <(Expr a, Expr b) =>
-            Language.LT(a, b);
+            LT(a, b);
 
         public static Expr operator <=(Expr a, Expr b) =>
-            Language.LTE(a, b);
+            LTE(a, b);
 
         public static Expr operator >(Expr a, Expr b) =>
-            Language.GT(a, b);
+            GT(a, b);
 
         public static Expr operator >=(Expr a, Expr b) =>
-            Language.GTE(a, b);
+            GTE(a, b);
 
         #endregion
     }

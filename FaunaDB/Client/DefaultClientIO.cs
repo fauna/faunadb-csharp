@@ -46,7 +46,7 @@ namespace FaunaDB.Client
 
         static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers)
         {
-            OrderedDictionary<string, IEnumerable<string>> dic = new OrderedDictionary<string, IEnumerable<string>>();
+            var dic = new OrderedDictionary<string, IEnumerable<string>>();
 
             foreach (var kv in headers)
                 dic.Add(kv.Key, kv.Value);
@@ -58,8 +58,8 @@ namespace FaunaDB.Client
         // Based on: http://stackoverflow.com/questions/19851474/networkcredential-working-for-post-but-not-get
         static string AuthString(string secret)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(secret);
-            string base64 = Convert.ToBase64String(bytes);
+            var bytes = Encoding.ASCII.GetBytes(secret);
+            var base64 = Convert.ToBase64String(bytes);
             return $"Basic {base64}";
         }
 

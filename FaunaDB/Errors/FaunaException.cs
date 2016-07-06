@@ -1,12 +1,16 @@
-﻿using FaunaDB.Client;
-using FaunaDB.Utils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FaunaDB.Collections;
 using FaunaDB.Types;
 
 namespace FaunaDB.Errors
 {
+    public class InvalidResponseException : Exception
+    {
+        public InvalidResponseException(string message) : base(message) {}
+    }
+
     /// <summary>
     /// Error returned by the FaunaDB server.
     /// For documentation of error types, see the <see href="https://faunadb.com/documentation#errors">docs</see>.
@@ -18,27 +22,17 @@ namespace FaunaDB.Errors
         /// <summary>
         /// List of all errors sent by the server.
         /// </summary>
-        public IReadOnlyList<QueryError> Errors
-        {
-            get
-            {
-                return queryErrorResponse.Match(
-                    Some: value => value.Errors,
-                    None: () => new List<QueryError>().AsReadOnly()
-                );
-            }
-        }
+        public IReadOnlyList<QueryError> Errors =>
+            queryErrorResponse.Match(
+                Some: value => value.Errors,
+                None: () => ImmutableList.Of<QueryError>()
+            );
 
-        public int StatusCode
-        {
-            get
-            {
-                return queryErrorResponse.Match(
-                    Some: value => value.StatusCode,
-                    None: () => 0
-                );
-            }
-        }
+        public int StatusCode =>
+            queryErrorResponse.Match(
+                Some: value => value.StatusCode,
+                None: () => 0
+            );
 
         protected FaunaException(QueryErrorResponse response) : base(CreateMessage(response.Errors))
         {

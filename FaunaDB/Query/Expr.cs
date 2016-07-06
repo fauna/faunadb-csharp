@@ -28,10 +28,10 @@ namespace FaunaDB.Query
         public abstract bool Equals(Expr v);
 
         public static bool operator ==(Expr a, Expr b) =>
-            object.Equals(a, b);
+            Equals(a, b);
 
         public static bool operator !=(Expr a, Expr b) =>
-            !object.Equals(a, b);
+            !Equals(a, b);
 
         public override int GetHashCode() =>
             HashCode();

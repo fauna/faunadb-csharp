@@ -1,6 +1,5 @@
 ﻿using FaunaDB.Errors;
 using FaunaDB.Query;
-using FaunaDB.Types;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,7 +123,7 @@ namespace Test
         }
     }
 
-    public class InvalidExpression : Expr
+    class InvalidExpression : Expr
     {
         public override bool Equals(Expr v) => true;
         protected override int HashCode() => 0;
