@@ -77,8 +77,8 @@ namespace FaunaDB.Query
         {
             Value = value;
 
-            if (Value == null)
-                throw new NullReferenceException();
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
         }
 
         public override bool Equals(Expr v)

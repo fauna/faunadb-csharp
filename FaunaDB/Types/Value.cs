@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using FaunaDB.Collections;
 using FaunaDB.Query;
 using Newtonsoft.Json;
 

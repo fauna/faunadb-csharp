@@ -24,8 +24,8 @@ namespace FaunaDB.Types
         {
             Value = value;
 
-            if (Value == null)
-                throw new NullReferenceException();
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace FaunaDB.Types
         /// <param name="builder">
         /// A lambda <c>(add) => { ... }</c> that calls <c>add(key, value)</c> for each pair to be in the new ObjectV.
         /// </param>
-        public ObjectV(Action<Action<string, Value>> builder)
+        internal ObjectV(Action<Action<string, Value>> builder)
         {
             var dic = new OrderedDictionary<string, Value>();
             builder((k, v) => dic.Add(new KeyValuePair<string, Value>(k, v)));

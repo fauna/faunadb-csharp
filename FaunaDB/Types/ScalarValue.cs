@@ -91,7 +91,7 @@ namespace FaunaDB.Types
         internal StringV(string value) : base(value)
         {
             if (value == null)
-                throw new NullReferenceException();
+                throw new ArgumentNullException(nameof(value));
         }
 
         public static StringV Of(string v) =>
@@ -107,7 +107,11 @@ namespace FaunaDB.Types
         /// Create a Ref from a string, such as <c>new Ref("databases/prydain")</c>.
         /// </summary>
         /// <param name="value">Value.</param>
-        public RefV(string value) : base(value) { }
+        public RefV(string value) : base(value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+        }
 
         protected override void WriteJson(JsonWriter writer)
         {
@@ -127,7 +131,11 @@ namespace FaunaDB.Types
     /// </remarks>
     public sealed class SetRef : ScalarValue<IReadOnlyDictionary<string, Value>>
     {
-        public SetRef(IReadOnlyDictionary<string, Value> q) : base(q) { }
+        public SetRef(IReadOnlyDictionary<string, Value> name) : base(name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+        }
 
         protected override void WriteJson(JsonWriter writer)
         {

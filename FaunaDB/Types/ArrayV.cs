@@ -25,16 +25,16 @@ namespace FaunaDB.Types
         {
             Value = new ArrayList<Value>(value);
 
-            if (Value == null)
-                throw new NullReferenceException();
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
         }
 
         internal ArrayV(IReadOnlyList<Value> value)
         {
             Value = value;
 
-            if (Value == null)
-                throw new NullReferenceException();
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
