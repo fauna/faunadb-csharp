@@ -1,16 +1,17 @@
-﻿using FaunaDB.Collections;
+﻿using System.Collections.Generic;
+using FaunaDB.Collections;
 
 using static FaunaDB.Types.Result;
 
 namespace FaunaDB.Types
 {
-    internal sealed class Path
+    sealed class Path
     {
-        public static readonly Path Empty = new Path(new ArrayList<Segment>());
+        public static readonly Path Empty = new Path(ArrayList<Segment>.Empty);
 
         internal static Path From(params string[] values)
         {
-            ArrayList<Segment> segments = new ArrayList<Segment>();
+            var segments = new ArrayList<Segment>();
             foreach (var field in values)
                 segments.Add(new ObjectKey(field));
             return new Path(segments);
@@ -18,22 +19,22 @@ namespace FaunaDB.Types
 
         internal static Path From(params int[] values)
         {
-            ArrayList<Segment> segments = new ArrayList<Segment>();
+            var segments = new ArrayList<Segment>();
             foreach (var index in values)
                 segments.Add(new ArrayIndex(index));
             return new Path(segments);
         }
 
-        private ArrayList<Segment> segments;
+        IReadOnlyList<Segment> segments;
 
-        private Path(ArrayList<Segment> segments)
+        Path(IReadOnlyList<Segment> segments)
         {
             this.segments = segments;
         }
 
         internal Path SubPath(Path other)
         {
-            ArrayList<Segment> list = new ArrayList<Segment>();
+            var list = new ArrayList<Segment>();
             foreach (var s in segments) list.Add(s);
             foreach (var s in other.segments) list.Add(s);
             return new Path(list);

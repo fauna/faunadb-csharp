@@ -17,8 +17,8 @@ namespace FaunaDB.Types
         {
             return values =>
             {
-                ArrayList<V> success = new ArrayList<V>();
-                ArrayList<string> failures = new ArrayList<string>();
+                var success = new ArrayList<V>();
+                var failures = new ArrayList<string>();
 
                 for (int i = 0; i < values.Count; i++)
                 {

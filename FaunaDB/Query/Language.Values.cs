@@ -9,32 +9,34 @@ namespace FaunaDB.Query
     {
         public struct PathSelector
         {
-            ArrayList<Expr> segments;
+            IReadOnlyList<Expr> segments;
 
             internal Expr Segments { get { return Arr(segments); } }
 
-            internal PathSelector(ArrayList<Expr> segments)
+            internal PathSelector(IReadOnlyList<Expr> segments)
             {
                 this.segments = segments;
             }
 
             internal PathSelector(params string[] segments)
             {
-                this.segments = new ArrayList<Expr>();
+                var segs = new ArrayList<Expr>();
                 foreach (var s in segments)
-                    this.segments.Add(s);
+                    segs.Add(s);
+                this.segments = segs;
             }
 
             internal PathSelector(params int[] segments)
             {
-                this.segments = new ArrayList<Expr>();
+                var segs = new ArrayList<Expr>();
                 foreach (var s in segments)
-                    this.segments.Add(s);
+                    segs.Add(s);
+                this.segments = segs;
             }
 
             public PathSelector At(params string[] others)
             {
-                ArrayList<Expr> all = new ArrayList<Expr>(segments);
+                var all = new ArrayList<Expr>(segments);
                 foreach (var s in others)
                     all.Add(s);
                 return new PathSelector(all);
@@ -42,7 +44,7 @@ namespace FaunaDB.Query
 
             public PathSelector At(params int[] others)
             {
-                ArrayList<Expr> all = new ArrayList<Expr>(segments);
+                var all = new ArrayList<Expr>(segments);
                 foreach (var s in others)
                     all.Add(s);
                 return new PathSelector(all);

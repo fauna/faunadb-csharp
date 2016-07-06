@@ -14,9 +14,9 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class ArrayV : Value, IEnumerable<Value>
     {
-        public static readonly ArrayV Empty = new ArrayV(new ArrayList<Value>());
+        public static readonly ArrayV Empty = new ArrayV(ArrayList<Value>.Empty);
 
-        public ArrayList<Value> Value { get; }
+        public IReadOnlyList<Value> Value { get; }
 
         public static ArrayV Of(params Value[] values) =>
             new ArrayV(values);
@@ -29,7 +29,7 @@ namespace FaunaDB.Types
                 throw new NullReferenceException();
         }
 
-        internal ArrayV(ArrayList<Value> value)
+        internal ArrayV(IReadOnlyList<Value> value)
         {
             Value = value;
 
@@ -45,8 +45,9 @@ namespace FaunaDB.Types
         /// </param>
         public ArrayV(Action<Action<Value>> builder)
         {
-            Value = new ArrayList<Value>();
-            builder(Value.Add);
+            var value = new ArrayList<Value>();
+            builder(value.Add);
+            Value = value;
         }
 
         /// <summary>
