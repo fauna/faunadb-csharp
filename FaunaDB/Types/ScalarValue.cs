@@ -245,10 +245,20 @@ namespace FaunaDB.Types
         public static string ToIso(this DateTime dt, string format) =>
             dt.ToString(format, CultureInfo.InvariantCulture);
 
-        public static DateTime FromIsoTime(string iso, string format)
+        public static DateTime FromIsoTime(string dateString, string format)
         {
-            //TODO Remove this workaround
+            var dateTruncated = TruncateLastTwoDigits(dateString);
+            var dateParsed = DateTime.ParseExact(dateTruncated, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
+            return dateParsed.ToUniversalTime();
+        }
 
+        /// <summary>
+        /// Given the response of the server use timestamps with high resolution it can represent
+        /// timestamps with resolution of 1ns, like for example: 1970-01-01T00:00:00.000000001Z.
+        /// However C# has a resolution of 100ns, so it cannot handle the last two digits of response.
+        /// </summary>
+        static string TruncateLastTwoDigits(string iso)
+        {
             var index = iso.LastIndexOf(".");
 
             if (index >= 0)
@@ -256,7 +266,7 @@ namespace FaunaDB.Types
                 iso = iso.Substring(0, Math.Min(iso.Length, index + 8));
 
                 if (!iso.EndsWith("Z"))
-                    iso = iso + "Z";
+                    iso += "Z";
             }
             else
             {
@@ -266,8 +276,7 @@ namespace FaunaDB.Types
                 iso += ".0000000Z";
             }
 
-            var dt = DateTime.ParseExact(iso, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-            return dt.ToUniversalTime();
+            return iso;
         }
 
         public static DateTime FromIsoDate(string iso, string format)
