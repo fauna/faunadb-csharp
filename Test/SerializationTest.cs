@@ -1,5 +1,6 @@
 ﻿using FaunaDB.Query;
 using FaunaDB.Types;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 
@@ -9,9 +10,9 @@ namespace Test
 {
     [TestFixture] public class SerializationTest
     {
-        private static void AssertJsonEqual(Expr expr, string value)
+        static void AssertJsonEqual(Expr expr, string value)
         {
-            Assert.AreEqual(value, expr.ToJson());
+            Assert.AreEqual(value, JsonConvert.SerializeObject(expr, Formatting.None));
         }
 
         [Test] public void TestLiteralValues()
@@ -41,8 +42,7 @@ namespace Test
             AssertJsonEqual(Obj("long", 10, "double", 2.78), "{\"object\":{\"long\":10,\"double\":2.78}}");
         }
 
-        [Test]
-        public void TestObjectAndArrays()
+        [Test] public void TestObjectAndArrays()
         {
             AssertJsonEqual(Obj("foo", Arr("bar")), "{\"object\":{\"foo\":[\"bar\"]}}");
 
@@ -56,10 +56,9 @@ namespace Test
             AssertJsonEqual(Obj("a", Obj("b", Obj("c", "d"))), "{\"object\":{\"a\":{\"object\":{\"b\":{\"object\":{\"c\":\"d\"}}}}}}");
         }
 
-        [Test]
-        public void TestAnonymousObj()
+        [Test] public void TestAnonymousObj()
         {
-            Expr obj = Obj(new
+            var obj = Obj(new
             {
                 foo = 10,
                 bar = "bar",
