@@ -98,12 +98,6 @@ namespace Test
     class Config {
         public static async Task<Config> GetConfig()
         {
-            /*
-            TODO: Would be nice to read from environment variables, but they don't work on Mono.
-            Func<string, string> env = Environment.GetEnvironmentVariable;
-            domain = env("FAUNA_DOMAIN");
-            ...
-            */
             string directory = System.AppDomain.CurrentDomain.BaseDirectory;
 
             while (!File.Exists(System.IO.Path.Combine(directory, "testConfig.json")))
