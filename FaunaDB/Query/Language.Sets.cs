@@ -4,7 +4,6 @@ namespace FaunaDB.Query
 {
     public partial struct Language
     {
-        #region Sets
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#sets">docs</see>.
         /// </summary>
@@ -76,6 +75,5 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Join(Expr source, Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> target) =>
             Join(source, Lambda(target));
-        #endregion
     }
 }

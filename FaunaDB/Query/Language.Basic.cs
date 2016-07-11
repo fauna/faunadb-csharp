@@ -4,7 +4,6 @@ namespace FaunaDB.Query
 {
     public partial struct Language
     {
-        #region Basic Forms
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
         /// This is the raw version. Usually it's easier to use the overload.
@@ -42,6 +41,5 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Lambda(Expr vars, Expr expr) =>
             UnescapedObject.With("lambda", vars, "expr", expr);
-        #endregion
     }
 }

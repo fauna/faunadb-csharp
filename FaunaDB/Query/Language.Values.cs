@@ -80,10 +80,7 @@ namespace FaunaDB.Query
         public static Expr Obj(IReadOnlyDictionary<string, Expr> fields) =>
             UnescapedObject.With("object", new UnescapedObject(fields));
 
-        #region Helpers
         static Expr Varargs(Expr[] values) =>
             values.Length == 1 ? values[0] : UnescapedArray.Of(values);
-        #endregion
-
     }
 }

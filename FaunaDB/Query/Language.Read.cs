@@ -2,16 +2,14 @@
 {
     public partial struct Language
     {
-        #region Read Functions
-
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
         /// </summary>
         public static Expr Get(Expr @ref, Expr ts = null) =>
             UnescapedObject.With("get", @ref, "ts", ts);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
         /// </summary>
         public static Expr Paginate(
             Expr set,
@@ -31,16 +29,15 @@
                     "sources", sources);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
         /// </summary>
         public static Expr Exists(Expr @ref, Expr ts = null) =>
             UnescapedObject.With("exists", @ref, "ts", ts);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>. 
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
         /// </summary>
         public static Expr Count(Expr set, Expr events = null) =>
             UnescapedObject.With("count", set, "events", events);
-        #endregion
     }
 }
