@@ -47,6 +47,7 @@
     <Compile Include="Query\Language.Collection.Filter.cs" />
     <Compile Include="Query\Language.Collection.Foreach.cs" />
     <Compile Include="Query\Language.Collection.Map.cs" />
+    <Compile Include="Query\Language.cs" />
     <Compile Include="Query\Language.Miscellaneous.cs" />
     <Compile Include="Query\Language.Read.cs" />
     <Compile Include="Query\Language.Sets.cs" />
