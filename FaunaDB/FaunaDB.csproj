@@ -81,6 +81,8 @@
     <Compile Include="Errors\QueryError.cs" />
     <Compile Include="Errors\ValidationFailure.cs" />
     <Compile Include="Errors\QueryErrorResponse.cs" />
+    <Compile Include="Collections\ImmutableDictionary.cs" />
+    <Compile Include="Collections\ImmutableList.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

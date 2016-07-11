@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FaunaDB.Collections
 {
-    public class ArrayList<T> : IList<T>, IReadOnlyList<T>
+    class ArrayList<T> : IList<T>, IReadOnlyList<T>
     {
         public static readonly ArrayList<T> Empty = new ArrayList<T>();
 
@@ -89,14 +89,5 @@ namespace FaunaDB.Collections
 
         public override string ToString() =>
             $"[{string.Join(", ", list)}]";
-    }
-
-    public static class ImmutableList
-    {
-        public static IReadOnlyList<T> Empty<T>() =>
-            ArrayList<T>.Empty;
-
-        public static IReadOnlyList<T> Of<T>(params T[] values) =>
-            new ArrayList<T>(values);
     }
 }
