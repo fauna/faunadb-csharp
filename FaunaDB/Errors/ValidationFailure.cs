@@ -3,8 +3,8 @@ using Newtonsoft.Json;
 
 namespace FaunaDB.Errors
 {
-	public class ValidationFailure
-	{
+    public class ValidationFailure
+    {
         public IReadOnlyList<string> Field { get; private set; }
         public string Code { get; private set; }
         public string Description { get; private set; }
