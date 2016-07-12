@@ -21,12 +21,18 @@ namespace FaunaDB.Types
         public static ArrayV Of(params Value[] values) =>
             new ArrayV(values);
 
-        internal ArrayV(params Value[] value)
-        {
-            Value = new ArrayList<Value>(value);
+        public static ArrayV Of(IEnumerable<Value> values) =>
+            new ArrayV(values);
 
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+        internal ArrayV(params Value[] values) : this((IEnumerable<Value>)values)
+        { }
+
+        internal ArrayV(IEnumerable<Value> values)
+        {
+            Value = new ArrayList<Value>(values);
+
+            if (values == null)
+                throw new ArgumentNullException(nameof(values));
         }
 
         internal ArrayV(IReadOnlyList<Value> value)

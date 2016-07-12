@@ -189,18 +189,35 @@ namespace Test
             Assert.AreEqual("Magic Missile", instance.Get(NAME_FIELD));
         }
 
-        [Test] public async Task TestIssueABatchedQuery()
+        [Test] public async Task TestIssueABatchedQueryWithVarargs()
         {
             var result0 = await client.Query(
                 Get(thorSpell1),
                 Get(thorSpell2)
             );
 
-            Assert.AreEqual(2, result0.Count);
-            Assert.AreEqual(thorSpell1, result0[0].Get(REF_FIELD));
-            Assert.AreEqual(thorSpell2, result0[1].Get(REF_FIELD));
+            Assert.AreEqual(ImmutableList.Of(thorSpell1, thorSpell2),
+                ArrayV.Of(result0).Collect(REF_FIELD));
 
             var result1 = await client.Query(Add(1, 2), Subtract(1, 2));
+
+            Assert.AreEqual(ImmutableList.Of<Value>(3, -1), result1);
+        }
+
+        [Test] public async Task TestIssueABatchedQueryWithEnumerable()
+        {
+            var result0 = await client.Query(ImmutableList.Of(
+                Get(thorSpell1),
+                Get(thorSpell2)
+            ));
+
+            Assert.AreEqual(ImmutableList.Of(thorSpell1, thorSpell2),
+                ArrayV.Of(result0).Collect(REF_FIELD));
+
+            var result1 = await client.Query(ImmutableList.Of(
+                Add(1, 2),
+                Subtract(1, 2)
+            ));
 
             Assert.AreEqual(ImmutableList.Of<Value>(3, -1), result1);
         }
