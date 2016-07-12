@@ -17,26 +17,20 @@ namespace FaunaDB.Errors
     /// </summary>
     public class FaunaException : Exception
     {
-        IOption<QueryErrorResponse> queryErrorResponse;
+        QueryErrorResponse queryErrorResponse;
 
         /// <summary>
         /// List of all errors sent by the server.
         /// </summary>
         public IReadOnlyList<QueryError> Errors =>
-            queryErrorResponse.Match(
-                Some: value => value.Errors,
-                None: () => ImmutableList.Of<QueryError>()
-            );
+            queryErrorResponse.Errors;
 
         public int StatusCode =>
-            queryErrorResponse.Match(
-                Some: value => value.StatusCode,
-                None: () => 0
-            );
+            queryErrorResponse.StatusCode;
 
         protected FaunaException(QueryErrorResponse response) : base(CreateMessage(response.Errors))
         {
-            queryErrorResponse = Option.Of(response);
+            queryErrorResponse = response;
         }
 
         static string CreateMessage(IReadOnlyList<QueryError> errors) =>
