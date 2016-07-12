@@ -1,4 +1,5 @@
-﻿using FaunaDB.Query;
+﻿using FaunaDB.Collections;
+using FaunaDB.Query;
 using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -105,6 +106,12 @@ namespace Test
 
         [Test] public void TestLet()
         {
+            var variables = ImmutableDictionary.Of<string, Expr>("x", 10);
+            AssertJsonEqual(Let(variables, Var("x")),
+                "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
+
+            ////
+
             AssertJsonEqual(Let("x", 10).In(Var("x")),
                 "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
 
