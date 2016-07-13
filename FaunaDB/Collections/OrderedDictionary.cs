@@ -143,7 +143,7 @@ namespace FaunaDB.Collections
         }
 
         IEnumerator IEnumerable.GetEnumerator() =>
-            dictionary.GetEnumerator();
+            GetEnumerator();
 
         public override int GetHashCode() =>
             dictionary.GetHashCode();
@@ -151,22 +151,8 @@ namespace FaunaDB.Collections
         public override bool Equals(object obj)
         {
             var other = obj as OrderedDictionary<TKey, TValue>;
-            return other != null && DictEquals(this, other);
+            return other != null && this.DictEquals(other);
         }
 
-        private static bool DictEquals(OrderedDictionary<TKey, TValue> a, OrderedDictionary<TKey, TValue> b)
-        {
-            if (a.Count != b.Count)
-                return false;
-            foreach (var kv in a)
-            {
-                TValue valueB;
-                if (!b.TryGetValue(kv.Key, out valueB))
-                    return false;
-                if (!Equals(kv.Value, valueB))
-                    return false;
-            }
-            return true;
-        }
     }
 }

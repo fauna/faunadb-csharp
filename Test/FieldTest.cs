@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 
 using static FaunaDB.Types.Option;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -74,7 +75,10 @@ namespace Test
 
         [Test] public void TestCodecConvertion()
         {
-            var setRef = ImmutableDictionary.Of<string, Value>("@ref", "databases");
+            var setRef = new Dictionary<string, Value> {
+                {"@ref", "databases"}
+            };
+
             var obj = ObjectV.With(
                 "string", "a string",
                 "bool", true,
@@ -114,13 +118,13 @@ namespace Test
         {
             var array = ArrayV.Of("John", "Bill");
 
-            Assert.AreEqual(ImmutableList.Of("John", "Bill"),
-                array.Collect(Field.To(Codec.STRING)));
+            Assert.That(array.Collect(Field.To(Codec.STRING)),
+                        Is.EquivalentTo(new List<string> { "John", "Bill" }));
 
             var obj = ObjectV.With("arrayOfNames", array);
 
-            Assert.AreEqual(ImmutableList.Of("John", "Bill"),
-                obj.Get(Field.At("arrayOfNames").Collect(Field.To(Codec.STRING))));
+            Assert.That(obj.Get(Field.At("arrayOfNames").Collect(Field.To(Codec.STRING))),
+                        Is.EquivalentTo(new List<string> { "John", "Bill" }));
 
             Assert.Throws(typeof(InvalidOperationException),
                 () => obj.Collect(Field.To(Codec.STRING)),
@@ -134,8 +138,8 @@ namespace Test
                     ObjectV.With("name", ArrayV.Of("Bill"))
                 );
 
-            Assert.AreEqual(ImmutableList.Of("John", "Bill"),
-                array.Collect(Field.At("name").At(Field.At(0)).To(Codec.STRING)));
+            Assert.That(array.Collect(Field.At("name").At(Field.At(0)).To(Codec.STRING)),
+                        Is.EquivalentTo(new List<string> { "John", "Bill", }));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using FaunaDB.Collections;
+﻿using System.Collections.Generic;
 using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -76,8 +76,11 @@ namespace Test
 
         [Test] public void TestSetRef()
         {
+            var expected = new SetRefV(new Dictionary<string, Value> {
+                { "match", new RefV("indexes/spells_by_element") },
+                { "terms", StringV.Of("fire") } });
             
-            AssertJsonEqual(new SetRefV(ImmutableDictionary.Of<string, Value>("match", new RefV("indexes/spells_by_element"), "terms", StringV.Of("fire"))),
+            AssertJsonEqual(expected,
                 "{" +
                 "  \"@set\": {" +
                 "    \"match\": { \"@ref\": \"indexes/spells_by_element\" }," +

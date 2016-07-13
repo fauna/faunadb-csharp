@@ -1,5 +1,4 @@
-﻿using FaunaDB.Collections;
-using FaunaDB.Types;
+﻿using FaunaDB.Types;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,9 @@ namespace Test
 
         [Test] public void TestSetRef()
         {
-            var dic = ImmutableDictionary.Of<string, Value>("@ref", "databases");
+            var dic = new Dictionary<string, Value> {
+                {"@ref", "databases"}
+            };
             Assert.AreEqual(Success(new SetRefV(dic)), new SetRefV(dic).To(Codec.SETREF));
             Assert.AreEqual(Fail<SetRefV>("Cannot convert StringV to SetRefV"), StringV.Of("a string").To(Codec.SETREF));
         }
@@ -62,7 +63,7 @@ namespace Test
 
         [Test] public void TestArray()
         {
-            var array = ImmutableList.Of<Value>("a string", true, 10);
+            IReadOnlyList<Value> array = new List<Value> { "a string", true, 10 };
 
             Assert.AreEqual(Success(array), ArrayV.Of("a string", true, 10).To(Codec.ARRAY));
             Assert.AreEqual(Fail<IReadOnlyList<Value>>("Cannot convert ObjectV to ArrayV"), ObjectV.Empty.To(Codec.ARRAY));
@@ -70,9 +71,11 @@ namespace Test
 
         [Test] public void TestObject()
         {
-            var obj = ImmutableDictionary.Of<string, Value>("foo", StringV.Of("bar"));
+            IReadOnlyDictionary<string, Value> expected = new Dictionary<string, Value> {
+                { "foo", StringV.Of("bar") }
+            };
 
-            Assert.AreEqual(Success(obj), ObjectV.With("foo", "bar").To(Codec.OBJECT));
+            Assert.AreEqual(Success(expected), ObjectV.With("foo", "bar").To(Codec.OBJECT));
             Assert.AreEqual(Fail<IReadOnlyDictionary<string, Value>>("Cannot convert StringV to ObjectV"), StringV.Of("a string").To(Codec.OBJECT));
         }
     }

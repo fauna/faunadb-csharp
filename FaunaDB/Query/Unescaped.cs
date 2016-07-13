@@ -66,12 +66,12 @@ namespace FaunaDB.Query
     class UnescapedArray : Expr
     {
         public static readonly UnescapedArray Empty =
-            new UnescapedArray(ImmutableList.Empty<Expr>());
+            new UnescapedArray(new List<Expr>());
 
         public IReadOnlyList<Expr> Value { get; }
 
         public static UnescapedArray Of(IEnumerable<Expr> values) =>
-            new UnescapedArray(new ArrayList<Expr>(values));
+            new UnescapedArray(new List<Expr>(values));
 
         public UnescapedArray(IReadOnlyList<Expr> value)
         {

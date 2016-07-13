@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using FaunaDB.Collections;
 
 namespace FaunaDB.Types
 {
@@ -143,6 +144,15 @@ namespace FaunaDB.Types
             writer.WriteObject(Value);
             writer.WriteEndObject();
         }
+
+        public override bool Equals(Expr v)
+        {
+            var other = v as SetRefV;
+            return other != null && Value.DictEquals(other.Value);
+        }
+
+        public override int GetHashCode() =>
+            Value.GetHashCode();
     }
 
     /// <summary>

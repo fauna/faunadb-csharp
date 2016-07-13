@@ -39,7 +39,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\ArrayList.cs" />
     <Compile Include="Query\Expr.Operators.cs" />
     <Compile Include="Query\Language.Authentication.cs" />
     <Compile Include="Query\Language.Basic.cs" />
@@ -82,7 +81,7 @@
     <Compile Include="Errors\ValidationFailure.cs" />
     <Compile Include="Errors\QueryErrorResponse.cs" />
     <Compile Include="Collections\ImmutableDictionary.cs" />
-    <Compile Include="Collections\ImmutableList.cs" />
+    <Compile Include="Collections\DictionaryExtension.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

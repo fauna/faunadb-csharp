@@ -1,5 +1,4 @@
-﻿using FaunaDB.Collections;
-using FaunaDB.Types;
+﻿using FaunaDB.Types;
 using System;
 using System.Collections.Generic;
 
@@ -20,7 +19,7 @@ namespace FaunaDB.Query
 
             internal PathSelector(params string[] segments)
             {
-                var segs = new ArrayList<Expr>();
+                var segs = new List<Expr>();
                 foreach (var s in segments)
                     segs.Add(s);
                 this.segments = segs;
@@ -28,7 +27,7 @@ namespace FaunaDB.Query
 
             internal PathSelector(params int[] segments)
             {
-                var segs = new ArrayList<Expr>();
+                var segs = new List<Expr>();
                 foreach (var s in segments)
                     segs.Add(s);
                 this.segments = segs;
@@ -36,7 +35,7 @@ namespace FaunaDB.Query
 
             public PathSelector At(params string[] others)
             {
-                var all = new ArrayList<Expr>(segments);
+                var all = new List<Expr>(segments);
                 foreach (var s in others)
                     all.Add(s);
                 return new PathSelector(all);
@@ -44,7 +43,7 @@ namespace FaunaDB.Query
 
             public PathSelector At(params int[] others)
             {
-                var all = new ArrayList<Expr>(segments);
+                var all = new List<Expr>(segments);
                 foreach (var s in others)
                     all.Add(s);
                 return new PathSelector(all);

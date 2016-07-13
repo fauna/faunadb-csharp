@@ -1,5 +1,4 @@
-﻿using FaunaDB.Collections;
-using FaunaDB.Query;
+﻿using FaunaDB.Query;
 using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
@@ -14,7 +13,7 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class ArrayV : Value, IEnumerable<Value>
     {
-        public static readonly ArrayV Empty = new ArrayV(ArrayList<Value>.Empty);
+        public static readonly ArrayV Empty = new ArrayV(new List<Value>());
 
         public IReadOnlyList<Value> Value { get; }
 
@@ -29,7 +28,7 @@ namespace FaunaDB.Types
 
         internal ArrayV(IEnumerable<Value> values)
         {
-            Value = new ArrayList<Value>(values);
+            Value = new List<Value>(values);
 
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
@@ -51,7 +50,7 @@ namespace FaunaDB.Types
         /// </param>
         public ArrayV(Action<Action<Value>> builder)
         {
-            var value = new ArrayList<Value>();
+            var value = new List<Value>();
             builder(value.Add);
             Value = value;
         }

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
+using FaunaDB.Query;
 
 namespace Test
 {
@@ -196,30 +197,30 @@ namespace Test
                 Get(thorSpell2)
             );
 
-            Assert.AreEqual(ImmutableList.Of(thorSpell1, thorSpell2),
-                ArrayV.Of(result0).Collect(REF_FIELD));
+            Assert.That(ArrayV.Of(result0).Collect(REF_FIELD),
+                        Is.EquivalentTo(new List<RefV> { thorSpell1, thorSpell2 }));
 
             var result1 = await client.Query(Add(1, 2), Subtract(1, 2));
 
-            Assert.AreEqual(ImmutableList.Of<Value>(3, -1), result1);
+            Assert.That(result1, Is.EquivalentTo(new List<Value> { 3, -1 }));
         }
 
         [Test] public async Task TestIssueABatchedQueryWithEnumerable()
         {
-            var result0 = await client.Query(ImmutableList.Of(
+            var result0 = await client.Query(new List<Expr> {
                 Get(thorSpell1),
                 Get(thorSpell2)
-            ));
+            });
 
-            Assert.AreEqual(ImmutableList.Of(thorSpell1, thorSpell2),
-                ArrayV.Of(result0).Collect(REF_FIELD));
+            Assert.That(ArrayV.Of(result0).Collect(REF_FIELD),
+                        Is.EquivalentTo(new List<RefV> { thorSpell1, thorSpell2 }));
 
-            var result1 = await client.Query(ImmutableList.Of(
+            var result1 = await client.Query(new List<Expr> {
                 Add(1, 2),
                 Subtract(1, 2)
-            ));
+            });
 
-            Assert.AreEqual(ImmutableList.Of<Value>(3, -1), result1);
+            Assert.That(result1, Is.EquivalentTo(new List<Value> { 3, -1 }));
         }
 
         [Test] public async Task TestUpdateInstanceData()
@@ -267,7 +268,8 @@ namespace Test
             Assert.AreEqual(createdInstance.Get(REF_FIELD), replacedInstance.Get(REF_FIELD));
             Assert.AreEqual("Volcano", replacedInstance.Get(NAME_FIELD));
             Assert.AreEqual(10L, replacedInstance.Get(COST_FIELD));
-            Assert.AreEqual(ImmutableList.Of("fire", "earth"), replacedInstance.Get(ELEMENTS_LIST).Collect(Field.To(Codec.STRING)));
+            Assert.That(replacedInstance.Get(ELEMENTS_LIST).Collect(Field.To(Codec.STRING)),
+                        Is.EquivalentTo(new List<string> { "fire", "earth" }));
         }
 
         [Test] public async Task TestDeleteAnInstance()
@@ -335,7 +337,7 @@ namespace Test
             Value singleMatch = await client.Query(
                 Paginate(Match(Ref("indexes/spells_by_element"), "fire")));
 
-            Assert.AreEqual(ImmutableList.Of(fireball), singleMatch.Get(REF_LIST));
+            Assert.That(singleMatch.Get(REF_LIST), Is.EquivalentTo(new List<RefV> { fireball }));
         }
 
         [Test] public async Task TestCountElementsOnAIndex()
@@ -349,9 +351,8 @@ namespace Test
             Value allInstances = await client.Query(
                 Paginate(Match(Ref("indexes/all_spells"))));
 
-            Assert.AreEqual(
-                ImmutableList.Of(magicMissile, fireball, faerieFire, summon, thorSpell1, thorSpell2),
-                allInstances.Get(REF_LIST));
+            Assert.That(allInstances.Get(REF_LIST),
+                        Is.EquivalentTo(new List<RefV> { magicMissile, fireball, faerieFire, summon, thorSpell1, thorSpell2 }));
         }
 
         [Test] public async Task TestPaginateOverAnIndex()
@@ -388,15 +389,13 @@ namespace Test
                 Let("x", 1, "y", 2).In(Arr(Var("y"), Var("x")))
             );
 
-            Assert.AreEqual(ImmutableList.Of(2L, 1L),
-                res.Collect(Field.To(Codec.LONG)));
+            Assert.That(res.Collect(Field.To(Codec.LONG)), Is.EquivalentTo(new List<long> { 2L, 1L }));
 
             res = await client.Query(
                 Let("x", 1, "y", 2).In((x, y) => Arr(y, x))
             );
 
-            Assert.AreEqual(ImmutableList.Of(2L, 1L),
-                res.Collect(Field.To(Codec.LONG)));
+            Assert.That(res.Collect(Field.To(Codec.LONG)), Is.EquivalentTo(new List<long> { 2L, 1L }));
         }
 
         [Test] public async Task TestEvalIfExpression()
@@ -437,15 +436,15 @@ namespace Test
                 Map(Arr(1, 2, 3),
                     Lambda("i", Add(Var("i"), 1))));
 
-            Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L),
-                res.Collect(Field.To(Codec.LONG)));
+            Assert.That(res.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
 
             res = await client.Query(
                 Map(Arr(1, 2, 3),
                     Lambda(i => Add(i, 1))));
 
-            Assert.AreEqual(ImmutableList.Of(2L, 3L, 4L),
-                res.Collect(Field.To(Codec.LONG)));
+            Assert.That(res.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
         }
 
         [Test] public async Task TestExecuteForeachExpression()
@@ -455,8 +454,8 @@ namespace Test
                     Lambda("spell", Create(await RandomClass(), Obj("data", Obj("name", Var("spell"))))))
             );
 
-            Assert.AreEqual(ImmutableList.Of("Fireball Level 1", "Fireball Level 2"),
-                res.Collect(Field.To(Codec.STRING)));
+            Assert.That(res.Collect(Field.To(Codec.STRING)),
+                        Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
 
             var clazz = await RandomClass();
 
@@ -465,8 +464,8 @@ namespace Test
                     Lambda(spell => Create(clazz, Obj("data", Obj("name", spell)))))
             );
 
-            Assert.AreEqual(ImmutableList.Of("Fireball Level 1", "Fireball Level 2"),
-                res.Collect(Field.To(Codec.STRING)));
+            Assert.That(res.Collect(Field.To(Codec.STRING)),
+                        Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
         }
 
         [Test] public async Task TestFilterACollection()
@@ -476,28 +475,30 @@ namespace Test
                     Lambda("i", EqualsFn(0, Modulo(Var("i"), 2))))
             );
 
-            Assert.AreEqual(ImmutableList.Of(2L),
-                filtered.Collect(Field.To(Codec.LONG)));
+            Assert.That(filtered.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 2L }));
 
             filtered = await client.Query(
                 Filter(Arr(1, 2, 3),
                     Lambda(i => EqualsFn(0, Modulo(i, 2))))
             );
 
-            Assert.AreEqual(ImmutableList.Of(2L),
-                filtered.Collect(Field.To(Codec.LONG)));
+            Assert.That(filtered.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 2L }));
         }
 
         [Test] public async Task TestTakeElementsFromCollection()
         {
             Value taken = await client.Query(Take(2, Arr(1, 2, 3)));
-            Assert.AreEqual(ImmutableList.Of(1L, 2L), taken.Collect(Field.To(Codec.LONG)));
+            Assert.That(taken.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 1L, 2L }));
         }
 
         [Test] public async Task TestDropElementsFromCollection()
         {
             Value dropped = await client.Query(Drop(2, Arr(1, 2, 3)));
-            Assert.AreEqual(ImmutableList.Of(3L), dropped.Collect(Field.To(Codec.LONG)));
+            Assert.That(dropped.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 3L }));
         }
 
         [Test] public async Task TestPrependElementsInACollection()
@@ -506,8 +507,8 @@ namespace Test
                 Prepend(Arr(1, 2), Arr(3, 4))
             );
 
-            Assert.AreEqual(ImmutableList.Of(1L, 2L, 3L, 4L),
-                prepended.Collect(Field.To(Codec.LONG)));
+            Assert.That(prepended.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 1L, 2L, 3L, 4L }));
         }
 
         [Test] public async Task TestAppendElementsInACollection()
@@ -516,8 +517,8 @@ namespace Test
                 Append(Arr(3, 4), Arr(1, 2))
             );
 
-            Assert.AreEqual(ImmutableList.Of(1L, 2L, 3L, 4L),
-                appended.Collect(Field.To(Codec.LONG)));
+            Assert.That(appended.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 1L, 2L, 3L, 4L }));
         }
 
         [Test] public async Task TestReadEventsFromIndex()
@@ -526,8 +527,8 @@ namespace Test
                 Paginate(Match(Ref("indexes/spells_by_element"), "arcane"), events: true)
             );
 
-            Assert.AreEqual(ImmutableList.Of(magicMissile, faerieFire),
-                events.Get(DATA).Collect(Field.At("resource").To(Codec.REF)));
+            Assert.That(events.Get(DATA).Collect(Field.At("resource").To(Codec.REF)),
+                        Is.EquivalentTo(new List<RefV> { magicMissile, faerieFire }));
         }
 
         [Test] public async Task TestPaginateUnion()
@@ -540,8 +541,8 @@ namespace Test
                 )
             );
 
-            Assert.AreEqual(ImmutableList.Of(magicMissile, fireball, faerieFire),
-                union.Get(REF_LIST));
+            Assert.That(union.Get(REF_LIST),
+                        Is.EquivalentTo(new List<RefV> { magicMissile, fireball, faerieFire }));
         }
 
         [Test] public async Task TestPaginateIntersection()
@@ -555,8 +556,8 @@ namespace Test
                 )
             );
 
-            Assert.AreEqual(ImmutableList.Of(faerieFire),
-                intersection.Get(REF_LIST));
+            Assert.That(intersection.Get(REF_LIST),
+                        Is.EquivalentTo(new List<RefV> { faerieFire }));
         }
 
         [Test] public async Task TestPaginateDifference()
@@ -570,7 +571,8 @@ namespace Test
                 )
             );
 
-            Assert.AreEqual(ImmutableList.Of(summon), difference.Get(REF_LIST));
+            Assert.That(difference.Get(REF_LIST),
+                        Is.EquivalentTo(new List<RefV> { summon }));
         }
 
         [Test] public async Task TestPaginateDistinctSets()
@@ -579,8 +581,8 @@ namespace Test
                 Paginate(Distinct(Match(Ref("indexes/elements_of_spells"))))
             );
 
-            Assert.AreEqual(ImmutableList.Of("arcane", "fire", "nature"),
-                distinct.Get(DATA).Collect(Field.To(Codec.STRING)));
+            Assert.That(distinct.Get(DATA).Collect(Field.To(Codec.STRING)),
+                        Is.EquivalentTo(new List<string> { "arcane", "fire", "nature" }));
         }
 
         [Test] public async Task TestPaginateJoin()
@@ -594,8 +596,8 @@ namespace Test
                 )
             );
 
-            Assert.AreEqual(ImmutableList.Of(thorSpell1, thorSpell2),
-                join.Get(REF_LIST));
+            Assert.That(join.Get(REF_LIST),
+                        Is.EquivalentTo(new List<RefV> { thorSpell1, thorSpell2 }));
         }
 
         [Test] public async Task TestEvalEqualsExpression()

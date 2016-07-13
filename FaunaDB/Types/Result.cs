@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using FaunaDB.Collections;
 
 namespace FaunaDB.Types
 {
@@ -24,14 +28,16 @@ namespace FaunaDB.Types
     class Success<T> : IResult<T>
     {
         readonly T value;
+        readonly IEqualityComparer comparer;
 
-        internal Success(T value)
+        internal Success(T value, IEqualityComparer comparer)
         {
             this.value = value;
+            this.comparer = comparer;
         }
 
         public IResult<U> Map<U>(Func<T, U> func) =>
-            new Success<U>(func(value));
+            Result.Success(func(value));
 
         public IResult<U> FlatMap<U>(Func<T, IResult<U>> func) =>
             func(value);
@@ -53,7 +59,7 @@ namespace FaunaDB.Types
         public override bool Equals(object obj)
         {
             var other = obj as Success<T>;
-            return other != null && Equals(value, other.value);
+            return other != null && comparer.Equals(value, other.value);
         }
 
         public override int GetHashCode() =>
@@ -108,9 +114,44 @@ namespace FaunaDB.Types
     public static class Result
     {
         public static IResult<T> Success<T>(T value) =>
-            new Success<T>(value);
+            new Success<T>(value, EqualityComparer<T>.Default);
+
+        public static IResult<IReadOnlyDictionary<Key, Value>> Success<Key, Value>(IReadOnlyDictionary<Key, Value> value) =>
+            new Success<IReadOnlyDictionary<Key, Value>>(value, DictionaryComparer<Key, Value>.Default);
+
+        public static IResult<IReadOnlyList<T>> Success<T>(IReadOnlyList<T> value) =>
+            new Success<IReadOnlyList<T>>(value, ListComparer<T>.Default);
 
         public static IResult<T> Fail<T>(string reason) =>
             new Failure<T>(reason);
+    }
+
+    class DictionaryComparer<Key, Value> : AbstractComparer<IReadOnlyDictionary<Key, Value>>
+    {
+        public static readonly DictionaryComparer<Key, Value> Default =
+            new DictionaryComparer<Key, Value>();
+
+        public override bool Equals(IReadOnlyDictionary<Key, Value> x, IReadOnlyDictionary<Key, Value> y) =>
+            x.DictEquals(y);
+    }
+
+    class ListComparer<T> : AbstractComparer<IReadOnlyList<T>>
+    {
+        public static readonly ListComparer<T> Default =
+            new ListComparer<T>();
+
+        public override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y) =>
+            x.SequenceEqual(y);
+    }
+
+    abstract class AbstractComparer<T> : IEqualityComparer<T>, IEqualityComparer
+    {
+        public abstract bool Equals(T x, T y);
+
+        public new bool Equals(object x, object y) => Equals((T)x, (T)y);
+
+        public int GetHashCode(T obj) => 0;
+
+        public int GetHashCode(object obj) => 0;
     }
 }

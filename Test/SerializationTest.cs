@@ -6,6 +6,7 @@ using NUnit.Framework;
 using System;
 
 using static FaunaDB.Query.Language;
+using System.Collections.Generic;
 
 namespace Test
 {
@@ -80,7 +81,10 @@ namespace Test
 
         [Test] public void TestLet()
         {
-            var variables = ImmutableDictionary.Of<string, Expr>("x", 10);
+            var variables = new Dictionary<string, Expr> {
+                { "x", 10 }
+            };
+
             AssertJsonEqual(Let(variables, Var("x")),
                 "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
 

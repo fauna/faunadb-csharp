@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace FaunaDB.Collections
 {
-    public static class ImmutableDictionary
+    static class ImmutableDictionary
     {
         public static IReadOnlyDictionary<TKey, TValue> Empty<TKey, TValue>() =>
             OrderedDictionary<TKey, TValue>.Empty;

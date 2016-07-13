@@ -1,5 +1,4 @@
-﻿using FaunaDB.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
 using static FaunaDB.Types.Result;
@@ -17,8 +16,8 @@ namespace FaunaDB.Types
         {
             return values =>
             {
-                var success = new ArrayList<V>();
-                var failures = new ArrayList<string>();
+                var success = new List<V>();
+                var failures = new List<string>();
 
                 for (int i = 0; i < values.Count; i++)
                 {
@@ -35,7 +34,7 @@ namespace FaunaDB.Types
                 if (failures.Count > 0)
                     return Fail<IReadOnlyList<V>>($"Failed to collect values: {string.Join(", ", failures)}");
 
-                return Success<IReadOnlyList<V>>(success);
+                return Success<V>(success);
             };
         }
 
