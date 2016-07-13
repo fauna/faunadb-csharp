@@ -50,8 +50,8 @@ namespace Test
 
         [Test] public void TestTimestamp()
         {
-            Assert.AreEqual(Success(new DateTime(2000, 1, 1, 0, 0, 0, 123)), new TimeV("2000-01-01T00:00:00.123Z").To(Codec.TS));
-            Assert.AreEqual(Fail<DateTime>("Cannot convert ObjectV to TimeV"), ObjectV.Empty.To(Codec.TS));
+            Assert.AreEqual(Success(new DateTime(2000, 1, 1, 0, 0, 0, 123)), new TimeV("2000-01-01T00:00:00.123Z").To(Codec.TIME));
+            Assert.AreEqual(Fail<DateTime>("Cannot convert ObjectV to TimeV"), ObjectV.Empty.To(Codec.TIME));
         }
 
         [Test] public void TestDate()

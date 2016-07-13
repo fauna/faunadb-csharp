@@ -722,7 +722,7 @@ namespace Test
         [Test] public async Task TestEvalTimeExpression()
         {
             Value res = await client.Query(Time("1970-01-01T00:00:00-04:00"));
-            Assert.AreEqual(new DateTime(1970, 1, 1, 4, 0, 0), res.To(Codec.TS).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 4, 0, 0), res.To(Codec.TIME).Value);
         }
 
         [Test] public async Task TestEvalEpochExpression()
@@ -737,10 +737,10 @@ namespace Test
                 Epoch(TicksToNano(2), TimeUnit.Nanosecond)
             );
 
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 30), res[0].To(Codec.TS).Value);
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 500), res[1].To(Codec.TS).Value);
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(1000), res[2].To(Codec.TS).Value);
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(2), res[3].To(Codec.TS).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 30), res[0].To(Codec.TIME).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 500), res[1].To(Codec.TIME).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(1000), res[2].To(Codec.TIME).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(2), res[3].To(Codec.TIME).Value);
         }
 
         [Test] public async Task TestEvalDateExpression()
