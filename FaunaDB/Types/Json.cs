@@ -90,7 +90,7 @@ namespace FaunaDB.Types
                         case "@set":
                             var v = ReadValue();
                             NextAndExpect(JsonToken.EndObject);
-                            return new SetRef(((ObjectV)v).Value);
+                            return new SetRefV(((ObjectV)v).Value);
                         case "@ts":
                             return new TimeV(ReadStringAndEndObject());
                         case "@date":

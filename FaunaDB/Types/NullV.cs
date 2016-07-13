@@ -6,7 +6,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Type of Value.Null.
     /// </summary>
-    public class NullV : Value
+    public sealed class NullV : Value
     {
         public static readonly Value Instance = new NullV();
 

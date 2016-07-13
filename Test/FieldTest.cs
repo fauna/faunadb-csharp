@@ -81,7 +81,7 @@ namespace Test
                 "double", 3.14,
                 "long", 1234,
                 "ref", new RefV("databases"),
-                "setref", new SetRef(setRef));
+                "setref", new SetRefV(setRef));
 
             Assert.AreEqual("a string",
                 obj.Get(Field.At("string").To(Codec.STRING)));
@@ -98,7 +98,7 @@ namespace Test
             Assert.AreEqual(new RefV("databases"),
                 obj.Get(Field.At("ref").To(Codec.REF)));
 
-            Assert.AreEqual(new SetRef(setRef),
+            Assert.AreEqual(new SetRefV(setRef),
                 obj.Get(Field.At("setref").To(Codec.SETREF)));
         }
 

@@ -19,8 +19,8 @@ namespace Test
         [Test] public void TestSetRef()
         {
             var dic = ImmutableDictionary.Of<string, Value>("@ref", "databases");
-            Assert.AreEqual(Success(new SetRef(dic)), new SetRef(dic).To(Codec.SETREF));
-            Assert.AreEqual(Fail<SetRef>("Cannot convert StringV to SetRef"), StringV.Of("a string").To(Codec.SETREF));
+            Assert.AreEqual(Success(new SetRefV(dic)), new SetRefV(dic).To(Codec.SETREF));
+            Assert.AreEqual(Fail<SetRefV>("Cannot convert StringV to SetRefV"), StringV.Of("a string").To(Codec.SETREF));
         }
 
         [Test] public void TestLong()

@@ -49,7 +49,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped boolean.
     /// </summary>
-    public class BooleanV : ScalarValue<bool>
+    public sealed class BooleanV : ScalarValue<bool>
     {
         internal BooleanV(bool value) : base(value) {}
 
@@ -63,7 +63,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped double.
     /// </summary>
-    public class DoubleV : ScalarValue<double>
+    public sealed class DoubleV : ScalarValue<double>
     {
         internal DoubleV(double value) : base(value) {}
 
@@ -74,7 +74,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped long. This is any JSON number with no fractional part.
     /// </summary>
-    public class LongV : ScalarValue<long>
+    public sealed class LongV : ScalarValue<long>
     {
         internal LongV(long value) : base(value) {}
 
@@ -85,7 +85,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Wrapped string.
     /// </summary>
-    public class StringV : ScalarValue<string>
+    public sealed class StringV : ScalarValue<string>
     {
         internal StringV(string value) : base(value)
         {
@@ -128,9 +128,9 @@ namespace FaunaDB.Types
     /// This represents a set returned as part of a response. This looks like <c>{"@set": set_query}</c>.
     /// For query sets see <see cref="Language"/>.
     /// </remarks>
-    public sealed class SetRef : ScalarValue<IReadOnlyDictionary<string, Value>>
+    public sealed class SetRefV : ScalarValue<IReadOnlyDictionary<string, Value>>
     {
-        public SetRef(IReadOnlyDictionary<string, Value> name) : base(name)
+        public SetRefV(IReadOnlyDictionary<string, Value> name) : base(name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));

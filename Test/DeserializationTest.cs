@@ -77,7 +77,7 @@ namespace Test
         [Test] public void TestSetRef()
         {
             
-            AssertJsonEqual(new SetRef(ImmutableDictionary.Of<string, Value>("match", new RefV("indexes/spells_by_element"), "terms", StringV.Of("fire"))),
+            AssertJsonEqual(new SetRefV(ImmutableDictionary.Of<string, Value>("match", new RefV("indexes/spells_by_element"), "terms", StringV.Of("fire"))),
                 "{" +
                 "  \"@set\": {" +
                 "    \"match\": { \"@ref\": \"indexes/spells_by_element\" }," +

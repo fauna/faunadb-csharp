@@ -18,8 +18,8 @@ namespace FaunaDB.Types
         public static IResult<RefV> REF(Value input) =>
             Cast.DoCast<RefV>(input);
 
-        public static IResult<SetRef> SETREF(Value input) =>
-            Cast.DoCast<SetRef>(input);
+        public static IResult<SetRefV> SETREF(Value input) =>
+            Cast.DoCast<SetRefV>(input);
 
         public static IResult<long> LONG(Value input) =>
             Cast.MapTo<LongV, long>(input, Cast.ScalarValue);
