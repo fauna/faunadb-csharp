@@ -1,5 +1,4 @@
-﻿using FaunaDB.Collections;
-using FaunaDB.Query;
+﻿using FaunaDB.Query;
 using Newtonsoft.Json;
 using System;
 using System.Globalization;

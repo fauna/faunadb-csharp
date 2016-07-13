@@ -67,12 +67,12 @@ namespace FaunaDB.Client
 
         async Task<Value> Execute(HttpMethodKind action, string path, Expr data = null, IReadOnlyDictionary<string, string> query = null)
         {
-            var dataString = data == null ?  null : data.ToJson();
+            var dataString = data == null ?  null : JsonConvert.SerializeObject(data, Formatting.None);
             var responseHttp = await clientIO.DoRequest(action, path, dataString, query);
 
             RaiseForStatusCode(responseHttp);
 
-            var responseContent = (ObjectV)Json.FromJson(responseHttp.ResponseContent);
+            var responseContent = FromJson(responseHttp.ResponseContent);
             return responseContent["resource"];
         }
 
@@ -113,5 +113,17 @@ namespace FaunaDB.Client
             }
         }
 
+        static ObjectV FromJson(string json)
+        {
+            try
+            {
+                var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
+                return JsonConvert.DeserializeObject<ObjectV>(json, settings);
+            }
+            catch (JsonReaderException ex)
+            {
+                throw new InvalidResponseException($"Bad JSON: {ex}");
+            }
+        }
     }
 }

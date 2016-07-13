@@ -6,28 +6,6 @@ using Newtonsoft.Json;
 
 namespace FaunaDB.Types
 {
-    public static class Json
-    {
-        /// <summary>
-        /// Read a Value from JSON.
-        /// </summary>
-        /// <exception cref="InvalidResponseException"/>
-        public static Value FromJson(string json)
-        {
-            // We handle dates ourselves. Don't want them automatically parsed.
-            var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            try
-            {
-                return JsonConvert.DeserializeObject<Value>(json, settings);
-            }
-            catch (JsonReaderException ex)
-            {
-                throw new InvalidResponseException($"Bad JSON: {ex}");
-            }
-        }
-
-    }
-
     class ValueJsonConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>

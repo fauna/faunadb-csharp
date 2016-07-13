@@ -11,13 +11,6 @@ namespace FaunaDB.Query
         internal void WriteJsonIntern(JsonWriter writer) =>
             WriteJson(writer);
 
-        /// <summary>
-        /// Convert to a JSON string.
-        /// </summary>
-        /// <param name="pretty">If true, output with helpful whitespace.</param>
-        internal string ToJson(bool pretty = false) =>
-            JsonConvert.SerializeObject(this, pretty ? Formatting.Indented : Formatting.None);
-
         #region boilerplate
         public override bool Equals(object obj)
         {
