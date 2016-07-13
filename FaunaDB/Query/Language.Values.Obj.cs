@@ -10,48 +10,6 @@ namespace FaunaDB.Query
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>
-        public static Expr Obj(object obj)
-        {
-            if (obj == null)
-                return NullV.Instance;
-
-            Type type = obj.GetType();
-
-            if (type.IsPrimitive || type == typeof(string))
-            {
-                MethodInfo methodInfo = typeof(Expr).GetMethod("op_Implicit", new Type[] { type });
-
-                return (Expr)methodInfo.Invoke(null, new object[] { obj });
-            }
-            else if (type.IsArray)
-            {
-                var array = (Array)obj;
-                var exprs = new Expr[array.Length];
-                for (int i = 0; i < array.Length; i++)
-                {
-                    exprs[i] = Obj(array.GetValue(i));
-                }
-
-                return UnescapedArray.Of(exprs);
-            }
-            else
-            {
-                var attributes = new OrderedDictionary<string, Expr>();
-
-                foreach (var property in obj.GetType().GetProperties())
-                {
-                    var value = property.GetValue(obj);
-
-                    attributes.Add(property.Name, Obj(value));
-                }
-
-                return Obj(attributes);
-            }
-        }
-
-        /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
-        /// </summary>
         public static Expr Obj() =>
             Obj(ImmutableDictionary.Empty<string, Expr>());
 

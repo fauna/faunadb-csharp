@@ -57,32 +57,6 @@ namespace Test
             AssertJsonEqual(Obj("a", Obj("b", Obj("c", "d"))), "{\"object\":{\"a\":{\"object\":{\"b\":{\"object\":{\"c\":\"d\"}}}}}}");
         }
 
-        [Test] public void TestAnonymousObj()
-        {
-            var obj = Obj(new
-            {
-                foo = 10,
-                bar = "bar",
-                array = new int[] { 1, 2, 3 },
-                obj = new
-                {
-                    a = 3.14,
-                    b = true
-                }
-            });
-
-            Assert.AreEqual(obj, Obj(
-                "foo", 10,
-                "bar", "bar",
-                "array", Arr(1, 2, 3),
-                "obj", Obj(
-                    "a", 3.14,
-                    "b", true)
-                ));
-
-            AssertJsonEqual(obj, "{\"object\":{\"foo\":10,\"bar\":\"bar\",\"array\":[1,2,3],\"obj\":{\"object\":{\"a\":3.14,\"b\":true}}}}");
-        }
-
         [Test] public void TestRef()
         {
             AssertJsonEqual(Ref("classes"), "{\"@ref\":\"classes\"}");
