@@ -15,6 +15,10 @@ namespace FaunaDB.Types
         T Value { get; }
 
         IOption<T> ValueOption { get; }
+
+        bool isSuccess { get; }
+
+        bool isFailure { get; }
     }
 
     class Success<T> : IResult<T>
@@ -41,6 +45,10 @@ namespace FaunaDB.Types
         public T Value { get { return value; } }
 
         public IOption<T> ValueOption { get { return Option.Some(value); } }
+
+        public bool isSuccess => true;
+
+        public bool isFailure => false;
 
         public override bool Equals(object obj)
         {
@@ -79,6 +87,10 @@ namespace FaunaDB.Types
         public T Value { get { throw new InvalidOperationException(reason); } }
 
         public IOption<T> ValueOption { get { return Option.None<T>(); } }
+
+        public bool isSuccess => false;
+
+        public bool isFailure => true;
 
         public override bool Equals(object obj)
         {

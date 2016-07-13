@@ -45,7 +45,12 @@ namespace FaunaDB.Types
             IResult<Value> result = Success(root);
 
             foreach (var s in segments)
+            {
                 result = result.FlatMap(value => s.Get(value));
+
+                if (result.isFailure)
+                    break;
+            }
 
             return result.Match(
                 Success: value => Success(value),
