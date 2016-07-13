@@ -36,8 +36,8 @@ namespace FaunaDB.Client
 
             var startTime = DateTime.UtcNow;
 
-            var httpResponse = await client.SendAsync(new HttpRequestMessage(new HttpMethod(method.Name()), path) { Content = dataString });//.ConfigureAwait(false);
-            var response = await httpResponse.Content.ReadAsStringAsync();//.ConfigureAwait(false);
+            var httpResponse = await client.SendAsync(new HttpRequestMessage(new HttpMethod(method.Name()), path) { Content = dataString }).ConfigureAwait(false);
+            var response = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var endTime = DateTime.UtcNow;
 
