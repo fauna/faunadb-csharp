@@ -30,7 +30,7 @@ namespace FaunaDB.Query
         protected override int HashCode() =>
             Values.GetHashCode();
 
-        protected override void WriteJson(JsonWriter writer)
+        protected internal override void WriteJson(JsonWriter writer)
         {
             writer.WriteObject(Values);
         }
@@ -90,7 +90,7 @@ namespace FaunaDB.Query
         protected override int HashCode() =>
             Value.GetHashCode();
 
-        protected override void WriteJson(JsonWriter writer)
+        protected internal override void WriteJson(JsonWriter writer)
         {
             writer.WriteArray(Value);
         }

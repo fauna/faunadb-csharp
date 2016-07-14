@@ -9,7 +9,7 @@ namespace FaunaDB.Types
     class ValueJsonConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
-            ((Value)value).WriteJsonIntern(writer);
+            ((Value)value).WriteJson(writer);
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
             ValueReader.HandleValue(reader);
@@ -162,7 +162,7 @@ namespace FaunaDB.Types
         {
             writer.WriteStartArray();
             foreach (var value in values)
-                value.WriteJsonIntern(writer);
+                value.WriteJson(writer);
             writer.WriteEndArray();
         }
 
@@ -170,7 +170,7 @@ namespace FaunaDB.Types
         {
             writer.WriteStartObject();
             writer.WritePropertyName(name);
-            value.WriteJsonIntern(writer);
+            value.WriteJson(writer);
             writer.WriteEndObject();
         }
 
@@ -180,7 +180,7 @@ namespace FaunaDB.Types
             foreach (var kv in props)
             {
                 writer.WritePropertyName(kv.Key);
-                kv.Value.WriteJsonIntern(writer);
+                kv.Value.WriteJson(writer);
             }
             writer.WriteEndObject();
         }

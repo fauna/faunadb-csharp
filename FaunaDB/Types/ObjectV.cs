@@ -57,7 +57,7 @@ namespace FaunaDB.Types
             return value;
         }
 
-        protected override void WriteJson(JsonWriter writer)
+        protected internal override void WriteJson(JsonWriter writer)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("object");

@@ -12,7 +12,7 @@ namespace FaunaDB.Types
 
         NullV() {}
 
-        protected override void WriteJson(JsonWriter writer)
+        protected internal override void WriteJson(JsonWriter writer)
         {
             writer.WriteNull();
         }

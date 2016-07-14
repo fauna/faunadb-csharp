@@ -63,7 +63,7 @@ namespace FaunaDB.Types
 
         public int Length { get { return Value.Count; } }
 
-        protected override void WriteJson(JsonWriter writer)
+        protected internal override void WriteJson(JsonWriter writer)
         {
             writer.WriteArray(Value);
         }
