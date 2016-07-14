@@ -3,13 +3,19 @@
     public partial struct Language
     {
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
+        /// Creates a new Get expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Get(Expr @ref, Expr ts = null) =>
             UnescapedObject.With("get", @ref, "ts", ts);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
+        /// Creates a new Paginate expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Paginate(
             Expr set,
@@ -29,13 +35,19 @@
                     "sources", sources);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
+        /// Creates a new Exists expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Exists(Expr @ref, Expr ts = null) =>
             UnescapedObject.With("exists", @ref, "ts", ts);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">docs</see>.
+        /// Creates a new Count expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Count(Expr set, Expr events = null) =>
             UnescapedObject.With("count", set, "events", events);
