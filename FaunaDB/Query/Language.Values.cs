@@ -112,11 +112,56 @@ namespace FaunaDB.Query
             UnescapedObject.With("ref", classRef, "id", id);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
+        /// Creates a new Timestamp value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Ts(DateTime dateTime) =>
+            new TimeV(dateTime);
+
+        /// <summary>
+        /// Creates a new Timestamp value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Ts(string iso8601Time) =>
+            new TimeV(iso8601Time);
+
+        /// <summary>
+        /// Creates a new Date value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Dt(DateTime dateTime) =>
+            new DateV(dateTime);
+
+        /// <summary>
+        /// Creates a new Date value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Dt(string iso8601Date) =>
+            new DateV(iso8601Date);
+
+        /// <summary>
+        /// Creates a new Array value containing the provided entries.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
         /// </summary>
         public static Expr Arr(params Expr[] values) =>
             UnescapedArray.Of(values);
 
+        /// <summary>
+        /// Creates a new Array value containing the provided enumerable of values.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
         public static Expr Arr(IEnumerable<Expr> values) =>
             UnescapedArray.Of(values);
 
