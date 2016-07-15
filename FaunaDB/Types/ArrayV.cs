@@ -42,13 +42,7 @@ namespace FaunaDB.Types
                 throw new ArgumentNullException(nameof(value));
         }
 
-        /// <summary>
-        /// Create from a builder expression.
-        /// </summary>
-        /// <param name="builder">
-        /// A lambda <c>(add) => { ... }</c> that calls <c>add</c> for each element to be in the new ArrayV.
-        /// </param>
-        public ArrayV(Action<Action<Value>> builder)
+        internal ArrayV(Action<Action<Value>> builder)
         {
             var value = new List<Value>();
             builder(value.Add);
