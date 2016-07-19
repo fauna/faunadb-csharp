@@ -1,31 +1,35 @@
-WIP
 
-# Development
+## How to Build
 
-## Setup
+### Necessary Tools
 
-Install these: http://www.mono-project.com/download/, http://www.monodevelop.com/download/
-`cd FaunaDB; nuget install`
-`cd ../
+* Visual Studio 15
+* Nuget
+* Windows PowerShell (optional)
 
-## Test
+### Installing Dependencies
 
-In Xamarin Studio:
-  Select View -> Unit Testing
-  Then use the unit test browser
-On console:
-  ???
+`nuget restore faunadb-csharp.sln`
 
-To view application output:
-  Contrary to the Xamarin documentation, this will *not* appear in an "Application Output" panel.
-  On my system there is no "Application Output" panel.
-  Instead, open the "Test Results" panel and make sure "Successful Tests" and "Output" are both selected.
-  Then you will see calls to `Console.Write` being reflected in the output section.
+### Build
 
-Linters: there are fxcop, stylecop, and gendarme. Don't know how to install any of them.
+`& "C:\Program Files (x86)\MSBuild\15.0\Bin\amd64\MSBuild.exe" .\faunadb-csharp.sln /t:Build`
 
+### Running Tests
 
-# TODO
+`.\packages\NUnit.ConsoleRunner.3.4.0\tools\nunit3-console.exe .\Test\bin\Debug\Test.dll --noresult`
 
-cleanup .gitignore
-cleanup faunadb-csharp.userprefs
+[Build on Mono](./Build-Mono.md)
+
+## Referencing FaunaDB Assembly
+
+First install the Nuget package by editing your `packages.config`
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<packages>
+  <package id="FaunaDB" version="1.0.0" targetFramework="net45" />
+</packages>
+```
+
+And then update your dependencies. See [Installing Dependencies](#installing-dependencies).
