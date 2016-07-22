@@ -1,17 +1,15 @@
-﻿using Newtonsoft.Json;
-using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Types;
+using Newtonsoft.Json;
+using NUnit.Framework;
 
 using static FaunaDB.Query.Language;
-using FaunaDB.Query;
-using System.Collections.Generic;
-using System;
 
 namespace Test
 {
@@ -23,8 +21,6 @@ namespace Test
         Client rootClient;
         protected RefV DbRef;
         protected Client client;
-
-        string serverKey;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -54,9 +50,8 @@ namespace Test
 
             await rootClient.Query(Create(Ref("databases"), Obj("name", dbName)));
 
-            var key = (ObjectV) await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "server")));
-            serverKey = (string) key["secret"];
-            client = GetClient();
+            var key = await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "server")));
+            client = rootClient.NewSessionClient(key.At("secret").To(Codec.STRING).Value);
         }
 
         [OneTimeTearDown]
@@ -70,8 +65,8 @@ namespace Test
             await rootClient.Query(Delete(DbRef));
         }
 
-        protected Client GetClient(string secret = null) =>
-            new Client(domain: domain, scheme: scheme, port: port, secret: secret ?? serverKey);
+        protected Client GetClient(string secret) =>
+            new Client(domain: domain, scheme: scheme, port: port, secret: secret);
 
         protected Client MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
@@ -89,6 +84,9 @@ namespace Test
         {
             this.resp = resp;
         }
+
+        public IClientIO NewSessionClient(string secret) =>
+            new MockClientIO(resp);
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             Task.FromResult(resp);

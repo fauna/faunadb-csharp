@@ -38,6 +38,14 @@ namespace FaunaDB.Client
                 new DefaultClientIO(new Uri(scheme + "://" + domain + ":" + port), timeout ?? TimeSpan.FromSeconds(60), secret);
         }
 
+        internal Client(IClientIO root)
+        {
+            clientIO = root;
+        }
+
+        public Client NewSessionClient(string secret) =>
+            new Client(clientIO.NewSessionClient(secret));
+
         /// <summary>
         /// Use the FaunaDB query API.
         /// </summary>

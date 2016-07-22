@@ -13,16 +13,28 @@ namespace FaunaDB.Client
     {
         // HttpClient is IDisposable, but we don't dispose of it.
         // http://stackoverflow.com/questions/15705092/do-httpclient-and-httpclienthandler-have-to-be-disposed
-        readonly HttpClient client = new HttpClient();
+        readonly HttpClient client;
+        readonly string authHeader;
+
+        internal DefaultClientIO(HttpClient client, string secret)
+        {
+            this.authHeader = AuthString(secret);
+            this.client = client;
+        }
 
         public DefaultClientIO(Uri domain, TimeSpan timeout, string secret)
         {
+            client = new HttpClient();
             client.BaseAddress = domain;
             client.Timeout = timeout;
-            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip");
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("Authorization", AuthString(secret));
+
+            authHeader = AuthString(secret);
         }
+
+        public IClientIO NewSessionClient(string secret) =>
+            new DefaultClientIO(client, secret);
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             DoRequestAsync(method, path, data, query);
@@ -36,7 +48,11 @@ namespace FaunaDB.Client
 
             var startTime = DateTime.UtcNow;
 
-            var httpResponse = await client.SendAsync(new HttpRequestMessage(new HttpMethod(method.Name()), path) { Content = dataString }).ConfigureAwait(false);
+            var message = new HttpRequestMessage(new HttpMethod(method.Name()), path);
+            message.Content = dataString;
+            message.Headers.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
+
+            var httpResponse = await client.SendAsync(message).ConfigureAwait(false);
             var response = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var endTime = DateTime.UtcNow;
@@ -59,8 +75,7 @@ namespace FaunaDB.Client
         static string AuthString(string secret)
         {
             var bytes = Encoding.ASCII.GetBytes(secret);
-            var base64 = Convert.ToBase64String(bytes);
-            return $"Basic {base64}";
+            return Convert.ToBase64String(bytes);
         }
 
         /// <summary>
