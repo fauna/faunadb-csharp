@@ -65,18 +65,6 @@ namespace FaunaDB.Query
         public static Expr Ref(Expr classRef, Expr id) =>
             UnescapedObject.With("ref", classRef, "id", id);
 
-        public static Expr Ts(DateTime dateTime) =>
-            new TimeV(dateTime);
-
-        public static Expr Ts(string iso8601Time) =>
-            new TimeV(iso8601Time);
-
-        public static Expr Dt(DateTime dateTime) =>
-            new DateV(dateTime);
-
-        public static Expr Dt(string iso8601Date) =>
-            new DateV(iso8601Date);
-
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
         /// </summary>

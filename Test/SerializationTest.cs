@@ -67,16 +67,16 @@ namespace Test
 
         [Test] public void TestTimestamp()
         {
-            AssertJsonEqual(Ts("1970-01-01T00:00:00Z"), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
+            AssertJsonEqual(new TimeV("1970-01-01T00:00:00Z"), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
 
-            AssertJsonEqual(Ts(new DateTime(1970, 1, 1, 0, 0, 0, 0)), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
+            AssertJsonEqual(new TimeV(new DateTime(1970, 1, 1, 0, 0, 0, 0)), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
         }
 
         [Test] public void TestDate()
         {
-            AssertJsonEqual(Dt("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
+            AssertJsonEqual(new DateV("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
 
-            AssertJsonEqual(Dt(new DateTime(2000, 1, 1)), "{\"@date\":\"2000-01-01\"}");
+            AssertJsonEqual(new DateV(new DateTime(2000, 1, 1)), "{\"@date\":\"2000-01-01\"}");
         }
 
         [Test] public void TestLet()
@@ -214,7 +214,7 @@ namespace Test
             AssertJsonEqual(Paginate(Ref("databases"), before: Ref("databases/thing/123456789")),
                 "{\"paginate\":{\"@ref\":\"databases\"},\"before\":{\"@ref\":\"databases/thing/123456789\"}}");
 
-            AssertJsonEqual(Paginate(Ref("databases"), ts: Ts("1970-01-01T00:00:00Z")),
+            AssertJsonEqual(Paginate(Ref("databases"), ts: new TimeV("1970-01-01T00:00:00Z")),
                 "{\"paginate\":{\"@ref\":\"databases\"},\"ts\":{\"@ts\":\"1970-01-01T00:00:00Z\"}}");
 
             AssertJsonEqual(Paginate(Ref("databases"), size: 10),
@@ -232,7 +232,7 @@ namespace Test
             AssertJsonEqual(Exists(Ref("classes/thing/123456789")),
                 "{\"exists\":{\"@ref\":\"classes/thing/123456789\"}}");
 
-            AssertJsonEqual(Exists(Ref("classes/thing/123456789"), Ts("1970-01-01T00:00:00.123Z")),
+            AssertJsonEqual(Exists(Ref("classes/thing/123456789"), new TimeV("1970-01-01T00:00:00.123Z")),
                 "{\"exists\":{\"@ref\":\"classes/thing/123456789\"},\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}}");
         }
 
@@ -273,7 +273,7 @@ namespace Test
         {
             AssertJsonEqual(Insert(
                     Ref("classes/widgets/123456789"),
-                    Ts("1970-01-01T00:00:00.123Z"),
+                    new TimeV("1970-01-01T00:00:00.123Z"),
                     "create",
                     Obj("data", Obj("name", "Computer"))),
                 "{\"insert\":{\"@ref\":\"classes/widgets/123456789\"}," +
@@ -283,7 +283,7 @@ namespace Test
 
             AssertJsonEqual(Insert(
                     Ref("classes/widgets/123456789"),
-                    Ts("1970-01-01T00:00:00.123Z"),
+                    new TimeV("1970-01-01T00:00:00.123Z"),
                     ActionType.Create,
                     Obj("data", Obj("name", "Computer"))),
                 "{\"insert\":{\"@ref\":\"classes/widgets/123456789\"},"+
@@ -296,7 +296,7 @@ namespace Test
         {
             AssertJsonEqual(Remove(
                     Ref("classes/widgets/123456789"),
-                    Ts("1970-01-01T00:00:00.123Z"),
+                    new TimeV("1970-01-01T00:00:00.123Z"),
                     "create"),
                 "{\"remove\":{\"@ref\":\"classes/widgets/123456789\"},"+
                 "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
@@ -304,7 +304,7 @@ namespace Test
 
             AssertJsonEqual(Remove(
                     Ref("classes/widgets/123456789"),
-                    Ts("1970-01-01T00:00:00.123Z"),
+                    new TimeV("1970-01-01T00:00:00.123Z"),
                     ActionType.Create),
                 "{\"remove\":{\"@ref\":\"classes/widgets/123456789\"}," +
                 "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
