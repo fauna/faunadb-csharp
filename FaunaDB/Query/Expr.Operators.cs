@@ -105,44 +105,5 @@ namespace FaunaDB.Query
             throw new ArgumentException("Invalid string value. Should be \"second\", \"millisecond\", \"microsecond\" or \"nanosecond\"");
         }
         #endregion
-
-        #region Operators
-        public static Expr operator !(Expr a) =>
-            Not(a);
-
-        public static Expr operator +(Expr a, Expr b) =>
-            Add(a, b);
-
-        public static Expr operator -(Expr a, Expr b) =>
-            Subtract(a, b);
-
-        public static Expr operator *(Expr a, Expr b) =>
-            Multiply(a, b);
-
-        public static Expr operator /(Expr a, Expr b) =>
-            Divide(a, b);
-
-        public static Expr operator %(Expr a, Expr b) =>
-            Modulo(a, b);
-
-        public static Expr operator &(Expr a, Expr b) =>
-            And(a, b);
-
-        public static Expr operator |(Expr a, Expr b) =>
-            Or(a, b);
-
-        public static Expr operator <(Expr a, Expr b) =>
-            LT(a, b);
-
-        public static Expr operator <=(Expr a, Expr b) =>
-            LTE(a, b);
-
-        public static Expr operator >(Expr a, Expr b) =>
-            GT(a, b);
-
-        public static Expr operator >=(Expr a, Expr b) =>
-            GTE(a, b);
-
-        #endregion
     }
 }

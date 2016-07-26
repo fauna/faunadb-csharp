@@ -41,36 +41,5 @@ namespace Test
             Assert.AreEqual(TimeUnit.Nanosecond, (TimeUnit)StringV.Of("nanosecond"));
             Assert.AreEqual(null, (string)(Expr)NullV.Instance);
         }
-
-        [Test] public void TestOperators()
-        {
-            var a = Var("a");
-            var b = Var("b");
-
-            Assert.AreEqual(Add(a, b), a + b);
-            Assert.AreEqual(Subtract(a, b), a - b);
-            Assert.AreEqual(Multiply(a, b), a * b);
-            Assert.AreEqual(Divide(a, b), a / b);
-            Assert.AreEqual(Modulo(a, b), a % b);
-            Assert.AreEqual(And(a, b), a & b);
-            Assert.AreEqual(Or(a, b), a | b);
-            Assert.AreEqual(Not(a), !a);
-            Assert.AreEqual(LT(a, b), a < b);
-            Assert.AreEqual(LTE(a, b), a <= b);
-            Assert.AreEqual(GT(a, b), a > b);
-            Assert.AreEqual(GTE(a, b), a >= b);
-        }
-
-        [Test] public void TestComplexOperators()
-        {
-            var a = Var("a");
-            var b = Var("b");
-            var c = Var("c");
-            var d = Var("d");
-
-            Assert.AreEqual(Add(Multiply(a, b), c), a * b + c);
-            Assert.AreEqual(Multiply(a, Add(b, c)), a * (b + c));
-            Assert.AreEqual(Add(Multiply(a, b), Multiply(c, d)), a * b + c * d);
-        }
     }
 }
