@@ -1,16 +1,15 @@
 ﻿using FaunaDB.Client;
-using FaunaDB.Collections;
 using FaunaDB.Errors;
 using FaunaDB.Types;
-using NUnit.Framework;
+using FaunaDB.Query;
 using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
-using FaunaDB.Query;
 
 namespace Test
 {
@@ -434,14 +433,28 @@ namespace Test
         {
             Value res = await client.Query(
                 Map(Arr(1, 2, 3),
-                    Lambda("i", Add(Var("i"), 1))));
+                    Lambda("i", Add(Var("i"), 1)))
+            );
 
             Assert.That(res.Collect(Field.To(Codec.LONG)),
                         Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
 
+            //////////////////
+
             res = await client.Query(
                 Map(Arr(1, 2, 3),
-                    Lambda(i => Add(i, 1))));
+                    Lambda(i => Add(i, 1)))
+            );
+
+            Assert.That(res.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
+
+            //////////////////
+
+            res = await client.Query(
+                Map(Arr(1, 2, 3),
+                    i => Add(i, 1))
+            );
 
             Assert.That(res.Collect(Field.To(Codec.LONG)),
                         Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
@@ -449,19 +462,31 @@ namespace Test
 
         [Test] public async Task TestExecuteForeachExpression()
         {
+            var clazz = await RandomClass();
+
             Value res = await client.Query(
                 Foreach(Arr("Fireball Level 1", "Fireball Level 2"),
-                    Lambda("spell", Create(await RandomClass(), Obj("data", Obj("name", Var("spell"))))))
+                    Lambda("spell", Create(clazz, Obj("data", Obj("name", Var("spell"))))))
             );
 
             Assert.That(res.Collect(Field.To(Codec.STRING)),
                         Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
 
-            var clazz = await RandomClass();
+            //////////////////
 
             res = await client.Query(
                 Foreach(Arr("Fireball Level 1", "Fireball Level 2"),
-                    Lambda(spell => Create(clazz, Obj("data", Obj("name", spell)))))
+                        Lambda(spell => Create(clazz, Obj("data", Obj("name", spell)))))
+            );
+
+            Assert.That(res.Collect(Field.To(Codec.STRING)),
+                        Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
+
+            //////////////////
+
+            res = await client.Query(
+                Foreach(Arr("Fireball Level 1", "Fireball Level 2"),
+                        spell => Create(clazz, Obj("data", Obj("name", spell))))
             );
 
             Assert.That(res.Collect(Field.To(Codec.STRING)),
@@ -478,6 +503,8 @@ namespace Test
             Assert.That(filtered.Collect(Field.To(Codec.LONG)),
                         Is.EquivalentTo(new List<long> { 2L }));
 
+            //////////////////
+
             filtered = await client.Query(
                 Filter(Arr(1, 2, 3),
                     Lambda(i => EqualsFn(0, Modulo(i, 2))))
@@ -485,6 +512,17 @@ namespace Test
 
             Assert.That(filtered.Collect(Field.To(Codec.LONG)),
                         Is.EquivalentTo(new List<long> { 2L }));
+
+            //////////////////
+
+            filtered = await client.Query(
+                Filter(Arr(1, 2, 3),
+                    i => EqualsFn(0, Modulo(i, 2)))
+            );
+
+            Assert.That(filtered.Collect(Field.To(Codec.LONG)),
+                        Is.EquivalentTo(new List<long> { 2L }));
+
         }
 
         [Test] public async Task TestTakeElementsFromCollection()

@@ -142,8 +142,17 @@ namespace Test
             AssertJsonEqual(Map(Arr(1, 2, 3), Lambda("x", Var("x"))),
                 "{\"map\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
 
+            AssertJsonEqual(Map(Arr(1, 2, 3), Lambda(x => x)),
+                "{\"map\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
             AssertJsonEqual(Map(Arr(1, 2, 3), x => x),
                 "{\"map\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Map(Arr(Arr(1, 2), Arr(3, 4)), Lambda(Arr("x", "y"), Add(Var("x"), Var("y")))),
+                "{\"map\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
+
+            AssertJsonEqual(Map(Arr(Arr(1, 2), Arr(3, 4)), Lambda((x, y) => Add(x, y))),
+                "{\"map\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
 
             AssertJsonEqual(Map(Arr(Arr(1, 2), Arr(3, 4)), (x, y) => Add(x, y)),
                 "{\"map\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
@@ -154,8 +163,17 @@ namespace Test
             AssertJsonEqual(Foreach(Arr(1, 2, 3), Lambda("x", Var("x"))),
                 "{\"foreach\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
 
+            AssertJsonEqual(Foreach(Arr(1, 2, 3), Lambda(x => x)),
+                "{\"foreach\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
             AssertJsonEqual(Foreach(Arr(1, 2, 3), x => x),
                 "{\"foreach\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Foreach(Arr(Arr(1, 2), Arr(3, 4)), Lambda(Arr("x", "y"), Add(Var("x"), Var("y")))),
+                "{\"foreach\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
+
+            AssertJsonEqual(Foreach(Arr(Arr(1, 2), Arr(3, 4)), Lambda((x, y) => Add(x, y))),
+                "{\"foreach\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
 
             AssertJsonEqual(Foreach(Arr(Arr(1, 2), Arr(3, 4)), (x, y) => Add(x, y)),
                 "{\"foreach\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
@@ -166,8 +184,17 @@ namespace Test
             AssertJsonEqual(Filter(Arr(1, 2, 3), Lambda("x", Var("x"))),
                 "{\"filter\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
 
+            AssertJsonEqual(Filter(Arr(1, 2, 3), Lambda(x => x)),
+                "{\"filter\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
             AssertJsonEqual(Filter(Arr(1, 2, 3), x => x),
                 "{\"filter\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
+
+            AssertJsonEqual(Filter(Arr(Arr(1, 2), Arr(3, 4)), Lambda(Arr("x", "y"), Add(Var("x"), Var("y")))),
+                "{\"filter\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
+
+            AssertJsonEqual(Filter(Arr(Arr(1, 2), Arr(3, 4)), Lambda((x, y) => Add(x, y))),
+                "{\"filter\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
 
             AssertJsonEqual(Filter(Arr(Arr(1, 2), Arr(3, 4)), (x, y) => Add(x, y)),
                 "{\"filter\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
