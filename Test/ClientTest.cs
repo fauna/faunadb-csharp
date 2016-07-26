@@ -389,12 +389,6 @@ namespace Test
             );
 
             Assert.That(res.Collect(Field.To(Codec.LONG)), Is.EquivalentTo(new List<long> { 2L, 1L }));
-
-            res = await client.Query(
-                Let("x", 1, "y", 2).In((x, y) => Arr(y, x))
-            );
-
-            Assert.That(res.Collect(Field.To(Codec.LONG)), Is.EquivalentTo(new List<long> { 2L, 1L }));
         }
 
         [Test] public async Task TestEvalIfExpression()
