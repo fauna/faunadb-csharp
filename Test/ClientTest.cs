@@ -10,6 +10,7 @@ using NUnit.Framework;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
+using NUnit.Framework.Constraints;
 
 namespace Test
 {
@@ -140,16 +141,28 @@ namespace Test
 
         [Test] public void TestUnauthorizedOnInvalidSecret()
         {
-            Assert.ThrowsAsync<Unauthorized>(async() =>
+            var ex = Assert.ThrowsAsync<Unauthorized>(async() =>
                 await GetClient(secret: "invalid secret").Query(Ref("classes/spells/1234"))
             );
+
+            AssertErrors(ex, code: "unauthorized", description: "Unauthorized");
+
+            AssertEmptyFailures(ex);
+
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
 
         [Test] public void TestNotFoundWhenInstanceDoesntExists()
         {
-            Assert.ThrowsAsync<NotFound>(async() =>
+            var ex = Assert.ThrowsAsync<NotFound>(async() =>
                 await client.Query(Get(Ref("classes/spells/1234")))
             );
+
+            AssertErrors(ex, code: "instance not found", description: "Instance not found.");
+
+            AssertEmptyFailures(ex);
+
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
 
         [Test] public async Task TestCreateAComplexInstance()
@@ -283,7 +296,13 @@ namespace Test
             Value exists = await client.Query(Exists(@ref));
             Assert.AreEqual(false, exists.To(Codec.BOOLEAN).Value);
 
-            Assert.ThrowsAsync<NotFound>(async() => await client.Query(Get(@ref)));
+            var ex = Assert.ThrowsAsync<NotFound>(async() => await client.Query(Get(@ref)));
+
+            AssertErrors(ex, code: "instance not found", description: "Instance not found.");
+
+            AssertEmptyFailures(ex);
+
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
 
         [Test] public async Task TestInsertAndRemoveEvents()
@@ -319,16 +338,25 @@ namespace Test
                         "terms", Arr(Obj("field", Arr("data", "uniqueField"))),
                         "unique", true)));
 
-            await client.Query(
-                Create(classRef,
-                    Obj("data", Obj("uniqueField", "same value"))));
-
-            Assert.ThrowsAsync<BadRequest>(async () =>
+            AsyncTestDelegate create = async () =>
             {
                 await client.Query(
                     Create(classRef,
                         Obj("data", Obj("uniqueField", "same value"))));
-            });
+            };
+
+            Assert.DoesNotThrowAsync(create);
+
+            var ex = Assert.ThrowsAsync<BadRequest>(create);
+
+            Assert.AreEqual("validation failed: Instance data is not valid.", ex.Message);
+
+            AssertErrors(ex, code: "validation failed", description: "Instance data is not valid.");
+
+            AssertFailures(ex, code: "duplicate value", description: "Value is not unique.",
+                           fields: Is.EquivalentTo(new List<string> { "data", "uniqueField" }));
+
+            AssertPosition(ex, positions: Is.Empty);
         }
 
         [Test] public async Task TestFindASingleInstanceFromIndex()
@@ -839,6 +867,32 @@ namespace Test
             builder.Append(new Random().Next(0, int.MaxValue));
 
             return builder.ToString();
+        }
+
+        static void AssertErrors(FaunaException ex, string code, string description)
+        {
+            Assert.That(ex.Errors, Has.Count.EqualTo(1));
+            Assert.AreEqual(code, ex.Errors[0].Code);
+            Assert.AreEqual(description, ex.Errors[0].Description);
+        }
+
+        static void AssertFailures(FaunaException ex, string code, string description, IResolveConstraint fields)
+        {
+            Assert.That(ex.Errors[0].Failures, Has.Count.EqualTo(1));
+            Assert.AreEqual(code, ex.Errors[0].Failures[0].Code);
+            Assert.AreEqual(description, ex.Errors[0].Failures[0].Description);
+
+            Assert.That(ex.Errors[0].Failures[0].Field, fields);
+        }
+
+        static void AssertEmptyFailures(FaunaException ex)
+        {
+            Assert.That(ex.Errors[0].Failures, Is.Empty);
+        }
+
+        static void AssertPosition(FaunaException ex, IResolveConstraint positions)
+        {
+            Assert.That(ex.Errors[0].Position, positions);
         }
     }
 }
