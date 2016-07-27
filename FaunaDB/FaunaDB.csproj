@@ -82,6 +82,7 @@
     <Compile Include="Errors\QueryErrorResponse.cs" />
     <Compile Include="Collections\ImmutableDictionary.cs" />
     <Compile Include="Collections\DictionaryExtension.cs" />
+    <Compile Include="Query\PageHelper.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>

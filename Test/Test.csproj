@@ -54,6 +54,7 @@
     <Compile Include="SerializationTest.cs" />
     <Compile Include="TestCase.cs" />
     <Compile Include="ErrorsTest.cs" />
+    <Compile Include="PageTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
