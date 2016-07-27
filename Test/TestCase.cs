@@ -18,9 +18,9 @@ namespace Test
         string domain;
         string scheme;
         int? port;
-        Client rootClient;
+        FaunaClient rootClient;
         protected RefV DbRef;
-        protected Client client;
+        protected FaunaClient client;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -65,14 +65,14 @@ namespace Test
             await rootClient.Query(Delete(DbRef));
         }
 
-        protected Client GetClient(string secret) =>
-            new Client(domain: domain, scheme: scheme, port: port, secret: secret);
+        protected FaunaClient GetClient(string secret) =>
+            new FaunaClient(domain: domain, scheme: scheme, port: port, secret: secret);
 
-        protected Client MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
+        protected FaunaClient MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var resp = new RequestResult(HttpMethodKind.Get, "", null, "", responseText, (int)statusCode, null, DateTime.UtcNow, DateTime.UtcNow);
             var mock = new MockClientIO(resp);
-            return new Client(domain: domain, scheme: scheme, port: port, clientIO: mock);
+            return new FaunaClient(domain: domain, scheme: scheme, port: port, clientIO: mock);
         }
     }
 

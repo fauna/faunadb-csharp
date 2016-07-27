@@ -19,12 +19,12 @@ namespace FaunaDB.Client
         public string Path { get; }
 
         /// <summary>
-        /// Query data. This is only valid for <see cref="Client.Get"/> (which is also called by <see cref="Client.Ping"/> .
+        /// Query data. This is only valid for <see cref="FaunaClient.Get"/> (which is also called by <see cref="FaunaClient.Ping"/> .
         /// </summary>
         public IReadOnlyDictionary<string, string> Query { get; }
 
         /// <summary>
-        /// Request data. This will be null for <see cref="Client.Get"/>s. 
+        /// Request data. This will be null for <see cref="FaunaClient.Get"/>s. 
         /// </summary>
         public string RequestContent { get; }
 

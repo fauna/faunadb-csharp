@@ -71,7 +71,7 @@
     <Compile Include="Types\ScalarValue.cs" />
     <Compile Include="Types\NullV.cs" />
     <Compile Include="Collections\OrderedDictionary.cs" />
-    <Compile Include="Client\Client.cs" />
+    <Compile Include="Client\FaunaClient.cs" />
     <Compile Include="Client\RequestResult.cs" />
     <Compile Include="Errors\FaunaException.cs" />
     <Compile Include="Client\HttpMethodKind.cs" />

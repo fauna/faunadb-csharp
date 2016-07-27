@@ -4,7 +4,7 @@ namespace FaunaDB.Client
 {
 
     /// <summary>
-    /// A method used by the <see cref="Client"/>.
+    /// A method used by the <see cref="FaunaClient"/>.
     /// </summary>
     public enum HttpMethodKind
     {

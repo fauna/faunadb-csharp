@@ -831,7 +831,7 @@ namespace Test
                     Obj("password", "abcdefg"))
             );
 
-            Client sessionClient = GetClient(secret: auth.At("secret").To(Codec.STRING).Value);
+            FaunaClient sessionClient = GetClient(secret: auth.At("secret").To(Codec.STRING).Value);
 
             Value loggedOut = await sessionClient.Query(Logout(true));
             Assert.AreEqual(true, loggedOut.To(Codec.BOOLEAN).Value);

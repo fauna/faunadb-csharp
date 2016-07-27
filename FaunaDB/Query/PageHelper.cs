@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FaunaDB.Client;
 using FaunaDB.Types;
 
 namespace FaunaDB.Query
 {
     public class PageHelper
     {
-        readonly Client.Client client;
+        readonly FaunaClient client;
         readonly Expr set;
         readonly Expr ts;
         Expr after;
@@ -17,7 +18,7 @@ namespace FaunaDB.Query
         readonly Expr sources;
         readonly List<Func<Expr, Expr>> faunaFunctions;
 
-        public PageHelper(Client.Client client,
+        public PageHelper(FaunaClient client,
                           Expr set,
                           Expr ts = null,
                           Expr after = null,

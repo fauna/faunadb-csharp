@@ -13,7 +13,7 @@ namespace FaunaDB.Client
     /// <summary>
     /// Directly communicates with FaunaDB via JSON.
     /// </summary>
-    public class Client
+    public class FaunaClient
     {
         readonly IClientIO clientIO;
 
@@ -23,7 +23,7 @@ namespace FaunaDB.Client
         /// <param name="timeout">Timeout. Defaults to 1 minute.</param>
         /// <param name="secret">Auth token for the FaunaDB server.</param>
         /// <param name="clientIO">Optional IInnerClient. Used only for testing.</param>"> 
-        public Client(
+        public FaunaClient(
             string domain = "rest.faunadb.com",
             string scheme = "https",
             int? port = null,
@@ -38,13 +38,13 @@ namespace FaunaDB.Client
                 new DefaultClientIO(new Uri(scheme + "://" + domain + ":" + port), timeout ?? TimeSpan.FromSeconds(60), secret);
         }
 
-        internal Client(IClientIO root)
+        internal FaunaClient(IClientIO root)
         {
             clientIO = root;
         }
 
-        public Client NewSessionClient(string secret) =>
-            new Client(clientIO.NewSessionClient(secret));
+        public FaunaClient NewSessionClient(string secret) =>
+            new FaunaClient(clientIO.NewSessionClient(secret));
 
         /// <summary>
         /// Use the FaunaDB query API.
