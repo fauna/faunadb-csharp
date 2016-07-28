@@ -17,18 +17,18 @@ namespace FaunaDB.Client
     {
         readonly IClientIO clientIO;
 
+        /// <param name="secret">Auth token for the FaunaDB server.</param>
         /// <param name="domain">Base URL for the FaunaDB server.</param>
         /// <param name="scheme">Scheme of the FaunaDB server. Should be "http" or "https".</param>
         /// <param name="port">Port of the FaunaDB server.</param>
         /// <param name="timeout">Timeout. Defaults to 1 minute.</param>
-        /// <param name="secret">Auth token for the FaunaDB server.</param>
         /// <param name="clientIO">Optional IInnerClient. Used only for testing.</param>"> 
         public FaunaClient(
+            string secret,
             string domain = "rest.faunadb.com",
             string scheme = "https",
             int? port = null,
             TimeSpan? timeout = null,
-            string secret = null,
             IClientIO clientIO = null)
         {
             if (port == null)

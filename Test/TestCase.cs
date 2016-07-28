@@ -72,7 +72,7 @@ namespace Test
         {
             var resp = new RequestResult(HttpMethodKind.Get, "", null, "", responseText, (int)statusCode, null, DateTime.UtcNow, DateTime.UtcNow);
             var mock = new MockClientIO(resp);
-            return new FaunaClient(domain: domain, scheme: scheme, port: port, clientIO: mock);
+            return new FaunaClient(secret: "secret", domain: domain, scheme: scheme, port: port, clientIO: mock);
         }
     }
 
