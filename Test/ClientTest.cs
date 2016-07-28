@@ -680,7 +680,7 @@ namespace Test
 
         [Test] public async Task TestEvalCasefoldExpression()
         {
-            Value res = await client.Query(CaseFold("Hen Wen"));
+            Value res = await client.Query(Casefold("Hen Wen"));
             Assert.AreEqual("hen wen", res.To(Codec.STRING).Value);
         }
 

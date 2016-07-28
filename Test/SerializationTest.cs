@@ -423,7 +423,7 @@ namespace Test
 
         [Test] public void TestCasefold()
         {
-            AssertJsonEqual(CaseFold("a string"),
+            AssertJsonEqual(Casefold("a string"),
                 "{\"casefold\":\"a string\"}");
         }
 

@@ -13,7 +13,7 @@
         /// <summary>
         /// See the <see href="https://faunadb.com/documentation/queries#string_functions">docs</see>. 
         /// </summary>
-        public static Expr CaseFold(Expr @string) =>
+        public static Expr Casefold(Expr @string) =>
             UnescapedObject.With("casefold", @string);
         #endregion
     }
