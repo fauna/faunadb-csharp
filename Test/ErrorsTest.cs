@@ -15,7 +15,7 @@ namespace Test
     {
         [Test] public void TestInvalidResponse()
         {
-            Assert.ThrowsAsync<InvalidResponseException>(async() => await MockClient("I like fine wine").Query(Get(Ref(""))));
+            Assert.ThrowsAsync<UnknowException>(async() => await MockClient("I like fine wine").Query(Get(Ref(""))));
             Assert.ThrowsAsync<KeyNotFoundException>(async() => await MockClient("{\"resoars\": 1}").Query(Get(Ref(""))));
         }
 

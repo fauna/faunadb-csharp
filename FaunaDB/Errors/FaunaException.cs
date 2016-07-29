@@ -1,16 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FaunaDB.Collections;
-using FaunaDB.Types;
 
 namespace FaunaDB.Errors
 {
-    public class InvalidResponseException : Exception
-    {
-        public InvalidResponseException(string message) : base(message) {}
-    }
-
     /// <summary>
     /// Error returned by the FaunaDB server.
     /// For documentation of error types, see the <see href="https://faunadb.com/documentation#errors">docs</see>.
@@ -33,6 +26,8 @@ namespace FaunaDB.Errors
             queryErrorResponse = response;
         }
 
+        protected FaunaException(string message) : base(message) { }
+
         static string CreateMessage(IReadOnlyList<QueryError> errors) =>
             string.Join(", ", from error in errors select $"{error.Code}: {error.Description}");
    }
@@ -54,27 +49,11 @@ namespace FaunaDB.Errors
     }
 
     /// <summary>
-    /// HTTP 403 error.
-    /// </summary>
-    public class PermissionDenied : FaunaException
-    {
-        internal PermissionDenied(QueryErrorResponse response) : base(response) {}
-    }
-
-    /// <summary>
     /// HTTP 404 error.
     /// </summary>
     public class NotFound : FaunaException
     {
         public NotFound(QueryErrorResponse response) : base(response) {}
-    }
-
-    /// <summary>
-    /// HTTP 405 error.
-    /// </summary>
-    public class MethodNotAllowed : FaunaException
-    {
-        internal MethodNotAllowed(QueryErrorResponse response) : base(response) {}
     }
 
     /// <summary>
@@ -96,6 +75,7 @@ namespace FaunaDB.Errors
     public class UnknowException : FaunaException
     {
         internal UnknowException(QueryErrorResponse response) : base(response) {}
+        internal UnknowException(string message) : base(message) { }
     }
 }
 

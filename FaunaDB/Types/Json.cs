@@ -152,7 +152,7 @@ namespace FaunaDB.Types
 
         Value Unexpected()
         {
-            throw new InvalidResponseException(reader.TokenType.ToString());
+            throw new UnknowException(reader.TokenType.ToString());
         }
     }
 
