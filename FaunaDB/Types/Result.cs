@@ -34,8 +34,36 @@ namespace FaunaDB.Types
         /// </returns>
         IResult<U> FlatMap<U>(Func<T, IResult<U>> func);
 
+        /// <summary>
+        /// Matches the current instance. Case it represents a successful result it will execute the first argument.
+        /// Case it represents a failure object it will execute the second argument.
+        /// </summary>
+        /// <example>
+        /// IResult&lt;string&gt; result = ...
+        /// 
+        /// IResult&lt;int&gt; other = result.Match(
+        ///   Success: value => int.Parse(value), 
+        ///   Failure: reason => DoSomethingElse(reason)
+        /// );
+        /// </example>
+        /// <param name="Success">Function to be executed case this instance represents a successful result</param>
+        /// <param name="Failure">Function to be executed case this instance represents a failure result</param>
         U Match<U>(Func<T, U> Success, Func<string, U> Failure);
 
+        /// <summary>
+        /// Matches the current instance. Case it represents a successful result it will execute the first argument.
+        /// Case it represents a failure object it will execute the second argument.
+        /// </summary>
+        /// <example>
+        /// IResult&lt;string&gt; result = ...
+        /// 
+        /// result.Match(
+        ///   Success: value => DoSomething(),
+        ///   Failure: reason => DoSomethingElse(reason)
+        /// );
+        /// </example>
+        /// <param name="Success">Action to be executed case this instance represents a successful result</param>
+        /// <param name="Failure">Action to be executed case this instance represents a failure result</param>
         void Match(Action<T> Success, Action<string> Failure);
 
         /// <summary>

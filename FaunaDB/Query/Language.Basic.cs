@@ -58,6 +58,14 @@ namespace FaunaDB.Query
         /// This is the raw version. Usually it's easier to use the overload.
         /// </para>
         /// <para>
+        /// See <see cref="Lambda(System.Func{Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr, Expr, Expr, Expr})"/>
+        /// </para>
+        /// <para>
         /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>

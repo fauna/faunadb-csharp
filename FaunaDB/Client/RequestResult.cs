@@ -19,17 +19,17 @@ namespace FaunaDB.Client
         public string Path { get; }
 
         /// <summary>
-        /// Query data. This is only valid for <see cref="FaunaClient.Execute(HttpMethodKind, string, FaunaDB.Query.Expr, IReadOnlyDictionary{string, string})"/> (which is also called by <see cref="Client.Ping"/>.
+        /// The query parameters submitted on the request.
         /// </summary>
         public IReadOnlyDictionary<string, string> Query { get; }
 
         /// <summary>
-        /// String data submited for the response.
+        /// String data submited for the server.
         /// </summary>
         public string RequestContent { get; }
 
         /// <summary>
-        /// String returned by the response.
+        /// String returned by the server.
         /// </summary>
         public string ResponseContent { get; }
 
@@ -54,7 +54,7 @@ namespace FaunaDB.Client
         public DateTime EndTime { get; }
 
         /// <summary>
-        /// Indicates how long the query takes to execute.
+        /// Indicates how long the query took to execute.
         /// </summary>
         public TimeSpan TimeTaken { get { return EndTime - StartTime; } }
 

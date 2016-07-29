@@ -10,6 +10,14 @@
         /// <para>
         /// This is the raw version. Usually it's easier to use the overload.
         /// </para>
+        /// <para>
+        /// See <see cref="Map(Expr, System.Func{Expr, Expr})"/>,
+        /// <see cref="Map(Expr, System.Func{Expr, Expr, Expr})"/>,
+        /// <see cref="Map(Expr, System.Func{Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Map(Expr, System.Func{Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Map(Expr, System.Func{Expr, Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Map(Expr, System.Func{Expr, Expr, Expr, Expr, Expr, Expr, Expr})"/>
+        /// </para>
         /// </summary>
         /// <param name="collection">A collection expression</param>
         /// <param name="lambda">Lambda expression created by <see cref="Lambda(Expr, Expr)"/></param>
@@ -29,6 +37,14 @@
         /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// <para>
+        /// See <see cref="Foreach(Expr, System.Func{Expr, Expr})"/>,
+        /// <see cref="Foreach(Expr, System.Func{Expr, Expr, Expr})"/>,
+        /// <see cref="Foreach(Expr, System.Func{Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Foreach(Expr, System.Func{Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Foreach(Expr, System.Func{Expr, Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Foreach(Expr, System.Func{Expr, Expr, Expr, Expr, Expr, Expr, Expr})"/>
+        /// </para>
+        /// <para>
         /// This is the raw version. Usually it's easier to use the overload.
         /// </para>
         /// </summary>
@@ -44,6 +60,14 @@
         /// </para>
         /// <para>
         /// This is the raw version. Usually it's easier to use the overload.
+        /// </para>
+        /// <para>
+        /// See <see cref="Filter(Expr, System.Func{Expr, Expr})"/>,
+        /// <see cref="Filter(Expr, System.Func{Expr, Expr, Expr})"/>,
+        /// <see cref="Filter(Expr, System.Func{Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Filter(Expr, System.Func{Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Filter(Expr, System.Func{Expr, Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Filter(Expr, System.Func{Expr, Expr, Expr, Expr, Expr, Expr, Expr})"/>
         /// </para>
         /// </summary>
         /// <param name="collection">A collection expression</param>

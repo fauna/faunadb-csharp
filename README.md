@@ -63,7 +63,7 @@ namespace FaunaDBProject
                 //do something
             }
         }
-        static async Task DoQuery(Client client)
+        static async Task DoQuery(FaunaClient client)
         {
             Value result = await client.Query(Paginate(Match(Ref("indexes/spells"))));
             IResult<IReadOnlyList<Value>> data = result.At("data").To(Codec.ARRAY);
@@ -76,7 +76,7 @@ namespace FaunaDBProject
 
         public static void Main(string[] args)
         {
-            Client client = new Client(domain: DOMAIN, scheme: SCHEME, port: PORT, secret: SECRET);
+            var client = new FaunaClient(domain: DOMAIN, scheme: SCHEME, port: PORT, secret: SECRET);
 
             DoQuery(client).Wait();
         }
@@ -84,31 +84,35 @@ namespace FaunaDBProject
 }
 ```
 
-In this example you will notice that we use pretty much every aspect of the library.
+This small example shows how to use pretty much every aspect of the library.
 
-First of then is how to instantiate a FaunaDB `Client`.
+#### How to instantiate a FaunaDB `FaunaClient`
 
 ```csharp
-Client client = new Client(domain: DOMAIN, scheme: SCHEME, port: PORT, secret: SECRET);
+var client = new FaunaClient(domain: DOMAIN, scheme: SCHEME, port: PORT, secret: SECRET);
 ```
 
 Except `secret` all other arguments are optional.
 
-Second is how to perform the query itself.
+#### How to execute a query
 
 ```csharp
 Value result = client.Query(Paginate(Match(Ref("indexes/spells"))));
 ```
 
-As you get more familiar with the library you will realize that `Query` methods receives an `Expr` object. `Expr` objects can be composed with others `Expr` to create complex queries objects. `FaunaDB.Query.Language` is a helper class where you can find all available expressions in the library.
+`Query` methods receives an `Expr` object. `Expr` objects can be composed with others `Expr` to create complex query objects. `FaunaDB.Query.Language` is a helper class where you can find all available expressions in the library.
 
-Third is how to access internal fields of objects and how to convert from `Value` objects to primitive objects using `Codec`.
+#### How to access objects fields and convert to primitive values
+
+Objects fields are accessed through `At` methods of `Value` class. It's possible to access fields by names if the value represents an object or by index if it represents an array. Also it's possible to convert `Value` class to its primitive correspondent using `To` methods specifying a `Codec`.
 
 ```csharp
 IResult<IReadOnlyList<Value>> data = result.At("data").To(Codec.ARRAY);
 ```
 
-Fourth is how work with `IResult<T>` objects. This object represents the result of an operation and it might be success or a failure. All operations on `Codec` return an object like this. This is this way so you don't need to check for nullability everywhere.
+#### How work with `IResult<T>` objects
+
+This object represents the result of an operation and it might be success or a failure. All operations on `Codec` return an object like this. This way it's possible to avoid check for nullability everywhere in the code.
 
 ```csharp
 data.Match(
@@ -117,14 +121,14 @@ data.Match(
 );
 ```
 
-Optionally you can transform one `IResult<T>` into another `IResult<U>` of different type using `Map` and `FlatMap`.
+Optionally it's possible transform one `IResult<T>` into another `IResult<U>` of different type using `Map` and `FlatMap`.
 
 ```csharp
 IResult<int> result = <<...>>;
 IResult<string> result.Map(value => value.toString());
 ```
 
-If `result` represents an failure all callings to `Map` and `FlatMap` are ignored. See `FaunaDB.Types.Result`.
+If `result` represents an failure all calls to `Map` and `FlatMap` are ignored. See `FaunaDB.Types.Result`.
 
 ## License
 

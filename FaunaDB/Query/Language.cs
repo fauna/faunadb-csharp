@@ -7,13 +7,13 @@
     /// </para>
     /// </summary>
     /// <example>
-    /// Each of these methods constructs a <see cref="FaunaDB.Types.Value"/>, which can then be composed with other methods to form complex
+    /// Each of these methods constructs a <see cref="Expr"/>, which can then be composed with other methods to form complex
     /// expressions.
     ///
     /// <code>
-    ///   Value existsValue = Exists(Ref("some/ref"));
+    ///   Expr existsValue = Exists(Ref("some/ref"));
     ///
-    ///   Value createValue = Create(
+    ///   Expr createValue = Create(
     ///    Ref("classes/some_class"),
     ///    Obj("data",
     ///      Obj("some", "field"))

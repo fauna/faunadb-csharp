@@ -12,7 +12,7 @@
             UnescapedObject.With("concat", strings, "separator", separator);
 
         /// <summary>
-        /// Creates a new CaseFold expression.
+        /// Creates a new Casefold expression.
         /// <para>
         /// See the <see href="https://faunadb.com/documentation/queries#string_functions">FaunaDB String Functions</see>
         /// </para>
