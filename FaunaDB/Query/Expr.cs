@@ -3,6 +3,9 @@ using System;
 
 namespace FaunaDB.Query
 {
+    /// <summary>
+    /// A query language expression. Constructors for this class are at the <see cref="Language"/> class.
+    /// </summary>
     [JsonConverter(typeof(ExprJsonConverter))]
     public abstract partial class Expr : IEquatable<Expr>
     {

@@ -2,14 +2,21 @@
 {
     public partial struct Language
     {
-        #region Time and Date
-
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
+        /// Creates a new Time expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Time(Expr time) =>
             UnescapedObject.With("time", time);
 
+        /// <summary>
+        /// Possible time units accepted by <see cref="Epoch(Expr, TimeUnit)"/>.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// </para>
+        /// </summary>
         public enum TimeUnit
         {
             Second,
@@ -19,22 +26,30 @@
         }
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
+        /// Creates a new Epoch expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Epoch(Expr number, TimeUnit unit) =>
             Epoch(number, (Expr)unit);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
+        /// Creates a new Epoch expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Epoch(Expr number, Expr unit) =>
             UnescapedObject.With("epoch", number, "unit", unit);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">docs</see>. 
+        /// Creates a new Date expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// </para>
         /// </summary>
         public static Expr Date(Expr date) =>
             UnescapedObject.With("date", date);
-        #endregion
     }
 }

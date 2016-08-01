@@ -19,26 +19,44 @@ namespace FaunaDB.Client
         public string Path { get; }
 
         /// <summary>
-        /// Query data. This is only valid for <see cref="FaunaClient.Get"/> (which is also called by <see cref="FaunaClient.Ping"/> .
+        /// The query parameters submitted on the request.
         /// </summary>
         public IReadOnlyDictionary<string, string> Query { get; }
 
         /// <summary>
-        /// Request data. This will be null for <see cref="FaunaClient.Get"/>s. 
+        /// String data submited for the server.
         /// </summary>
         public string RequestContent { get; }
 
         /// <summary>
-        /// Value returned by the response. Includes "resource" wrapper object, or may be an "errors" object instead.
+        /// String returned by the server.
         /// </summary>
         public string ResponseContent { get; }
 
+        /// <summary>
+        /// Http status code result of the request.
+        /// </summary>
         public int StatusCode { get; }
 
+        /// <summary>
+        /// Response headers returned by the FaunaDB server.
+        /// </summary>
         public IReadOnlyDictionary<string, IEnumerable<string>> ResponseHeaders { get; }
 
+        /// <summary>
+        /// <see cref="DateTime"/> when the query was issued.
+        /// </summary>
         public DateTime StartTime { get; }
+
+        /// <summary>
+        /// <see cref="DateTime"/> when the query finished.
+        /// </summary>
         public DateTime EndTime { get; }
+
+        /// <summary>
+        /// Indicates how long the query took to execute.
+        /// </summary>
+        public TimeSpan TimeTaken { get { return EndTime - StartTime; } }
 
         public RequestResult(
             HttpMethodKind method,
@@ -61,8 +79,6 @@ namespace FaunaDB.Client
             StartTime = startTime;
             EndTime = endTime;
         }
-
-        public TimeSpan TimeTaken { get { return EndTime - StartTime; } }
     }
 }
 

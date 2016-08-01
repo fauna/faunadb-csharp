@@ -9,7 +9,7 @@ using System.Linq;
 namespace FaunaDB.Types
 {
     /// <summary>
-    /// Corresponds to a JSON object.
+    /// Represents an Object value in the FaunaDB query language. Objects are polymorphic dictionaries.
     /// </summary>
     public sealed class ObjectV : Value
     {

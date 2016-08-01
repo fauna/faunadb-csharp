@@ -9,7 +9,7 @@ using System.Linq;
 namespace FaunaDB.Types
 {
     /// <summary>
-    /// Corresponds to a JSON array.
+    /// Represents an array value in the FaunaDB query language. Arrays are polymorphic ordered lists of other values.
     /// </summary>
     public sealed class ArrayV : Value, IEnumerable<Value>
     {

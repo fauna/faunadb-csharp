@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace FaunaDB.Types
 {
     /// <summary>
-    /// Type of Value.Null.
+    /// Represents a null value in the FaunaDB query language.
     /// </summary>
     public sealed class NullV : Value
     {

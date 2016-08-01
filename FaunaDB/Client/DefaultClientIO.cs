@@ -9,10 +9,11 @@ using FaunaDB.Collections;
 
 namespace FaunaDB.Client
 {
+    /// <summary>
+    /// Default client that handles all http connections using <see cref="HttpClient"/>.
+    /// </summary>
     class DefaultClientIO : IClientIO
     {
-        // HttpClient is IDisposable, but we don't dispose of it.
-        // http://stackoverflow.com/questions/15705092/do-httpclient-and-httpclienthandler-have-to-be-disposed
         readonly HttpClient client;
         readonly string authHeader;
 
@@ -70,8 +71,9 @@ namespace FaunaDB.Client
             return dic;
         }
 
-        // NetworkCredentials doesn't work, so have to do this.
-        // Based on: http://stackoverflow.com/questions/19851474/networkcredential-working-for-post-but-not-get
+        /// <summary>
+        /// Encodes secret string using base 64.
+        /// </summary>
         static string AuthString(string secret)
         {
             var bytes = Encoding.ASCII.GetBytes(secret);

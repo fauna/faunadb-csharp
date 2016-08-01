@@ -6,6 +6,12 @@ namespace FaunaDB.Query
 {
     public partial struct Language
     {
+        /// <summary>
+        /// Builder for path selectors.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
         public struct PathSelector
         {
             IReadOnlyList<Expr> segments;
@@ -33,6 +39,11 @@ namespace FaunaDB.Query
                 this.segments = segs;
             }
 
+            /// <summary>
+            /// Narrow to a specific path on a object node.
+            /// </summary>
+            /// <param name="others">A list of nested fields</param>
+            /// <returns>A new narrowed path</returns>
             public PathSelector At(params string[] others)
             {
                 var all = new List<Expr>(segments);
@@ -41,6 +52,11 @@ namespace FaunaDB.Query
                 return new PathSelector(all);
             }
 
+            /// <summary>
+            /// Narrow to a specific element index on a array node.
+            /// </summary>
+            /// <param name="others">A list of nested indexes</param>
+            /// <returns>A new narrowed path</returns>
             public PathSelector At(params int[] others)
             {
                 var all = new List<Expr>(segments);
@@ -50,40 +66,115 @@ namespace FaunaDB.Query
             }
         }
 
+        /// <summary>
+        /// Helper for constructing a <see cref="PathSelector"/> with the given path terms.
+        /// <para>
+        /// See <see cref="PathSelector"/>
+        /// </para>
+        /// </summary>
         public static PathSelector Path(params string[] segments) =>
             new PathSelector(segments);
 
+        /// <summary>
+        /// Helper for constructing a <see cref="PathSelector"/> with the given path terms.
+        /// <para>
+        /// See <see cref="PathSelector"/>
+        /// </para>
+        /// </summary>
         public static PathSelector Path(params int[] segments) =>
             new PathSelector(segments);
 
+        /// <summary>
+        /// Creates a null value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
         public static Expr Null() =>
             NullV.Instance;
 
+        /// <summary>
+        /// Creates a <see cref="RefV"/> value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
         public static Expr Ref(string id) =>
             new RefV(id);
 
+        /// <summary>
+        /// Calls ref function to create a ref value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
         public static Expr Ref(Expr classRef, Expr id) =>
             UnescapedObject.With("ref", classRef, "id", id);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
+        /// Creates a new Timestamp value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Ts(DateTime dateTime) =>
+            new TimeV(dateTime);
+
+        /// <summary>
+        /// Creates a new Timestamp value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Ts(string iso8601Time) =>
+            new TimeV(iso8601Time);
+
+        /// <summary>
+        /// Creates a new Date value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Dt(DateTime dateTime) =>
+            new DateV(dateTime);
+
+        /// <summary>
+        /// Creates a new Date value.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Dt(string iso8601Date) =>
+            new DateV(iso8601Date);
+
+        /// <summary>
+        /// Creates a new Array value containing the provided entries.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
         /// </summary>
         public static Expr Arr(params Expr[] values) =>
             UnescapedArray.Of(values);
 
+        /// <summary>
+        /// Creates a new Array value containing the provided enumerable of values.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
         public static Expr Arr(IEnumerable<Expr> values) =>
             UnescapedArray.Of(values);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">docs</see>
+        /// Creates a new Object value wrapping the provided map.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
         /// </summary>
         public static Expr Obj(IReadOnlyDictionary<string, Expr> fields) =>
             UnescapedObject.With("object", new UnescapedObject(fields));
 
-        #region Helpers
         static Expr Varargs(Expr[] values) =>
             values.Length == 1 ? values[0] : UnescapedArray.Of(values);
-        #endregion
-
     }
 }
