@@ -6,22 +6,86 @@ using FaunaDB.Collections;
 
 namespace FaunaDB.Types
 {
+    /// <summary>
+    /// Represents the result of an operation. Usually a coercion operation.
+    /// <para>
+    /// See <see cref="Codec"/>
+    /// </para>
+    /// </summary>
     public interface IResult<T>
     {
+        /// <summary>
+        /// Apply the function passed on the result value.
+        /// </summary>
+        /// <param name="func">the map function to be applied</param>
+        /// <returns>
+        /// If this is a successful result, return a new successful result with the map function result.
+        /// If this is a failure, returns a new failure with the same error message.
+        /// </returns>
         IResult<U> Map<U>(Func<T, U> func);
 
+        /// <summary>
+        /// Apply the function passed on the result value.
+        /// </summary>
+        /// <param name="func">the map function to be applied</param>
+        /// <returns>
+        /// If this is a successful result, returns the map function result.
+        /// If this is a failure, returns a new failure with the same error message.
+        /// </returns>
         IResult<U> FlatMap<U>(Func<T, IResult<U>> func);
 
+        /// <summary>
+        /// Matches the current instance. Case it represents a successful result it will execute the first argument.
+        /// Case it represents a failure object it will execute the second argument.
+        /// </summary>
+        /// <example>
+        /// IResult&lt;string&gt; result = ...
+        /// 
+        /// IResult&lt;int&gt; other = result.Match(
+        ///   Success: value => int.Parse(value), 
+        ///   Failure: reason => DoSomethingElse(reason)
+        /// );
+        /// </example>
+        /// <param name="Success">Function to be executed case this instance represents a successful result</param>
+        /// <param name="Failure">Function to be executed case this instance represents a failure result</param>
         U Match<U>(Func<T, U> Success, Func<string, U> Failure);
 
+        /// <summary>
+        /// Matches the current instance. Case it represents a successful result it will execute the first argument.
+        /// Case it represents a failure object it will execute the second argument.
+        /// </summary>
+        /// <example>
+        /// IResult&lt;string&gt; result = ...
+        /// 
+        /// result.Match(
+        ///   Success: value => DoSomething(),
+        ///   Failure: reason => DoSomethingElse(reason)
+        /// );
+        /// </example>
+        /// <param name="Success">Action to be executed case this instance represents a successful result</param>
+        /// <param name="Failure">Action to be executed case this instance represents a failure result</param>
         void Match(Action<T> Success, Action<string> Failure);
 
+        /// <summary>
+        /// Extracts the resulting value or throw an exception if the operation has failed.
+        /// </summary>
+        /// <exception cref="InvalidOperationException" />
         T Value { get; }
 
+        /// <summary>
+        /// Gets an <see cref="IOption{T}"/> type containing the result value if the operation was successful,
+        /// or <see cref="Option.None{T}()"/> if it was a failure
+        /// </summary>
         IOption<T> ValueOption { get; }
 
+        /// <summary>
+        /// Return true if the operation was successful
+        /// </summary>
         bool isSuccess { get; }
 
+        /// <summary>
+        /// Return true if the operation has failed
+        /// </summary>
         bool isFailure { get; }
     }
 
@@ -111,17 +175,43 @@ namespace FaunaDB.Types
             reason;
     }
 
+    /// <summary>
+    /// Represents the result of an operation. Usually a coercion operation.
+    /// <para>
+    /// See <see cref="Codec"/>
+    /// </para>
+    /// </summary>
     public static class Result
     {
+        /// <summary>
+        /// Creates a successful result
+        /// </summary>
+        /// <param name="value">result's value</param>
+        /// <returns>a successful result</returns>
         public static IResult<T> Success<T>(T value) =>
             new Success<T>(value, EqualityComparer<T>.Default);
 
+        /// <summary>
+        /// Creates a successful result. Specialization for <see cref="IReadOnlyDictionary{TKey, TValue}"/>
+        /// </summary>
+        /// <param name="value">result's value</param>
+        /// <returns>a successful result</returns>
         public static IResult<IReadOnlyDictionary<Key, Value>> Success<Key, Value>(IReadOnlyDictionary<Key, Value> value) =>
             new Success<IReadOnlyDictionary<Key, Value>>(value, DictionaryComparer<Key, Value>.Default);
 
+        /// <summary>
+        /// Creates a successful result. Specialization for <see cref="IReadOnlyList{T}"/>
+        /// </summary>
+        /// <param name="value">result's value</param>
+        /// <returns>a successful result</returns>
         public static IResult<IReadOnlyList<T>> Success<T>(IReadOnlyList<T> value) =>
             new Success<IReadOnlyList<T>>(value, ListComparer<T>.Default);
 
+        /// <summary>
+        /// Creates failure result
+        /// </summary>
+        /// <param name="reason">the reason for the failure</param>
+        /// <returns>a failure result</returns>
         public static IResult<T> Fail<T>(string reason) =>
             new Failure<T>(reason);
     }

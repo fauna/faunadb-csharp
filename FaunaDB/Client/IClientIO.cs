@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace FaunaDB.Client
 {
     /// <summary>
-    /// Handles actual I/O for a Client. This can be changed for testing.
+    /// Handles actual I/O for a <see cref="FaunaClient"/>.
     /// </summary>
     public interface IClientIO
     {

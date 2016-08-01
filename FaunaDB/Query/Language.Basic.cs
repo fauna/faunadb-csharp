@@ -4,44 +4,80 @@ namespace FaunaDB.Query
 {
     public partial struct Language
     {
-        #region Basic Forms
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
+        /// Creates a new Let expression with the provided bindings.
+        /// <para>
         /// This is the raw version. Usually it's easier to use the overload.
+        /// </para>
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
         /// </summary>
         public static Expr Let(Expr vars, Expr @in) =>
             UnescapedObject.With("let", vars, "in", @in);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
+        /// Creates a new Let expression wrapping the provided map of bindings.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
         /// </summary>
         public static Expr Let(IReadOnlyDictionary<string, Expr> vars, Expr @in) =>
             Let(new UnescapedObject(vars), @in);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
+        /// Creates a new Var expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
         /// </summary>
         public static Expr Var(string varName) =>
             UnescapedObject.With("var", varName);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
+        /// Creates a new If expression.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
         /// </summary>
         public static Expr If(Expr @if, Expr @then, Expr @else) =>
             UnescapedObject.With("if", @if, "then", @then, "else", @else);
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
+        /// Creates a new Do expression containing the provided expressions.
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
         /// </summary>
         public static Expr Do(params Expr[] expressions) =>
             UnescapedObject.With("do", Varargs(expressions));
 
         /// <summary>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">docs</see>.
-        /// This is the raw version. Usually it's easier to use an overload.
+        /// Creates a new Lambda expression.
+        /// <para>
+        /// This is the raw version. Usually it's easier to use the overload.
+        /// </para>
+        /// <para>
+        /// See <see cref="Lambda(System.Func{Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr, Expr, Expr})"/>,
+        /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr, Expr, Expr, Expr})"/>
+        /// </para>
+        /// <para>
+        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
         /// </summary>
+        /// <param name="vars">Variable names. Can be a single string or an array of strings</param>
+        /// <param name="expr">Any composed expression created by <see cref="Language"/></param>
+        /// <example>
+        /// <code>
+        /// var lambda1 = Lambda("a", Add(Var("a"), 1);
+        /// var lambda2 = Lambda(Arr("a", "b"), Add(Var("a"), Var("b"));
+        /// </code>
+        /// </example>
         public static Expr Lambda(Expr vars, Expr expr) =>
             UnescapedObject.With("lambda", vars, "expr", expr);
-        #endregion
     }
 }

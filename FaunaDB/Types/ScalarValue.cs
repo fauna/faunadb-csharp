@@ -8,18 +8,10 @@ using FaunaDB.Collections;
 namespace FaunaDB.Types
 {
     /// <summary>
-    /// Base class for Values that simply wrap something, such as <see cref="BooleanV"/>. 
+    /// Represents a scalar value at the FaunaDB query language.
     /// </summary>
     public abstract class ScalarValue<TWrapped> : Value
     {
-        /// <summary>
-        /// Wrapped value.
-        /// </summary>
-        /// <remarks>
-        /// For simple wrappings (bool, double, long, string, array, object),
-        /// there should exist an implicit conversion from this to Value
-        /// and an explicit (unsafe because a Value might not be a BoolV) conversion from Value to this.
-        /// </remarks>
         public TWrapped Value { get; }
 
         protected ScalarValue(TWrapped value)
@@ -48,7 +40,7 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// Wrapped boolean.
+    /// Represents a Boolean value in the FaunaDB query language.
     /// </summary>
     public sealed class BooleanV : ScalarValue<bool>
     {
@@ -62,7 +54,7 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// Wrapped double.
+    /// Represents a Double value in the FaunaDB query language.
     /// </summary>
     public sealed class DoubleV : ScalarValue<double>
     {
@@ -73,7 +65,7 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// Wrapped long. This is any JSON number with no fractional part.
+    /// Represents a Long value in the FaunaDB query language.
     /// </summary>
     public sealed class LongV : ScalarValue<long>
     {
@@ -84,7 +76,7 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// Wrapped string.
+    /// Represents a String value in the FaunaDB query language.
     /// </summary>
     public sealed class StringV : ScalarValue<string>
     {
@@ -99,7 +91,10 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// FaunaDB ref. See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
+    /// A FaunaDB ref type.
+    /// <para>
+    /// See <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
+    /// </para>
     /// </summary>
     public sealed class RefV : ScalarValue<string>
     {
@@ -123,12 +118,9 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// FaunaDB Set.
+    /// A FaunaDB set literal.
+    /// See <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>
     /// </summary>
-    /// <remarks>
-    /// This represents a set returned as part of a response. This looks like <c>{"@set": set_query}</c>.
-    /// For query sets see <see cref="Language"/>.
-    /// </remarks>
     public sealed class SetRefV : ScalarValue<IReadOnlyDictionary<string, Value>>
     {
         public SetRefV(IReadOnlyDictionary<string, Value> name) : base(name)
@@ -156,8 +148,10 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// FaunaDB timestamp.
-    /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
+    /// Represents a Timestamp value in the FaunaDB query language.
+    /// <para>
+    /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
+    /// </para>
     /// </summary>
     public sealed class TimeV : ScalarValue<DateTime>
     {
@@ -205,8 +199,10 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// FaunaDB date.
-    /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">docs</see>. 
+    /// Represents a Date value in the FaunaDB query language.
+    /// <para>
+    /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
+    /// </para>
     /// </summary>
     public sealed class DateV : ScalarValue<DateTime>
     {
