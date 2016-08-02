@@ -1,3 +1,3 @@
-rmdir packages\FaunaDB -Recurse -Force
-mkdir packages\FaunaDB
-nuget.exe pack .\FaunaDB\FaunaDB.csproj -OutputDirectory packages\FaunaDB -Properties Configuration=Release
+rmdir packages\FaunaDB.Client -Recurse -Force
+mkdir packages\FaunaDB.Client
+nuget.exe pack .\FaunaDB.Client\FaunaDB.Client.csproj -OutputDirectory packages\FaunaDB.Client -Properties Configuration=Release

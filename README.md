@@ -28,7 +28,7 @@ First install the Nuget package by editing your `packages.config`
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <packages>
-  <package id="FaunaDB" version="1.0.0" targetFramework="net45" />
+  <package id="FaunaDB.Client" version="0.0.1" targetFramework="net45" />
 </packages>
 ```
 

@@ -3,11 +3,11 @@
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("FaunaDB")]
+[assembly: AssemblyTitle("FaunaDB.Client")]
 [assembly: AssemblyCompany("Fauna, Inc.")]
 [assembly: AssemblyProduct("C# Driver for FaunaDB")]
 [assembly: AssemblyDescription("C# Driver for FaunaDB")]
-[assembly: AssemblyCopyright("© Fauna, Inc. 2016. Distributed under MPL 2.0")]
+[assembly: AssemblyCopyright("© Fauna, Inc. 2016. Distributed under MPL 2.0 License")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -33,5 +33,5 @@
 
 static class FaunaDBAttribute
 {
-    public const string Version = "1.0.1.0";
+    public const string Version = "0.0.1.0";
 }
