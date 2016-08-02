@@ -1,11 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.25302.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaunaDB", "FaunaDB\FaunaDB.csproj", "{F668B011-79C7-474B-8594-E0D2785F83F8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{CC9D4AE2-C260-4EC0-A5F4-3A5CCCFB99A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{F61FD463-D09F-4B5E-B6B5-7E891C8C87F2}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\build.ps1 = Scripts\build.ps1
+		Scripts\nuget-pack.ps1 = Scripts\nuget-pack.ps1
+		Scripts\nuget-push.ps1 = Scripts\nuget-push.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
