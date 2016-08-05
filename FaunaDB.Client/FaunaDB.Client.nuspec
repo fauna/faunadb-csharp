@@ -12,7 +12,7 @@
 
 See https://faunadb.com for more information.</description>
     <licenseUrl>https://github.com/faunadb/faunadb-csharp/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://faunadb.com/</projectUrl>
+    <projectUrl>https://github.com/faunadb/faunadb-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
   </metadata>
 </package>
