@@ -15,9 +15,6 @@ namespace Test
 {
     public class TestCase
     {
-        string domain;
-        string scheme;
-        int? port;
         FaunaClient rootClient;
         protected RefV DbRef;
         protected FaunaClient client;
@@ -30,16 +27,17 @@ namespace Test
 
         async Task SetUpAsync()
         {
-            var cfg = await Config.GetConfig();
-            domain = cfg.Domain;
-            scheme = cfg.Scheme;
-            if (domain == null)
-                domain = "rest.faunadb.com";
-            if (scheme == null)
-                scheme = "https";
-            port = cfg.Port;
+            Func<string, string, string> Env = (name, @default) =>
+                Environment.GetEnvironmentVariable(name) ?? @default;
 
-            rootClient = GetClient(secret: cfg.Secret);
+            var cfg = await Config.GetConfig();
+
+            var domain = Env("FAUNA_DOMAIN", cfg.Domain);
+            var scheme = Env("FAUNA_SCHEME", cfg.Scheme);
+            var port = Env("FAUNA_PORT", cfg.Port);
+            var secret = Env("FAUNA_ROOT_KEY", cfg.Secret);
+
+            rootClient = new FaunaClient(domain: domain, scheme: scheme, port: int.Parse(port), secret: secret);
 
             const string dbName = "faunadb-csharp-test";
             DbRef = new RefV($"databases/{dbName}");
@@ -66,13 +64,13 @@ namespace Test
         }
 
         protected FaunaClient GetClient(string secret) =>
-            new FaunaClient(domain: domain, scheme: scheme, port: port, secret: secret);
+            rootClient.NewSessionClient(secret);
 
         protected FaunaClient MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var resp = new RequestResult(HttpMethodKind.Get, "", null, "", responseText, (int)statusCode, null, DateTime.UtcNow, DateTime.UtcNow);
             var mock = new MockClientIO(resp);
-            return new FaunaClient(secret: "secret", domain: domain, scheme: scheme, port: port, clientIO: mock);
+            return new FaunaClient(secret: "secret", clientIO: mock);
         }
     }
 
@@ -113,7 +111,7 @@ namespace Test
 
         public string Domain { get; set; }
         public string Scheme { get; set; }
-        public int? Port { get; set; }
+        public string Port { get; set; }
         public string Secret { get; set; }
 
         public override string ToString() =>

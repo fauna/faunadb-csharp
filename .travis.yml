@@ -1,0 +1,17 @@
+language: csharp
+solution: faunadb-csharp.sln
+install:
+  - nuget restore faunadb-csharp.sln
+script:
+  - xbuild /p:Configuration=Release faunadb-csharp.sln
+  - mono ./packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe ./FaunaDB.Client.Test/bin/Release/FaunaDB.Client.Test.dll
+env:
+  global:
+  - secure: "Jx7gD9AxPQIuhC3qeIjYVfLuDFAX7Kd+Cg4db6JgM3YEXLvo8SNuUau+Sy9d0UonxyzFaGVM1GwopSP/aIJeKFgXFmticrw7j/Hrz3ZnwCfcX7XUKZghhbBEUybn7Gzp3Mm9RVG58OOWr7ske74cGDNFXnJHez1ivmJgTOCjtt5jv5CsvBJuRbbUNcvgW7VYfp2GjFlGoz4iTTzUfd5IrW1kZIj94C6nreK+tlIa/2rkyEazwnUhQ5OJZ2IGlD5GDPd4Nunk0APqYvvyhVxviCGi/+3CSxnYTnVahv94jQ24uZ0EODSY2yytQTYMWLBdSFgIGC17UK1A/8Liuyo7jjx+nyH5o9M5MPWqQ5BpDGLpi8ySFklWqE8YxAfUlUHz8Ro709NdBo1rnG9U/k/W9jZzBwDRzvbnD8fbZx7NdOi560jnU+vQzKTpYET9hK+lSiMv/WlZtPBCkp/KiIN96EKVem7RmhaGTw3T/tQI6iIrmkhVqrW2fWjfGohkuOQ+fk3hVOrpXfJDAAO/xkF/DOKAyNjaliVhdKXF5mBmZTIvTm4Lb7xFddWniAoqcEiai2UQtpWuil3zcExacTOVdJrNMlaufIIY3uGLXnpOaSpeIsY8/AassiI9JjQFF5tX9xY+EEaIGfr8+6eHuaH5wlRkfPp8Yu6ZmBcBbcwCENI="
+  - FAUNA_DOMAIN=cloud.faunadb.com
+  - FAUNA_SCHEME=https
+  - FAUNA_PORT=443
+branches:
+  only:
+    - master
+

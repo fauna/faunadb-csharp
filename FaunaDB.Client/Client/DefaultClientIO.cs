@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -54,11 +57,29 @@ namespace FaunaDB.Client
             message.Headers.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
 
             var httpResponse = await client.SendAsync(message).ConfigureAwait(false);
-            var response = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            string response;
+
+            if (httpResponse.Content.Headers.ContentEncoding.Any(encoding => encoding == "gzip"))
+                response = await DecompressGZip(httpResponse.Content).ConfigureAwait(false);
+            else
+                response = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var endTime = DateTime.UtcNow;
 
             return new RequestResult(method, path, query, data, response, (int)httpResponse.StatusCode, ToDictionary(httpResponse.Headers), startTime, endTime);
+        }
+
+        static async Task<string> DecompressGZip(HttpContent content)
+        {
+            using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
+            {
+                using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
+                {
+                    using (var reader = new StreamReader(gzip))
+                        return await reader.ReadToEndAsync().ConfigureAwait(false);
+                }
+            }
         }
 
         static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers)
