@@ -2,10 +2,6 @@
 
 [![Build Status](https://travis-ci.org/faunadb/faunadb-csharp.svg?branch=master)](https://travis-ci.org/faunadb/faunadb-csharp)
 
-## WIP
-
-***Please, note that this driver is being developed. Changes will happen until we have an official release.***
-
 ## How to Build
 
 ### Necessary Tools
