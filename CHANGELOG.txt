@@ -1,0 +1,8 @@
+0.1.2-SNAPSHOT
+
+0.1.1
+* Change default cloud url to https://cloud.faunadb.com
+
+0.1.0
+* First public release
+
