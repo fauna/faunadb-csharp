@@ -33,5 +33,5 @@
 
 static class FaunaDBAttribute
 {
-    public const string Version = "0.1.0.0";
+    public const string Version = "0.1.1.0";
 }
