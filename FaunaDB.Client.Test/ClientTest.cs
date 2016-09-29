@@ -18,6 +18,7 @@ namespace Test
     {
         private static Field<Value> DATA = Field.At("data");
         private static Field<RefV> REF_FIELD = Field.At("ref").To(Codec.REF);
+        private static Field<RefV> RESOURCE_FIELD = Field.At("resource").To(Codec.REF);
         private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
 
         private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To(Codec.STRING);
@@ -315,9 +316,7 @@ namespace Test
                 Insert(createdInstance.Get(REF_FIELD), 1L, ActionType.Create,
                     Obj("data", Obj("cooldown", 5L))));
 
-            Assert.AreEqual(createdInstance.Get(REF_FIELD), insertedEvent.Get(REF_FIELD));
-            Assert.AreEqual(1, insertedEvent.Get(DATA).To(Codec.OBJECT).Value.Count);
-            Assert.AreEqual(5L, insertedEvent.Get(DATA).At("cooldown").To(Codec.LONG).Value);
+            Assert.AreEqual(insertedEvent.Get(RESOURCE_FIELD), createdInstance.Get(REF_FIELD));
 
             Value removedEvent = await client.Query(
                 Remove(createdInstance.Get(REF_FIELD), 2L, ActionType.Delete)
