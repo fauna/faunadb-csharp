@@ -20,7 +20,7 @@ namespace FaunaDB.Types
     /// its data can be accessed.
     /// </para>
     /// <para>
-    /// See <see href="https://faunadb.com/documentation/queries#values">FaunaDB Value Types</see>
+    /// See <see href="https://fauna.com/documentation/queries#values">FaunaDB Value Types</see>
     /// </para>
     /// </summary>
     /// <example>

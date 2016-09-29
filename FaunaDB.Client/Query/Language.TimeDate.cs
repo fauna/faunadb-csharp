@@ -5,7 +5,7 @@
         /// <summary>
         /// Creates a new Time expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
         /// </para>
         /// </summary>
         public static Expr Time(Expr time) =>
@@ -14,7 +14,7 @@
         /// <summary>
         /// Possible time units accepted by <see cref="Epoch(Expr, TimeUnit)"/>.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
         /// </para>
         /// </summary>
         public enum TimeUnit
@@ -28,7 +28,7 @@
         /// <summary>
         /// Creates a new Epoch expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
         /// </para>
         /// </summary>
         public static Expr Epoch(Expr number, TimeUnit unit) =>
@@ -37,7 +37,7 @@
         /// <summary>
         /// Creates a new Epoch expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
         /// </para>
         /// </summary>
         public static Expr Epoch(Expr number, Expr unit) =>
@@ -46,7 +46,7 @@
         /// <summary>
         /// Creates a new Date expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
         /// </para>
         /// </summary>
         public static Expr Date(Expr date) =>

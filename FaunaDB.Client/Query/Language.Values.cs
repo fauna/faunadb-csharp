@@ -9,7 +9,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Builder for path selectors.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public struct PathSelector
@@ -87,7 +87,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a null value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Null() =>
@@ -96,7 +96,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a <see cref="RefV"/> value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ref(string id) =>
@@ -105,7 +105,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Calls ref function to create a ref value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ref(Expr classRef, Expr id) =>
@@ -114,7 +114,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Timestamp value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ts(DateTime dateTime) =>
@@ -123,7 +123,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Timestamp value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ts(string iso8601Time) =>
@@ -132,7 +132,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Date value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Dt(DateTime dateTime) =>
@@ -141,7 +141,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Date value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Dt(string iso8601Date) =>
@@ -150,7 +150,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Array value containing the provided entries.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Arr(params Expr[] values) =>
@@ -159,7 +159,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Array value containing the provided enumerable of values.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Arr(IEnumerable<Expr> values) =>
@@ -168,7 +168,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Object value wrapping the provided map.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Obj(IReadOnlyDictionary<string, Expr> fields) =>

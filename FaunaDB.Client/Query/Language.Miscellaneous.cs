@@ -7,7 +7,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new NextId expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr NextId() =>
@@ -16,7 +16,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Equals expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
        public static Expr EqualsFn(params Expr[] values) =>
@@ -25,7 +25,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Contains expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Contains(Expr path, Expr @in) =>
@@ -34,7 +34,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Contains expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Contains(PathSelector path, Expr @in) =>
@@ -43,7 +43,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Select expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
        public static Expr Select(Expr path, Expr @from, Expr @default = null) =>
@@ -52,7 +52,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Select expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Select(PathSelector path, Expr @from, Expr @default = null) =>
@@ -61,7 +61,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Add expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Add(params Expr[] values) =>
@@ -70,7 +70,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Multiply expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Multiply(params Expr[] values) =>
@@ -79,7 +79,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Subtract expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Subtract(params Expr[] values) =>
@@ -88,7 +88,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Divide expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Divide(params Expr[] values) =>
@@ -97,7 +97,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Modulo expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Modulo(params Expr[] values) =>
@@ -106,7 +106,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new LT expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr LT(params Expr[] values) =>
@@ -115,7 +115,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new LTE expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr LTE(params Expr[] values) =>
@@ -124,7 +124,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new GT expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
        public static Expr GT(params Expr[] values) =>
@@ -133,7 +133,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new GTE expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
        public static Expr GTE(params Expr[] values) =>
@@ -142,7 +142,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new And expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr And(params Expr[] values) =>
@@ -151,7 +151,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Or expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Or(params Expr[] values) =>
@@ -160,7 +160,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Not expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public static Expr Not(Expr boolean) =>

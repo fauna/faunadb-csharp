@@ -6,7 +6,7 @@ namespace FaunaDB.Errors
 {
     /// <summary>
     /// Error returned by the FaunaDB server.
-    /// For documentation of error types, see the <see href="https://faunadb.com/documentation#errors">docs</see>.
+    /// For documentation of error types, see the <see href="https://fauna.com/documentation#errors">docs</see>.
     /// </summary>
     public class FaunaException : Exception
     {

@@ -7,7 +7,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Match expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Match(Expr index, params Expr[] terms) =>
@@ -16,7 +16,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Union expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Union(params Expr[] values) =>
@@ -25,7 +25,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Intersection expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
        public static Expr Intersection(params Expr[] values) =>
@@ -34,7 +34,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Difference expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Difference(params Expr[] values) =>
@@ -43,7 +43,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Distinct expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Distinct(Expr set) =>
@@ -52,7 +52,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Join expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// <para>
         /// This is the raw version. Usually it's easier to use the overload.
