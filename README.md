@@ -1,4 +1,4 @@
-# FaunaDB C# Client
+# FaunaDB C# Driver
 
 [![Build Status](https://travis-ci.org/faunadb/faunadb-csharp.svg?branch=master)](https://travis-ci.org/faunadb/faunadb-csharp)
 
