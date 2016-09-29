@@ -114,7 +114,7 @@ namespace FaunaDB.Client
         /// <summary>
         /// Check service health.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/rest#other">docs</see>.
+        /// See the <see href="https://fauna.com/documentation/rest#other">docs</see>.
         /// </para>
         /// </summary>
         /// <param name="scope">Must be "node", "local", "global", or "all". Defaults to "global"</param>

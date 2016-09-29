@@ -93,7 +93,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// A FaunaDB ref type.
     /// <para>
-    /// See <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
+    /// See <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
     /// </para>
     /// </summary>
     public sealed class RefV : ScalarValue<string>
@@ -119,7 +119,7 @@ namespace FaunaDB.Types
 
     /// <summary>
     /// A FaunaDB set literal.
-    /// See <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>
+    /// See <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>
     /// </summary>
     public sealed class SetRefV : ScalarValue<IReadOnlyDictionary<string, Value>>
     {
@@ -150,7 +150,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Represents a Timestamp value in the FaunaDB query language.
     /// <para>
-    /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
+    /// See the <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
     /// </para>
     /// </summary>
     public sealed class TimeV : ScalarValue<DateTime>
@@ -201,7 +201,7 @@ namespace FaunaDB.Types
     /// <summary>
     /// Represents a Date value in the FaunaDB query language.
     /// <para>
-    /// See the <see href="https://faunadb.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
+    /// See the <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
     /// </para>
     /// </summary>
     public sealed class DateV : ScalarValue<DateTime>

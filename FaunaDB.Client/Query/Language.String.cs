@@ -5,7 +5,7 @@
         /// <summary>
         /// Creates a new Concat expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#string_functions">FaunaDB String Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#string_functions">FaunaDB String Functions</see>
         /// </para>
         /// </summary>
         public static Expr Concat(Expr strings, Expr separator = null) =>
@@ -14,7 +14,7 @@
         /// <summary>
         /// Creates a new Casefold expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#string_functions">FaunaDB String Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#string_functions">FaunaDB String Functions</see>
         /// </para>
         /// </summary>
         public static Expr Casefold(Expr @string) =>

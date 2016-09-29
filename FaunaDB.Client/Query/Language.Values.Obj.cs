@@ -7,7 +7,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new empty Object value.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Obj() =>
@@ -16,7 +16,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Object value with the provided entries.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
        public static Expr Obj(string key1, Expr value1) =>
@@ -25,7 +25,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Object value with the provided entries.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2) =>
@@ -34,7 +34,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Object value with the provided entries.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
@@ -43,7 +43,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Object value with the provided entries.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
@@ -52,7 +52,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Object value with the provided entries.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5) =>
@@ -61,7 +61,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Object value with the provided entries.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
         /// </para>
         /// </summary>
        public static Expr Obj(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>

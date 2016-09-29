@@ -20,7 +20,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Let expression with the provided bindings.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <param name="k0">First variable name</param>
@@ -31,7 +31,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Let expression with the provided bindings.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <param name="k0">First variable name</param>
@@ -44,7 +44,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Let expression with the provided bindings.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <param name="k0">First variable name</param>
@@ -59,7 +59,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Let expression with the provided bindings.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <param name="k0">First variable name</param>
@@ -76,7 +76,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Let expression with the provided bindings.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <param name="k0">First variable name</param>
@@ -95,7 +95,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Let expression with the provided bindings.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <param name="k0">First variable name</param>

@@ -7,7 +7,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Join expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
        public static Expr Join(Expr source, Func<Expr, Expr> target) =>
@@ -16,7 +16,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Join expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Join(Expr source, Func<Expr, Expr, Expr> target) =>
@@ -25,7 +25,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Join expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Join(Expr source, Func<Expr, Expr, Expr, Expr> target) =>
@@ -34,7 +34,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Join expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Join(Expr source, Func<Expr, Expr, Expr, Expr, Expr> target) =>
@@ -43,7 +43,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Join expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Join(Expr source, Func<Expr, Expr, Expr, Expr, Expr, Expr> target) =>
@@ -52,7 +52,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Join expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
         public static Expr Join(Expr source, Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> target) =>

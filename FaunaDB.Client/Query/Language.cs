@@ -20,6 +20,6 @@
     ///   );
     /// </code>
     /// </example>
-    /// <see href="https://faunadb.com/documentation/queries">FaunaDB Query API</see>
+    /// <see href="https://fauna.com/documentation/queries">FaunaDB Query API</see>
     public partial struct Language { }
 }

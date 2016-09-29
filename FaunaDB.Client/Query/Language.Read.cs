@@ -5,7 +5,7 @@
         /// <summary>
         /// Creates a new Get expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
         /// </para>
         /// </summary>
         public static Expr Get(Expr @ref, Expr ts = null) =>
@@ -14,7 +14,7 @@
         /// <summary>
         /// Creates a new Paginate expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
         /// </para>
         /// </summary>
         public static Expr Paginate(
@@ -37,7 +37,7 @@
         /// <summary>
         /// Creates a new Exists expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
         /// </para>
         /// </summary>
         public static Expr Exists(Expr @ref, Expr ts = null) =>
@@ -46,7 +46,7 @@
         /// <summary>
         /// Creates a new Count expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
         /// </para>
         /// </summary>
         public static Expr Count(Expr set, Expr events = null) =>

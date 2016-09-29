@@ -5,7 +5,7 @@
         /// <summary>
         /// Creates a new Map expression.
         /// <para>
-        /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// <para>
         /// This is the raw version. Usually it's easier to use the overload.
@@ -34,7 +34,7 @@
         /// <summary>
         /// Creates a new Foreach expression.
         /// <para>
-        /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// <para>
         /// See <see cref="Foreach(Expr, System.Func{Expr, Expr})"/>,
@@ -56,7 +56,7 @@
         /// <summary>
         /// Creates a new Filter expression.
         /// <para>
-        /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// <para>
         /// This is the raw version. Usually it's easier to use the overload.
@@ -85,7 +85,7 @@
         /// <summary>
         /// Creates a new Take expression.
         /// <para>
-        /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// </summary>
         /// <param name="number">Number of elements to take from the head of collection</param>
@@ -103,7 +103,7 @@
         /// <summary>
         /// Creates a new Drop expression.
         /// <para>
-        /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// </summary>
         /// <param name="number">Number of elements to drop from the head of collection</param>
@@ -121,7 +121,7 @@
         /// <summary>
         /// Creates a new Prepend expression.
         /// <para>
-        /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// </summary>
         /// <param name="elements">Elements to be prepended into the collection</param>
@@ -139,7 +139,7 @@
         /// <summary>
         /// Creates a new Append expression.
         /// <para>
-        /// <see href="https://faunadb.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
         /// </para>
         /// </summary>
         /// <param name="elements">Elements to be appended into the collection</param>

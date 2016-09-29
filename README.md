@@ -1,4 +1,4 @@
-# FaunaDB C# Client
+# FaunaDB C# Driver
 
 [![Build Status](https://travis-ci.org/faunadb/faunadb-csharp.svg?branch=master)](https://travis-ci.org/faunadb/faunadb-csharp)
 
@@ -135,7 +135,7 @@ If `result` represents an failure all calls to `Map` and `FlatMap` are ignored. 
 
 ## License
 
-Copyright 2016 [Fauna, Inc.](https://faunadb.com/)
+Copyright 2016 [Fauna, Inc.](https://fauna.com/)
 
 Licensed under the Mozilla Public License, Version 2.0 (the "License"); you may
 not use this software except in compliance with the License. You may obtain a

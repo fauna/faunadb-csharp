@@ -8,7 +8,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a lambda expression that receives one argument.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <example>
@@ -31,7 +31,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a lambda expression that receives two arguments.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <example>
@@ -57,7 +57,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a lambda expression that receives three arguments.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <example>
@@ -84,7 +84,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a lambda expression that receives four arguments.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <example>
@@ -112,7 +112,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a lambda expression that receives five arguments.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <example>
@@ -141,7 +141,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a lambda expression that receives six arguments.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <example>

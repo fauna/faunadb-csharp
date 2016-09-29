@@ -10,7 +10,7 @@ namespace FaunaDB.Query
         /// This is the raw version. Usually it's easier to use the overload.
         /// </para>
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         public static Expr Let(Expr vars, Expr @in) =>
@@ -19,7 +19,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Let expression wrapping the provided map of bindings.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         public static Expr Let(IReadOnlyDictionary<string, Expr> vars, Expr @in) =>
@@ -28,7 +28,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Var expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         public static Expr Var(string varName) =>
@@ -37,7 +37,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new If expression.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         public static Expr If(Expr @if, Expr @then, Expr @else) =>
@@ -46,7 +46,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Do expression containing the provided expressions.
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         public static Expr Do(params Expr[] expressions) =>
@@ -66,7 +66,7 @@ namespace FaunaDB.Query
         /// <see cref="Lambda(System.Func{Expr, Expr, Expr, Expr, Expr, Expr, Expr})"/>
         /// </para>
         /// <para>
-        /// See the <see href="https://faunadb.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
         /// </para>
         /// </summary>
         /// <param name="vars">Variable names. Can be a single string or an array of strings</param>

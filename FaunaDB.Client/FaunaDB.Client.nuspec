@@ -10,7 +10,7 @@
     <summary>Adds support to connect to FaunaDB</summary>
     <description>C# Driver for FaunaDB.
 
-See https://faunadb.com for more information.</description>
+See https://fauna.com for more information.</description>
     <licenseUrl>https://github.com/faunadb/faunadb-csharp/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/faunadb/faunadb-csharp</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
