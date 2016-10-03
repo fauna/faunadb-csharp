@@ -1,6 +1,8 @@
 # FaunaDB C# Driver
 
-[![Build Status](https://travis-ci.org/faunadb/faunadb-csharp.svg?branch=master)](https://travis-ci.org/faunadb/faunadb-csharp)
+[![Build Status](https://img.shields.io/travis/faunadb/faunadb-csharp/master.svg?maxAge=21600)](https://travis-ci.org/faunadb/faunadb-csharp)
+[![NuGet](https://img.shields.io/nuget/v/FaunaDB.Client.svg?maxAge=21600)](https://www.nuget.org/packages/FaunaDB.Client/)
+[![License](https://img.shields.io/badge/license-MPL_2.0-blue.svg?maxAge=2592000)](https://raw.githubusercontent.com/faunadb/faunadb-csharp/master/LICENSE)
 
 ## How to Build
 
