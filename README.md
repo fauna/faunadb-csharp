@@ -18,11 +18,11 @@
 
 ### Build
 
-`& "C:\Program Files (x86)\MSBuild\15.0\Bin\amd64\MSBuild.exe" .\faunadb-csharp.sln /t:Build`
+`& "C:\Program Files (x86)\MSBuild\14.0\Bin\amd64\MSBuild.exe" .\faunadb-csharp.sln /t:Build`
 
 ### Running Tests
 
-`.\packages\NUnit.ConsoleRunner.3.4.0\tools\nunit3-console.exe .\Test\bin\Debug\Test.dll --noresult`
+`.\packages\NUnit.ConsoleRunner.3.4.0\tools\nunit3-console.exe .\FaunaDB.Client.Test\bin\Debug\FaunaDB.Client.Test.dll --noresult`
 
 [Build on Mono](./Build-Mono.md)
 
