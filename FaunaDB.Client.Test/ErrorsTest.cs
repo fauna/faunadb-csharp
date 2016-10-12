@@ -7,6 +7,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+using FaunaDB.Types;
+using FaunaDB.Client;
 using static FaunaDB.Query.Language;
 
 namespace Test
@@ -35,6 +37,15 @@ namespace Test
         {
             var client = MockClient("{\"errors\": [{\"code\": \"unavailable\", \"description\": \"on vacation\"}]}", HttpStatusCode.ServiceUnavailable);
             Assert.ThrowsAsync<UnavailableError>(async() => await client.Query(Get(Ref(""))), "unavailable");
+        }
+
+        [Test] public async Task TestPermissionDenied()
+        {
+            var key = await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "client")));
+
+            var client = GetClient(secret: key.Get(Field.At("secret").To(Codec.STRING)));
+
+            AssertQueryException<PermissionDenied>(client, Paginate(Ref("databases")), "permission denied", "Insufficient privileges to perform the action.");
         }
         #endregion
 
@@ -116,6 +127,12 @@ namespace Test
         }
 
         void AssertQueryException<TException>(Expr query, string code, string description, IReadOnlyList<string> position = null)
+            where TException : FaunaException
+        {
+            AssertQueryException<TException>(client, query, code, description, position);
+        }
+
+        void AssertQueryException<TException>(FaunaClient client, Expr query, string code, string description, IReadOnlyList<string> position = null)
             where TException  : FaunaException
         {
             var exception = Assert.ThrowsAsync<TException>(async() => await client.Query(query));

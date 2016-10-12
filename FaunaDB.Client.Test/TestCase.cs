@@ -15,7 +15,7 @@ namespace Test
 {
     public class TestCase
     {
-        FaunaClient rootClient;
+        protected FaunaClient rootClient;
         protected RefV DbRef;
         protected FaunaClient client;
 

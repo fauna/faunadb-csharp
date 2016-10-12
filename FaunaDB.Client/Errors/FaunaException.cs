@@ -53,6 +53,16 @@ namespace FaunaDB.Errors
     }
 
     /// <summary>
+    /// HTTP 403 error.
+    /// An exception thrown if FaunaDB responds with an HTTP 403 (Permission Denied).
+    /// <para>HTTP 403 error.</para>
+    /// </summary>
+    public class PermissionDenied : FaunaException
+    {
+        internal PermissionDenied(QueryErrorResponse response) : base(response) {}
+    }
+
+    /// <summary>
     /// HTTP 404 error.
     /// An exception thrown if a HTTP 404 (Not Found) is returned from FaunaDB.
     /// <para>HTTP 404 error.</para>
