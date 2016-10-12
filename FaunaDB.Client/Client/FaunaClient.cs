@@ -156,6 +156,8 @@ namespace FaunaDB.Client
                     throw new BadRequest(response);
                 case 401:
                     throw new Unauthorized(response);
+                case 403:
+                    throw new PermissionDenied(response);
                 case 404:
                     throw new NotFound(response);
                 case 500:
