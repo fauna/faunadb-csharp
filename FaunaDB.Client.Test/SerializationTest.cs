@@ -490,6 +490,24 @@ namespace Test
                 "{\"next_id\":null}");
         }
 
+        [Test] public void TestDatabase()
+        {
+            AssertJsonEqual(Database("db_name"),
+                "{\"database\":\"db_name\"}");
+        }
+
+        [Test] public void TestIndex()
+        {
+            AssertJsonEqual(Index("index_name"),
+                "{\"index\":\"index_name\"}");
+        }
+
+        [Test] public void TestClass()
+        {
+            AssertJsonEqual(Class("class_name"),
+                "{\"class\":\"class_name\"}");
+        }
+
         [Test] public void TestEquals()
         {
             AssertJsonEqual(EqualsFn("value"),
