@@ -85,5 +85,41 @@
         /// </summary>
         public static Expr Remove(Expr @ref, Expr ts, Expr action) =>
             UnescapedObject.With("remove", @ref, "ts", ts, "action", action);
+
+        /// <summary>
+        /// Creates a new CreateClass expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateClass(Expr class_params) =>
+            UnescapedObject.With("create_class", class_params);
+
+        /// <summary>
+        /// Creates a new CreateDatabase expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateDatabase(Expr db_params) =>
+            UnescapedObject.With("create_database", db_params);
+
+        /// <summary>
+        /// Creates a new CreateIndex expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateIndex(Expr index_params) =>
+            UnescapedObject.With("create_index", index_params);
+
+        /// <summary>
+        /// Creates a new CreateKey expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateKey(Expr key_params) =>
+            UnescapedObject.With("create_key", key_params);
     }
 }

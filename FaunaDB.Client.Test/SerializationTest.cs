@@ -323,6 +323,30 @@ namespace Test
                 "\"action\":\"create\"}");
         }
 
+        [Test] public void TestCreateClass()
+        {
+            AssertJsonEqual(CreateClass(Obj("name", "class_name")),
+                "{\"create_class\":{\"object\":{\"name\":\"class_name\"}}}");
+        }
+
+        [Test] public void TestCreateDatabase()
+        {
+            AssertJsonEqual(CreateDatabase(Obj("name", "db_name")),
+                "{\"create_database\":{\"object\":{\"name\":\"db_name\"}}}");
+        }
+
+        [Test] public void TestCreateIndex()
+        {
+            AssertJsonEqual(CreateIndex(Obj("name", "index_name", "source", Ref("classes/class_name"))),
+                "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"@ref\":\"classes/class_name\"}}}}");
+        }
+
+        [Test] public void TestCreateKey()
+        {
+            AssertJsonEqual(CreateKey(Obj("database", Ref("databases/db_name"), "role", "client")),
+                "{\"create_key\":{\"object\":{\"database\":{\"@ref\":\"databases/db_name\"},\"role\":\"client\"}}}");
+        }
+
         [Test] public void TestMatch()
         {
             AssertJsonEqual(Match(Ref("indexes/all_the_things")),
