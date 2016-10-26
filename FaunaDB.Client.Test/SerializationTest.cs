@@ -257,15 +257,6 @@ namespace Test
                 "{\"exists\":{\"@ref\":\"classes/thing/123456789\"},\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}}");
         }
 
-        [Test] public void TestCount()
-        {
-            AssertJsonEqual(Count(Ref("databases")),
-                "{\"count\":{\"@ref\":\"databases\"}}");
-
-            AssertJsonEqual(Count(Ref("databases"), true),
-                "{\"count\":{\"@ref\":\"databases\"},\"events\":true}");
-        }
-
         [Test] public void TestCreate()
         {
             AssertJsonEqual(Create(Ref("database"), Obj("name", "widgets")),

@@ -366,12 +366,6 @@ namespace Test
             Assert.That(singleMatch.Get(REF_LIST), Is.EquivalentTo(new List<RefV> { fireball }));
         }
 
-        [Test] public async Task TestCountElementsOnAIndex()
-        {
-            Value count = await client.Query(Count(Match(Ref("indexes/all_spells"))));
-            Assert.AreEqual(6L, count.To(Codec.LONG).Value);
-        }
-
         [Test] public async Task TestListAllItensOnAClassIndex()
         {
             Value allInstances = await client.Query(
