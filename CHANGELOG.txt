@@ -1,4 +1,9 @@
 0.1.2-SNAPSHOT
+* adds PermissionDenied exception
+* uses NUnit adapter to run tests on Visual Studio
+* removes Count() function
+* adds Database(), Index(), Class() reference constructor functions
+* adds CreateClass(), CreateDatabase(), CreateIndex() and CreateKey() functions
 
 0.1.1
 * Change default cloud url to https://cloud.faunadb.com
