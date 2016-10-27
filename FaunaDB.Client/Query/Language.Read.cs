@@ -42,14 +42,5 @@
         /// </summary>
         public static Expr Exists(Expr @ref, Expr ts = null) =>
             UnescapedObject.With("exists", @ref, "ts", ts);
-
-        /// <summary>
-        /// Creates a new Count expression.
-        /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
-        /// </para>
-        /// </summary>
-        public static Expr Count(Expr set, Expr events = null) =>
-            UnescapedObject.With("count", set, "events", events);
     }
 }

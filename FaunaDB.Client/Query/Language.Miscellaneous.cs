@@ -14,6 +14,33 @@ namespace FaunaDB.Query
             UnescapedObject.With("next_id", NullV.Instance);
 
         /// <summary>
+        /// Creates a new Database expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Database(Expr db_name) =>
+            UnescapedObject.With("database", db_name);
+
+        /// <summary>
+        /// Creates a new Index expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Index(Expr index_name) =>
+            UnescapedObject.With("index", index_name);
+
+        /// <summary>
+        /// Creates a new Class expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Class(Expr class_name) =>
+            UnescapedObject.With("class", class_name);
+
+        /// <summary>
         /// Creates a new Equals expression.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>

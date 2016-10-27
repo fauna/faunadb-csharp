@@ -257,15 +257,6 @@ namespace Test
                 "{\"exists\":{\"@ref\":\"classes/thing/123456789\"},\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}}");
         }
 
-        [Test] public void TestCount()
-        {
-            AssertJsonEqual(Count(Ref("databases")),
-                "{\"count\":{\"@ref\":\"databases\"}}");
-
-            AssertJsonEqual(Count(Ref("databases"), true),
-                "{\"count\":{\"@ref\":\"databases\"},\"events\":true}");
-        }
-
         [Test] public void TestCreate()
         {
             AssertJsonEqual(Create(Ref("database"), Obj("name", "widgets")),
@@ -330,6 +321,30 @@ namespace Test
                 "{\"remove\":{\"@ref\":\"classes/widgets/123456789\"}," +
                 "\"ts\":{\"@ts\":\"1970-01-01T00:00:00.123Z\"}," +
                 "\"action\":\"create\"}");
+        }
+
+        [Test] public void TestCreateClass()
+        {
+            AssertJsonEqual(CreateClass(Obj("name", "class_name")),
+                "{\"create_class\":{\"object\":{\"name\":\"class_name\"}}}");
+        }
+
+        [Test] public void TestCreateDatabase()
+        {
+            AssertJsonEqual(CreateDatabase(Obj("name", "db_name")),
+                "{\"create_database\":{\"object\":{\"name\":\"db_name\"}}}");
+        }
+
+        [Test] public void TestCreateIndex()
+        {
+            AssertJsonEqual(CreateIndex(Obj("name", "index_name", "source", Ref("classes/class_name"))),
+                "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"@ref\":\"classes/class_name\"}}}}");
+        }
+
+        [Test] public void TestCreateKey()
+        {
+            AssertJsonEqual(CreateKey(Obj("database", Ref("databases/db_name"), "role", "client")),
+                "{\"create_key\":{\"object\":{\"database\":{\"@ref\":\"databases/db_name\"},\"role\":\"client\"}}}");
         }
 
         [Test] public void TestMatch()
@@ -473,6 +488,24 @@ namespace Test
         {
             AssertJsonEqual(NextId(),
                 "{\"next_id\":null}");
+        }
+
+        [Test] public void TestDatabase()
+        {
+            AssertJsonEqual(Database("db_name"),
+                "{\"database\":\"db_name\"}");
+        }
+
+        [Test] public void TestIndex()
+        {
+            AssertJsonEqual(Index("index_name"),
+                "{\"index\":\"index_name\"}");
+        }
+
+        [Test] public void TestClass()
+        {
+            AssertJsonEqual(Class("class_name"),
+                "{\"class\":\"class_name\"}");
         }
 
         [Test] public void TestEquals()

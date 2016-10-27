@@ -26,6 +26,9 @@ namespace Test
         private static Field<Value> ELEMENTS_LIST = DATA.At(Field.At("elements"));
         private static Field<long> COST_FIELD = DATA.At(Field.At("cost")).To(Codec.LONG);
 
+        private static Value adminKey;
+        private static FaunaClient adminClient;
+
         private static RefV magicMissile;
         private static RefV fireball;
         private static RefV faerieFire;
@@ -44,6 +47,9 @@ namespace Test
 
         async Task SetUpAsync()
         {
+            adminKey = await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "admin")));
+            adminClient = rootClient.NewSessionClient(adminKey.At("secret").To(Codec.STRING).Value);
+
             await client.Query(Create(Ref("classes"), Obj("name", "spells")));
             await client.Query(Create(Ref("classes"), Obj("name", "characters")));
             await client.Query(Create(Ref("classes"), Obj("name", "spellbooks")));
@@ -364,12 +370,6 @@ namespace Test
                 Paginate(Match(Ref("indexes/spells_by_element"), "fire")));
 
             Assert.That(singleMatch.Get(REF_LIST), Is.EquivalentTo(new List<RefV> { fireball }));
-        }
-
-        [Test] public async Task TestCountElementsOnAIndex()
-        {
-            Value count = await client.Query(Count(Match(Ref("indexes/all_spells"))));
-            Assert.AreEqual(6L, count.To(Codec.LONG).Value);
         }
 
         [Test] public async Task TestListAllItensOnAClassIndex()
@@ -814,6 +814,64 @@ namespace Test
         {
             Value res = await client.Query(NextId());
             Assert.IsNotNull(res.To(Codec.STRING).Value);
+        }
+
+        [Test] public async Task TestCreateClass()
+        {
+            await client.Query(CreateClass(Obj("name", "class_for_test")));
+
+            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Ref("classes/class_for_test"))));
+        }
+
+        [Test] public async Task TestCreateDatabase()
+        {
+            await adminClient.Query(CreateDatabase(Obj("name", "database_for_test")));
+
+            Assert.AreEqual(BooleanV.True, await adminClient.Query(Exists(Ref("databases/database_for_test"))));
+        }
+
+        [Test] public async Task TestCreateIndex()
+        {
+            await client.Query(CreateIndex(Obj("name", "index_for_test", "source", Ref("classes/characters"))));
+
+            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Ref("indexes/index_for_test"))));
+        }
+
+        [Test] public async Task TestCreateKey()
+        {
+            await adminClient.Query(CreateDatabase(Obj("name", "database_for_key_test")));
+
+            var key = await adminClient.Query(CreateKey(Obj("database", Ref("databases/database_for_key_test"), "role", "server")));
+
+            var newClient = adminClient.NewSessionClient(secret: key.At("secret").To(Codec.STRING).Value);
+
+            await newClient.Query(CreateClass(Obj("name", "class_for_key_test")));
+
+            Assert.AreEqual(BooleanV.True, await newClient.Query(Exists(Ref("classes/class_for_key_test"))));
+        }
+
+        [Test] public async Task TestDatabase()
+        {
+            Assert.ThrowsAsync<BadRequest>(async() => await adminClient.Query(Database("nonexistent-db")));
+
+            await adminClient.Query(CreateDatabase(Obj("name", "database_for_database_test")));
+
+            Assert.AreEqual(Ref("databases/database_for_database_test"),
+                await client.Query(Database("database_for_database_test")));
+        }
+
+        [Test] public async Task TestIndex()
+        {
+            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(Index("nonexistent-index")));
+
+            Assert.AreEqual(Ref("indexes/all_spells"), await client.Query(Index("all_spells")));
+        }
+
+        [Test] public async Task TestClass()
+        {
+            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(Class("nonexistent-class")));
+
+            Assert.AreEqual(Ref("classes/spells"), await client.Query(Class("spells")));
         }
 
         [Test] public async Task TestAuthenticateSession()
