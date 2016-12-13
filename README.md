@@ -75,7 +75,7 @@ namespace FaunaDBProject
 {
     class FaunaDBHelloWorld
     {
-        static readonly string DOMAIN = "cloud.faunadb.com";
+        static readonly string DOMAIN = "db.fauna.com";
         static readonly string SCHEME = "https";
         static readonly int PORT = 443;
         static readonly string SECRET = "<<YOUR-SECRET-HERE>>";

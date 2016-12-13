@@ -35,7 +35,7 @@ namespace FaunaDB.Client
         /// <param name="clientIO">Optional <see cref="IClientIO"/>.</param>
         public FaunaClient(
             string secret,
-            string domain = "cloud.faunadb.com",
+            string domain = "db.fauna.com",
             string scheme = "https",
             int? port = null,
             TimeSpan? timeout = null,
