@@ -88,5 +88,23 @@ namespace Test
                 "  }" +
                 "}");
         }
+
+        [Test] public void TestBytes()
+        {
+            AssertJsonEqual(new BytesV(0x1, 0x2, 0x3, 0x4),
+                "{\"@bytes\": \"AQIDBA==\"}");
+        }
+
+        [Test] public void TestBytesUrlSafe()
+        {
+            AssertJsonEqual(new BytesV(0xf8), "{\"@bytes\":\"-A==\"}");
+            AssertJsonEqual(new BytesV(0xf9), "{\"@bytes\":\"-Q==\"}");
+            AssertJsonEqual(new BytesV(0xfa), "{\"@bytes\":\"-g==\"}");
+            AssertJsonEqual(new BytesV(0xfb), "{\"@bytes\":\"-w==\"}");
+            AssertJsonEqual(new BytesV(0xfc), "{\"@bytes\":\"_A==\"}");
+            AssertJsonEqual(new BytesV(0xfd), "{\"@bytes\":\"_Q==\"}");
+            AssertJsonEqual(new BytesV(0xfe), "{\"@bytes\":\"_g==\"}");
+            AssertJsonEqual(new BytesV(0xff), "{\"@bytes\":\"_w==\"}");
+        }
     }
 }

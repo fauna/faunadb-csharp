@@ -1,5 +1,4 @@
-﻿using FaunaDB.Collections;
-using FaunaDB.Query;
+﻿using FaunaDB.Query;
 using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -77,6 +76,23 @@ namespace Test
             AssertJsonEqual(new DateV("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
 
             AssertJsonEqual(new DateV(new DateTime(2000, 1, 1)), "{\"@date\":\"2000-01-01\"}");
+        }
+
+        [Test] public void TestBytes()
+        {
+            AssertJsonEqual(new BytesV(0x1, 0x2, 0x3, 0x4), "{\"@bytes\":\"AQIDBA==\"}");
+        }
+
+        [Test] public void TestBytesUrlSafe()
+        {
+            AssertJsonEqual(new BytesV(0xf8), "{\"@bytes\":\"-A==\"}");
+            AssertJsonEqual(new BytesV(0xf9), "{\"@bytes\":\"-Q==\"}");
+            AssertJsonEqual(new BytesV(0xfa), "{\"@bytes\":\"-g==\"}");
+            AssertJsonEqual(new BytesV(0xfb), "{\"@bytes\":\"-w==\"}");
+            AssertJsonEqual(new BytesV(0xfc), "{\"@bytes\":\"_A==\"}");
+            AssertJsonEqual(new BytesV(0xfd), "{\"@bytes\":\"_Q==\"}");
+            AssertJsonEqual(new BytesV(0xfe), "{\"@bytes\":\"_g==\"}");
+            AssertJsonEqual(new BytesV(0xff), "{\"@bytes\":\"_w==\"}");
         }
 
         [Test] public void TestLet()

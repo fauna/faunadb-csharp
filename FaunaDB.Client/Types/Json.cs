@@ -95,6 +95,8 @@ namespace FaunaDB.Types
                             return new TimeV(ReadStringAndEndObject());
                         case "@date":
                             return new DateV(ReadStringAndEndObject());
+                        case "@bytes":
+                            return new BytesV(ReadStringAndEndObject());
                         default:
                             return ReadObjectBody(name);
                     }
