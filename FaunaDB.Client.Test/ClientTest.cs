@@ -355,12 +355,9 @@ namespace Test
 
             var ex = Assert.ThrowsAsync<BadRequest>(create);
 
-            Assert.AreEqual("validation failed: Instance data is not valid.", ex.Message);
+            Assert.AreEqual("instance not unique: Instance is not unique.", ex.Message);
 
-            AssertErrors(ex, code: "validation failed", description: "Instance data is not valid.");
-
-            AssertFailures(ex, code: "duplicate value", description: "Value is not unique.",
-                           fields: Is.EquivalentTo(new List<string> { "data", "uniqueField" }));
+            AssertErrors(ex, code: "instance not unique", description: "Instance is not unique.");
 
             AssertPosition(ex, positions: Is.Empty);
         }
