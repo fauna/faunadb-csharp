@@ -12,7 +12,7 @@ namespace FaunaDB.Types
             ((Value)value).WriteJson(writer);
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) =>
-            ValueReader.HandleValue(reader);
+            ValueReader.ReadValue(reader);
 
         public override bool CanConvert(Type objectType) =>
             typeof(Value).IsAssignableFrom(objectType);
@@ -22,12 +22,24 @@ namespace FaunaDB.Types
     {
         readonly JsonReader reader;
 
-        public static Value HandleValue(JsonReader reader) =>
-            new ValueReader(reader).HandleValue();
+        public static Value ReadValue(JsonReader reader) =>
+            new ValueReader(reader).ReadValue();
 
         ValueReader(JsonReader reader)
         {
             this.reader = reader;
+        }
+
+        Value ReadValue()
+        {
+            try
+            {
+                return HandleValue();
+            }
+            finally
+            {
+                Next();
+            }
         }
 
         Value HandleValue()
@@ -53,52 +65,37 @@ namespace FaunaDB.Types
             }
         }
 
-        JsonToken Next()
+        JsonToken Next(JsonToken expect = JsonToken.None)
         {
             reader.Read();
+
+            if (expect != JsonToken.None && expect != reader.TokenType)
+                Unexpected(expect);
+
             return reader.TokenType;
         }
-
-        Value ReadValue()
-        {
-            reader.Read();
-            return HandleValue();
-        }
-
-        ArrayV ReadArray() =>
-            new ArrayV(Add =>
-            {
-                while (Next() != JsonToken.EndArray)
-                    Add(HandleValue());
-            });
 
         Value ReadObject()
         {
             switch (Next())
             {
                 case JsonToken.PropertyName:
-                    var name = (string) reader.Value;
-                    switch (name)
+                    switch ((string)reader.Value)
                     {
-                        case "@ref":
-                            return new RefV(ReadStringAndEndObject());
                         case "@obj":
-                            NextAndExpect(JsonToken.StartObject);
-                            var obj = ReadObjectBody(ReadPropertyName());
-                            NextAndExpect(JsonToken.EndObject);
-                            return obj;
+                            return ReadEnclosedObject();
                         case "@set":
-                            var v = ReadValue();
-                            NextAndExpect(JsonToken.EndObject);
-                            return new SetRefV(((ObjectV)v).Value);
+                            return new SetRefV(ReadEnclosedObject().Value);
+                        case "@ref":
+                            return new RefV(ReadEnclosedString());
                         case "@ts":
-                            return new TimeV(ReadStringAndEndObject());
+                            return new TimeV(ReadEnclosedString());
                         case "@date":
-                            return new DateV(ReadStringAndEndObject());
+                            return new DateV(ReadEnclosedString());
                         case "@bytes":
-                            return new BytesV(ReadStringAndEndObject());
+                            return new BytesV(ReadEnclosedString());
                         default:
-                            return ReadObjectBody(name);
+                            return ReadObjectBody();
                     }
                 case JsonToken.EndObject:
                     return ObjectV.Empty;
@@ -107,54 +104,77 @@ namespace FaunaDB.Types
             }
         }
 
-        ObjectV ReadObjectBody(string firstPropertyName) =>
-            new ObjectV(Add =>
+        ObjectV ReadObjectBody()
+        {
+            if (reader.TokenType == JsonToken.EndObject)
+                return ObjectV.Empty;
+
+            return new ObjectV(Add =>
             {
-                Add(firstPropertyName, ReadValue());
-                while (Next() != JsonToken.EndObject)
-                    Add(ExpectPropertyName(), ReadValue());
+                while (reader.TokenType != JsonToken.EndObject)
+                    Add(ReadPropertyName(), ReadValue());
             });
+        }
+
+        ArrayV ReadArray()
+        {
+            if (Next() == JsonToken.EndArray)
+                return ArrayV.Empty;
+
+            return new ArrayV(Add =>
+            {
+                while (reader.TokenType != JsonToken.EndArray)
+                    Add(ReadValue());
+            });
+        }
 
         string ReadPropertyName()
         {
-            Next();
-            return ExpectPropertyName();
+            try
+            {
+                if (reader.TokenType != JsonToken.PropertyName)
+                    Unexpected(JsonToken.PropertyName);
+
+                return (string)reader.Value;
+            }
+            finally
+            {
+                Next();
+            }
         }
 
-        string ExpectPropertyName()
+        string ReadEnclosedString()
         {
-            Expect(JsonToken.PropertyName);
-            return (string) reader.Value;
+            try
+            {
+                Next(expect: JsonToken.String);
+                return (string) reader.Value;
+            }
+            finally
+            {
+                Next(expect: JsonToken.EndObject);
+            }
         }
 
-        string ReadString()
+        ObjectV ReadEnclosedObject()
         {
-            NextAndExpect(JsonToken.String);
-            return (string) reader.Value;
+            try
+            {
+                Next(expect: JsonToken.StartObject);
+                return (ObjectV)ReadObject();
+            }
+            finally
+            {
+                Next(expect: JsonToken.EndObject);
+            }
         }
 
-        string ReadStringAndEndObject()
+        Value Unexpected(JsonToken expected = JsonToken.None)
         {
-            var s = ReadString();
-            NextAndExpect(JsonToken.EndObject);
-            return s;
-        }
+            if (expected == JsonToken.None)
+                throw new UnknowException($"Unexpected token {reader.TokenType.ToString()}");
 
-        void NextAndExpect(JsonToken tokenType)
-        {
-            Next();
-            Expect(tokenType);
-        }
-
-        void Expect(JsonToken tokenType)
-        {
-            if (reader.TokenType != tokenType)
-                Unexpected();
-        }
-
-        Value Unexpected()
-        {
-            throw new UnknowException(reader.TokenType.ToString());
+            throw new UnknowException($"Expected {expected.ToString()} but received {reader.TokenType.ToString()}");
         }
     }
 

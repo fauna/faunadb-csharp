@@ -45,6 +45,8 @@ namespace Test
         {
             AssertJsonEqual(ArrayV.Of(LongV.Of(1), StringV.Of("a string"), DoubleV.Of(3.14), BooleanV.True, NullV.Instance),
                 "[1, \"a string\", 3.14, true, null]");
+
+            AssertJsonEqual(ArrayV.Empty, "[]");
         }
 
         [Test] public void TestDate()
@@ -61,6 +63,8 @@ namespace Test
         {
             AssertJsonEqual(ObjectV.With("foo", ObjectV.With("bar", ArrayV.Of(BooleanV.True, NullV.Instance))),
                 "{\"foo\":{\"bar\":[true,null]}}");
+
+            AssertJsonEqual(ObjectV.Empty, "{}");
         }
 
         [Test] public void TestNull()
@@ -72,6 +76,8 @@ namespace Test
         {
             AssertJsonEqual(ObjectV.With("@name", StringV.Of("Test")),
                 "{\"@obj\":{\"@name\":\"Test\"}}");
+
+            AssertJsonEqual(ObjectV.Empty, "{\"@obj\":{}}");
         }
 
         [Test] public void TestSetRef()
@@ -87,6 +93,9 @@ namespace Test
                 "    \"terms\": \"fire\"" +
                 "  }" +
                 "}");
+
+            AssertJsonEqual(new SetRefV(new Dictionary<string, Value>()),
+                "{\"@set\":{}}");
         }
 
         [Test] public void TestBytes()
