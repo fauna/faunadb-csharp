@@ -19,6 +19,7 @@ namespace Test
         private static Field<string> SECRET_FIELD = Field.At("secret").To(Codec.STRING);
         private static Field<Value> DATA = Field.At("data");
         private static Field<RefV> REF_FIELD = Field.At("ref").To(Codec.REF);
+        private static Field<long> TS_FIELD = Field.At("ts").To(Codec.LONG);
         private static Field<RefV> RESOURCE_FIELD = Field.At("resource").To(Codec.REF);
         private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
 
@@ -405,6 +406,19 @@ namespace Test
             IReadOnlyDictionary<string, Value> set = res.To(Codec.SETREF).Value.Value;
             Assert.AreEqual("arcane", set["terms"].To(Codec.STRING).Value);
             Assert.AreEqual(new RefV("indexes/spells_by_element"), set["match"].To(Codec.REF).Value);
+        }
+
+        [Test] public async Task TestEvalAtExpression()
+        {
+            var summonData = await client.Query(Get(summon));
+
+            var beforeSummon = summonData.Get(TS_FIELD) - 1;
+
+            var spells = await client.Query(
+                At(beforeSummon, Paginate(Match(Index("all_spells")))));
+
+            Assert.That(spells.Get(REF_LIST),
+                        Is.EquivalentTo(new List<RefV> { magicMissile, fireball, faerieFire }));
         }
 
         [Test] public async Task TestEvalLetExpression()

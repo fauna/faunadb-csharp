@@ -5,6 +5,15 @@ namespace FaunaDB.Query
     public partial struct Language
     {
         /// <summary>
+        /// Creates a new At expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
+        /// </summary>
+        public static Expr At(Expr timestamp, Expr expr) =>
+            UnescapedObject.With("at", timestamp, "expr", expr);
+
+        /// <summary>
         /// Creates a new Let expression with the provided bindings.
         /// <para>
         /// This is the raw version. Usually it's easier to use the overload.

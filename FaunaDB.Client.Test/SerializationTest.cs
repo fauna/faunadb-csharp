@@ -95,6 +95,15 @@ namespace Test
             AssertJsonEqual(new BytesV(0xff), "{\"@bytes\":\"_w==\"}");
         }
 
+        [Test] public void TestAt()
+        {
+            AssertJsonEqual(At(1, Paginate(Ref("classes"))),
+                "{\"at\":1,\"expr\":{\"paginate\":{\"@ref\":\"classes\"}}}");
+
+            AssertJsonEqual(At(Time("1970-01-01T00:00:00Z"), Paginate(Ref("classes"))),
+                "{\"at\":{\"time\":\"1970-01-01T00:00:00Z\"},\"expr\":{\"paginate\":{\"@ref\":\"classes\"}}}");
+        }
+
         [Test] public void TestLet()
         {
             var variables = new Dictionary<string, Expr> {
