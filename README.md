@@ -156,7 +156,7 @@ If `result` represents an failure all calls to `Map` and `FlatMap` are ignored. 
 
 ## License
 
-Copyright 2016 [Fauna, Inc.](https://fauna.com/)
+Copyright 2017 [Fauna, Inc.](https://fauna.com/)
 
 Licensed under the Mozilla Public License, Version 2.0 (the "License"); you may
 not use this software except in compliance with the License. You may obtain a

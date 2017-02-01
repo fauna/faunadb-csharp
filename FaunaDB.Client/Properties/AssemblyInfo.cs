@@ -7,7 +7,7 @@
 [assembly: AssemblyCompany("Fauna, Inc.")]
 [assembly: AssemblyProduct("C# Driver for FaunaDB")]
 [assembly: AssemblyDescription("C# Driver for FaunaDB")]
-[assembly: AssemblyCopyright("© Fauna, Inc. 2016. Distributed under MPL 2.0 License")]
+[assembly: AssemblyCopyright("© Fauna, Inc. 2017. Distributed under MPL 2.0 License")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
