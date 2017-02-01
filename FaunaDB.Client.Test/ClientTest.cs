@@ -912,6 +912,13 @@ namespace Test
                             await adminClient.Query(KeyFromSecret(secret)));
         }
 
+        [Test] public async Task TestBytes()
+        {
+            Value bytes = await client.Query(new BytesV(0x1, 0x2, 0x3));
+
+            Assert.AreEqual(new BytesV(0x1, 0x2, 0x3), bytes);
+        }
+
         [Test] public async Task TestPing()
         {
             Assert.AreEqual("Scope all is OK", await client.Ping("all"));

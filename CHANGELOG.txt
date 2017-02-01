@@ -1,4 +1,5 @@
 0.1.3-SNAPSHOT
+* Adds support for @bytes type
 * Adds KeyFromSecret() function
 * Change default cloud url to https://db.fauna.com
 
