@@ -67,6 +67,16 @@ namespace FaunaDB.Types
             return buffer.ToString();
         }
 
+        /// <summary>
+        /// Convert url-safe base64 encoded string to an array of bytes.
+        ///
+        /// <para>
+        /// Given <see cref="Convert.FromBase64String(string)"/> does not support url-safe strings,
+        /// that method substitute the character '_' to '/' and '-' to '+' before doing the conversion.
+        ///
+        /// More info in <see href="https://en.wikipedia.org/wiki/Base64#URL_applications">Wikipedia</see>
+        /// </para>
+        /// </summary>
         static byte[] FromUrlSafeBase64(string urlSafe)
         {
             var base64 = urlSafe.Replace('_', '/').Replace('-', '+');
@@ -74,6 +84,16 @@ namespace FaunaDB.Types
             return Convert.FromBase64String(base64);
         }
 
+        /// <summary>
+        /// Convert an array of bytes to an url-safe base64 encoded string.
+        ///
+        /// <para>
+        /// Given <see cref="Convert.ToBase64String(byte[])"/> does not produce url-safe strings,
+        /// that method substitute the character '+' to '-' and '/' to '_' after the conversion.
+        ///
+        /// More info in <see href="https://en.wikipedia.org/wiki/Base64#URL_applications">Wikipedia</see>
+        /// </para>
+        /// </summary>
         static string ToUrlSafeBase64(byte[] value)
         {
             return Convert.ToBase64String(value)
