@@ -224,6 +224,12 @@ namespace Test
                 "{\"get\":{\"@ref\":\"classes/thing/123456789\"}}");
         }
 
+        [Test] public void TestKeyFromSecret()
+        {
+            AssertJsonEqual(KeyFromSecret("s3cr3t"),
+                "{\"key_from_secret\":\"s3cr3t\"}");
+        }
+
         [Test] public void TestPaginate()
         {
             AssertJsonEqual(Paginate(Ref("databases")),

@@ -16,6 +16,7 @@ namespace Test
 {
     [TestFixture] public class ClientTest : TestCase
     {
+        private static Field<string> SECRET_FIELD = Field.At("secret").To(Codec.STRING);
         private static Field<Value> DATA = Field.At("data");
         private static Field<RefV> REF_FIELD = Field.At("ref").To(Codec.REF);
         private static Field<RefV> RESOURCE_FIELD = Field.At("resource").To(Codec.REF);
@@ -48,7 +49,7 @@ namespace Test
         async Task SetUpAsync()
         {
             adminKey = await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "admin")));
-            adminClient = rootClient.NewSessionClient(adminKey.At("secret").To(Codec.STRING).Value);
+            adminClient = rootClient.NewSessionClient(adminKey.Get(SECRET_FIELD));
 
             await client.Query(Create(Ref("classes"), Obj("name", "spells")));
             await client.Query(Create(Ref("classes"), Obj("name", "characters")));
@@ -354,12 +355,9 @@ namespace Test
 
             var ex = Assert.ThrowsAsync<BadRequest>(create);
 
-            Assert.AreEqual("validation failed: Instance data is not valid.", ex.Message);
+            Assert.AreEqual("instance not unique: Instance is not unique.", ex.Message);
 
-            AssertErrors(ex, code: "validation failed", description: "Instance data is not valid.");
-
-            AssertFailures(ex, code: "duplicate value", description: "Value is not unique.",
-                           fields: Is.EquivalentTo(new List<string> { "data", "uniqueField" }));
+            AssertErrors(ex, code: "instance not unique", description: "Instance is not unique.");
 
             AssertPosition(ex, positions: Is.Empty);
         }
@@ -843,7 +841,7 @@ namespace Test
 
             var key = await adminClient.Query(CreateKey(Obj("database", Ref("databases/database_for_key_test"), "role", "server")));
 
-            var newClient = adminClient.NewSessionClient(secret: key.At("secret").To(Codec.STRING).Value);
+            var newClient = adminClient.NewSessionClient(secret: key.Get(SECRET_FIELD));
 
             await newClient.Query(CreateClass(Obj("name", "class_for_key_test")));
 
@@ -888,7 +886,7 @@ namespace Test
                     Obj("password", "abcdefg"))
             );
 
-            FaunaClient sessionClient = GetClient(secret: auth.At("secret").To(Codec.STRING).Value);
+            FaunaClient sessionClient = GetClient(secret: auth.Get(SECRET_FIELD));
 
             Value loggedOut = await sessionClient.Query(Logout(true));
             Assert.AreEqual(true, loggedOut.To(Codec.BOOLEAN).Value);
@@ -898,6 +896,20 @@ namespace Test
             );
 
             Assert.AreEqual(false, identified.To(Codec.BOOLEAN).Value);
+        }
+
+        [Test] public async Task TestKeyFromSecret()
+        {
+            const string dbName = "database_for_key_from_secret_test";
+
+            await adminClient.Query(CreateDatabase(Obj("name", dbName)));
+
+            var key = await adminClient.Query(CreateKey(Obj("database", Database(dbName), "role", "server")));
+
+            var secret = key.Get(SECRET_FIELD);
+
+            Assert.AreEqual(await adminClient.Query(Get(key.Get(REF_FIELD))),
+                            await adminClient.Query(KeyFromSecret(secret)));
         }
 
         [Test] public async Task TestPing()

@@ -12,6 +12,15 @@
             UnescapedObject.With("get", @ref, "ts", ts);
 
         /// <summary>
+        /// Creates a new KeyFromSecret expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr KeyFromSecret(string secret) =>
+            UnescapedObject.With("key_from_secret", secret);
+
+        /// <summary>
         /// Creates a new Paginate expression.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
