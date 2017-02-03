@@ -61,6 +61,12 @@ namespace Test
             Assert.AreEqual(Fail<DateTime>("Cannot convert ObjectV to DateV"), ObjectV.Empty.To(Codec.DATE));
         }
 
+        [Test] public void TestBytes()
+        {
+            Assert.AreEqual(Success(new byte[] { 0x1, 0x2, 0x3 }), new BytesV(0x1, 0x2, 0x3).To(Codec.BYTES));
+            Assert.AreEqual(Fail<bool>("Cannot convert BytesV to BooleanV"), new BytesV(0x1).To(Codec.BOOLEAN));
+        }
+
         [Test] public void TestArray()
         {
             IReadOnlyList<Value> array = new List<Value> { "a string", true, 10 };
