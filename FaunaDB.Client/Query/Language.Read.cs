@@ -17,7 +17,7 @@
         /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
         /// </para>
         /// </summary>
-        public static Expr KeyFromSecret(string secret) =>
+        public static Expr KeyFromSecret(Expr secret) =>
             UnescapedObject.With("key_from_secret", secret);
 
         /// <summary>

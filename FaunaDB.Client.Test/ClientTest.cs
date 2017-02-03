@@ -914,16 +914,12 @@ namespace Test
 
         [Test] public async Task TestKeyFromSecret()
         {
-            const string dbName = "database_for_key_from_secret_test";
-
-            await adminClient.Query(CreateDatabase(Obj("name", dbName)));
-
-            var key = await adminClient.Query(CreateKey(Obj("database", Database(dbName), "role", "server")));
+            var key = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "server")));
 
             var secret = key.Get(SECRET_FIELD);
 
-            Assert.AreEqual(await adminClient.Query(Get(key.Get(REF_FIELD))),
-                            await adminClient.Query(KeyFromSecret(secret)));
+            Assert.AreEqual(await rootClient.Query(Get(key.Get(REF_FIELD))),
+                            await rootClient.Query(KeyFromSecret(secret)));
         }
 
         [Test] public async Task TestBytes()
