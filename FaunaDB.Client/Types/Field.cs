@@ -40,7 +40,7 @@ namespace FaunaDB.Types
                 if (failures.Count > 0)
                     return Fail<IReadOnlyList<V>>($"Failed to collect values: {string.Join(", ", failures)}");
 
-                return Success<V>(success);
+                return Success<IReadOnlyList<V>>(success);
             };
         }
 

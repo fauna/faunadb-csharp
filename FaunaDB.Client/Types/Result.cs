@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using FaunaDB.Collections;
 
 namespace FaunaDB.Types
 {
@@ -92,12 +88,10 @@ namespace FaunaDB.Types
     class Success<T> : IResult<T>
     {
         readonly T value;
-        readonly IEqualityComparer comparer;
 
-        internal Success(T value, IEqualityComparer comparer)
+        internal Success(T value)
         {
             this.value = value;
-            this.comparer = comparer;
         }
 
         public IResult<U> Map<U>(Func<T, U> func) =>
@@ -123,7 +117,7 @@ namespace FaunaDB.Types
         public override bool Equals(object obj)
         {
             var other = obj as Success<T>;
-            return other != null && comparer.Equals(value, other.value);
+            return other != null && Equals(value, other.value);
         }
 
         public override int GetHashCode() =>
@@ -189,31 +183,7 @@ namespace FaunaDB.Types
         /// <param name="value">result's value</param>
         /// <returns>a successful result</returns>
         public static IResult<T> Success<T>(T value) =>
-            new Success<T>(value, EqualityComparer<T>.Default);
-
-        /// <summary>
-        /// Creates a successful result. Specialization for <see cref="IReadOnlyDictionary{TKey, TValue}"/>
-        /// </summary>
-        /// <param name="value">result's value</param>
-        /// <returns>a successful result</returns>
-        public static IResult<IReadOnlyDictionary<Key, Value>> Success<Key, Value>(IReadOnlyDictionary<Key, Value> value) =>
-            new Success<IReadOnlyDictionary<Key, Value>>(value, DictionaryComparer<Key, Value>.Default);
-
-        /// <summary>
-        /// Creates a successful result. Specialization for <see cref="IReadOnlyList{T}"/>
-        /// </summary>
-        /// <param name="value">result's value</param>
-        /// <returns>a successful result</returns>
-        public static IResult<IReadOnlyList<T>> Success<T>(IReadOnlyList<T> value) =>
-            new Success<IReadOnlyList<T>>(value, ListComparer<T>.Default);
-
-        /// <summary>
-        /// Creates a successful result. Specialization for array of bytes
-        /// </summary>
-        /// <param name="value">result's value</param>
-        /// <returns>a successful result</returns>
-        public static IResult<byte[]> Success(byte[] value) =>
-            new Success<byte[]>(value, BytesComparer.Default);
+            new Success<T>(value);
 
         /// <summary>
         /// Creates failure result
@@ -222,43 +192,5 @@ namespace FaunaDB.Types
         /// <returns>a failure result</returns>
         public static IResult<T> Fail<T>(string reason) =>
             new Failure<T>(reason);
-    }
-
-    class DictionaryComparer<Key, Value> : AbstractComparer<IReadOnlyDictionary<Key, Value>>
-    {
-        public static readonly DictionaryComparer<Key, Value> Default =
-            new DictionaryComparer<Key, Value>();
-
-        public override bool Equals(IReadOnlyDictionary<Key, Value> x, IReadOnlyDictionary<Key, Value> y) =>
-            x.DictEquals(y);
-    }
-
-    class ListComparer<T> : AbstractComparer<IReadOnlyList<T>>
-    {
-        public static readonly ListComparer<T> Default =
-            new ListComparer<T>();
-
-        public override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y) =>
-            x.SequenceEqual(y);
-    }
-
-    class BytesComparer : AbstractComparer<byte[]>
-    {
-        public static readonly BytesComparer Default =
-            new BytesComparer();
-
-        public override bool Equals(byte[] x, byte[] y) =>
-            x.SequenceEqual(y);
-    }
-
-    abstract class AbstractComparer<T> : IEqualityComparer<T>, IEqualityComparer
-    {
-        public abstract bool Equals(T x, T y);
-
-        public new bool Equals(object x, object y) => Equals((T)x, (T)y);
-
-        public int GetHashCode(T obj) => 0;
-
-        public int GetHashCode(object obj) => 0;
     }
 }
