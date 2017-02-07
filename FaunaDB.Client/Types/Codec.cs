@@ -39,6 +39,9 @@ namespace FaunaDB.Types
         public static IResult<DateTime> TIME(Value input) =>
             Cast.MapTo<TimeV, DateTime>(input, Cast.ScalarValue);
 
+        public static IResult<byte[]> BYTES(Value input) =>
+            Cast.MapTo<BytesV, byte[]>(input, Cast.ScalarValue);
+
         public static IResult<IReadOnlyList<Value>> ARRAY(Value input) =>
             Cast.MapTo<ArrayV, IReadOnlyList<Value>>(input, x => x.Value);
 

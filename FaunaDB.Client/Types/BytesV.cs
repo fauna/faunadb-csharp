@@ -12,59 +12,32 @@ namespace FaunaDB.Types
     /// See <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
     /// </para>
     /// </summary>
-    public class BytesV : Value
+    public class BytesV : ScalarValue<byte[]>
     {
-        byte[] _Value;
+        internal BytesV(string base64) : base(FromUrlSafeBase64(base64))
+        { }
 
-        public byte[] Value
-        {
-            get
-            {
-                return (byte[])_Value.Clone();
-            }
-        }
-
-        internal BytesV(string base64)
-        {
-            _Value = FromUrlSafeBase64(base64);
-        }
-
-        public BytesV(params byte[] value)
-        {
-            _Value = value;
-        }
+        public BytesV(params byte[] value) : base(value)
+        { }
 
         public override bool Equals(Expr v)
         {
             var other = v as BytesV;
-            return other != null && _Value.SequenceEqual(other._Value);
+            return other != null && Value.SequenceEqual(other.Value);
         }
 
         protected override int HashCode() =>
-            _Value.GetHashCode();
+            Value.GetHashCode();
 
         protected internal override void WriteJson(JsonWriter writer)
         {
-            writer.WriteObject("@bytes", ToUrlSafeBase64(_Value));
+            writer.WriteObject("@bytes", ToUrlSafeBase64(Value));
         }
 
         public override string ToString()
         {
-            var buffer = new StringBuilder(_Value.Length * 4);
-
-            buffer.Append("ByteV(");
-
-            for (int i = 0; i < _Value.Length; i++)
-            {
-                buffer.AppendFormat("0x{0:x2}", _Value[i]);
-
-                if (i < _Value.Length - 1)
-                    buffer.Append(", ");
-            }
-
-            buffer.Append(")");
-
-            return buffer.ToString();
+            var str = Value.Select(b => string.Format("0x{0:x2}", b));
+            return "BytesV(" + string.Join(", ", str) + ")";
         }
 
         /// <summary>

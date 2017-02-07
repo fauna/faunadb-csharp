@@ -208,6 +208,14 @@ namespace FaunaDB.Types
             new Success<IReadOnlyList<T>>(value, ListComparer<T>.Default);
 
         /// <summary>
+        /// Creates a successful result. Specialization for array of bytes
+        /// </summary>
+        /// <param name="value">result's value</param>
+        /// <returns>a successful result</returns>
+        public static IResult<byte[]> Success(byte[] value) =>
+            new Success<byte[]>(value, BytesComparer.Default);
+
+        /// <summary>
         /// Creates failure result
         /// </summary>
         /// <param name="reason">the reason for the failure</param>
@@ -231,6 +239,15 @@ namespace FaunaDB.Types
             new ListComparer<T>();
 
         public override bool Equals(IReadOnlyList<T> x, IReadOnlyList<T> y) =>
+            x.SequenceEqual(y);
+    }
+
+    class BytesComparer : AbstractComparer<byte[]>
+    {
+        public static readonly BytesComparer Default =
+            new BytesComparer();
+
+        public override bool Equals(byte[] x, byte[] y) =>
             x.SequenceEqual(y);
     }
 
