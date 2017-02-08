@@ -864,8 +864,6 @@ namespace Test
 
         [Test] public async Task TestDatabase()
         {
-            Assert.ThrowsAsync<BadRequest>(async() => await adminClient.Query(Database("nonexistent-db")));
-
             await adminClient.Query(CreateDatabase(Obj("name", "database_for_database_test")));
 
             Assert.AreEqual(Ref("databases/database_for_database_test"),
@@ -874,15 +872,11 @@ namespace Test
 
         [Test] public async Task TestIndex()
         {
-            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(Index("nonexistent-index")));
-
             Assert.AreEqual(Ref("indexes/all_spells"), await client.Query(Index("all_spells")));
         }
 
         [Test] public async Task TestClass()
         {
-            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(Class("nonexistent-class")));
-
             Assert.AreEqual(Ref("classes/spells"), await client.Query(Class("spells")));
         }
 
