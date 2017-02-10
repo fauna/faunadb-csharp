@@ -82,15 +82,8 @@ namespace FaunaDB.Client
             }
         }
 
-        static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers)
-        {
-            var dic = new OrderedDictionary<string, IEnumerable<string>>();
-
-            foreach (var kv in headers)
-                dic.Add(kv.Key, kv.Value);
-
-            return dic;
-        }
+        static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers) =>
+            new ImmutableDictionary<string, IEnumerable<string>>(headers);
 
         /// <summary>
         /// Encodes secret string using base 64.

@@ -1,81 +1,176 @@
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 
 namespace FaunaDB.Collections
 {
+    class ImmutableDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+    {
+        public static readonly ImmutableDictionary<TKey, TValue> Empty =
+            new ImmutableDictionary<TKey, TValue>();
+
+        readonly OrderedDictionary dictionary = new OrderedDictionary();
+
+        internal ImmutableDictionary(params KeyValuePair<TKey, TValue>[] values)
+            : this((IEnumerable<KeyValuePair<TKey, TValue>>)values)
+        { }
+
+        internal ImmutableDictionary(IEnumerable<KeyValuePair<TKey, TValue>> values)
+        {
+            foreach (var kv in values)
+            {
+                if (kv.Value == null)
+                    continue;
+
+                dictionary.Add(kv.Key, kv.Value);
+            }
+        }
+
+        public TValue this[TKey key]
+        {
+            get
+            {
+                if (key == null)
+                    throw new ArgumentNullException(nameof(key));
+
+                if (!ContainsKey(key))
+                    throw new KeyNotFoundException();
+
+                return (TValue)dictionary[key];
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return dictionary.Count;
+            }
+        }
+
+        public IEnumerable<TKey> Keys
+        {
+            get
+            {
+                TKey[] array = new TKey[dictionary.Keys.Count];
+                dictionary.Keys.CopyTo(array, 0);
+                return new List<TKey>(array);
+            }
+        }
+
+        public IEnumerable<TValue> Values
+        {
+            get
+            {
+                TValue[] array = new TValue[dictionary.Values.Count];
+                dictionary.Values.CopyTo(array, 0);
+                return new List<TValue>(array);
+            }
+        }
+
+        public bool ContainsKey(TKey key)
+        {
+            return dictionary.Contains(key);
+        }
+
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            if (dictionary.Contains(key))
+            {
+                value = this[key];
+                return true;
+            }
+
+            value = default(TValue);
+            return false;
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            foreach (var key in Keys)
+            {
+                yield return new KeyValuePair<TKey, TValue>(key, this[key]);
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() =>
+            GetEnumerator();
+    }
+
     static class ImmutableDictionary
     {
         public static IReadOnlyDictionary<TKey, TValue> Empty<TKey, TValue>() =>
-            OrderedDictionary<TKey, TValue>.Empty;
+            ImmutableDictionary<TKey, TValue>.Empty;
 
-        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0)
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0)
         {
-            var dic = new OrderedDictionary<TKey1, TValue1>();
-            dic.Add(k0, v0);
-            return dic;
+            return new ImmutableDictionary<TKey, TValue>(
+                new KeyValuePair<TKey, TValue>(k0, v0)
+            );
         }
 
-        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1)
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0, TKey k1, TValue v1)
         {
-            var dic = new OrderedDictionary<TKey1, TValue1>();
-            dic.Add(k0, v0);
-            dic.Add(k1, v1);
-            return dic;
+            return new ImmutableDictionary<TKey, TValue>(
+                new KeyValuePair<TKey, TValue>(k0, v0),
+                new KeyValuePair<TKey, TValue>(k1, v1)
+            );
         }
 
-        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2)
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0, TKey k1, TValue v1, TKey k2, TValue v2)
         {
-            var dic = new OrderedDictionary<TKey1, TValue1>();
-            dic.Add(k0, v0);
-            dic.Add(k1, v1);
-            dic.Add(k2, v2);
-            return dic;
+            return new ImmutableDictionary<TKey, TValue>(
+                new KeyValuePair<TKey, TValue>(k0, v0),
+                new KeyValuePair<TKey, TValue>(k1, v1),
+                new KeyValuePair<TKey, TValue>(k2, v2)
+            );
         }
 
-        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3)
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0, TKey k1, TValue v1, TKey k2, TValue v2, TKey k3, TValue v3)
         {
-            var dic = new OrderedDictionary<TKey1, TValue1>();
-            dic.Add(k0, v0);
-            dic.Add(k1, v1);
-            dic.Add(k2, v2);
-            dic.Add(k3, v3);
-            return dic;
+            return new ImmutableDictionary<TKey, TValue>(
+                new KeyValuePair<TKey, TValue>(k0, v0),
+                new KeyValuePair<TKey, TValue>(k1, v1),
+                new KeyValuePair<TKey, TValue>(k2, v2),
+                new KeyValuePair<TKey, TValue>(k3, v3)
+            );
         }
 
-        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4)
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0, TKey k1, TValue v1, TKey k2, TValue v2, TKey k3, TValue v3, TKey k4, TValue v4)
         {
-            var dic = new OrderedDictionary<TKey1, TValue1>();
-            dic.Add(k0, v0);
-            dic.Add(k1, v1);
-            dic.Add(k2, v2);
-            dic.Add(k3, v3);
-            dic.Add(k4, v4);
-            return dic;
+            return new ImmutableDictionary<TKey, TValue>(
+                new KeyValuePair<TKey, TValue>(k0, v0),
+                new KeyValuePair<TKey, TValue>(k1, v1),
+                new KeyValuePair<TKey, TValue>(k2, v2),
+                new KeyValuePair<TKey, TValue>(k3, v3),
+                new KeyValuePair<TKey, TValue>(k4, v4)
+            );
         }
 
-        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5)
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0, TKey k1, TValue v1, TKey k2, TValue v2, TKey k3, TValue v3, TKey k4, TValue v4, TKey k5, TValue v5)
         {
-            var dic = new OrderedDictionary<TKey1, TValue1>();
-            dic.Add(k0, v0);
-            dic.Add(k1, v1);
-            dic.Add(k2, v2);
-            dic.Add(k3, v3);
-            dic.Add(k4, v4);
-            dic.Add(k5, v5);
-            return dic;
+            return new ImmutableDictionary<TKey, TValue>(
+                new KeyValuePair<TKey, TValue>(k0, v0),
+                new KeyValuePair<TKey, TValue>(k1, v1),
+                new KeyValuePair<TKey, TValue>(k2, v2),
+                new KeyValuePair<TKey, TValue>(k3, v3),
+                new KeyValuePair<TKey, TValue>(k4, v4),
+                new KeyValuePair<TKey, TValue>(k5, v5)
+            );
         }
 
-        public static IReadOnlyDictionary<TKey1, TValue1> Of<TKey1, TValue1>(TKey1 k0, TValue1 v0, TKey1 k1, TValue1 v1, TKey1 k2, TValue1 v2, TKey1 k3, TValue1 v3, TKey1 k4, TValue1 v4, TKey1 k5, TValue1 v5, TKey1 k6, TValue1 v6)
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0, TKey k1, TValue v1, TKey k2, TValue v2, TKey k3, TValue v3, TKey k4, TValue v4, TKey k5, TValue v5, TKey k6, TValue v6)
         {
-            var dic = new OrderedDictionary<TKey1, TValue1>();
-            dic.Add(k0, v0);
-            dic.Add(k1, v1);
-            dic.Add(k2, v2);
-            dic.Add(k3, v3);
-            dic.Add(k4, v4);
-            dic.Add(k5, v5);
-            dic.Add(k6, v6);
-            return dic;
+            return new ImmutableDictionary<TKey, TValue>(
+                new KeyValuePair<TKey, TValue>(k0, v0),
+                new KeyValuePair<TKey, TValue>(k1, v1),
+                new KeyValuePair<TKey, TValue>(k2, v2),
+                new KeyValuePair<TKey, TValue>(k3, v3),
+                new KeyValuePair<TKey, TValue>(k4, v4),
+                new KeyValuePair<TKey, TValue>(k5, v5),
+                new KeyValuePair<TKey, TValue>(k6, v6)
+            );
         }
-
     }
 }
