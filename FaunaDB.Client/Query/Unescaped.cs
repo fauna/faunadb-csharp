@@ -10,30 +10,29 @@ namespace FaunaDB.Query
     class UnescapedObject : Expr
     {
         public static readonly UnescapedObject Empty =
-            new UnescapedObject(ImmutableDictionary.Empty<string, Expr>());
+            new UnescapedObject(ImmutableDictionary<string, Expr>.Empty);
 
-        IReadOnlyDictionary<string, Expr> Values;
-
-        public UnescapedObject() : this(new OrderedDictionary<string, Expr>()) { }
+        IReadOnlyDictionary<string, Expr> Values { get; }
 
         public UnescapedObject(IReadOnlyDictionary<string, Expr> values)
         {
+            if (values == null)
+                throw new ArgumentNullException(nameof(values));
+
             Values = values;
         }
 
         public override bool Equals(Expr v)
         {
             var w = v as UnescapedObject;
-            return w != null && w.Values.Equals(Values);
+            return w != null && w.Values.DictEquals(Values);
         }
 
         protected override int HashCode() =>
             Values.GetHashCode();
 
-        protected internal override void WriteJson(JsonWriter writer)
-        {
+        protected internal override void WriteJson(JsonWriter writer) =>
             writer.WriteObject(Values);
-        }
 
         public override string ToString()
         {
@@ -68,17 +67,14 @@ namespace FaunaDB.Query
         public static readonly UnescapedArray Empty =
             new UnescapedArray(new List<Expr>());
 
-        public IReadOnlyList<Expr> Value { get; }
-
-        public static UnescapedArray Of(IEnumerable<Expr> values) =>
-            new UnescapedArray(new List<Expr>(values));
+        IReadOnlyList<Expr> Value { get; }
 
         public UnescapedArray(IReadOnlyList<Expr> value)
         {
-            Value = value;
-
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
+
+            Value = value;
         }
 
         public override bool Equals(Expr v)
@@ -90,13 +86,16 @@ namespace FaunaDB.Query
         protected override int HashCode() =>
             Value.GetHashCode();
 
-        protected internal override void WriteJson(JsonWriter writer)
-        {
+        protected internal override void WriteJson(JsonWriter writer) =>
             writer.WriteArray(Value);
-        }
 
         public override string ToString() =>
             $"UArr({string.Join(", ", Value)})";
 
+        public static UnescapedArray Of(params Expr[] values) =>
+            new UnescapedArray(new List<Expr>(values));
+
+        public static UnescapedArray Of(IEnumerable<Expr> values) =>
+            new UnescapedArray(new List<Expr>(values));
     }
 }

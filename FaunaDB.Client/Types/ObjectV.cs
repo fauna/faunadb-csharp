@@ -14,13 +14,14 @@ namespace FaunaDB.Types
     public sealed class ObjectV : Value
     {
         #region Construction
-        public static readonly ObjectV Empty = new ObjectV(new OrderedDictionary<string, Value>());
+        public static readonly ObjectV Empty =
+            new ObjectV(ImmutableDictionary<string, Value>.Empty);
 
         public IReadOnlyDictionary<string, Value> Value { get; }
 
-        public ObjectV() : this(Empty.Value) { }
+        internal ObjectV() : this(Empty.Value) { }
 
-        public ObjectV(IReadOnlyDictionary<string, Value> value)
+        internal ObjectV(IReadOnlyDictionary<string, Value> value)
         {
             Value = value;
 
@@ -36,9 +37,9 @@ namespace FaunaDB.Types
         /// </param>
         internal ObjectV(Action<Action<string, Value>> builder)
         {
-            var dic = new OrderedDictionary<string, Value>();
-            builder((k, v) => dic.Add(new KeyValuePair<string, Value>(k, v)));
-            Value = dic;
+            var values = new List<KeyValuePair<string, Value>>();
+            builder((k, v) => values.Add(new KeyValuePair<string, Value>(k, v)));
+            Value = new ImmutableDictionary<string, Value>(values);
         }
 
         #endregion
@@ -52,7 +53,7 @@ namespace FaunaDB.Types
         /// </summary>
         public Value GetOrNull(string key)
         {
-            Value value;
+            Value value = null;
             Value.TryGetValue(key, out value);
             return value;
         }
@@ -69,7 +70,7 @@ namespace FaunaDB.Types
         public override bool Equals(Expr v)
         {
             var obj = v as ObjectV;
-            return obj != null && Value.Equals(obj.Value);
+            return obj != null && Value.DictEquals(obj.Value);
         }
 
         protected override int HashCode() =>
