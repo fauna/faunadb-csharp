@@ -84,7 +84,7 @@ namespace Test
                 "bool", true,
                 "double", 3.14,
                 "long", 1234,
-                "ref", new RefV("databases"),
+                "ref", BuiltIn.DATABASES,
                 "setref", new SetRefV(setRef));
 
             Assert.AreEqual("a string",
@@ -99,7 +99,7 @@ namespace Test
             Assert.AreEqual(1234L,
                 obj.Get(Field.At("long").To(Codec.LONG)));
 
-            Assert.AreEqual(new RefV("databases"),
+            Assert.AreEqual(BuiltIn.DATABASES,
                 obj.Get(Field.At("ref").To(Codec.REF)));
 
             Assert.AreEqual(new SetRefV(setRef),

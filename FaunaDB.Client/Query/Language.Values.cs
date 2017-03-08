@@ -94,15 +94,6 @@ namespace FaunaDB.Query
             NullV.Instance;
 
         /// <summary>
-        /// Creates a <see cref="RefV"/> value.
-        /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
-        /// </para>
-        /// </summary>
-        public static Expr Ref(string id) =>
-            new RefV(id);
-
-        /// <summary>
         /// Calls ref function to create a ref value.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>

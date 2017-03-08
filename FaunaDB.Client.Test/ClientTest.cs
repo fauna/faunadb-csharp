@@ -7,20 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
-using NUnit.Framework.Constraints;
 
 namespace Test
 {
     [TestFixture] public class ClientTest : TestCase
     {
-        private static Field<string> SECRET_FIELD = Field.At("secret").To(Codec.STRING);
         private static Field<Value> DATA = Field.At("data");
         private static Field<RefV> REF_FIELD = Field.At("ref").To(Codec.REF);
         private static Field<long> TS_FIELD = Field.At("ts").To(Codec.LONG);
-        private static Field<RefV> RESOURCE_FIELD = Field.At("resource").To(Codec.REF);
+        private static Field<RefV> INSTANCE_FIELD = Field.At("instance").To(Codec.REF);
         private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
 
         private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To(Codec.STRING);
@@ -49,44 +48,44 @@ namespace Test
 
         async Task SetUpAsync()
         {
-            adminKey = await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "admin")));
+            adminKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "admin")));
             adminClient = rootClient.NewSessionClient(adminKey.Get(SECRET_FIELD));
 
-            await client.Query(Create(Ref("classes"), Obj("name", "spells")));
-            await client.Query(Create(Ref("classes"), Obj("name", "characters")));
-            await client.Query(Create(Ref("classes"), Obj("name", "spellbooks")));
+            await client.Query(CreateClass(Obj("name", "spells")));
+            await client.Query(CreateClass(Obj("name", "characters")));
+            await client.Query(CreateClass(Obj("name", "spellbooks")));
 
-            await client.Query(Create(Ref("indexes"), Obj(
+            await client.Query(CreateIndex(Obj(
                 "name", "all_spells",
-                "source", Ref("classes/spells")
+                "source", Class("spells")
               )));
 
-            await client.Query(Create(Ref("indexes"), Obj(
+            await client.Query(CreateIndex(Obj(
                 "name", "spells_by_element",
-                "source", Ref("classes/spells"),
+                "source", Class("spells"),
                 "terms", Arr(Obj("field", Arr("data", "element")))
               )));
 
-            await client.Query(Create(Ref("indexes"), Obj(
+            await client.Query(CreateIndex(Obj(
                 "name", "elements_of_spells",
-                "source", Ref("classes/spells"),
+                "source", Class("spells"),
                 "values", Arr(Obj("field", Arr("data", "element")))
               )));
 
-            await client.Query(Create(Ref("indexes"), Obj(
+            await client.Query(CreateIndex(Obj(
                 "name", "spellbooks_by_owner",
-                "source", Ref("classes/spellbooks"),
+                "source", Class("spellbooks"),
                 "terms", Arr(Obj("field", Arr("data", "owner")))
               )));
 
-            await client.Query(Create(Ref("indexes"), Obj(
+            await client.Query(CreateIndex(Obj(
                 "name", "spells_by_spellbook",
-                "source", Ref("classes/spells"),
+                "source", Class("spells"),
                 "terms", Arr(Obj("field", Arr("data", "spellbook")))
               )));
 
             magicMissile = GetRef(await client.Query(
-              Create(Ref("classes/spells"),
+              Create(Class("spells"),
                 Obj("data",
                   Obj(
                     "name", "Magic Missile",
@@ -95,7 +94,7 @@ namespace Test
             ));
 
             fireball = GetRef(await client.Query(
-              Create(Ref("classes/spells"),
+              Create(Class("spells"),
                 Obj("data",
                   Obj(
                     "name", "Fireball",
@@ -104,7 +103,7 @@ namespace Test
             ));
 
             faerieFire = GetRef(await client.Query(
-              Create(Ref("classes/spells"),
+              Create(Class("spells"),
                 Obj("data",
                   Obj(
                     "name", "Faerie Fire",
@@ -116,7 +115,7 @@ namespace Test
             ));
 
             summon = GetRef(await client.Query(
-              Create(Ref("classes/spells"),
+              Create(Class("spells"),
                 Obj("data",
                   Obj(
                     "name", "Summon Animal Companion",
@@ -125,24 +124,24 @@ namespace Test
             ));
 
             thor = GetRef(await client.Query(
-              Create(Ref("classes/characters"),
+              Create(Class("characters"),
                 Obj("data", Obj("name", "Thor")))
             ));
 
-            RefV thorsSpellbook = GetRef(await client.Query(
-              Create(Ref("classes/spellbooks"),
+            var thorsSpellbook = GetRef(await client.Query(
+              Create(Class("spellbooks"),
                 Obj("data",
                   Obj("owner", thor)))
             ));
 
             thorSpell1 = GetRef(await client.Query(
-              Create(Ref("classes/spells"),
+              Create(Class("spells"),
                 Obj("data",
                   Obj("spellbook", thorsSpellbook)))
             ));
 
             thorSpell2 = GetRef(await client.Query(
-              Create(Ref("classes/spells"),
+              Create(Class("spells"),
                 Obj("data",
                   Obj("spellbook", thorsSpellbook)))
             ));
@@ -150,8 +149,8 @@ namespace Test
 
         [Test] public void TestUnauthorizedOnInvalidSecret()
         {
-            var ex = Assert.ThrowsAsync<Unauthorized>(async() =>
-                await GetClient(secret: "invalid secret").Query(Ref("classes/spells/1234"))
+            var ex = Assert.ThrowsAsync<Unauthorized>(
+                async() => await GetClient(secret: "invalid secret").Query(new RefV(id: "1234", @class: new ClassV("spells")))
             );
 
             AssertErrors(ex, code: "unauthorized", description: "Unauthorized");
@@ -163,8 +162,8 @@ namespace Test
 
         [Test] public void TestNotFoundWhenInstanceDoesntExists()
         {
-            var ex = Assert.ThrowsAsync<NotFound>(async() =>
-                await client.Query(Get(Ref("classes/spells/1234")))
+            var ex = Assert.ThrowsAsync<NotFound>(
+                async() => await client.Query(Get(new RefV(id: "1234", @class: new ClassV("spells"))))
             );
 
             AssertErrors(ex, code: "instance not found", description: "Instance not found.");
@@ -324,7 +323,7 @@ namespace Test
                 Insert(createdInstance.Get(REF_FIELD), 1L, ActionType.Create,
                     Obj("data", Obj("cooldown", 5L))));
 
-            Assert.AreEqual(insertedEvent.Get(RESOURCE_FIELD), createdInstance.Get(REF_FIELD));
+            Assert.AreEqual(insertedEvent.Get(INSTANCE_FIELD), createdInstance.Get(REF_FIELD));
 
             Value removedEvent = await client.Query(
                 Remove(createdInstance.Get(REF_FIELD), 2L, ActionType.Delete)
@@ -338,12 +337,11 @@ namespace Test
             RefV classRef = await RandomClass();
 
             await client.Query(
-                Create(Ref("indexes"),
-                    Obj(
-                        "name", RandomStartingWith("class_index_"),
-                        "source", classRef,
-                        "terms", Arr(Obj("field", Arr("data", "uniqueField"))),
-                        "unique", true)));
+                CreateIndex(Obj(
+                    "name", RandomStartingWith("class_index_"),
+                    "source", classRef,
+                    "terms", Arr(Obj("field", Arr("data", "uniqueField"))),
+                    "unique", true)));
 
             AsyncTestDelegate create = async () =>
             {
@@ -366,7 +364,7 @@ namespace Test
         [Test] public async Task TestFindASingleInstanceFromIndex()
         {
             Value singleMatch = await client.Query(
-                Paginate(Match(Ref("indexes/spells_by_element"), "fire")));
+                Paginate(Match(Index("spells_by_element"), "fire")));
 
             Assert.That(singleMatch.Get(REF_LIST), Is.EquivalentTo(new List<RefV> { fireball }));
         }
@@ -374,7 +372,7 @@ namespace Test
         [Test] public async Task TestListAllItensOnAClassIndex()
         {
             Value allInstances = await client.Query(
-                Paginate(Match(Ref("indexes/all_spells"))));
+                Paginate(Match(Index("all_spells"))));
 
             Assert.That(allInstances.Get(REF_LIST),
                         Is.EquivalentTo(new List<RefV> { magicMissile, fireball, faerieFire, summon, thorSpell1, thorSpell2 }));
@@ -383,14 +381,14 @@ namespace Test
         [Test] public async Task TestPaginateOverAnIndex()
         {
             Value page1 = await client.Query(
-                Paginate(Match(Ref("indexes/all_spells")), size: 3));
+                Paginate(Match(Index("all_spells")), size: 3));
 
             Assert.AreEqual(3, page1.Get(DATA).To(Codec.ARRAY).Value.Count);
             Assert.NotNull(page1.At("after"));
             Assert.AreEqual(None<Value>(), page1.At("before").To(Codec.VALUE).ValueOption);
 
             Value page2 = await client.Query(
-              Paginate(Match(Ref("indexes/all_spells")), after: page1.At("after"), size: 3));
+              Paginate(Match(Index("all_spells")), after: page1.At("after"), size: 3));
 
             Assert.AreEqual(3, page2.Get(DATA).To(Codec.ARRAY).Value.Count);
             Assert.AreNotEqual(page1.At("data"), page2.Get(DATA));
@@ -401,11 +399,11 @@ namespace Test
         [Test] public async Task TestDealWithSetRef()
         {
             Value res = await client.Query(
-                Match(Ref("indexes/spells_by_element"), "arcane"));
+                Match(Index("spells_by_element"), "arcane"));
 
             IReadOnlyDictionary<string, Value> set = res.To(Codec.SETREF).Value.Value;
             Assert.AreEqual("arcane", set["terms"].To(Codec.STRING).Value);
-            Assert.AreEqual(new RefV("indexes/spells_by_element"), set["match"].To(Codec.REF).Value);
+            Assert.AreEqual(new IndexV("spells_by_element"), set["match"].To(Codec.REF).Value);
         }
 
         [Test] public async Task TestEvalAtExpression()
@@ -441,7 +439,7 @@ namespace Test
 
         [Test] public async Task TestEvalDoExpression()
         {
-            RefV @ref = new RefV(RandomStartingWith((await RandomClass()).Value, "/"));
+            RefV @ref = await RandomClass();
 
             Value res = await client.Query(
                 Do(Create(@ref, Obj("data", Obj("name", "Magic Missile"))),
@@ -595,10 +593,10 @@ namespace Test
         [Test] public async Task TestReadEventsFromIndex()
         {
             Value events = await client.Query(
-                Paginate(Match(Ref("indexes/spells_by_element"), "arcane"), events: true)
+                Paginate(Match(Index("spells_by_element"), "arcane"), events: true)
             );
 
-            Assert.That(events.Get(DATA).Collect(Field.At("resource").To(Codec.REF)),
+            Assert.That(events.Get(DATA).Collect(Field.At("instance").To(Codec.REF)),
                         Is.EquivalentTo(new List<RefV> { magicMissile, faerieFire }));
         }
 
@@ -607,8 +605,8 @@ namespace Test
             Value union = await client.Query(
                 Paginate(
                     Union(
-                        Match(Ref("indexes/spells_by_element"), "arcane"),
-                        Match(Ref("indexes/spells_by_element"), "fire"))
+                        Match(Index("spells_by_element"), "arcane"),
+                        Match(Index("spells_by_element"), "fire"))
                 )
             );
 
@@ -621,8 +619,8 @@ namespace Test
             Value intersection = await client.Query(
                 Paginate(
                     Intersection(
-                        Match(Ref("indexes/spells_by_element"), "arcane"),
-                        Match(Ref("indexes/spells_by_element"), "nature")
+                        Match(Index("spells_by_element"), "arcane"),
+                        Match(Index("spells_by_element"), "nature")
                     )
                 )
             );
@@ -636,8 +634,8 @@ namespace Test
             Value difference = await client.Query(
                 Paginate(
                     Difference(
-                        Match(Ref("indexes/spells_by_element"), "nature"),
-                        Match(Ref("indexes/spells_by_element"), "arcane")
+                        Match(Index("spells_by_element"), "nature"),
+                        Match(Index("spells_by_element"), "arcane")
                     )
                 )
             );
@@ -649,7 +647,7 @@ namespace Test
         [Test] public async Task TestPaginateDistinctSets()
         {
             Value distinct = await client.Query(
-                Paginate(Distinct(Match(Ref("indexes/elements_of_spells"))))
+                Paginate(Distinct(Match(Index("elements_of_spells"))))
             );
 
             Assert.That(distinct.Get(DATA).Collect(Field.To(Codec.STRING)),
@@ -661,8 +659,8 @@ namespace Test
             Value join = await client.Query(
                 Paginate(
                     Join(
-                        Match(Ref("indexes/spellbooks_by_owner"), thor),
-                        Lambda(spellbook => Match(Ref("indexes/spells_by_spellbook"), spellbook))
+                        Match(Index("spellbooks_by_owner"), thor),
+                        Lambda(spellbook => Match(Index("spells_by_spellbook"), spellbook))
                     )
                 )
             );
@@ -832,52 +830,52 @@ namespace Test
         {
             await client.Query(CreateClass(Obj("name", "class_for_test")));
 
-            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Ref("classes/class_for_test"))));
+            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Class("class_for_test"))));
         }
 
         [Test] public async Task TestCreateDatabase()
         {
             await adminClient.Query(CreateDatabase(Obj("name", "database_for_test")));
 
-            Assert.AreEqual(BooleanV.True, await adminClient.Query(Exists(Ref("databases/database_for_test"))));
+            Assert.AreEqual(BooleanV.True, await adminClient.Query(Exists(Database("database_for_test"))));
         }
 
         [Test] public async Task TestCreateIndex()
         {
-            await client.Query(CreateIndex(Obj("name", "index_for_test", "source", Ref("classes/characters"))));
+            await client.Query(CreateIndex(Obj("name", "index_for_test", "source", Class("characters"))));
 
-            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Ref("indexes/index_for_test"))));
+            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Index("index_for_test"))));
         }
 
         [Test] public async Task TestCreateKey()
         {
             await adminClient.Query(CreateDatabase(Obj("name", "database_for_key_test")));
 
-            var key = await adminClient.Query(CreateKey(Obj("database", Ref("databases/database_for_key_test"), "role", "server")));
+            var key = await adminClient.Query(CreateKey(Obj("database", Database("database_for_key_test"), "role", "server")));
 
             var newClient = adminClient.NewSessionClient(secret: key.Get(SECRET_FIELD));
 
             await newClient.Query(CreateClass(Obj("name", "class_for_key_test")));
 
-            Assert.AreEqual(BooleanV.True, await newClient.Query(Exists(Ref("classes/class_for_key_test"))));
+            Assert.AreEqual(BooleanV.True, await newClient.Query(Exists(Class("class_for_key_test"))));
         }
 
         [Test] public async Task TestDatabase()
         {
             await adminClient.Query(CreateDatabase(Obj("name", "database_for_database_test")));
 
-            Assert.AreEqual(Ref("databases/database_for_database_test"),
+            Assert.AreEqual(new DatabaseV("database_for_database_test"),
                 await client.Query(Database("database_for_database_test")));
         }
 
         [Test] public async Task TestIndex()
         {
-            Assert.AreEqual(Ref("indexes/all_spells"), await client.Query(Index("all_spells")));
+            Assert.AreEqual(new IndexV("all_spells"), await client.Query(Index("all_spells")));
         }
 
         [Test] public async Task TestClass()
         {
-            Assert.AreEqual(Ref("classes/spells"), await client.Query(Class("spells")));
+            Assert.AreEqual(new ClassV("spells"), await client.Query(Class("spells")));
         }
 
         [Test] public async Task TestAuthenticateSession()
@@ -925,13 +923,92 @@ namespace Test
 
         [Test] public async Task TestPing()
         {
-            Assert.AreEqual("Scope all is OK", await client.Ping("all"));
+            Assert.AreEqual("Scope node is OK", await client.Ping("node"));
+        }
+
+        [Test]
+        public async Task TestRef()
+        {
+            var newClient = GetClient(secret: clientKey.Get(SECRET_FIELD));
+
+            Assert.AreEqual(
+                new IndexV(id: "all_spells"),
+                await newClient.Query(Index("all_spells"))
+            );
+
+            Assert.AreEqual(
+                new ClassV(id: "spells"),
+                await newClient.Query(Class("spells"))
+            );
+
+            Assert.AreEqual(
+                new DatabaseV(id: "faunadb-csharp-test"),
+                await newClient.Query(Database("faunadb-csharp-test"))
+            );
+
+            Assert.AreEqual(
+                new KeyV(id: "1234567890"),
+                await newClient.Query(new KeyV("1234567890"))
+            );
+
+            Assert.AreEqual(
+                new FunctionV(id: "function_name"),
+                await newClient.Query(new FunctionV("function_name"))
+            );
+
+            Assert.AreEqual(
+                new RefV("1", new ClassV("spells")),
+                await newClient.Query(Ref(Class("spells"), "1"))
+            );
+
+            Assert.AreEqual(
+                new RefV("1", new ClassV("spells")),
+                await newClient.Query(Ref(new ClassV("spells"), "1"))
+            );
+        }
+
+        [Test] public async Task TestNestedRef()
+        {
+            var client1 = await CreateNewDatabase(adminClient, "parent-database");
+            await CreateNewDatabase(client1, "child-database");
+
+            var key = await client1.Query(CreateKey(Obj("database", Database("child-database"), "role", "server")));
+
+            var client2 = client1.NewSessionClient(secret: key.Get(SECRET_FIELD));
+
+            await client2.Query(CreateClass(Obj("name", "a_class")));
+
+            var nestedClassRef = new ClassV(
+                id: "a_class",
+                database: new DatabaseV(
+                    id: "child-database",
+                    database: new DatabaseV("parent-database")));
+
+            var client3 = client2.NewSessionClient(secret: clientKey.Get(SECRET_FIELD));
+
+            Assert.AreEqual(BooleanV.True, await client3.Query(Exists(nestedClassRef)));
+
+            var _ref = new RefV(
+                id: "classes",
+                database: new DatabaseV("child-database", new DatabaseV("parent-database")));
+
+            var ret = await client3.Query(Paginate(_ref));
+
+            Assert.That(ret.Get(REF_LIST),
+                        Is.EquivalentTo(new List<RefV> { nestedClassRef }));
+        }
+
+        static async Task<FaunaClient> CreateNewDatabase(FaunaClient client, string name)
+        {
+            await client.Query(CreateDatabase(Obj("name", name)));
+            var key = await client.Query(CreateKey(Obj("database", Database(name), "role", "admin")));
+            return client.NewSessionClient(secret: key.Get(SECRET_FIELD));
         }
 
         private async Task<RefV> RandomClass()
         {
             Value clazz = await client.Query(
-              Create(Ref("classes"),
+              CreateClass(
                 Obj("name", RandomStartingWith("some_class_")))
             );
 

@@ -15,9 +15,12 @@ namespace Test
 {
     public class TestCase
     {
+        protected static Field<string> SECRET_FIELD = Field.At("secret").To(Codec.STRING);
+
         protected FaunaClient rootClient;
         protected RefV DbRef;
         protected FaunaClient client;
+        protected Value clientKey;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -36,20 +39,21 @@ namespace Test
             var scheme = Env("FAUNA_SCHEME", cfg.Scheme);
             var port = Env("FAUNA_PORT", cfg.Port);
             var secret = Env("FAUNA_ROOT_KEY", cfg.Secret);
+            var endpoint = $"{scheme}://{domain}:{port}";
 
-            rootClient = new FaunaClient(domain: domain, scheme: scheme, port: int.Parse(port), secret: secret);
+            rootClient = new FaunaClient(secret: secret, endpoint: endpoint);
 
             const string dbName = "faunadb-csharp-test";
-            DbRef = new RefV($"databases/{dbName}");
+            DbRef = new DatabaseV(dbName);
 
             try {
                 await rootClient.Query(Delete(DbRef));
             } catch (BadRequest) {}
 
-            await rootClient.Query(Create(Ref("databases"), Obj("name", dbName)));
+            await rootClient.Query(CreateDatabase(Obj("name", dbName)));
 
-            var key = await rootClient.Query(Create(Ref("keys"), Obj("database", DbRef, "role", "server")));
-            client = rootClient.NewSessionClient(key.At("secret").To(Codec.STRING).Value);
+            clientKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "server")));
+            client = rootClient.NewSessionClient(clientKey.Get(SECRET_FIELD));
         }
 
         [OneTimeTearDown]
@@ -69,14 +73,13 @@ namespace Test
         protected FaunaClient MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             var resp = new RequestResult(HttpMethodKind.Get, "", null, "", responseText, (int)statusCode, null, DateTime.UtcNow, DateTime.UtcNow);
-            var mock = new MockClientIO(resp);
-            return new FaunaClient(secret: "secret", clientIO: mock);
+            return new FaunaClient(clientIO: new MockClientIO(resp));
         }
     }
 
     class MockClientIO : IClientIO
     {
-        RequestResult resp;
+        readonly RequestResult resp;
 
         public MockClientIO(RequestResult resp)
         {

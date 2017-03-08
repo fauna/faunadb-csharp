@@ -91,33 +91,6 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
-    /// A FaunaDB ref type.
-    /// <para>
-    /// See <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
-    /// </para>
-    /// </summary>
-    public sealed class RefV : ScalarValue<string>
-    {
-        /// <summary>
-        /// Create a Ref from a string, such as <c>new Ref("databases/prydain")</c>.
-        /// </summary>
-        /// <param name="value">Value.</param>
-        public RefV(string value) : base(value)
-        {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-        }
-
-        protected internal override void WriteJson(JsonWriter writer)
-        {
-            writer.WriteObject("@ref", Value);
-        }
-
-        public static implicit operator string(RefV r) =>
-            r.Value;
-    }
-
-    /// <summary>
     /// A FaunaDB set literal.
     /// See <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>
     /// </summary>
