@@ -23,7 +23,7 @@
 
 [assembly: AssemblyVersion(FaunaDBAttribute.Version)]
 [assembly: AssemblyFileVersion(FaunaDBAttribute.Version)]
-[assembly: AssemblyInformationalVersion(FaunaDBAttribute.Version)]
+[assembly: AssemblyInformationalVersion(FaunaDBAttribute.Version + "-SNAPSHOT")]
 
 // The following attributes are used to specify the signing key for the assembly,
 // if desired. See the Mono documentation for more information about signing.
@@ -33,5 +33,5 @@
 
 static class FaunaDBAttribute
 {
-    public const string Version = "1.0.0";
+    public const string Version = "1.0.1";
 }
