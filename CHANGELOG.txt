@@ -1,4 +1,5 @@
-0.1.4-SNAPSHOT
+1.0.0
+* Official release
 
 0.1.3
 * Adds support for At() function
