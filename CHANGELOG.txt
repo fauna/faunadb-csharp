@@ -1,3 +1,6 @@
+1.0.1-SNAPSHOT
+* Pinning FaunaDB API version to 2.0
+
 1.0.0
 * Official release
 
