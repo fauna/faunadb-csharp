@@ -928,6 +928,20 @@ namespace Test
             Assert.AreEqual("Scope all is OK", await client.Ping("all"));
         }
 
+        [Test]
+        public async Task TestDeserializeUserClasses()
+        {
+            var people = await client.Query<List<Person>>(Arr(
+                Obj("name", "John", "age", 42, "attribs", Obj("email", "john@example.org")),
+                Obj("name", "Mary", "age", 30, "attribs", Obj("email", "mary@example.org"))
+            ));
+
+            Assert.That(people, Is.EquivalentTo(new List<Person> {
+                new Person("John", 42, ObjectV.With("email", "john@example.org")),
+                new Person("Mary", 30, ObjectV.With("email", "mary@example.org"))
+            }));
+        }
+
         private async Task<RefV> RandomClass()
         {
             Value clazz = await client.Query(

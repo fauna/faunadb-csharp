@@ -83,6 +83,7 @@
     <Compile Include="TestCase.cs" />
     <Compile Include="ErrorsTest.cs" />
     <Compile Include="PageTest.cs" />
+    <Compile Include="Person.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

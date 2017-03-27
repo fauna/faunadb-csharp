@@ -7,11 +7,14 @@ namespace Test
 {
     [TestFixture] public class DeserializationTest
     {
-        static void AssertJsonEqual(Value value, string json)
+        static T Deserialize<T>(string json)
         {
             var settings = new JsonSerializerSettings { DateParseHandling = DateParseHandling.None };
-            Assert.AreEqual(value, JsonConvert.DeserializeObject<Value>(json, settings));
+            return JsonConvert.DeserializeObject<T>(json, settings);
         }
+
+        static void AssertJsonEqual(Value value, string json) =>
+            Assert.AreEqual(value, Deserialize<Value>(json));
 
         [Test] public void TestString()
         {
@@ -115,5 +118,19 @@ namespace Test
             AssertJsonEqual(new BytesV(0xfe), "{\"@bytes\":\"_g==\"}");
             AssertJsonEqual(new BytesV(0xff), "{\"@bytes\":\"_w==\"}");
         }
+
+        [Test]
+        public void TestUserClasses()
+        {
+            var john = @"{'name': 'John', 'age': 42, 'attribs': {'@obj': {'email': 'john@example.org'}}}";
+            var mary = @"{'name': 'Mary', 'age': 30, 'attribs': {'@obj': {'email': 'mary@example.org'}}}";
+            var people = Deserialize<List<Person>>($"[{john}, {mary}]");
+
+            Assert.That(people, Is.EquivalentTo(new List<Person> {
+                new Person("John", 42, ObjectV.With("email", "john@example.org")),
+                new Person("Mary", 30, ObjectV.With("email", "mary@example.org"))
+            }));
+        }
+
     }
 }
