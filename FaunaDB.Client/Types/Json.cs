@@ -30,19 +30,14 @@ namespace FaunaDB.Types
             this.reader = reader;
         }
 
-        Value ReadValue()
+        Value ConsumeValue()
         {
-            try
-            {
-                return HandleValue();
-            }
-            finally
-            {
-                Next();
-            }
+            var value = ReadValue();
+            Consume(token: JsonToken.None);
+            return value;
         }
 
-        Value HandleValue()
+        Value ReadValue()
         {
             switch (reader.TokenType)
             {
@@ -51,13 +46,13 @@ namespace FaunaDB.Types
                 case JsonToken.StartArray:
                     return ReadArray();
                 case JsonToken.Integer:
-                    return LongV.Of((long) reader.Value);
+                    return LongV.Of((long)Expect(token: JsonToken.Integer));
                 case JsonToken.Float:
-                    return DoubleV.Of((double) reader.Value);
+                    return DoubleV.Of((double)Expect(token: JsonToken.Float));
                 case JsonToken.String:
-                    return StringV.Of((string) reader.Value);
+                    return StringV.Of((string)Expect(token: JsonToken.String));
                 case JsonToken.Boolean:
-                    return BooleanV.Of((bool) reader.Value);
+                    return BooleanV.Of((bool)Expect(token: JsonToken.Boolean));
                 case JsonToken.Null:
                     return NullV.Instance;
                 default:
@@ -65,19 +60,11 @@ namespace FaunaDB.Types
             }
         }
 
-        JsonToken Next(JsonToken expect = JsonToken.None)
-        {
-            reader.Read();
-
-            if (expect != JsonToken.None && expect != reader.TokenType)
-                Unexpected(expect);
-
-            return reader.TokenType;
-        }
-
         Value ReadObject()
         {
-            switch (Next())
+            Consume(token: JsonToken.StartObject);
+
+            switch (reader.TokenType)
             {
                 case JsonToken.PropertyName:
                     switch ((string)reader.Value)
@@ -112,61 +99,62 @@ namespace FaunaDB.Types
             return new ObjectV(Add =>
             {
                 while (reader.TokenType != JsonToken.EndObject)
-                    Add(ReadPropertyName(), ReadValue());
+                    Add(ReadPropertyName(), ConsumeValue());
             });
         }
 
         ArrayV ReadArray()
         {
-            if (Next() == JsonToken.EndArray)
+            Consume(token: JsonToken.StartArray);
+
+            if (reader.TokenType == JsonToken.EndArray)
                 return ArrayV.Empty;
 
             return new ArrayV(Add =>
             {
                 while (reader.TokenType != JsonToken.EndArray)
-                    Add(ReadValue());
+                    Add(ConsumeValue());
             });
         }
 
         string ReadPropertyName()
         {
-            try
-            {
-                if (reader.TokenType != JsonToken.PropertyName)
-                    Unexpected(JsonToken.PropertyName);
+            if (reader.TokenType != JsonToken.PropertyName)
+                Unexpected(JsonToken.PropertyName);
 
-                return (string)reader.Value;
-            }
-            finally
-            {
-                Next();
-            }
+            return (string)Consume(token: JsonToken.PropertyName);
         }
 
         string ReadEnclosedString()
         {
-            try
-            {
-                Next(expect: JsonToken.String);
-                return (string) reader.Value;
-            }
-            finally
-            {
-                Next(expect: JsonToken.EndObject);
-            }
+            Consume(token: JsonToken.PropertyName);
+            return (string)Consume(token: JsonToken.String);
         }
 
         ObjectV ReadEnclosedObject()
         {
-            try
-            {
-                Next(expect: JsonToken.StartObject);
-                return (ObjectV)ReadObject();
-            }
-            finally
-            {
-                Next(expect: JsonToken.EndObject);
-            }
+            Consume(token: JsonToken.PropertyName);
+            var obj = (ObjectV)ReadObject();
+            Consume(token: JsonToken.EndObject);
+            return obj;
+        }
+
+        object Expect(JsonToken token)
+        {
+            if (token != JsonToken.None && token != reader.TokenType)
+                Unexpected(token);
+
+            return reader.Value;
+        }
+
+        object Consume(JsonToken token)
+        {
+            if (token != JsonToken.None && token != reader.TokenType)
+                Unexpected(token);
+
+            var value = reader.Value;
+            reader.Read();
+            return value;
         }
 
         Value Unexpected(JsonToken expected = JsonToken.None)
