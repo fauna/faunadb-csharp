@@ -942,6 +942,19 @@ namespace Test
             }));
         }
 
+        [Test]
+        public async Task TestSerializeUserClasses()
+        {
+            var john = new Person("John", 42, ObjectV.With("email", "john@example.org"));
+            var mary = new Person("Mary", 30, ObjectV.With("email", "mary@example.org"));
+
+            var people = await client.Query<List<Person>>(Arr(
+                Obj(john), Obj(mary)
+            ));
+
+            Assert.That(people, Is.EquivalentTo(new List<Person> { john, mary }));
+        }
+
         private async Task<RefV> RandomClass()
         {
             Value clazz = await client.Query(

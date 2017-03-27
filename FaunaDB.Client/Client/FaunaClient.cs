@@ -179,7 +179,7 @@ namespace FaunaDB.Client
             }
         }
 
-        public class Response<T>
+        class Response<T>
         {
             [JsonProperty("resource")]
             public T Resource;

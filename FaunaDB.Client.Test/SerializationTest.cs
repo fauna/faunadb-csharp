@@ -637,5 +637,14 @@ namespace Test
             AssertJsonEqual(Not(true), "{\"not\":true}");
             AssertJsonEqual(Not(false), "{\"not\":false}");
         }
+
+        [Test]
+        public void TestUserClasses()
+        {
+            AssertJsonEqual(
+                Obj(new Person("John", 42, ObjectV.With("email", "john@example.com"))),
+                "{\"object\":{\"Name\":\"John\",\"Age\":42,\"Attribs\":{\"object\":{\"email\":\"john@example.com\"}}}}"
+            );
+        }
     }
 }

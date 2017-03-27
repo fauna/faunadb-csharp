@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Collections;
+using FaunaDB.Utils;
 
 namespace FaunaDB.Query
 {
@@ -12,6 +13,15 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Obj() =>
             Obj(ImmutableDictionary.Empty<string, Expr>());
+
+        /// <summary>
+        /// Creates a new Object value with the provided object.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Obj(object obj) =>
+            ObjectUtil.ToExpr(obj);
 
         /// <summary>
         /// Creates a new Object value with the provided entries.
