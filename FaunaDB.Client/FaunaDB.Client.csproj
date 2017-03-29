@@ -87,5 +87,7 @@
     <Compile Include="Query\PageHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\BytesV.cs" />
+    <Compile Include="Encoding\Encoder.cs" />
+    <Compile Include="Attributes\FaunaDBAttributes.cs" />
   </ItemGroup>
 </Project>

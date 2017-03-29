@@ -91,7 +91,7 @@ namespace FaunaDB.Client
         /// </summary>
         static string AuthString(string secret)
         {
-            var bytes = Encoding.ASCII.GetBytes(secret);
+            var bytes = System.Text.Encoding.ASCII.GetBytes(secret);
             return Convert.ToBase64String(bytes);
         }
 
