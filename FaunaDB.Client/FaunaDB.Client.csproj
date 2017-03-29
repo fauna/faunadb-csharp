@@ -89,5 +89,7 @@
     <Compile Include="Types\BytesV.cs" />
     <Compile Include="Types\RefParser.cs" />
     <Compile Include="Types\RefV.cs" />
+    <Compile Include="Types\Encoder.cs" />
+    <Compile Include="Types\FaunaDBAttributes.cs" />
   </ItemGroup>
 </Project>

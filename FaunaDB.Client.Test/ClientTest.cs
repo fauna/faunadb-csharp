@@ -1,4 +1,4 @@
-﻿using FaunaDB.Client;
+using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Types;
 using FaunaDB.Query;
@@ -11,6 +11,7 @@ using NUnit.Framework.Constraints;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
+using static FaunaDB.Types.Encoder;
 
 namespace Test
 {
@@ -919,6 +920,47 @@ namespace Test
             Value bytes = await client.Query(new BytesV(0x1, 0x2, 0x3));
 
             Assert.AreEqual(new BytesV(0x1, 0x2, 0x3), bytes);
+        }
+
+        class Spell
+        {
+            [Field("name")]
+            public string Name { get; }
+
+            [Field("element")]
+            public string Element { get; }
+
+            [Field("cost")]
+            public int Cost { get; }
+
+            public Spell(string name, string element, int cost)
+            {
+                Name = name;
+                Element = element;
+                Cost = cost;
+            }
+        }
+
+        [Test]
+        public async Task TestUserClass()
+        {
+            var spell = new Spell("Magic Missile", "arcane", 10);
+
+            var spellCreated = await client.Query(
+                Create(
+                    new ClassV("spells"),
+                    Obj("data", Encode(spell))
+                )
+            );
+
+            Assert.AreEqual(
+                ObjectV.With(
+                    "name", "Magic Missile",
+                    "element", "arcane",
+                    "cost", 10
+                ),
+                spellCreated.Get(DATA)
+            );
         }
 
         [Test] public async Task TestPing()

@@ -1,5 +1,6 @@
 ## 2.0.0-SNAPSHOT
 
+- Adds support for user classes serialization
 - Adds support for new reference types in FaunaDB API 2.1
   - `DatabaseV`, `ClassV`, `IndexV`, `FunctionV` and `KeyV`
 - Removes `Ref(string id)` function

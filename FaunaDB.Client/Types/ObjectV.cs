@@ -86,6 +86,9 @@ namespace FaunaDB.Types
         public static ObjectV With() =>
             new ObjectV();
 
+        public static ObjectV With(IReadOnlyDictionary<string, Value> values) =>
+            new ObjectV(values);
+
         public static ObjectV With(string key1, Value value1) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1));
 
