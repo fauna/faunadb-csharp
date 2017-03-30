@@ -12,6 +12,7 @@ using NUnit.Framework.Constraints;
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
 using static FaunaDB.Types.Encoder;
+using static FaunaDB.Types.Decoder;
 
 namespace Test
 {
@@ -926,42 +927,47 @@ namespace Test
 
         class Spell
         {
-            [Field("name")]
+            [FaunaField("name")]
             public string Name { get; }
 
-            [Field("element")]
+            [FaunaField("element")]
             public string Element { get; }
 
-            [Field("cost")]
+            [FaunaField("cost")]
             public int Cost { get; }
 
+            [FaunaConstructor]
             public Spell(string name, string element, int cost)
             {
                 Name = name;
                 Element = element;
                 Cost = cost;
             }
+
+            public override int GetHashCode() => 0;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as Spell;
+                return other != null && Name == other.Name && Element == other.Element && Cost == other.Cost;
+            }
         }
 
         [Test]
         public async Task TestUserClass()
         {
-            var spell = new Spell("Magic Missile", "arcane", 10);
-
             var spellCreated = await client.Query(
                 Create(
                     Ref("classes/spells"),
-                    Obj("data", Encode(spell))
+                    Obj("data", Encode(new Spell("Magic Missile", "arcane", 10)))
                 )
             );
 
+            var spellCodec = DATA.To(Codec.DECODE<Spell>);
+
             Assert.AreEqual(
-                ObjectV.With(
-                    "name", "Magic Missile",
-                    "element", "arcane",
-                    "cost", 10
-                ),
-                spellCreated.Get(DATA)
+                new Spell("Magic Missile", "arcane", 10),
+                spellCreated.Get(spellCodec)
             );
         }
 

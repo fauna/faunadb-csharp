@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using FaunaDB.Types;
 using NUnit.Framework;
@@ -110,13 +110,13 @@ namespace Test
 
         class Address
         {
-            [Field("street")]
+            [FaunaField("street")]
             public string Street { get; set; }
 
-            [Field("number")]
+            [FaunaField("number")]
             private int number;
 
-            [FaunaDB.Types.Ignore]
+            [FaunaIgnore]
             public int Number
             {
                 get
@@ -136,16 +136,16 @@ namespace Test
         {
             public static byte[] DefaultAvatar = { 1, 2, 3, 4 };
 
-            [Field("name")]
+            [FaunaField("name")]
             public string Name { get; }
 
-            [Field("birth_date")]
+            [FaunaField("birth_date")]
             public DateTime BirthDate { get; }
 
-            [Field("address")]
+            [FaunaField("address")]
             public Address Address { get; }
 
-            [Field("avatar_image")]
+            [FaunaField("avatar_image")]
             public byte[] Avatar { get; }
 
             public Person(string name, DateTime birthDate, Address address, byte[] avatar)
@@ -194,22 +194,22 @@ namespace Test
 
         struct Rect
         {
-            [Field("x")]
+            [FaunaField("x")]
             public int x1;
 
-            [Field("y")]
+            [FaunaField("y")]
             public int y1;
 
-            [FaunaDB.Types.Ignore]
+            [FaunaIgnore]
             public int x2;
 
-            [FaunaDB.Types.Ignore]
+            [FaunaIgnore]
             public int y2;
 
-            [Field("width")]
+            [FaunaField("width")]
             public int Width { get { return x2 - x1; } }
 
-            [Field("height")]
+            [FaunaField("height")]
             public int Height { get { return y2 - y1; } }
 
             public Rect(int x1, int y1, int x2, int y2)

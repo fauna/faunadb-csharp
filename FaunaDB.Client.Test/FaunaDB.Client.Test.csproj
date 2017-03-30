@@ -84,6 +84,7 @@
     <Compile Include="ErrorsTest.cs" />
     <Compile Include="PageTest.cs" />
     <Compile Include="EncoderTest.cs" />
+    <Compile Include="DecoderTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
