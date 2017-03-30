@@ -236,23 +236,36 @@ namespace Test
 
         class Node
         {
-            public Node Left;
-            public Node Right;
+            public string Id { get; set; }
+            public Node Left { get; set; }
+            public Node Right { get; set; }
 
-            public override string ToString() => "Node";
+            public override string ToString() => $"Node({Id})";
+            public override bool Equals(object obj) => obj is Node && Id == ((Node)obj).Id;
+            public override int GetHashCode() => Id.GetHashCode();
         }
 
         [Test]
         public void TestCycles()
         {
-            var parent = new Node();
-            parent.Left = new Node();
-            parent.Right = new Node();
+            var parent = new Node { Id = "parent" };
+            parent.Left = new Node { Id = "left" };
+            parent.Right = new Node { Id = "right" };
 
             parent.Right.Left = parent;
 
             var ex = Assert.Throws<InvalidOperationException>(() => Encode(parent));
-            AreEqual("Self referencing loop detected for object `Node`", ex.Message);
+            AreEqual("Self referencing loop detected for object `Node(parent)`", ex.Message);
+        }
+
+        [Test]
+        public void TestCyclesForReferenceNotEquality()
+        {
+            var parent = new Node { Id = "id" };
+            parent.Left = new Node { Id = "id" };
+            parent.Right = new Node { Id = "id" };
+
+            Assert.DoesNotThrow(() => Encode(parent));
         }
 
         class FaunaTypes

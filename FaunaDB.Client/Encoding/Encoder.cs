@@ -4,31 +4,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FaunaDB.Query;
 using FaunaDB.Types;
 using FaunaDB.Attributes;
+using System.Linq.Expressions;
 
 namespace FaunaDB.Encoding
 {
+    using Converter = Func<EncoderImpl, object, Value>;
+
     public static class Encoder
     {
-        public static Expr Encode(object obj) =>
+        public static Value Encode(object obj) =>
             new EncoderImpl().Encode(obj);
     }
 
     class EncoderImpl
     {
+        static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Converter>();
+
         Stack<object> stack = new Stack<object>();
 
-        public Expr Encode(object obj)
+        public Value Encode(object obj)
         {
             if (obj == null)
                 return NullV.Instance;
 
-            if (typeof(Expr).IsInstanceOfType(obj))
-                return (Expr)obj;
+            if (typeof(Value).IsInstanceOfType(obj))
+                return (Value)obj;
 
-            if (stack.Contains(obj))
+            if (stack.Contains(obj, ReferenceComparer.Default))
                 throw new InvalidOperationException($"Self referencing loop detected for object `{obj}`");
 
             try
@@ -43,7 +47,7 @@ namespace FaunaDB.Encoding
             }
         }
 
-        Expr EncodeIntern(object obj)
+        Value EncodeIntern(object obj)
         {
             var type = obj.GetType();
 
@@ -83,9 +87,6 @@ namespace FaunaDB.Encoding
                     if (typeof(byte[]).IsInstanceOfType(obj))
                         return new BytesV((byte[])obj);
 
-                    if (type.IsArray)
-                        return WrapEnumerable((IEnumerable)obj);
-
                     if (typeof(IDictionary).IsInstanceOfType(obj))
                         return WrapDictionary((IDictionary)obj);
 
@@ -95,10 +96,10 @@ namespace FaunaDB.Encoding
                     return WrapObj(obj);
             }
 
-            throw new InvalidOperationException($"Could not encode object `{obj}`");
+            throw new InvalidOperationException($"Unsupported type {type} at `{obj}`");
         }
 
-        Expr WrapDateTime(DateTime date)
+        Value WrapDateTime(DateTime date)
         {
             if (date.Ticks % (24 * 60 * 60 * 10000) > 0)
                 return new TimeV(date);
@@ -106,44 +107,118 @@ namespace FaunaDB.Encoding
             return new DateV(date);
         }
 
-        Expr WrapEnumerable(IEnumerable array)
+        Value WrapEnumerable(IEnumerable array)
         {
-            var ret = new List<Expr>();
+            var ret = new List<Value>();
 
             foreach (var value in array)
                 ret.Add(Encode(value));
 
-            return new UnescapedArray(ret);
+            return new ArrayV(ret);
         }
 
-        Expr WrapDictionary(IDictionary dic)
+        Value WrapDictionary(IDictionary dic)
         {
-            var ret = new Dictionary<string, Expr>();
+            var ret = new Dictionary<string, Value>();
 
             foreach (DictionaryEntry entry in dic)
                 ret.Add(entry.Key.ToString(), Encode(entry.Value));
 
-            return UnescapedObject.With("object", new UnescapedObject(ret));
+            return new ObjectV(ret);
         }
 
-        Expr WrapObj(object obj)
+        Value WrapObj(object obj)
         {
             var type = obj.GetType();
 
-            var fields = GetAllFields(type)
-                .Where(f => !Has<CompilerGeneratedAttribute>(f) && !Has<IgnoreAttribute>(f))
-                .ToDictionary(f => GetMemberName(f), f => f.GetValue(obj));
+            Converter converter;
 
-            var properties = type
+            lock (converters)
+            {
+                if (!converters.TryGetValue(type, out converter))
+                {
+                    converter = CreateConverter(type);
+                    converters.Add(type, converter);
+                }
+            }
+
+            return converter.Invoke(this, obj);
+        }
+
+        /*
+         * Func<EncoderImpl, object, Value> lambda = (encoder, obj) => {
+         *    var dic = new Dictionary<string, Expr> {
+         *       { "Field1", encoder.Encode(obj.Field1) },
+         *       { "Field2", encoder.Encode(obj.Field2) },
+         *       { "Field3", encoder.Encode(obj.Field3) },
+         *    };
+         *    return new ObjectV(dic);
+         * };
+         */
+        Converter CreateConverter(Type srcType)
+        {
+            var dictType = typeof(Dictionary<string, Value>);
+            var addMethod = dictType.GetMethod("Add", new Type[] { typeof(string), typeof(Value) });
+            var objectVConstructor = typeof(ObjectV).GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(IReadOnlyDictionary<string, Value>) }, null);
+
+            var encoderExpr = Expression.Parameter(typeof(EncoderImpl), "encoder");
+            var objExpr = Expression.Parameter(typeof(object), "obj");
+
+            var fields = GetAllFields(srcType)
+                .Where(field => !Has<CompilerGeneratedAttribute>(field) && !Has<IgnoreAttribute>(field))
+                .Select(field => AddElementToDic(encoderExpr, srcType, field, addMethod, objExpr));
+
+            var properties = srcType
                 .GetProperties()
-                .Where(p => p.CanRead && !Has<IgnoreAttribute>(p))
-                .ToDictionary(p => GetMemberName(p), p => p.GetValue(obj));
+                .Where(parameter => parameter.CanRead && !Has<IgnoreAttribute>(parameter))
+                .Select(parameter => AddElementToDic(encoderExpr, srcType, parameter, addMethod, objExpr));
 
-            var dictionary = fields
-                .Concat(properties)
-                .ToDictionary(kv => kv.Key, kv => kv.Value);
+            var newDictExpr = Expression.ListInit(Expression.New(dictType), fields.Concat(properties));
+            var lambda = Expression.Lambda<Converter>(
+                Expression.New(objectVConstructor, newDictExpr),
+                encoderExpr,
+                objExpr
+            );
 
-            return WrapDictionary(dictionary);
+            return lambda.Compile();
+        }
+
+        /*
+         * (object) ((SrcType)objExpr).member
+         */
+        Expression AccessMember(Type srcType, MemberInfo member, Expression objExpr)
+        {
+            return Expression.Convert(
+                Expression.MakeMemberAccess(Expression.Convert(objExpr, srcType), member),
+                typeof(object)
+            );
+        }
+
+        /*
+         * encodeExpr.Encode( argExpression )
+         */
+        Expression CallEncode(Expression encoderExpr, Expression argExpression)
+        {
+            var encodeMethod = typeof(EncoderImpl).GetMethod("Encode", new Type[] { typeof(object) });
+
+            return Expression.Call(
+                encoderExpr,
+                encodeMethod,
+                argExpression
+            );
+        }
+
+        /*
+         * Add(member.Name, Encode( objExpr.member ))
+         */
+        ElementInit AddElementToDic(Expression encoderExpr, Type srcType, MemberInfo member, MethodInfo addMethod, Expression objExpr)
+        {
+            var keyExpr = Expression.Constant(GetMemberName(member));
+            var valueExpr = CallEncode(encoderExpr, AccessMember(srcType, member, objExpr));
+
+            return Expression.ElementInit(
+                addMethod, keyExpr, valueExpr
+            );
         }
 
         static bool Has<T>(MemberInfo member) where T : Attribute =>
@@ -167,6 +242,17 @@ namespace FaunaDB.Encoding
                 return field.Name;
 
             return member.Name;
+        }
+
+        class ReferenceComparer : IEqualityComparer<object>
+        {
+            public static readonly ReferenceComparer Default = new ReferenceComparer();
+
+            public new bool Equals(object x, object y) =>
+                object.ReferenceEquals(x, y);
+
+            public int GetHashCode(object obj) =>
+                RuntimeHelpers.GetHashCode(obj);
         }
     }
 }
