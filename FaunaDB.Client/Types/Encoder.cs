@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Collections;
 using System.Collections.Generic;
@@ -102,6 +102,7 @@ namespace FaunaDB.Types
                 case TypeCode.Decimal:
                     return DoubleV.Of(Convert.ToDouble(obj));
 
+                case TypeCode.DBNull:
                 case TypeCode.Empty:
                     return NullV.Instance;
 
@@ -199,13 +200,13 @@ namespace FaunaDB.Types
             var encoderExpr = Expression.Parameter(typeof(EncoderImpl), "encoder");
             var objExpr = Expression.Parameter(typeof(object), "obj");
 
-            var fields = GetAllFields(srcType)
-                .Where(field => !Has<CompilerGeneratedAttribute>(field) && !Has<IgnoreAttribute>(field))
+            var fields = srcType.GetAllFields()
+                .Where(field => !field.Has<CompilerGeneratedAttribute>() && !field.Has<FaunaIgnoreAttribute>())
                 .Select(field => AddElementToDic(encoderExpr, srcType, field, addMethod, objExpr));
 
             var properties = srcType
                 .GetProperties()
-                .Where(parameter => parameter.CanRead && !Has<IgnoreAttribute>(parameter))
+                .Where(parameter => parameter.CanRead && !parameter.Has<FaunaIgnoreAttribute>())
                 .Select(parameter => AddElementToDic(encoderExpr, srcType, parameter, addMethod, objExpr));
 
             var newDictExpr = Expression.ListInit(Expression.New(dictType), fields.Concat(properties));
@@ -248,35 +249,12 @@ namespace FaunaDB.Types
          */
         ElementInit AddElementToDic(Expression encoderExpr, Type srcType, MemberInfo member, MethodInfo addMethod, Expression objExpr)
         {
-            var keyExpr = Expression.Constant(GetMemberName(member));
+            var keyExpr = Expression.Constant(member.GetName());
             var valueExpr = CallEncode(encoderExpr, AccessMember(srcType, member, objExpr));
 
             return Expression.ElementInit(
                 addMethod, keyExpr, valueExpr
             );
-        }
-
-        static bool Has<T>(MemberInfo member) where T : Attribute =>
-            member.GetCustomAttribute<T>() != null;
-
-        static IEnumerable<FieldInfo> GetAllFields(Type type)
-        {
-            if (type == null)
-                return Enumerable.Empty<FieldInfo>();
-
-            var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-
-            return type.GetFields(flags).Concat(GetAllFields(type.BaseType));
-        }
-
-        static string GetMemberName(MemberInfo member)
-        {
-            var field = member.GetCustomAttribute<FieldAttribute>();
-
-            if (field != null)
-                return field.Name;
-
-            return member.Name;
         }
 
         class ReferenceComparer : IEqualityComparer<object>
