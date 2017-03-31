@@ -18,27 +18,20 @@ namespace FaunaDB.Client
     class DefaultClientIO : IClientIO
     {
         readonly HttpClient client;
-        readonly string authHeader;
+        readonly AuthenticationHeaderValue authHeader;
 
-        internal DefaultClientIO(HttpClient client, string secret)
+        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader)
         {
-            this.authHeader = AuthString(secret);
             this.client = client;
+            this.authHeader = authHeader;
         }
 
-        public DefaultClientIO(Uri domain, TimeSpan timeout, string secret)
-        {
-            client = new HttpClient();
-            client.BaseAddress = domain;
-            client.Timeout = timeout;
-            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            authHeader = AuthString(secret);
-        }
+        public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout)
+            : this(CreateClient(endpoint, timeout), AuthHeader(secret))
+        { }
 
         public IClientIO NewSessionClient(string secret) =>
-            new DefaultClientIO(client, secret);
+            new DefaultClientIO(client, AuthHeader(secret));
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             DoRequestAsync(method, path, data, query);
@@ -54,7 +47,7 @@ namespace FaunaDB.Client
 
             var message = new HttpRequestMessage(new HttpMethod(method.Name()), path);
             message.Content = dataString;
-            message.Headers.Authorization = new AuthenticationHeaderValue("Basic", authHeader);
+            message.Headers.Authorization = authHeader;
 
             var httpResponse = await client.SendAsync(message).ConfigureAwait(false);
 
@@ -86,12 +79,12 @@ namespace FaunaDB.Client
             new ImmutableDictionary<string, IEnumerable<string>>(headers);
 
         /// <summary>
-        /// Encodes secret string using base 64.
+        /// Encodes secret string using base64.
         /// </summary>
-        static string AuthString(string secret)
+        static AuthenticationHeaderValue AuthHeader(string secret)
         {
             var bytes = Encoding.ASCII.GetBytes(secret);
-            return Convert.ToBase64String(bytes);
+            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(bytes));
         }
 
         /// <summary>
@@ -104,6 +97,18 @@ namespace FaunaDB.Client
             foreach (var kv in query)
                 q[kv.Key] = kv.Value;
             return q.ToString();
+        }
+
+        static HttpClient CreateClient(Uri endpoint, TimeSpan timeout)
+        {
+            var client = new HttpClient();
+            client.BaseAddress = endpoint;
+            client.Timeout = timeout;
+            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("X-FaunaDB-API-Version", "2.1");
+
+            return client;
         }
     }
 }

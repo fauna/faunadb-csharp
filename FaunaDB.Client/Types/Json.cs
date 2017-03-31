@@ -87,7 +87,7 @@ namespace FaunaDB.Types
                         case "@set":
                             return new SetRefV(ReadEnclosedObject().Value);
                         case "@ref":
-                            return new RefV(ReadEnclosedString());
+                            return RefParser.Parse(ReadEnclosedObject());
                         case "@ts":
                             return new TimeV(ReadEnclosedString());
                         case "@date":

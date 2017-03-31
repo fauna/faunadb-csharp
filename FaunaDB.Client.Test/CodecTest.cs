@@ -9,7 +9,7 @@ namespace Test
     {
         [Test] public void TestRef()
         {
-            AssertSuccess(new RefV("databases"), new RefV("databases").To(Codec.REF));
+            AssertSuccess(BuiltIn.DATABASES, BuiltIn.DATABASES.To(Codec.REF));
             AssertFailure("Cannot convert StringV to RefV", StringV.Of("a string").To(Codec.REF));
         }
 

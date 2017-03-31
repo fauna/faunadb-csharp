@@ -27,30 +27,22 @@ namespace FaunaDB.Client
         /// <summary>
         /// Constructs a new instance of <see cref="FaunaClient"/> with the specified arguments.
         /// </summary>
-        /// <param name="domain">Base URL for the FaunaDB server.</param>
-        /// <param name="scheme">Scheme of the FaunaDB server. Should be "http" or "https". Default is "https"</param>
-        /// <param name="port">Port of the FaunaDB server. Defaults to 443 if schema is "https" or 80 if schema is "http"</param>
-        /// <param name="timeout">Timeout for I/O operations. Defaults to 1 minute.</param>
         /// <param name="secret">Auth token for the FaunaDB server.</param>
-        /// <param name="clientIO">Optional <see cref="IClientIO"/>.</param>
+        /// <param name="endpoint">URL for the FaunaDB server. Defaults to "https://db.fauna.com:443"</param>
+        /// <param name="timeout">Timeout for I/O operations. Defaults to 1 minute.</param>
         public FaunaClient(
             string secret,
-            string domain = "db.fauna.com",
-            string scheme = "https",
-            int? port = null,
-            TimeSpan? timeout = null,
-            IClientIO clientIO = null)
-        {
-            if (port == null)
-                port = scheme == "https" ? 443 : 80;
+            string endpoint = "https://db.fauna.com:443",
+            TimeSpan? timeout = null)
+            : this(CreateClient(secret, endpoint, timeout))
+        { }
 
-            this.clientIO = clientIO ??
-                new DefaultClientIO(new Uri($"{scheme}://{domain}:{port}"), timeout ?? TimeSpan.FromSeconds(60), secret);
-        }
-
-        internal FaunaClient(IClientIO root)
+        /// <summary>
+        /// Constructs a new instance of <see cref="FaunaClient"/> with the specified <see cref="IClientIO"/>.
+        /// </summary>
+        public FaunaClient(IClientIO clientIO)
         {
-            clientIO = root;
+            this.clientIO = clientIO;
         }
 
         /// <summary>
@@ -180,6 +172,18 @@ namespace FaunaDB.Client
             {
                 throw new UnknowException($"Bad JSON: {ex}");
             }
+        }
+
+        static IClientIO CreateClient(
+            string secret,
+            string endpoint,
+            TimeSpan? timeout)
+        {
+            return new DefaultClientIO(
+                secret: secret,
+                endpoint: new Uri(endpoint),
+                timeout: timeout ?? TimeSpan.FromSeconds(60)
+            );
         }
     }
 }
