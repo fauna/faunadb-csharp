@@ -4,16 +4,36 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FaunaDB.Types;
-using FaunaDB.Attributes;
 using System.Linq.Expressions;
 
-namespace FaunaDB.Encoding
+namespace FaunaDB.Types
 {
     using Converter = Func<EncoderImpl, object, Value>;
 
+    /// <summary>
+    /// FaunaDB object to <see cref="Value"/> encoder.
+    /// </summary>
     public static class Encoder
     {
+        /// <summary>
+        /// Encode the specified object into a corresponding FaunaDB value.
+        /// </summary>
+        /// <example>
+        /// Encode(10) => LongV.Of(10)
+        /// Encode(3.14) => DoubleV.Of(3.14)
+        /// Encode(true) => BooleanV.True
+        /// Encode(null) => NullV.Instance
+        /// Encode("a string") => StringV.Of("a string")
+        /// Encode(new int[] {1, 2}) => ArrayV.Of(1, 2)
+        /// Encode(new List&lt;int&gt; {1, 2}) => ArrayV.Of(1, 2)
+        /// Encode(new byte[] {1, 2}) => new ByteV(1, 2)
+        /// Encode(DateTime.Now) => new TimeV("2000-01-01T01:10:30.123Z")
+        /// Encode(DateTime.Today) => new DateV("2001-01-01")
+        /// Encode(user) => ObjectV.With("user_name", "john", "password", "s3cr3t")
+        /// </example>
+        /// <returns>A FaunaDB <see cref="Value"/> corresponding to the given argument</returns>
+        /// <param name="obj">Any instance of user defined classes, primitive values or any
+        /// generic collection like <see cref="System.Collections.Generic.IList{T}"/> or <see cref="System.Collections.Generic.IDictionary{TKey, TValue}"/></param>
         public static Value Encode(object obj) =>
             new EncoderImpl().Encode(obj);
     }

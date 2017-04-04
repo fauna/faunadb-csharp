@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using FaunaDB.Attributes;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
 using static FaunaDB.Query.Language;
-using static FaunaDB.Encoding.Encoder;
+using static FaunaDB.Types.Encoder;
 
 namespace Test
 {
@@ -120,7 +119,7 @@ namespace Test
             [Field("number")]
             private int number;
 
-            [FaunaDB.Attributes.Ignore]
+            [FaunaDB.Types.Ignore]
             public int Number
             {
                 get
@@ -204,10 +203,10 @@ namespace Test
             [Field("y")]
             public int y1;
 
-            [FaunaDB.Attributes.Ignore]
+            [FaunaDB.Types.Ignore]
             public int x2;
 
-            [FaunaDB.Attributes.Ignore]
+            [FaunaDB.Types.Ignore]
             public int y2;
 
             [Field("width")]

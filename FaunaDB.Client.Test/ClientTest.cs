@@ -2,7 +2,6 @@ using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Types;
 using FaunaDB.Query;
-using FaunaDB.Attributes;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ using NUnit.Framework.Constraints;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
-using static FaunaDB.Encoding.Encoder;
+using static FaunaDB.Types.Encoder;
 
 namespace Test
 {
