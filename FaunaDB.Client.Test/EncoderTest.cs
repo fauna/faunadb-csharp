@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using FaunaDB.Query;
 using FaunaDB.Types;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
-using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Encoder;
 
 namespace Test
@@ -16,35 +13,35 @@ namespace Test
         [Test]
         public void TestPrimitive()
         {
-            AreEqual(StringV.Of("a string"), Encode("a string"));
+            Assert.AreEqual(StringV.Of("a string"), Encode("a string"));
 
-            AreEqual(BooleanV.True, Encode(true));
-            AreEqual(BooleanV.False, Encode(false));
+            Assert.AreEqual(BooleanV.True, Encode(true));
+            Assert.AreEqual(BooleanV.False, Encode(false));
 
-            AreEqual(NullV.Instance, Encode((object)null));
+            Assert.AreEqual(NullV.Instance, Encode((object)null));
 
-            AreEqual(new BytesV(1, 2, 3, 4), Encode(new byte[] { 1, 2, 3, 4 }));
+            Assert.AreEqual(new BytesV(1, 2, 3, 4), Encode(new byte[] { 1, 2, 3, 4 }));
 
-            AreEqual(new DateV("2001-01-01"), Encode(new DateTime(2001, 1, 1)));
-            AreEqual(new TimeV("2000-01-01T01:10:30.123Z"), Encode(new DateTime(2000, 1, 1, 1, 10, 30, 123)));
+            Assert.AreEqual(new DateV("2001-01-01"), Encode(new DateTime(2001, 1, 1)));
+            Assert.AreEqual(new TimeV("2000-01-01T01:10:30.123Z"), Encode(new DateTime(2000, 1, 1, 1, 10, 30, 123)));
 
             //float point
-            AreEqual(DoubleV.Of((float)3.14), Encode((float)3.14));
-            AreEqual(DoubleV.Of(3.14), Encode((double)3.14));
-            AreEqual(DoubleV.Of(3.14), Encode((decimal)3.14));
+            Assert.AreEqual(DoubleV.Of((float)3.14), Encode((float)3.14));
+            Assert.AreEqual(DoubleV.Of(3.14), Encode((double)3.14));
+            Assert.AreEqual(DoubleV.Of(3.14), Encode((decimal)3.14));
 
             //signed values
-            AreEqual(LongV.Of(10), Encode((sbyte)10));
-            AreEqual(LongV.Of(10), Encode((short)10));
-            AreEqual(LongV.Of(10), Encode((int)10));
-            AreEqual(LongV.Of(10), Encode((long)10));
+            Assert.AreEqual(LongV.Of(10), Encode((sbyte)10));
+            Assert.AreEqual(LongV.Of(10), Encode((short)10));
+            Assert.AreEqual(LongV.Of(10), Encode((int)10));
+            Assert.AreEqual(LongV.Of(10), Encode((long)10));
 
             //unsigned values
-            AreEqual(LongV.Of(10), Encode((char)10));
-            AreEqual(LongV.Of(10), Encode((byte)10));
-            AreEqual(LongV.Of(10), Encode((ushort)10));
-            AreEqual(LongV.Of(10), Encode((uint)10));
-            AreEqual(LongV.Of(10), Encode((ulong)10));
+            Assert.AreEqual(LongV.Of(10), Encode((char)10));
+            Assert.AreEqual(LongV.Of(10), Encode((byte)10));
+            Assert.AreEqual(LongV.Of(10), Encode((ushort)10));
+            Assert.AreEqual(LongV.Of(10), Encode((uint)10));
+            Assert.AreEqual(LongV.Of(10), Encode((ulong)10));
         }
 
         [Test]
@@ -90,23 +87,23 @@ namespace Test
         [Test]
         public void TestCollection()
         {
-            AreEqual(
-                Arr(1, 2, 3),
+            Assert.AreEqual(
+                ArrayV.Of(1, 2, 3),
                 Encode(new int[] { 1, 2, 3 })
             );
 
-            AreEqual(
-                Arr(1, 2, 3),
+            Assert.AreEqual(
+                ArrayV.Of(1, 2, 3),
                 Encode(new List<int> { 1, 2, 3 })
             );
 
-            AreEqual(
-                Arr("a string", 3.14, NullV.Instance, 10, true),
+            Assert.AreEqual(
+                ArrayV.Of("a string", 3.14, NullV.Instance, 10, true),
                 Encode(new object[] { "a string", 3.14, null, 10, true })
             );
 
-            AreEqual(
-                Obj("field1", "value1", "field2", 10),
+            Assert.AreEqual(
+                ObjectV.With("field1", "value1", "field2", 10),
                 Encode(new Dictionary<string, object> { {"field1", "value1"}, {"field2", 10} })
             );
         }
@@ -163,17 +160,17 @@ namespace Test
         [Test]
         public void TestUserClass()
         {
-            AreEqual(
-                Obj("name", "John", "birth_date", new DateV("1980-01-01"), "address", Obj("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
+            Assert.AreEqual(
+                ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
                 Encode(new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar))
             );
 
             // list of person
 
-            AreEqual(
-                Arr(
-                    Obj("name", "John", "birth_date", new DateV("1980-01-01"), "address", Obj("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
-                    Obj("name", "Mary", "birth_date", new DateV("1975-01-01"), "address", Obj("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
+            Assert.AreEqual(
+                ArrayV.Of(
+                    ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
+                    ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
                 ),
                 Encode(new List<Person> {
                     new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar),
@@ -183,10 +180,10 @@ namespace Test
 
             // dictionary of string => person
 
-            AreEqual(
-                Obj(
-                    "first", Obj("name", "John", "birth_date", new DateV("1980-01-01"), "address", Obj("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
-                    "second", Obj("name", "Mary", "birth_date", new DateV("1975-01-01"), "address", Obj("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
+            Assert.AreEqual(
+                ObjectV.With(
+                    "first", ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
+                    "second", ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
                 ),
                 Encode(new Dictionary<string, Person> {
                     {"first", new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar)},
@@ -227,8 +224,8 @@ namespace Test
         [Test]
         public void TestUserStruct()
         {
-            AreEqual(
-                Obj("x", 10, "y", 20, "width", 10, "height", 10),
+            Assert.AreEqual(
+                ObjectV.With("x", 10, "y", 20, "width", 10, "height", 10),
                 Encode(new Rect(10, 20, 20, 30))
             );
         }
@@ -254,7 +251,7 @@ namespace Test
             parent.Right.Left = parent;
 
             var ex = Assert.Throws<InvalidOperationException>(() => Encode(parent));
-            AreEqual("Self referencing loop detected for object `Node(parent)`", ex.Message);
+            Assert.AreEqual("Self referencing loop detected for object `Node(parent)`", ex.Message);
         }
 
         [Test]
@@ -286,26 +283,23 @@ namespace Test
         [Test]
         public void TestFaunaTypes()
         {
-            AreEqual(
-                Obj(new Dictionary<string, Expr> {
+            Assert.AreEqual(
+                ObjectV.With(new Dictionary<string, Value> {
                     {"stringV", "a string"},
                     {"longV", 123},
                     {"booleanV", true},
                     {"doubleV", 3.14},
-                    {"nullV", Null()},
+                    {"nullV", NullV.Instance},
                     {"dateV", new DateV("2001-01-01")},
                     {"timeV", new TimeV("2000-01-01T01:10:30.123Z")},
-                    {"refV", Ref("classes")},
+                    {"refV", new RefV("classes")},
                     {"setRefV", new SetRefV(new Dictionary<string, Value>())},
-                    {"arrayV", Arr(1, 2, 3)},
-                    {"objectV", Obj("a", "b")},
+                    {"arrayV", ArrayV.Of(1, 2, 3)},
+                    {"objectV", ObjectV.With("a", "b")},
                     {"bytesV", new BytesV(1, 2, 3, 4)}
                 }),
                 Encode(new FaunaTypes())
             );
         }
-
-        static void AreEqual(Expr expected, Expr actual) =>
-            Assert.AreEqual(JsonConvert.SerializeObject(expected), JsonConvert.SerializeObject(actual));
     }
 }
