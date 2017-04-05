@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace FaunaDB.Types
 {
@@ -41,6 +42,7 @@ namespace FaunaDB.Types
     class EncoderImpl
     {
         static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Converter>();
+        static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
         Stack<object> stack = new Stack<object>();
 
@@ -153,13 +155,26 @@ namespace FaunaDB.Types
 
             Converter converter;
 
-            lock (converters)
+            try
             {
+                locker.EnterUpgradeableReadLock();
                 if (!converters.TryGetValue(type, out converter))
                 {
-                    converter = CreateConverter(type);
-                    converters.Add(type, converter);
+                    try
+                    {
+                        locker.EnterWriteLock();
+                        converter = CreateConverter(type);
+                        converters.Add(type, converter);
+                    }
+                    finally
+                    {
+                        locker.ExitWriteLock();
+                    }
                 }
+            }
+            finally
+            {
+                locker.ExitUpgradeableReadLock();
             }
 
             return converter.Invoke(this, obj);
