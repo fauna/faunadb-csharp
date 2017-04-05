@@ -1,5 +1,6 @@
-1.0.1-SNAPSHOT
+1.1.0-SNAPSHOT
 * Pinning FaunaDB API version to 2.0
+* Adds support for user classes serialization
 
 1.0.0
 * Official release
