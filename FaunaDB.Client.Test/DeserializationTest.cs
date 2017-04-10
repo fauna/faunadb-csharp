@@ -4,6 +4,8 @@ using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
+using static FaunaDB.Query.Language;
+
 namespace Test
 {
     [TestFixture] public class DeserializationTest
@@ -205,6 +207,13 @@ namespace Test
                 new FunctionV(id: "a-function", database: new DatabaseV("a-database")),
                 "{\"@ref\": {\"id\": \"a-function\", \"class\": {\"@ref\": {\"id\": \"functions\"}}, \"database\": {\"@ref\": {\"id\": \"a-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}}}"
             );
+        }
+
+        [Test]
+        public void TestQuery()
+        {
+            AssertJsonEqual(QueryV.Of("x", Add(Var("x"), 1)), "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
+            AssertJsonEqual(QueryV.Of(x => Add(x, 1)), "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
         }
     }
 }

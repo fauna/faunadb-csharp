@@ -94,6 +94,8 @@ namespace FaunaDB.Types
                             return new DateV(ReadEnclosedString());
                         case "@bytes":
                             return new BytesV(ReadEnclosedString());
+                        case "@query":
+                            return new QueryV(ReadEnclosedLambda());
                         default:
                             return ReadObjectBody();
                     }
@@ -167,6 +169,36 @@ namespace FaunaDB.Types
             {
                 Next(expect: JsonToken.EndObject);
             }
+        }
+
+        Expr ReadEnclosedLambda() =>
+            Unwrap(ReadEnclosedObject());
+
+        static Expr Unwrap(Expr expr)
+        {
+            var obj = expr as ObjectV;
+            if (obj != null)
+            {
+                var values = new Dictionary<string, Expr>();
+
+                foreach (var kv in obj.Value)
+                    values.Add(kv.Key, Unwrap(kv.Value));
+
+                return new UnescapedObject(values);
+            }
+
+            var arr = expr as ArrayV;
+            if (arr != null)
+            {
+                var values = new List<Expr>();
+
+                foreach (var value in arr.Value)
+                    values.Add(Unwrap(value));
+
+                return new UnescapedArray(values);
+            }
+
+            return expr;
         }
 
         Value Unexpected(JsonToken expected = JsonToken.None)

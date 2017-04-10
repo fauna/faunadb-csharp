@@ -93,5 +93,6 @@
     <Compile Include="Types\Attributes.cs" />
     <Compile Include="Types\Decoder.cs" />
     <Compile Include="Types\Reflection.cs" />
+    <Compile Include="Types\QueryV.cs" />
   </ItemGroup>
 </Project>
