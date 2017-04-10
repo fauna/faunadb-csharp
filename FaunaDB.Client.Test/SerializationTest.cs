@@ -637,5 +637,15 @@ namespace Test
             AssertJsonEqual(Not(true), "{\"not\":true}");
             AssertJsonEqual(Not(false), "{\"not\":false}");
         }
+
+        [Test]
+        public void TestQuery()
+        {
+            AssertJsonEqual(Query(Lambda("x", Add(Var("x"), 1))), "{\"query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
+            AssertJsonEqual(Query(Lambda(x => Add(x, 1))), "{\"query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
+
+            AssertJsonEqual(QueryV.Of("x", Add(Var("x"), 1)), "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
+            AssertJsonEqual(QueryV.Of(x => Add(x, 1)), "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
+        }
     }
 }

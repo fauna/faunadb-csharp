@@ -5,6 +5,24 @@ namespace FaunaDB.Query
     public partial struct Language
     {
         /// <summary>
+        /// Creates a new Call expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
+        /// </summary>
+        public static Expr Call(Expr @ref, params Expr[] arguments) =>
+            UnescapedObject.With("call", @ref, "arguments", Varargs(arguments));
+
+        /// <summary>
+        /// Creates a new Query expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
+        /// </summary>
+        public static Expr Query(Expr lambda) =>
+            UnescapedObject.With("query", lambda);
+
+        /// <summary>
         /// Creates a new At expression.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
