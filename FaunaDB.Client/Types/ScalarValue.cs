@@ -96,11 +96,14 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class SetRefV : ScalarValue<IReadOnlyDictionary<string, Value>>
     {
-        public SetRefV(IReadOnlyDictionary<string, Value> name) : base(name)
+        public SetRefV(IReadOnlyDictionary<string, Value> value) : base(value)
         {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
         }
+
+        public SetRefV Of(IReadOnlyDictionary<string, Value> value) =>
+            new SetRefV(value);
 
         protected internal override void WriteJson(JsonWriter writer)
         {
@@ -129,12 +132,21 @@ namespace FaunaDB.Types
     public sealed class TimeV : ScalarValue<DateTime>
     {
         /// <summary>
-        /// Construct from an iso8601 time string.
+        /// Construct a TimeV from an iso8601 time string.
         /// It must use the 'Z' time zone.
         /// </summary>
         public TimeV(string iso8601Time) : base(DateTimeUtil.FromIsoTime(iso8601Time, TimeFormat)) { }
 
+        /// <summary>
+        /// Construct a TimeV from a <see cref="DateTime"/> object.
+        /// </summary>
         public TimeV(DateTime dateTime) : base(dateTime) { }
+
+        public static TimeV Of(string isoTime) =>
+            new TimeV(isoTime);
+
+        public static TimeV Of(DateTime dateTime) =>
+            new TimeV(dateTime);
 
         /// <summary>
         /// Convert from a DateTime by rendering as iso8601.
@@ -180,11 +192,20 @@ namespace FaunaDB.Types
     public sealed class DateV : ScalarValue<DateTime>
     {
         /// <summary>
-        /// Construct from an iso8601 date string.
+        /// Construct a DateV from an iso8601 date string.
         /// </summary>
         public DateV(string iso8601Date) : base(DateTimeUtil.FromIsoDate(iso8601Date, DateFormat)) { }
 
+        /// <summary>
+        /// Construct a DateV from a <see cref="DateTime"/> object.
+        /// </summary>
         public DateV(DateTime dateDate) : base(dateDate) { }
+
+        public static DateV Of(string isoDate) =>
+            new DateV(isoDate);
+
+        public static DateV Of(DateTime dateTime) =>
+            new DateV(dateTime);
 
         /// <summary>
         /// Convert from a DateTime by rendering as iso8601.
