@@ -1,4 +1,4 @@
-﻿using FaunaDB.Types;
+using FaunaDB.Types;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -83,11 +83,96 @@ namespace Test
             AssertFailure("Cannot convert StringV to ObjectV", StringV.Of("a string").To(Codec.OBJECT));
         }
 
+        class Product
+        {
+            [FaunaField("description")]
+            public string Description { get; }
+
+            [FaunaField("price")]
+            public int Price { get; }
+
+            [FaunaConstructor]
+            public Product(string description, int price)
+            {
+                Description = description;
+                Price = price;
+            }
+
+            public override int GetHashCode() => 0;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as Product;
+                return other != null && Description == other.Description && Price == other.Price;
+            }
+        }
+
+        [Test]
+        public void TestUserObject()
+        {
+            var product1 = ObjectV.With("description", "laptop", "price", 100);
+            var product2 = ObjectV.With("description", "mouse", "price", 10);
+
+            AssertSuccess(new Product("laptop", 100), product1.To(Codec.DECODE<Product>));
+            AssertSuccess(new Product("mouse", 10), product2.To(Codec.DECODE<Product>));
+
+            var products = ArrayV
+                .Of(product1, product2)
+                .Collect(Field.To(Codec.DECODE<Product>));
+
+            Assert.That(
+                products,
+                Is.EquivalentTo(new List<Product> {
+                    new Product("laptop", 100), new Product("mouse", 10),
+                })
+            );
+        }
+
+        [Test]
+        public void TestValueToType()
+        {
+            AssertSuccess("a string", StringV.Of("a string").To<string>());
+            AssertSuccess(true, BooleanV.True.To<bool>());
+            AssertSuccess(null, NullV.Instance.To<object>());
+
+            AssertSuccess((long)10, LongV.Of(10).To<long>());
+            AssertSuccess((int)10, LongV.Of(10).To<int>());
+            AssertSuccess((short)10, LongV.Of(10).To<short>());
+            AssertSuccess((sbyte)10, LongV.Of(10).To<sbyte>());
+
+            AssertSuccess((ulong)10, LongV.Of(10).To<ulong>());
+            AssertSuccess((uint)10, LongV.Of(10).To<uint>());
+            AssertSuccess((ushort)10, LongV.Of(10).To<ushort>());
+            AssertSuccess((byte)10, LongV.Of(10).To<byte>());
+            AssertSuccess((char)10, LongV.Of(10).To<char>());
+
+            AssertSuccess(3.14f, DoubleV.Of(3.14).To<float>());
+            AssertSuccess(3.14, DoubleV.Of(3.14).To<double>());
+            AssertSuccess((decimal)3.14, DoubleV.Of(3.14).To<decimal>());
+
+            AssertSuccess(new DateTime(2001, 1, 1), new DateV("2001-01-01").To<DateTime>());
+            AssertSuccess(new DateTime(2000, 1, 1, 1, 10, 30, 123), new TimeV("2000-01-01T01:10:30.123Z").To<DateTime>());
+
+            AssertSuccess(new byte[] { 1, 2, 3 }, new BytesV(1, 2, 3).To<byte[]>());
+
+            AssertSuccess(
+                new Product("Laptop", 999),
+                ObjectV.With("description", "Laptop", "price", 999).To<Product>()
+            );
+        }
+
+        [Test]
+        public void TestReturnFailureOnOverflow()
+        {
+            AssertFailure("Value was either too large or too small for a signed byte.", LongV.Of(sbyte.MinValue - 1).To(Codec.DECODE<sbyte>));
+            AssertFailure("Value was either too large or too small for a UInt16.", LongV.Of(ushort.MaxValue + 1).To(Codec.DECODE<ushort>));
+        }
+
         static void AssertSuccess<T>(T expected, IResult<T> actual)
         {
             actual.Match(
                 Success: value => Assert.AreEqual(expected, value),
-                Failure: reason => Assert.Fail("Expected a success result", "AssertSuccess")
+                Failure: reason => Assert.Fail(reason, "AssertSuccess")
             );
         }
 

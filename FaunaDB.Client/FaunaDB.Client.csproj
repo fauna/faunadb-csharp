@@ -88,6 +88,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\BytesV.cs" />
     <Compile Include="Types\Encoder.cs" />
-    <Compile Include="Types\FaunaDBAttributes.cs" />
+    <Compile Include="Types\Attributes.cs" />
+    <Compile Include="Types\Decoder.cs" />
+    <Compile Include="Types\Reflection.cs" />
   </ItemGroup>
 </Project>

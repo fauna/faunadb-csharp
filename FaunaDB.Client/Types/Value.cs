@@ -70,7 +70,7 @@ namespace FaunaDB.Types
             Field.At(keys).Get(this).Match(
                 Success: value => value,
                 Failure: reason => NullV.Instance
-                );
+            );
 
         /// <summary>
         /// Navigate through array's indexes, assuming value is an instance of <see cref="ArrayV"/>.
@@ -81,7 +81,18 @@ namespace FaunaDB.Types
             Field.At(indexes).Get(this).Match(
                 Success: value => value,
                 Failure: reason => NullV.Instance
-                );
+            );
+
+
+        /// <summary>
+        /// Attempts to coerce this value to given type T specified.
+        /// <para>
+        /// See <see cref="Codec.DECODE"/>
+        /// </para>
+        /// </summary>
+        /// <typeparam name="T">The type name in which this value shoulbe be decoded</typeparam>
+        public IResult<T> To<T>() =>
+            To(Codec.DECODE<T>);
 
         /// <summary>
         /// Attempts to coerce this value using the <see cref="Codec"/> passed
