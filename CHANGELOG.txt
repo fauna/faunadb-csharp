@@ -1,4 +1,4 @@
-1.1.0-SNAPSHOT
+1.1.0
 * Pinning FaunaDB API version to 2.0
 * Adds support for user classes serialization
 * Adds support for @query type
