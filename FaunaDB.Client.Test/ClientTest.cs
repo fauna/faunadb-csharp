@@ -976,6 +976,50 @@ namespace Test
             Assert.AreEqual("Scope all is OK", await client.Ping("all"));
         }
 
+        [Test]
+        public async Task TestEchoQuery()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            Assert.AreEqual(
+                query,
+                await client.Query(query)
+            );
+        }
+
+        [Test]
+        public async Task TestWrapQuery()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            Assert.AreEqual(
+                query,
+                await client.Query(Query(Lambda(Arr("x", "y"), Concat(Arr(Var("x"), "/", Var("y"))))))
+            );
+        }
+
+        [Test]
+        public async Task TestCreateFunction()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            await client.Query(CreateFunction(Obj("name", "concat_with_slash", "body", query)));
+
+            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Ref("functions/concat_with_slash"))));
+        }
+
+        [Test]
+        public async Task TestCallFunction()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            await client.Query(CreateFunction(Obj("name", "my_concat", "body", query)));
+
+            var result = await client.Query(Call(Ref("functions/my_concat"), "a", "b"));
+
+            Assert.AreEqual(StringV.Of("a/b"), result);
+        }
+
         private async Task<RefV> RandomClass()
         {
             Value clazz = await client.Query(

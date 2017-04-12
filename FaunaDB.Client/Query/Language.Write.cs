@@ -121,5 +121,14 @@
         /// </summary>
         public static Expr CreateKey(Expr key_params) =>
             UnescapedObject.With("create_key", key_params);
+
+        /// <summary>
+        /// Creates a new CreateFunction expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateFunction(Expr function_params) =>
+            UnescapedObject.With("create_function", function_params);
     }
 }
