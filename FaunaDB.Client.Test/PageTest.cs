@@ -63,7 +63,7 @@ namespace Test
             for (int i = 0; i < 100; i++)
             {
                 var result = await client.Query(Create(classRef, Obj("data", Obj("i", i))));
-                var index = result.At("data", "i").To(Codec.LONG).Value;
+                var index = result.At("data", "i").To<long>().Value;
 
                 instanceRefs.Add(index, result.At("ref"));
                 refsToIndex.Add(result.At("ref"), index);
@@ -81,7 +81,7 @@ namespace Test
 
                 foreach (var value in array)
                 {
-                    var i = value.At(0).To(Codec.LONG).Value;
+                    var i = value.At(0).To<long>().Value;
                     var r = value.At(1);
 
                     Assert.AreEqual(instanceRefs[i], r);

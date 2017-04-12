@@ -16,18 +16,19 @@ using static FaunaDB.Types.Decoder;
 
 namespace Test
 {
-    [TestFixture] public class ClientTest : TestCase
+    [TestFixture]
+    public class ClientTest : TestCase
     {
         private static Field<Value> DATA = Field.At("data");
-        private static Field<RefV> REF_FIELD = Field.At("ref").To(Codec.REF);
-        private static Field<long> TS_FIELD = Field.At("ts").To(Codec.LONG);
-        private static Field<RefV> INSTANCE_FIELD = Field.At("instance").To(Codec.REF);
-        private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To(Codec.REF));
+        private static Field<RefV> REF_FIELD = Field.At("ref").To<RefV>();
+        private static Field<long> TS_FIELD = Field.At("ts").To<long>();
+        private static Field<RefV> INSTANCE_FIELD = Field.At("instance").To<RefV>();
+        private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To<RefV>());
 
-        private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To(Codec.STRING);
-        private static Field<string> ELEMENT_FIELD = DATA.At(Field.At("element")).To(Codec.STRING);
+        private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To<string>();
+        private static Field<string> ELEMENT_FIELD = DATA.At(Field.At("element")).To<string>();
         private static Field<Value> ELEMENTS_LIST = DATA.At(Field.At("elements"));
-        private static Field<long> COST_FIELD = DATA.At(Field.At("cost")).To(Codec.LONG);
+        private static Field<long> COST_FIELD = DATA.At(Field.At("cost")).To<long>();
 
         private static Value adminKey;
         private static FaunaClient adminClient;
@@ -43,7 +44,8 @@ namespace Test
         RefV GetRef(Value v) =>
             v.Get(REF_FIELD);
 
-        [OneTimeSetUp] new public void SetUp()
+        [OneTimeSetUp]
+        new public void SetUp()
         {
             SetUpAsync().Wait();
         }
@@ -149,10 +151,11 @@ namespace Test
             ));
         }
 
-        [Test] public void TestUnauthorizedOnInvalidSecret()
+        [Test]
+        public void TestUnauthorizedOnInvalidSecret()
         {
             var ex = Assert.ThrowsAsync<Unauthorized>(
-                async() => await GetClient(secret: "invalid secret").Query(new RefV(id: "1234", @class: new ClassV("spells")))
+                async () => await GetClient(secret: "invalid secret").Query(new RefV(id: "1234", @class: new ClassV("spells")))
             );
 
             AssertErrors(ex, code: "unauthorized", description: "Unauthorized");
@@ -162,10 +165,11 @@ namespace Test
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
 
-        [Test] public void TestNotFoundWhenInstanceDoesntExists()
+        [Test]
+        public void TestNotFoundWhenInstanceDoesntExists()
         {
             var ex = Assert.ThrowsAsync<NotFound>(
-                async() => await client.Query(Get(new RefV(id: "1234", @class: new ClassV("spells"))))
+                async () => await client.Query(Get(new RefV(id: "1234", @class: new ClassV("spells"))))
             );
 
             AssertErrors(ex, code: "instance not found", description: "Instance not found.");
@@ -175,7 +179,8 @@ namespace Test
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
 
-        [Test] public async Task TestCreateAComplexInstance()
+        [Test]
+        public async Task TestCreateAComplexInstance()
         {
             Value instance = await client.Query(
                 Create(await RandomClass(),
@@ -190,20 +195,20 @@ namespace Test
                             ))));
 
             Value testField = instance.Get(DATA).At("testField");
-            Assert.AreEqual("sup", testField.At("string").To(Codec.STRING).Value);
-            Assert.AreEqual(1234L, testField.At("num").To(Codec.LONG).Value);
-            Assert.AreEqual(true, testField.At("bool").To(Codec.BOOLEAN).Value);
-            Assert.AreEqual(None<string>(), testField.At("bool").To(Codec.STRING).ValueOption);
-            Assert.AreEqual(None<Value>(), testField.At("credentials").To(Codec.VALUE).ValueOption);
-            Assert.AreEqual(None<string>(), testField.At("credentials", "password").To(Codec.STRING).ValueOption);
+            Assert.AreEqual("sup", testField.At("string").To<string>().Value);
+            Assert.AreEqual(1234L, testField.At("num").To<long>().Value);
+            Assert.AreEqual(true, testField.At("bool").To<bool>().Value);
+            Assert.AreEqual(None(), testField.At("bool").To<string>().ToOption);
+            Assert.AreEqual(None(), testField.At("credentials").To<Value>().ToOption);
+            Assert.AreEqual(None(), testField.At("credentials", "password").To<string>().ToOption);
 
             Value array = testField.At("array");
-            Assert.AreEqual(4, array.To(Codec.ARRAY).Value.Count);
-            Assert.AreEqual(1L, array.At(0).To(Codec.LONG).Value);
-            Assert.AreEqual("2", array.At(1).To(Codec.STRING).Value);
-            Assert.AreEqual(3.4, array.At(2).To(Codec.DOUBLE).Value);
-            Assert.AreEqual("JR", array.At(3).At("name").To(Codec.STRING).Value);
-            Assert.AreEqual(None<Value>(), array.At(4).To(Codec.VALUE).ValueOption);
+            Assert.AreEqual(4, array.To<Value[]>().Value.Length);
+            Assert.AreEqual(1L, array.At(0).To<long>().Value);
+            Assert.AreEqual("2", array.At(1).To<string>().Value);
+            Assert.AreEqual(3.4, array.At(2).To<double>().Value);
+            Assert.AreEqual("JR", array.At(3).At("name").To<string>().Value);
+            Assert.AreEqual(None(), array.At(4).To<Value>().ToOption);
         }
 
         [Test] public async Task TestGetAnInstance()
@@ -265,7 +270,7 @@ namespace Test
             Assert.AreEqual(createdInstance.Get(REF_FIELD), updatedInstance.Get(REF_FIELD));
             Assert.AreEqual("Faerie Fire", updatedInstance.Get(NAME_FIELD));
             Assert.AreEqual("arcane", updatedInstance.Get(ELEMENT_FIELD));
-            Assert.AreEqual(None<long>(), updatedInstance.GetOption(COST_FIELD));
+            Assert.AreEqual(None(), updatedInstance.GetOption(COST_FIELD));
         }
 
         [Test] public async Task TestReplaceAnInstancesData()
@@ -290,7 +295,7 @@ namespace Test
             Assert.AreEqual(createdInstance.Get(REF_FIELD), replacedInstance.Get(REF_FIELD));
             Assert.AreEqual("Volcano", replacedInstance.Get(NAME_FIELD));
             Assert.AreEqual(10L, replacedInstance.Get(COST_FIELD));
-            Assert.That(replacedInstance.Get(ELEMENTS_LIST).Collect(Field.To(Codec.STRING)),
+            Assert.That(replacedInstance.Get(ELEMENTS_LIST).Collect(Field.To<string>()),
                         Is.EquivalentTo(new List<string> { "fire", "earth" }));
         }
 
@@ -304,7 +309,7 @@ namespace Test
             await client.Query(Delete(@ref));
 
             Value exists = await client.Query(Exists(@ref));
-            Assert.AreEqual(false, exists.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(false, exists.To<bool>().Value);
 
             var ex = Assert.ThrowsAsync<NotFound>(async() => await client.Query(Get(@ref)));
 
@@ -385,17 +390,17 @@ namespace Test
             Value page1 = await client.Query(
                 Paginate(Match(Index("all_spells")), size: 3));
 
-            Assert.AreEqual(3, page1.Get(DATA).To(Codec.ARRAY).Value.Count);
+            Assert.AreEqual(3, page1.Get(DATA).To<Value[]>().Value.Length);
             Assert.NotNull(page1.At("after"));
-            Assert.AreEqual(None<Value>(), page1.At("before").To(Codec.VALUE).ValueOption);
+            Assert.AreEqual(None(), page1.At("before").To<Value>().ToOption);
 
             Value page2 = await client.Query(
               Paginate(Match(Index("all_spells")), after: page1.At("after"), size: 3));
 
-            Assert.AreEqual(3, page2.Get(DATA).To(Codec.ARRAY).Value.Count);
+            Assert.AreEqual(3, page2.Get(DATA).To<Value[]>().Value.Length);
             Assert.AreNotEqual(page1.At("data"), page2.Get(DATA));
             Assert.NotNull(page2.At("before"));
-            Assert.AreEqual(None<Value>(), page2.At("after").To(Codec.VALUE).ValueOption);
+            Assert.AreEqual(None(), page2.At("after").To<Value>().ToOption);
         }
 
         [Test] public async Task TestDealWithSetRef()
@@ -403,9 +408,9 @@ namespace Test
             Value res = await client.Query(
                 Match(Index("spells_by_element"), "arcane"));
 
-            IReadOnlyDictionary<string, Value> set = res.To(Codec.SETREF).Value.Value;
-            Assert.AreEqual("arcane", set["terms"].To(Codec.STRING).Value);
-            Assert.AreEqual(new IndexV("spells_by_element"), set["match"].To(Codec.REF).Value);
+            IReadOnlyDictionary<string, Value> set = res.To<SetRefV>().Value.Value;
+            Assert.AreEqual("arcane", set["terms"].To<string>().Value);
+            Assert.AreEqual(new IndexV("spells_by_element"), set["match"].To<RefV>().Value);
         }
 
         [Test] public async Task TestEvalAtExpression()
@@ -427,7 +432,7 @@ namespace Test
                 Let("x", 1, "y", 2).In(Arr(Var("y"), Var("x")))
             );
 
-            Assert.That(res.Collect(Field.To(Codec.LONG)), Is.EquivalentTo(new List<long> { 2L, 1L }));
+            Assert.That(res.Collect(Field.To<long>()), Is.EquivalentTo(new List<long> { 2L, 1L }));
         }
 
         [Test] public async Task TestEvalIfExpression()
@@ -436,7 +441,7 @@ namespace Test
                 If(true, "was true", "was false")
             );
 
-            Assert.AreEqual("was true", res.To(Codec.STRING).Value);
+            Assert.AreEqual("was true", res.To<string>().Value);
         }
 
         [Test] public async Task TestEvalDoExpression()
@@ -454,12 +459,12 @@ namespace Test
         [Test] public async Task TestEchoAnObjectBack()
         {
             Value res = await client.Query(Obj("name", "Hen Wen", "age", 123));
-            Assert.AreEqual("Hen Wen", res.At("name").To(Codec.STRING).Value);
-            Assert.AreEqual(123L, res.At("age").To(Codec.LONG).Value);
+            Assert.AreEqual("Hen Wen", res.At("name").To<string>().Value);
+            Assert.AreEqual(123L, res.At("age").To<long>().Value);
 
             res = await client.Query(res);
-            Assert.AreEqual("Hen Wen", res.At("name").To(Codec.STRING).Value);
-            Assert.AreEqual(123L, res.At("age").To(Codec.LONG).Value);
+            Assert.AreEqual("Hen Wen", res.At("name").To<string>().Value);
+            Assert.AreEqual(123L, res.At("age").To<long>().Value);
         }
 
         [Test] public async Task TestMapOverCollections()
@@ -469,7 +474,7 @@ namespace Test
                     Lambda("i", Add(Var("i"), 1)))
             );
 
-            Assert.That(res.Collect(Field.To(Codec.LONG)),
+            Assert.That(res.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
 
             //////////////////
@@ -479,7 +484,7 @@ namespace Test
                     Lambda(i => Add(i, 1)))
             );
 
-            Assert.That(res.Collect(Field.To(Codec.LONG)),
+            Assert.That(res.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
 
             //////////////////
@@ -489,7 +494,7 @@ namespace Test
                     i => Add(i, 1))
             );
 
-            Assert.That(res.Collect(Field.To(Codec.LONG)),
+            Assert.That(res.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
         }
 
@@ -502,7 +507,7 @@ namespace Test
                     Lambda("spell", Create(clazz, Obj("data", Obj("name", Var("spell"))))))
             );
 
-            Assert.That(res.Collect(Field.To(Codec.STRING)),
+            Assert.That(res.Collect(Field.To<string>()),
                         Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
 
             //////////////////
@@ -512,7 +517,7 @@ namespace Test
                         Lambda(spell => Create(clazz, Obj("data", Obj("name", spell)))))
             );
 
-            Assert.That(res.Collect(Field.To(Codec.STRING)),
+            Assert.That(res.Collect(Field.To<string>()),
                         Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
 
             //////////////////
@@ -522,7 +527,7 @@ namespace Test
                         spell => Create(clazz, Obj("data", Obj("name", spell))))
             );
 
-            Assert.That(res.Collect(Field.To(Codec.STRING)),
+            Assert.That(res.Collect(Field.To<string>()),
                         Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
         }
 
@@ -533,7 +538,7 @@ namespace Test
                     Lambda("i", EqualsFn(0, Modulo(Var("i"), 2))))
             );
 
-            Assert.That(filtered.Collect(Field.To(Codec.LONG)),
+            Assert.That(filtered.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 2L }));
 
             //////////////////
@@ -543,7 +548,7 @@ namespace Test
                     Lambda(i => EqualsFn(0, Modulo(i, 2))))
             );
 
-            Assert.That(filtered.Collect(Field.To(Codec.LONG)),
+            Assert.That(filtered.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 2L }));
 
             //////////////////
@@ -553,7 +558,7 @@ namespace Test
                     i => EqualsFn(0, Modulo(i, 2)))
             );
 
-            Assert.That(filtered.Collect(Field.To(Codec.LONG)),
+            Assert.That(filtered.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 2L }));
 
         }
@@ -561,14 +566,14 @@ namespace Test
         [Test] public async Task TestTakeElementsFromCollection()
         {
             Value taken = await client.Query(Take(2, Arr(1, 2, 3)));
-            Assert.That(taken.Collect(Field.To(Codec.LONG)),
+            Assert.That(taken.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 1L, 2L }));
         }
 
         [Test] public async Task TestDropElementsFromCollection()
         {
             Value dropped = await client.Query(Drop(2, Arr(1, 2, 3)));
-            Assert.That(dropped.Collect(Field.To(Codec.LONG)),
+            Assert.That(dropped.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 3L }));
         }
 
@@ -578,7 +583,7 @@ namespace Test
                 Prepend(Arr(1, 2), Arr(3, 4))
             );
 
-            Assert.That(prepended.Collect(Field.To(Codec.LONG)),
+            Assert.That(prepended.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 1L, 2L, 3L, 4L }));
         }
 
@@ -588,7 +593,7 @@ namespace Test
                 Append(Arr(3, 4), Arr(1, 2))
             );
 
-            Assert.That(appended.Collect(Field.To(Codec.LONG)),
+            Assert.That(appended.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 1L, 2L, 3L, 4L }));
         }
 
@@ -598,7 +603,7 @@ namespace Test
                 Paginate(Match(Index("spells_by_element"), "arcane"), events: true)
             );
 
-            Assert.That(events.Get(DATA).Collect(Field.At("instance").To(Codec.REF)),
+            Assert.That(events.Get(DATA).Collect(Field.At("instance").To<RefV>()),
                         Is.EquivalentTo(new List<RefV> { magicMissile, faerieFire }));
         }
 
@@ -652,7 +657,7 @@ namespace Test
                 Paginate(Distinct(Match(Index("elements_of_spells"))))
             );
 
-            Assert.That(distinct.Get(DATA).Collect(Field.To(Codec.STRING)),
+            Assert.That(distinct.Get(DATA).Collect(Field.To<string>()),
                         Is.EquivalentTo(new List<string> { "arcane", "fire", "nature" }));
         }
 
@@ -674,25 +679,25 @@ namespace Test
         [Test] public async Task TestEvalEqualsExpression()
         {
             Value equals = await client.Query(EqualsFn("fire", "fire"));
-            Assert.AreEqual(true, equals.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, equals.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalConcatExpression()
         {
             Value simpleConcat = await client.Query(Concat(Arr("Magic", "Missile")));
-            Assert.AreEqual("MagicMissile", simpleConcat.To(Codec.STRING).Value);
+            Assert.AreEqual("MagicMissile", simpleConcat.To<string>().Value);
 
             Value concatWithSeparator = await client.Query(
                 Concat(Arr("Magic", "Missile"), " ")
             );
 
-            Assert.AreEqual("Magic Missile", concatWithSeparator.To(Codec.STRING).Value);
+            Assert.AreEqual("Magic Missile", concatWithSeparator.To<string>().Value);
         }
 
         [Test] public async Task TestEvalCasefoldExpression()
         {
             Value res = await client.Query(Casefold("Hen Wen"));
-            Assert.AreEqual("hen wen", res.To(Codec.STRING).Value);
+            Assert.AreEqual("hen wen", res.To<string>().Value);
         }
 
         [Test] public async Task TestEvalContainsExpression()
@@ -704,7 +709,7 @@ namespace Test
                         Obj("foods", Arr("crunchings", "munchings"))))
             );
 
-            Assert.AreEqual(true, contains.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(BooleanV.True, contains);
         }
 
         [Test] public async Task TestEvalSelectExpression()
@@ -717,85 +722,85 @@ namespace Test
                 )
             );
 
-            Assert.AreEqual("munchings", selected.To(Codec.STRING).Value);
+            Assert.AreEqual("munchings", selected.To<string>().Value);
         }
 
         [Test] public async Task TestEvalLTExpression()
         {
             Value res = await client.Query(LT(Arr(1, 2, 3)));
-            Assert.AreEqual(true, res.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, res.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalLTEExpression()
         {
             Value res = await client.Query(LTE(Arr(1, 2, 2)));
-            Assert.AreEqual(true, res.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, res.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalGTxpression()
         {
             Value res = await client.Query(GT(Arr(3, 2, 1)));
-            Assert.AreEqual(true, res.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, res.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalGTExpression()
         {
             Value res = await client.Query(GTE(Arr(3, 2, 2)));
-            Assert.AreEqual(true, res.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, res.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalAddExpression()
         {
             Value res = await client.Query(Add(100, 10));
-            Assert.AreEqual(110L, res.To(Codec.LONG).Value);
+            Assert.AreEqual(110L, res.To<long>().Value);
         }
 
         [Test] public async Task TestEvalMultiplyExpression()
         {
             Value res = await client.Query(Multiply(100, 10));
-            Assert.AreEqual(1000L, res.To(Codec.LONG).Value);
+            Assert.AreEqual(1000L, res.To<long>().Value);
         }
 
         [Test] public async Task TestEvalSubtractExpression()
         {
             Value res = await client.Query(Subtract(100, 10));
-            Assert.AreEqual(90L, res.To(Codec.LONG).Value);
+            Assert.AreEqual(90L, res.To<long>().Value);
         }
 
         [Test] public async Task TestEvalDivideExpression()
         {
             Value res = await client.Query(Divide(100, 10));
-            Assert.AreEqual(10L, res.To(Codec.LONG).Value);
+            Assert.AreEqual(10L, res.To<long>().Value);
         }
 
         [Test] public async Task TestEvalModuloExpression()
         {
             Value res = await client.Query(Modulo(101, 10));
-            Assert.AreEqual(1L, res.To(Codec.LONG).Value);
+            Assert.AreEqual(1L, res.To<long>().Value);
         }
 
         [Test] public async Task TestEvalAndExpression()
         {
             Value res = await client.Query(And(true, false));
-            Assert.AreEqual(false, res.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(false, res.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalOrExpression()
         {
             Value res = await client.Query(Or(true, false));
-            Assert.AreEqual(true, res.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, res.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalNotExpression()
         {
             Value notR = await client.Query(Not(false));
-            Assert.AreEqual(true, notR.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, notR.To<bool>().Value);
         }
 
         [Test] public async Task TestEvalTimeExpression()
         {
             Value res = await client.Query(Time("1970-01-01T00:00:00-04:00"));
-            Assert.AreEqual(new DateTime(1970, 1, 1, 4, 0, 0), res.To(Codec.TIME).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 4, 0, 0), res.To<DateTime>().Value);
         }
 
         [Test] public async Task TestEvalEpochExpression()
@@ -810,22 +815,22 @@ namespace Test
                 Epoch(TicksToNano(2), TimeUnit.Nanosecond)
             );
 
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 30), res[0].To(Codec.TIME).Value);
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 500), res[1].To(Codec.TIME).Value);
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(1000), res[2].To(Codec.TIME).Value);
-            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(2), res[3].To(Codec.TIME).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 30), res[0].To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 500), res[1].To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(1000), res[2].To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(2), res[3].To<DateTime>().Value);
         }
 
         [Test] public async Task TestEvalDateExpression()
         {
             Value res = await client.Query(Date("1970-01-02"));
-            Assert.AreEqual(new DateTime(1970, 1, 2), res.To(Codec.DATE).Value);
+            Assert.AreEqual(new DateTime(1970, 1, 2), res.To<DateTime>().Value);
         }
 
         [Test] public async Task TestGetNextId()
         {
             Value res = await client.Query(NextId());
-            Assert.IsNotNull(res.To(Codec.STRING).Value);
+            Assert.IsNotNull(res.To<string>().Value);
         }
 
         [Test] public async Task TestCreateClass()
@@ -897,13 +902,13 @@ namespace Test
             FaunaClient sessionClient = GetClient(secret: auth.Get(SECRET_FIELD));
 
             Value loggedOut = await sessionClient.Query(Logout(true));
-            Assert.AreEqual(true, loggedOut.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(true, loggedOut.To<bool>().Value);
 
             Value identified = await client.Query(
                 Identify(createdInstance.Get(REF_FIELD), "wrong-password")
             );
 
-            Assert.AreEqual(false, identified.To(Codec.BOOLEAN).Value);
+            Assert.AreEqual(false, identified.To<bool>().Value);
         }
 
         [Test] public async Task TestKeyFromSecret()
@@ -961,11 +966,11 @@ namespace Test
                 )
             );
 
-            var spellCodec = DATA.To(Codec.DECODE<Spell>);
+            var spellField = DATA.To<Spell>();
 
             Assert.AreEqual(
                 new Spell("Magic Missile", "arcane", 10),
-                spellCreated.Get(spellCodec)
+                spellCreated.Get(spellField)
             );
         }
 

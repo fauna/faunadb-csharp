@@ -78,7 +78,7 @@ namespace FaunaDBProject
         static readonly string ENDPOINT = "https://db.fauna.com:443";
         static readonly string SECRET = "<<YOUR-SECRET-HERE>>";
 
-        static void ProcessData(IReadOnlyList<Value> values)
+        static void ProcessData(Value[] values)
         {
             foreach (Value value in values)
             {
@@ -88,7 +88,7 @@ namespace FaunaDBProject
         static async Task DoQuery(FaunaClient client)
         {
             Value result = await client.Query(Paginate(Match(Index("spells"))));
-            IResult<IReadOnlyList<Value>> data = result.At("data").To(Codec.ARRAY);
+            IResult<Value[]> data = result.At("data").To<Value[]>();
 
             data.Match(
                 Success: value => ProcessData(value),
@@ -126,15 +126,15 @@ Value result = await client.Query(Paginate(Match(Index("spells"))));
 
 #### How to access objects fields and convert to primitive values
 
-Objects fields are accessed through `At` methods of `Value` class. It's possible to access fields by names if the value represents an object or by index if it represents an array. Also it's possible to convert `Value` class to its primitive correspondent using `To` methods specifying a `Codec`.
+Objects fields are accessed through `At` methods of `Value` class. It's possible to access fields by names if the value represents an object or by index if it represents an array. Also it's possible to convert `Value` class to its primitive correspondent using `To` methods specifying a type.
 
 ```csharp
-IResult<IReadOnlyList<Value>> data = result.At("data").To(Codec.ARRAY);
+IResult<Value[]> data = result.At("data").To<Value[]>();
 ```
 
 #### How work with `IResult<T>` objects
 
-This object represents the result of an operation and it might be success or a failure. All operations on `Codec` return an object like this. This way it's possible to avoid check for nullability everywhere in the code.
+This object represents the result of an operation and it might be success or a failure. All convertion operations returns an object like this. This way it's possible to avoid check for nullability everywhere in the code.
 
 ```csharp
 data.Match(

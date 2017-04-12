@@ -17,7 +17,7 @@ namespace Test
             Assert.AreEqual(StringV.Of("bar"),
                 obj.Get(Field.At("foo")));
 
-            Assert.AreEqual(None<Value>(),
+            Assert.AreEqual(None(),
                 obj.GetOption(Field.At("nonexistent")));
 
             Assert.Throws(typeof(InvalidOperationException),
@@ -35,7 +35,7 @@ namespace Test
             Assert.AreEqual(LongV.Of(10),
                 array.Get(Field.At(1)));
 
-            Assert.AreEqual(None<Value>(),
+            Assert.AreEqual(None(),
                 array.GetOption(Field.At(1234)));
 
             Assert.Throws(typeof(InvalidOperationException),
@@ -73,7 +73,7 @@ namespace Test
                 "Cannot find path \"1/1/1\". Array index \"1\" not found");
         }
 
-        [Test] public void TestCodecConvertion()
+        [Test] public void TestFieldConvertion()
         {
             var setRef = new Dictionary<string, Value> {
                 {"@ref", "databases"}
@@ -88,22 +88,22 @@ namespace Test
                 "setref", new SetRefV(setRef));
 
             Assert.AreEqual("a string",
-                obj.Get(Field.At("string").To(Codec.STRING)));
+                obj.Get(Field.At("string").To<string>()));
 
             Assert.AreEqual(true,
-                obj.Get(Field.At("bool").To(Codec.BOOLEAN)));
+                obj.Get(Field.At("bool").To<bool>()));
 
             Assert.AreEqual(3.14,
-                obj.Get(Field.At("double").To(Codec.DOUBLE)));
+                obj.Get(Field.At("double").To<double>()));
 
             Assert.AreEqual(1234L,
-                obj.Get(Field.At("long").To(Codec.LONG)));
+                obj.Get(Field.At("long").To<long>()));
 
             Assert.AreEqual(BuiltIn.DATABASES,
-                obj.Get(Field.At("ref").To(Codec.REF)));
+                obj.Get(Field.At("ref").To<RefV>()));
 
             Assert.AreEqual(new SetRefV(setRef),
-                obj.Get(Field.At("setref").To(Codec.SETREF)));
+                obj.Get(Field.At("setref").To<SetRefV>()));
         }
 
         [Test] public void TestComplex()
@@ -111,23 +111,23 @@ namespace Test
             var obj = ObjectV.With("foo", ArrayV.Of(1, 2, ObjectV.With("bar", "a string")));
 
             Assert.AreEqual("a string",
-                obj.Get(Field.At("foo").At(Field.At(2)).At(Field.At("bar").To(Codec.STRING))));
+                obj.Get(Field.At("foo").At(Field.At(2)).At(Field.At("bar").To<string>())));
         }
 
         [Test] public void TestCollect()
         {
             var array = ArrayV.Of("John", "Bill");
 
-            Assert.That(array.Collect(Field.To(Codec.STRING)),
+            Assert.That(array.Collect(Field.To<string>()),
                         Is.EquivalentTo(new List<string> { "John", "Bill" }));
 
             var obj = ObjectV.With("arrayOfNames", array);
 
-            Assert.That(obj.Get(Field.At("arrayOfNames").Collect(Field.To(Codec.STRING))),
+            Assert.That(obj.Get(Field.At("arrayOfNames").Collect(Field.To<string>())),
                         Is.EquivalentTo(new List<string> { "John", "Bill" }));
 
             Assert.Throws(typeof(InvalidOperationException),
-                () => obj.Collect(Field.To(Codec.STRING)),
+                () => obj.Collect(Field.To<string>()),
                 "Cannot convert ObjectV to ArrayV");
         }
 
@@ -138,7 +138,7 @@ namespace Test
                     ObjectV.With("name", ArrayV.Of("Bill"))
                 );
 
-            Assert.That(array.Collect(Field.At("name").At(Field.At(0)).To(Codec.STRING)),
+            Assert.That(array.Collect(Field.At("name").At(Field.At(0)).To<string>()),
                         Is.EquivalentTo(new List<string> { "John", "Bill", }));
         }
     }

@@ -43,7 +43,7 @@ namespace Test
         {
             var key = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "client")));
 
-            var client = GetClient(secret: key.Get(Field.At("secret").To(Codec.STRING)));
+            var client = GetClient(secret: key.Get(Field.At("secret").To<string>()));
 
             AssertQueryException<PermissionDenied>(client, Paginate(BuiltIn.DATABASES), "permission denied", "Insufficient privileges to perform the action.");
         }
