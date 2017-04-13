@@ -374,6 +374,25 @@ namespace Test
         }
 
         [Test]
+        public void TestCastErrors()
+        {
+            Assert.AreEqual(
+                "Cannot cast FaunaDB.Types.StringV to FaunaDB.Types.ObjectV",
+                Assert.Throws<InvalidOperationException>(() => Decode<ObjectV>("a string")).Message
+            );
+
+            Assert.AreEqual(
+                "Cannot cast FaunaDB.Types.StringV to FaunaDB.Types.LongV",
+                Assert.Throws<InvalidOperationException>(() => Decode<LongV>("a string")).Message
+            );
+
+            Assert.AreEqual(
+                "Cannot cast FaunaDB.Types.ObjectV to FaunaDB.Types.RefV",
+                Assert.Throws<InvalidOperationException>(() => Decode<RefV>(ObjectV.Empty)).Message
+            );
+        }
+
+        [Test]
         public void TestErrors()
         {
             Assert.AreEqual(
