@@ -121,7 +121,7 @@ Except `secret` all other arguments are optional.
 #### How to execute a query
 
 ```csharp
-Value result = client.Query(Paginate(Match(Ref("indexes/spells"))));
+Value result = await client.Query(Paginate(Match(Ref("indexes/spells"))));
 ```
 
 `Query` methods receives an `Expr` object. `Expr` objects can be composed with others `Expr` to create complex query objects. `FaunaDB.Query.Language` is a helper class where you can find all available expressions in the library.
@@ -153,6 +153,73 @@ IResult<string> result.Map(value => value.toString());
 ```
 
 If `result` represents an failure all calls to `Map` and `FlatMap` are ignored. See `FaunaDB.Types.Result`.
+
+### How to work with user defined classes
+
+Instead of manually creating your objects via the DSL (e.g. the Obj() method), you may use the `Encoder` class to convert a user-defined type into the equivalent `Value` type.
+
+For example:
+
+```csharp
+class Product
+{
+    [FaunaField("description")]
+    public string Description { get; set; }
+
+    [FaunaField("price")]
+    public double Price { get; set; }
+
+    [FaunaConstructor]
+    public Product(string description, double price)
+    {
+        Description = description;
+        Price = price;
+    }
+}
+```
+
+To persist an instance of `Product` in FaunaDB:
+
+```csharp
+Product product = new Product("Smartphone", 649.90);
+
+await client.Query(
+    Create(
+        Ref("classes/product"),
+        Obj("data", Encoder.Encode(product))
+    )
+);
+```
+
+To convert from a `Value` type back to the `Product` type, you can use a `Decoder`:
+
+```csharp
+Value value = await client.Query(Get(Ref("classes/product/123456789")));
+
+Product product = Decoder.Decode<Product>(value);
+```
+
+or via the `To<T>()` helper method:
+
+```csharp
+Value value = await client.Query(Get(Ref("classes/product/123456789")));
+
+IResult<Product> product = value.To<Product>();
+```
+
+Note that in this case the return type is `IResult<T>`.
+
+There are three attributes that can be used to change the behavior of the `Encoder` and `Decoder`:
+
+- `FaunaField`: Used to override a custom field name and/or provide a default value for that field. If this attribute is not specified, the member name will be used instead. Can be used on fields, properties and constructor arguments.
+- `FaunaConstructor`: Used to mark a constructor or a public static method as the method used to instantiate the specified type. This attribute can be used only once per class.
+- `FaunaIgnore`: Used to ignore a specific member. Can be used on fields, properties and constructors arguments. If used on a constructor argument, that argument must have a default value.
+
+`Encoder` and `Decoder` can currently convert:
+
+- Primitive scalar types (`int`, `long`, `string`, etc.)
+- Primitive arrays, generic collections such as `List<T>`, and their respective interfaces such as `IList<T>`.
+- Dictionaries with string keys, such as `Dictionary<string, T>` and its respective interface `IDictionary<string, T>`.
 
 ## License
 
