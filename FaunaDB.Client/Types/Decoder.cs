@@ -76,8 +76,13 @@ namespace FaunaDB.Types
 
         static object DecodeIntern(Value value, Type dstType)
         {
-            if (typeof(object) != dstType && dstType.IsAssignableFrom(value.GetType()))
-                return value;
+            if (typeof(Value).IsAssignableFrom(dstType))
+            {
+                if (dstType.IsAssignableFrom(value.GetType()))
+                    return value;
+
+                throw new InvalidOperationException($"Cannot cast {value.GetType()} to {dstType}");
+            }
 
             switch (Type.GetTypeCode(dstType))
             {
