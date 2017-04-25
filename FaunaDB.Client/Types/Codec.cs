@@ -47,6 +47,22 @@ namespace FaunaDB.Types
 
         public static IResult<IReadOnlyDictionary<string, Value>> OBJECT(Value input) =>
             Cast.MapTo<ObjectV, IReadOnlyDictionary<string, Value>>(input, x => x.Value);
+
+        public static IResult<T> DECODE<T>(Value input)
+        {
+            try
+            {
+                return Success(Decoder.Decode<T>(input));
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Fail<T>(ex.Message);
+            }
+            catch (OverflowException ex)
+            {
+                return Fail<T>(ex.Message);
+            }
+        }
     }
 
     struct Cast

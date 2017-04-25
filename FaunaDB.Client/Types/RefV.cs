@@ -23,6 +23,9 @@ namespace FaunaDB.Types
             Database = database;
         }
 
+        public static RefV Of(string id, RefV @class = null, RefV database = null) =>
+            new RefV(id, @class, database);
+
         protected internal override void WriteJson(JsonWriter writer)
         {
             var props = UnescapedObject.With(
@@ -63,6 +66,9 @@ namespace FaunaDB.Types
     {
         public DatabaseV(string id, DatabaseV database = null) : base(id, BuiltIn.DATABASES, database)
         { }
+
+        public static DatabaseV Of(string id, DatabaseV database = null) =>
+            new DatabaseV(id, database);
     }
 
     /// <summary>
@@ -72,6 +78,9 @@ namespace FaunaDB.Types
     {
         public ClassV(string id, DatabaseV database = null) : base(id, BuiltIn.CLASSES, database)
         { }
+
+        public static ClassV Of(string id, DatabaseV database = null) =>
+            new ClassV(id, database);
     }
 
     /// <summary>
@@ -81,6 +90,9 @@ namespace FaunaDB.Types
     {
         public IndexV(string id, DatabaseV database = null) : base(id, BuiltIn.INDEXES, database)
         { }
+
+        public static IndexV Of(string id, DatabaseV database = null) =>
+            new IndexV(id, database);
     }
 
     /// <summary>
@@ -90,6 +102,9 @@ namespace FaunaDB.Types
     {
         public FunctionV(string id, DatabaseV database = null) : base(id, BuiltIn.FUNCTIONS, database)
         { }
+
+        public static FunctionV Of(string id, DatabaseV database = null) =>
+            new FunctionV(id, database);
     }
 
     /// <summary>
@@ -99,6 +114,9 @@ namespace FaunaDB.Types
     {
         public KeyV(string id, DatabaseV database = null) : base(id, BuiltIn.KEYS, database)
         { }
+
+        public static KeyV Of(string id, DatabaseV database = null) =>
+            new KeyV(id, database);
     }
 
     public static class BuiltIn

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using FaunaDB.Query;
 using Newtonsoft.Json;
 
@@ -14,11 +13,23 @@ namespace FaunaDB.Types
     /// </summary>
     public class BytesV : ScalarValue<byte[]>
     {
-        internal BytesV(string base64) : base(FromUrlSafeBase64(base64))
+        /// <summary>
+        /// Creates a new instance of <see cref="BytesV"/> from a base64 string.
+        /// </summary>
+        public BytesV(string base64) : base(FromUrlSafeBase64(base64))
         { }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="BytesV"/> from a variable lenght of bytes.
+        /// </summary>
         public BytesV(params byte[] value) : base(value)
         { }
+
+        public static BytesV Of(string base64) =>
+            new BytesV(base64);
+
+        public static BytesV Of(params byte[] value) =>
+            new BytesV(value);
 
         public override bool Equals(Expr v)
         {

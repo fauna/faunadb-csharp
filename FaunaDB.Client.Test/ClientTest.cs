@@ -1,4 +1,4 @@
-﻿using FaunaDB.Client;
+using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Types;
 using FaunaDB.Query;
@@ -11,6 +11,8 @@ using NUnit.Framework.Constraints;
 
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
+using static FaunaDB.Types.Encoder;
+using static FaunaDB.Types.Decoder;
 
 namespace Test
 {
@@ -921,6 +923,52 @@ namespace Test
             Assert.AreEqual(new BytesV(0x1, 0x2, 0x3), bytes);
         }
 
+        class Spell
+        {
+            [FaunaField("name")]
+            public string Name { get; }
+
+            [FaunaField("element")]
+            public string Element { get; }
+
+            [FaunaField("cost")]
+            public int Cost { get; }
+
+            [FaunaConstructor]
+            public Spell(string name, string element, int cost)
+            {
+                Name = name;
+                Element = element;
+                Cost = cost;
+            }
+
+            public override int GetHashCode() => 0;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as Spell;
+                return other != null && Name == other.Name && Element == other.Element && Cost == other.Cost;
+            }
+        }
+
+        [Test]
+        public async Task TestUserClass()
+        {
+            var spellCreated = await client.Query(
+                Create(
+                    new ClassV("spells"),
+                    Obj("data", Encode(new Spell("Magic Missile", "arcane", 10)))
+                )
+            );
+
+            var spellCodec = DATA.To(Codec.DECODE<Spell>);
+
+            Assert.AreEqual(
+                new Spell("Magic Missile", "arcane", 10),
+                spellCreated.Get(spellCodec)
+            );
+        }
+
         [Test] public async Task TestPing()
         {
             Assert.AreEqual("Scope node is OK", await client.Ping("node"));
@@ -1003,6 +1051,50 @@ namespace Test
             await client.Query(CreateDatabase(Obj("name", name)));
             var key = await client.Query(CreateKey(Obj("database", Database(name), "role", "admin")));
             return client.NewSessionClient(secret: key.Get(SECRET_FIELD));
+        }
+
+        [Test]
+        public async Task TestEchoQuery()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            Assert.AreEqual(
+                query,
+                await client.Query(query)
+            );
+        }
+
+        [Test]
+        public async Task TestWrapQuery()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            Assert.AreEqual(
+                query,
+                await client.Query(Query(Lambda(Arr("x", "y"), Concat(Arr(Var("x"), "/", Var("y"))))))
+            );
+        }
+
+        [Test]
+        public async Task TestCreateFunction()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            await client.Query(CreateFunction(Obj("name", "concat_with_slash", "body", query)));
+
+            Assert.AreEqual(BooleanV.True, await client.Query(Exists(new FunctionV("concat_with_slash"))));
+        }
+
+        [Test]
+        public async Task TestCallFunction()
+        {
+            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+
+            await client.Query(CreateFunction(Obj("name", "my_concat", "body", query)));
+
+            var result = await client.Query(Call(new FunctionV("my_concat"), "a", "b"));
+
+            Assert.AreEqual(StringV.Of("a/b"), result);
         }
 
         private async Task<RefV> RandomClass()

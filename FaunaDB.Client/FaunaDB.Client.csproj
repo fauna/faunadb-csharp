@@ -89,5 +89,10 @@
     <Compile Include="Types\BytesV.cs" />
     <Compile Include="Types\RefParser.cs" />
     <Compile Include="Types\RefV.cs" />
+    <Compile Include="Types\Encoder.cs" />
+    <Compile Include="Types\Attributes.cs" />
+    <Compile Include="Types\Decoder.cs" />
+    <Compile Include="Types\Reflection.cs" />
+    <Compile Include="Types\QueryV.cs" />
   </ItemGroup>
 </Project>
