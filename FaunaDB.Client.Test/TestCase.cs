@@ -15,7 +15,7 @@ namespace Test
 {
     public class TestCase
     {
-        protected static Field<string> SECRET_FIELD = Field.At("secret").To(Codec.STRING);
+        protected static Field<string> SECRET_FIELD = Field.At("secret").To<string>();
 
         protected FaunaClient rootClient;
         protected RefV DbRef;

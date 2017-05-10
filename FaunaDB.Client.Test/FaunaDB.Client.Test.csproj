@@ -74,7 +74,6 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodecTest.cs" />
     <Compile Include="DeserializationTest.cs" />
     <Compile Include="FieldTest.cs" />
     <Compile Include="ClientTest.cs" />

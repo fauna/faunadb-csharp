@@ -4,9 +4,6 @@ namespace FaunaDB.Types
 {
     /// <summary>
     /// Represents the result of an operation. Usually a coercion operation.
-    /// <para>
-    /// See <see cref="Codec"/>
-    /// </para>
     /// </summary>
     public interface IResult<T>
     {
@@ -37,9 +34,9 @@ namespace FaunaDB.Types
         /// <example>
         /// IResult&lt;string&gt; result = ...
         /// 
-        /// IResult&lt;int&gt; other = result.Match(
+        /// int parsed = result.Match(
         ///   Success: value => int.Parse(value), 
-        ///   Failure: reason => DoSomethingElse(reason)
+        ///   Failure: reason => ReturnDefaultValue()
         /// );
         /// </example>
         /// <param name="Success">Function to be executed case this instance represents a successful result</param>
@@ -72,7 +69,7 @@ namespace FaunaDB.Types
         /// Gets an <see cref="IOption{T}"/> type containing the result value if the operation was successful,
         /// or <see cref="Option.None{T}()"/> if it was a failure
         /// </summary>
-        IOption<T> ValueOption { get; }
+        IOption<T> ToOption { get; }
 
         /// <summary>
         /// Return true if the operation was successful
@@ -108,7 +105,7 @@ namespace FaunaDB.Types
 
         public T Value { get { return value; } }
 
-        public IOption<T> ValueOption { get { return Option.Some(value); } }
+        public IOption<T> ToOption { get { return Option.Some(value); } }
 
         public bool isSuccess => true;
 
@@ -150,7 +147,7 @@ namespace FaunaDB.Types
 
         public T Value { get { throw new InvalidOperationException(reason); } }
 
-        public IOption<T> ValueOption { get { return Option.None<T>(); } }
+        public IOption<T> ToOption { get { return Option.None<T>(); } }
 
         public bool isSuccess => false;
 
@@ -166,14 +163,11 @@ namespace FaunaDB.Types
             reason.GetHashCode();
 
         public override string ToString() =>
-            reason;
+            $"Failure({reason})";
     }
 
     /// <summary>
     /// Represents the result of an operation. Usually a coercion operation.
-    /// <para>
-    /// See <see cref="Codec"/>
-    /// </para>
     /// </summary>
     public static class Result
     {
@@ -192,5 +186,13 @@ namespace FaunaDB.Types
         /// <returns>a failure result</returns>
         public static IResult<T> Fail<T>(string reason) =>
             new Failure<T>(reason);
+
+        /// <summary>
+        /// Creates failure result. Specialization for object type.
+        /// </summary>
+        /// <param name="reason">the reason for the failure</param>
+        /// <returns>a failure result</returns>
+        public static IResult<object> Fail(string reason) =>
+            new Failure<object>(reason);
     }
 }

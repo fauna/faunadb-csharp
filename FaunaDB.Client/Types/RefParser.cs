@@ -8,7 +8,7 @@
                 Some: Parse,
                 None: () =>
                 {
-                    var id = value.GetOption(Field.At("id").To(Codec.STRING));
+                    var id = value.GetOption(Field.At("id").To<string>());
                     var cls = value.GetOption(Field.At("class"));
                     var db = value.GetOption(Field.At("database"));
 

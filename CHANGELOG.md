@@ -1,5 +1,7 @@
 ## 2.0.0-SNAPSHOT
 
+- Removes `Codec` api
+- Rename `ValueOption` to `ToOption` in `IResult<T>` interface
 - Adds support for `@query` type
 - Adds support for user classes serialization
 - Adds support for new reference types in FaunaDB API 2.1

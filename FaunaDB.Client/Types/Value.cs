@@ -34,9 +34,9 @@ namespace FaunaDB.Types
     /// <para>
     /// The result tree can be accessed using:
     /// <code>
-    ///   Field&lt;RefV&gt; ref = Field.At("ref").To(Codec.REF);
-    ///   Field&lt;string&gt; someKey = Field.At("data", "someKey").To(Codec.STRING);
-    ///   Field&lt;string&gt; nonExistingKey = Field.At("non-existing-key").To(Codec.LONG);
+    ///   Field&lt;RefV&gt; ref = Field.At("ref").To&lt;RefV&gt;();
+    ///   Field&lt;string&gt; someKey = Field.At("data", "someKey").To&lt;string&gt;();
+    ///   Field&lt;string&gt; nonExistingKey = Field.At("non-existing-key").To&lt;long&gt;();
     ///
     ///   node.Get(ref); // new RefV("some/ref")
     ///   node.Get(someKey); // "string1"
@@ -46,16 +46,13 @@ namespace FaunaDB.Types
     /// <para>
     /// The interface also has helpers to transverse values without <see cref="Field"/> references:
     /// <code>
-    ///   node.At("ref").To(Codec.REF).Get(); // new RefV("some/ref")
-    ///   node.At("data", "someKey").To(Codec.STRING).Get() // "string1"
-    ///   node.At("non-existing-key").To(Codec.LONG).GetOption() // Option.None&lt;long&gt;()
+    ///   node.At("ref").To&lt;RefV&gt;().Get(); // new RefV("some/ref")
+    ///   node.At("data", "someKey").To&lt;string&gt;().Get() // "string1"
+    ///   node.At("non-existing-key").To&lt;long&gt;().GetOption() // Option.None&lt;long&gt;()
     /// </code>
     /// </para>
     /// <para>
     /// See <see cref="Field"/>
-    /// </para>
-    /// <para>
-    /// See <see cref="Codec"/>
     /// </para>
     /// </example>
     [JsonConverter(typeof(ValueJsonConverter))]
@@ -83,27 +80,12 @@ namespace FaunaDB.Types
                 Failure: reason => NullV.Instance
             );
 
-
         /// <summary>
         /// Attempts to coerce this value to given type T specified.
-        /// <para>
-        /// See <see cref="Codec.DECODE"/>
-        /// </para>
         /// </summary>
         /// <typeparam name="T">The type name in which this value shoulbe be decoded</typeparam>
         public IResult<T> To<T>() =>
-            To(Codec.DECODE<T>);
-
-        /// <summary>
-        /// Attempts to coerce this value using the <see cref="Codec"/> passed
-        /// <para>
-        /// See <see cref="Codec"/>
-        /// </para>
-        /// </summary>
-        /// <param name="codec">codec function to attempt coercion</param>
-        /// <returns>the <see cref="IResult{T}"/> of the coercion</returns>
-        public IResult<T> To<T>(Func<Value, IResult<T>> codec) =>
-            codec(this);
+            Field.Decode<T>(this);
 
         /// <summary>
         /// Loop through this node collecting the {@link Field} passed, assuming the node is an instance of {@link ArrayV}
@@ -124,9 +106,9 @@ namespace FaunaDB.Types
         /// <para>
         /// The result tree can be accessed using:
         /// <code>
-        ///   node.Get("arrayOfStrings").Collect(Field.To(Codec.STRING)); // ["Jhon", "Bill"]
+        ///   node.Get("arrayOfStrings").Collect(Field.To&lt;string&gt;()); // ["Jhon", "Bill"]
         ///
-        ///   Field&lt;string&gt; name = Field.At("name").To(Codec.STRING);
+        ///   Field&lt;string&gt; name = Field.At("name").To&lt;string&gt;();
         ///   node.Get("arrayOfObjects").Collect(name); // ["Jhon", "Bill"]
         /// }
         /// </code>
@@ -158,7 +140,7 @@ namespace FaunaDB.Types
         /// <param name="field">field to extract</param>
         /// <returns>An <see cref="IOption{T}"/> with the resulting value if the field's extraction was successful</returns>
         public IOption<T> GetOption<T>(Field<T> field) =>
-            field.Get(this).ValueOption;
+            field.Get(this).ToOption;
 
         #region implicit conversions
         public static implicit operator Value(bool b) =>

@@ -24,7 +24,7 @@ namespace FaunaDB.Types
             return new Path(segments);
         }
 
-        IReadOnlyList<ISegment> segments;
+        readonly IReadOnlyList<ISegment> segments;
 
         Path(IReadOnlyList<ISegment> segments)
         {
@@ -84,9 +84,10 @@ namespace FaunaDB.Types
 
             public IResult<Value> Get(Value root)
             {
-                return root.To(Codec.OBJECT).FlatMap(obj => {
+                return root.To<ObjectV>().FlatMap(obj => {
                     Value value;
-                    if (obj.TryGetValue(field, out value))
+
+                    if (obj.Value.TryGetValue(field, out value))
                         return Success(value);
 
                     return Fail<Value>($"Object key \"{field}\" not found");
@@ -117,8 +118,8 @@ namespace FaunaDB.Types
 
             public IResult<Value> Get(Value root)
             {
-                return root.To(Codec.ARRAY).FlatMap(array => {
-                    if (index >= 0 && index < array.Count)
+                return root.To<ArrayV>().FlatMap(array => {
+                    if (index >= 0 && index < array.Length)
                         return Success(array[index]);
                     
                     return Fail<Value>($"Array index \"{index}\" not found");

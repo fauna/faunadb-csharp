@@ -2,16 +2,63 @@
 
 namespace FaunaDB.Types
 {
+    /// <summary>
+    /// Represents an optional value.
+    /// </summary>
     public interface IOption<T>
     {
         T Value { get; }
 
+        /// <summary>
+        /// Apply the function passed on the optional value.
+        /// </summary>
+        /// <param name="func">the map function to be applied</param>
+        /// <returns>
+        /// If this is a some value, return a new optional with the function applied to it.
+        /// If this is a none value, returns none and ignore the function.
+        /// </returns>
         IOption<U> Map<U>(Func<T, U> func);
 
+        /// <summary>
+        /// Apply the function passed on the optional value.
+        /// </summary>
+        /// <param name="func">the map function to be applied</param>
+        /// <returns>
+        /// If this is a some value, return a new optional with the function applied to it.
+        /// If this is a none value, returns none and ignore the function.
+        /// </returns>
         IOption<U> FlatMap<U>(Func<T, IOption<U>> func);
 
+        /// <summary>
+        /// Matches the current instance. Case it contains some value it will execute the first argument.
+        /// Case it contains none value it will execute the second argument.
+        /// </summary>
+        /// <example>
+        /// IOption&lt;string&gt; optional = ...
+        ///
+        /// int parsed = result.Match(
+        ///   Some: value => int.Parse(value),
+        ///   None: () => ReturnDefaultValue()
+        /// );
+        /// </example>
+        /// <param name="Some">Function to be executed case this instance contains some value</param>
+        /// <param name="None">Function to be executed case this instance contains none value</param>
         U Match<U>(Func<T, U> Some, Func<U> None);
 
+        /// <summary>
+        /// Matches the current instance. Case it contains some value it will execute the first argument.
+        /// Case it contains none value it will execute the second argument.
+        /// </summary>
+        /// <example>
+        /// IOption&lt;string&gt; optional = ...
+        ///
+        /// result.Match(
+        ///   Some: value => DoSomething(value),
+        ///   None: () => DoSomethingElse()
+        /// );
+        /// </example>
+        /// <param name="Some">Function to be executed case this instance contains some value</param>
+        /// <param name="None">Function to be executed case this instance contains none value</param>
         void Match(Action<T> Some, Action None);
     }
 
@@ -83,6 +130,9 @@ namespace FaunaDB.Types
             $"None()";
     }
 
+    /// <summary>
+    /// Represents an optional value.
+    /// </summary>
     public static class Option
     {
         public static IOption<T> Some<T>(T value) =>
@@ -90,6 +140,9 @@ namespace FaunaDB.Types
 
         public static IOption<T> None<T>() =>
             new None<T>();
+
+        public static IOption<object> None() =>
+            new None<object>();
 
         public static IOption<T> Of<T>(T value)
         {
