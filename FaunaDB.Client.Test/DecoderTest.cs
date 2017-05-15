@@ -39,6 +39,75 @@ namespace Test
             Assert.AreEqual(new byte[] { 1, 2, 3 }, Decode<byte[]>(new BytesV(1, 2, 3)));
         }
 
+        struct Point
+        {
+            public int X;
+            public int Y;
+        }
+
+        struct Rect
+        {
+            public Point UpperLeft;
+            public Point BottonRight;
+        }
+
+        [Test]
+        public void TestNullToValueTypes()
+        {
+            Assert.AreEqual(0, Decode<long>(NullV.Instance));
+            Assert.AreEqual(0, Decode<int>(NullV.Instance));
+            Assert.AreEqual(0, Decode<short>(NullV.Instance));
+            Assert.AreEqual(0, Decode<sbyte>(NullV.Instance));
+
+            Assert.AreEqual(0, Decode<ulong>(NullV.Instance));
+            Assert.AreEqual(0, Decode<uint>(NullV.Instance));
+            Assert.AreEqual(0, Decode<ushort>(NullV.Instance));
+            Assert.AreEqual(0, Decode<byte>(NullV.Instance));
+            Assert.AreEqual(0, Decode<char>(NullV.Instance));
+
+            Assert.AreEqual((float)0, Decode<float>(NullV.Instance));
+            Assert.AreEqual((double)0, Decode<double>(NullV.Instance));
+            Assert.AreEqual((decimal)0, Decode<decimal>(NullV.Instance));
+
+            Assert.AreEqual(default(Point), Decode<Point>(NullV.Instance));
+            Assert.AreEqual(default(Point), Decode<Point>(ObjectV.Empty));
+            Assert.AreEqual(default(Point), Decode<Point>(ObjectV.With("x", NullV.Instance, "y", NullV.Instance)));
+
+            Assert.AreEqual(default(Rect), Decode<Rect>(NullV.Instance));
+            Assert.AreEqual(default(Rect), Decode<Rect>(ObjectV.Empty));
+            Assert.AreEqual(default(Rect), Decode<Rect>(ObjectV.With("UpperLeft", NullV.Instance, "BottonRight", NullV.Instance)));
+
+            //
+
+            Assert.AreEqual(0, Decode<long>(null));
+            Assert.AreEqual(0, Decode<int>(null));
+            Assert.AreEqual(0, Decode<short>(null));
+            Assert.AreEqual(0, Decode<sbyte>(null));
+
+            Assert.AreEqual(0, Decode<ulong>(null));
+            Assert.AreEqual(0, Decode<uint>(null));
+            Assert.AreEqual(0, Decode<ushort>(null));
+            Assert.AreEqual(0, Decode<byte>(null));
+            Assert.AreEqual(0, Decode<char>(null));
+
+            Assert.AreEqual((float)0, Decode<float>(null));
+            Assert.AreEqual((double)0, Decode<double>(null));
+            Assert.AreEqual((decimal)0, Decode<decimal>(null));
+
+            Assert.AreEqual(default(Point), Decode<Point>(null));
+            Assert.AreEqual(default(Rect), Decode<Rect>(null));
+        }
+
+        [Test]
+        public void TestNullToClassTypes()
+        {
+            Assert.AreEqual(default(string), Decode<string>(NullV.Instance));
+            Assert.AreEqual(default(string), Decode<string>(null));
+
+            Assert.AreEqual(default(Product), Decode<Product>(NullV.Instance));
+            Assert.AreEqual(default(Product), Decode<Product>(null));
+        }
+
         [Test]
         public void TestIntegerLimits()
         {
@@ -186,20 +255,6 @@ namespace Test
         {
             var obj = Decode<MethodCreator>(ObjectV.With("field", "a string"));
             Assert.AreEqual("a string", obj.Field);
-        }
-
-        [Test]
-        public void TestRequiredProperties()
-        {
-            var ex = Assert.Throws<InvalidOperationException>(() => Decode<Product>(ObjectV.With("Description", "product")));
-            Assert.AreEqual("Missing required property: `Price`", ex.Message);
-        }
-
-        [Test]
-        public void TestRequiredPropertyOnCreator()
-        {
-            var ex = Assert.Throws<InvalidOperationException>(() => Decode<MethodCreator>(ObjectV.Empty));
-            Assert.AreEqual("Missing required property: `field`", ex.Message);
         }
 
         class DefaultValueOnProperty
@@ -507,6 +562,37 @@ namespace Test
 
             Assert.AreEqual("property1", obj.Property1);
             Assert.AreEqual("property2", obj.Property2);
+        }
+
+        class MissingFields
+        {
+            public string NullableField { get; set; }
+            public int NonNullableField { get; set; }
+        }
+
+        class MissingFieldsOnConstructor
+        {
+            public string NullableField { get; }
+            public int NonNullableField { get; }
+
+            [FaunaConstructor]
+            public MissingFieldsOnConstructor(string NullableField, int NonNullableField)
+            {
+                this.NullableField = NullableField;
+                this.NonNullableField = NonNullableField;
+            }
+        }
+
+        [Test]
+        public void TestMissingFieldsToDefaltValues()
+        {
+            var missingFields1 = Decode<MissingFields>(ObjectV.Empty);
+            Assert.AreEqual(default(string), missingFields1.NullableField);
+            Assert.AreEqual(default(int), missingFields1.NonNullableField);
+
+            var missingFields2 = Decode<MissingFieldsOnConstructor>(ObjectV.Empty);
+            Assert.AreEqual(default(string), missingFields2.NullableField);
+            Assert.AreEqual(default(int), missingFields2.NonNullableField);
         }
     }
 }

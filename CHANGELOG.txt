@@ -2,6 +2,8 @@
 * Pinning FaunaDB API version to 2.0
 * Adds support for user classes serialization
 * Adds support for @query type
+* Don't throw exception for missing attributes when constructing objects, assign default value
+* Fix default missing constructor for value types
 
 1.0.0
 * Official release
