@@ -69,7 +69,7 @@ namespace FaunaDB.Types
         public static object Decode(Value value, Type dstType)
         {
             if (value == null || value == NullV.Instance)
-                return null;
+                return dstType.IsValueType ? Activator.CreateInstance(dstType) : null;
 
             return DecodeIntern(value, dstType);
         }
@@ -83,6 +83,9 @@ namespace FaunaDB.Types
 
                 throw new InvalidOperationException($"Cannot cast {value.GetType()} to {dstType}");
             }
+
+            if (dstType.IsEnum)
+                return ToEnum(value, dstType);
 
             switch (Type.GetTypeCode(dstType))
             {
@@ -235,6 +238,35 @@ namespace FaunaDB.Types
             return scalar.Value;
         }
 
+        static object ToEnum(Value value, Type dstType)
+        {
+            Converter converter;
+
+            try
+            {
+                locker.EnterUpgradeableReadLock();
+                if (!converters.TryGetValue(dstType, out converter))
+                {
+                    try
+                    {
+                        locker.EnterWriteLock();
+                        converter = CreateEnumConverter(dstType);
+                        converters.Add(dstType, converter);
+                    }
+                    finally
+                    {
+                        locker.ExitWriteLock();
+                    }
+                }
+            }
+            finally
+            {
+                locker.ExitUpgradeableReadLock();
+            }
+
+            return converter.Invoke(value);
+        }
+
         static object FromObject(Value value, Type dstType)
         {
             Converter converter;
@@ -264,6 +296,57 @@ namespace FaunaDB.Types
             return converter.Invoke(value);
         }
 
+        static object ThrowError(Value value, Type dstType)
+        {
+            throw new InvalidOperationException($"Enumeration value '{((StringV)value).Value}' not found in {dstType}");
+        }
+
+        static Converter CreateEnumConverter(Type dstType)
+        {
+            var objExpr = Expression.Parameter(typeof(Value), "obj");
+            var varExpr = Expression.Variable(dstType, "output");
+            var target = Expression.Label(dstType);
+
+            var switchValue = Expression.MakeMemberAccess(
+                Expression.Convert(objExpr, typeof(StringV)),
+                typeof(StringV).GetMember("Value")[0]
+            );
+
+            var defaultValue = Expression.Call(
+                typeof(DecoderImpl).GetMethod("ThrowError", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(Value), typeof(Type) }, null),
+                objExpr,
+                Expression.Constant(dstType, typeof(Type))
+            );
+
+            var cases = dstType
+                .GetEnumValues()
+                .OfType<Enum>()
+                .Select(CreateSwitchCase)
+                .ToArray();
+
+            return Expression.Lambda<Converter>(
+                Expression.Switch(switchValue, defaultValue, cases),
+                objExpr
+            ).Compile();
+        }
+
+        static SwitchCase CreateSwitchCase(Enum enumValue)
+        {
+            var dstType = enumValue.GetType();
+            var enumName = Enum.GetName(dstType, enumValue);
+            var member = dstType.GetMember(enumName)[0];
+
+            var faunaEnum = member.GetCustomAttribute<FaunaEnum>();
+
+            return Expression.SwitchCase(
+                Expression.Constant(enumValue, typeof(object)),
+                Expression.Constant(
+                    faunaEnum != null ? faunaEnum.Alias : enumName,
+                    typeof(string)
+                )
+            );
+        }
+
         static Converter CreateConverter(Type dstType)
         {
             var creator = GetCreator(dstType);
@@ -273,7 +356,12 @@ namespace FaunaDB.Types
 
             var constructor = GetConstructor(dstType);
             if (constructor == null)
+            {
+                if (dstType.IsValueType)
+                    return FromValueType(dstType);
+
                 throw new InvalidOperationException($"No default constructor or constructor/static method annotated with attribute [FaunaConstructor] found on type `{dstType}`");
+            }
 
             return FromConstructor(constructor, dstType);
         }
@@ -314,13 +402,13 @@ namespace FaunaDB.Types
                 .GetAllFields()
                 .Where(f => !ignoreProperties.Contains(f.GetName()))
                 .Where(f => !f.Has<CompilerGeneratedAttribute>() && !f.Has<FaunaIgnoreAttribute>())
-                .Select(f => Expression.Assign(Expression.MakeMemberAccess(varExpr, f), CallDecode(CallGetValue(objExpr, f), f.FieldType)));
+                .Select(f => Expression.Assign(Expression.MakeMemberAccess(varExpr, f), CallDecode(CallGetValue(objExpr, f, f.FieldType), f.FieldType)));
 
             var properties = dstType
                 .GetProperties()
                 .Where(p => !ignoreProperties.Contains(p.GetName()))
                 .Where(p => p.CanWrite && !p.Has<FaunaIgnoreAttribute>())
-                .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p), p.PropertyType)));
+                .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p, p.PropertyType), p.PropertyType)));
 
             return properties.Count() > 0
                              ? Expression.Block(fields.Concat(properties))
@@ -338,17 +426,36 @@ namespace FaunaDB.Types
 
             var ignoreProperties = parameters.Select(p => p.GetName());
 
-            var expr = Expression.Lambda<Converter>(
-                Expression.Block(
-                    new ParameterExpression[] { varExpr },
-                    Expression.Assign(varExpr, creatorExpr(parametersExpr)),
-                    AssignProperties(objExpr, varExpr, dstType, ignoreProperties),
-                    Expression.Label(target, varExpr)
-                ),
-                objExpr
+            var block = Expression.Block(
+                new ParameterExpression[] { varExpr },
+                Expression.Assign(varExpr, creatorExpr(parametersExpr)),
+                AssignProperties(objExpr, varExpr, dstType, ignoreProperties),
+                Expression.Label(target, varExpr)
             );
 
-            return expr.Compile();
+            return Expression.Lambda<Converter>(
+                Expression.Convert(block, typeof(object)), objExpr
+            ).Compile();
+        }
+
+        /*
+         * Func<Value, object> = value =>
+         * {
+         *      DstType output = new DstType();
+         *
+         *      output.Field1 = (T1)Decode( GetValue(value, "attrib1", defaultValue1), typeof(T1) );
+         *      output.Field2 = (T2)Decode( GetValue(value, "attrib2", defaultValue2), typeof(T2) );
+         *
+         *      return output;
+         * }
+         */
+        static Converter FromValueType(Type dstType)
+        {
+            return Create(
+                _ => Expression.New(dstType),
+                new ParameterInfo[0],
+                dstType
+            );
         }
 
         /*
@@ -413,18 +520,26 @@ namespace FaunaDB.Types
             ), type);
         }
 
-        static Expression CallGetValue(Expression objExpr, MemberInfo member)
+        static Expression CallGetValue(Expression objExpr, MemberInfo member, Type memberType)
         {
             var field = member.GetCustomAttribute<FaunaFieldAttribute>();
-            var hasDefaultValue = field != null && field.DefaultValue != null;
             var defaultValue = field != null ? Encoder.Encode(field.DefaultValue) : null;
 
-            return CallGetValue(objExpr, member.GetName(), hasDefaultValue, defaultValue);
+            var hasDefaultValue = field != null && field.DefaultValue != null;
+            if (!hasDefaultValue && memberType.IsValueType)
+                defaultValue = Encoder.Encode(Activator.CreateInstance(memberType));
+
+            if (defaultValue == null)
+                defaultValue = NullV.Instance;
+
+            if (member.GetCustomAttribute<FaunaIgnoreAttribute>() != null)
+                return Expression.Constant(defaultValue, typeof(Value));
+
+            return CallGetValue(objExpr, member.GetName(), defaultValue);
         }
 
         static Expression CallGetValue(Expression objExpr, ParameterInfo parameter)
         {
-            var ignore = parameter.GetCustomAttribute<FaunaIgnoreAttribute>();
             var field = parameter.GetCustomAttribute<FaunaFieldAttribute>();
             var hasDefaultValue = field != null && field.DefaultValue != null;
 
@@ -432,56 +547,33 @@ namespace FaunaDB.Types
                 ? Encoder.Encode(field.DefaultValue)
                 : Encoder.Encode(parameter.DefaultValue);
 
-            if (ignore != null)
+            if (!hasDefaultValue && parameter.ParameterType.IsValueType)
+                defaultValue = Encoder.Encode(Activator.CreateInstance(parameter.ParameterType));
+
+            if (defaultValue == null)
+                defaultValue = NullV.Instance;
+
+            if (parameter.GetCustomAttribute<FaunaIgnoreAttribute>() != null)
                 return Expression.Constant(defaultValue, typeof(Value));
 
-            return CallGetValue(objExpr, parameter.GetName(), hasDefaultValue || parameter.HasDefaultValue, defaultValue);
+            return CallGetValue(objExpr, parameter.GetName(), defaultValue);
         }
 
         /*
-         * if (hasDefaultValue)
-         *     GetValue( objExpr, property, defaultValue )
-         * else
-         *     GetValue( objExpr, property )
+         * GetValue( objExpr, property, defaultValue )
          */
-        static Expression CallGetValue(Expression objExpr, string property, bool hasDefaultValue, Value defaultValue)
+        static Expression CallGetValue(Expression objExpr, string property, Value defaultValue)
         {
-            if (hasDefaultValue)
-            {
-                var getValueMethod = typeof(DecoderImpl).GetMethod(
-                    "GetValue", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(ObjectV), typeof(string), typeof(Value) }, null
-                );
+            var getValueMethod = typeof(DecoderImpl).GetMethod(
+                "GetValue", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(ObjectV), typeof(string), typeof(Value) }, null
+            );
 
-                return Expression.Call(
-                    getValueMethod,
-                    Expression.Convert(objExpr, typeof(ObjectV)),
-                    Expression.Constant(property),
-                    Expression.Convert(Expression.Constant(defaultValue), typeof(Value))
-                );
-            }
-            else
-            {
-                var getValueMethod = typeof(DecoderImpl).GetMethod(
-                    "GetValue", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(ObjectV), typeof(string) }, null
-                );
-
-                return Expression.Call(
-                    getValueMethod,
-                    Expression.Convert(objExpr, typeof(ObjectV)),
-                    Expression.Constant(property)
-                );
-            }
-        }
-
-        static Value GetValue(ObjectV obj, string property)
-        {
-            var values = obj.Value;
-
-            Value value;
-            if (values.TryGetValue(property, out value))
-                return value;
-
-            throw new InvalidOperationException($"Missing required property: `{property}`");
+            return Expression.Call(
+                getValueMethod,
+                Expression.Convert(objExpr, typeof(ObjectV)),
+                Expression.Constant(property),
+                Expression.Convert(Expression.Constant(defaultValue), typeof(Value))
+            );
         }
 
         static Value GetValue(ObjectV obj, string property, Value defaultValue)
