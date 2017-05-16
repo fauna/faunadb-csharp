@@ -4,6 +4,7 @@
 * Adds support for @query type
 * Don't throw exception for missing attributes when constructing objects, assign default value
 * Fix default missing constructor for value types
+* Encode/Decode enums as strings
 
 1.0.0
 * Official release

@@ -119,4 +119,31 @@ namespace FaunaDB.Types
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method)]
     public class FaunaConstructorAttribute : Attribute
     { }
+
+    /// <summary>
+    /// Instruct the encoder/decoder to rename the annotated enum field.
+    /// If not used the method <see cref="Enum.GetName(Type, object)"/> will be used instead.
+    /// </summary>
+    /// <example>
+    /// enum CpuTypes
+    /// {
+    ///     [FaunaEnum("x86_32")] X86,
+    ///     [FaunaEnum("x86_64")] X86_64,
+    ///     ARM,
+    ///     MIPS
+    /// }
+    /// </example>
+    [AttributeUsage(AttributeTargets.Field)]
+    public class FaunaEnum : Attribute
+    {
+        /// <summary>
+        /// Alias used to encode/decode the enum value
+        /// </summary>
+        public string Alias { get; }
+
+        public FaunaEnum(string alias)
+        {
+            Alias = alias;
+        }
+    }
 }

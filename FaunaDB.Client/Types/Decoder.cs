@@ -84,6 +84,9 @@ namespace FaunaDB.Types
                 throw new InvalidOperationException($"Cannot cast {value.GetType()} to {dstType}");
             }
 
+            if (dstType.IsEnum)
+                return ToEnum(value, dstType);
+
             switch (Type.GetTypeCode(dstType))
             {
                 case TypeCode.String:
@@ -235,6 +238,35 @@ namespace FaunaDB.Types
             return scalar.Value;
         }
 
+        static object ToEnum(Value value, Type dstType)
+        {
+            Converter converter;
+
+            try
+            {
+                locker.EnterUpgradeableReadLock();
+                if (!converters.TryGetValue(dstType, out converter))
+                {
+                    try
+                    {
+                        locker.EnterWriteLock();
+                        converter = CreateEnumConverter(dstType);
+                        converters.Add(dstType, converter);
+                    }
+                    finally
+                    {
+                        locker.ExitWriteLock();
+                    }
+                }
+            }
+            finally
+            {
+                locker.ExitUpgradeableReadLock();
+            }
+
+            return converter.Invoke(value);
+        }
+
         static object FromObject(Value value, Type dstType)
         {
             Converter converter;
@@ -262,6 +294,57 @@ namespace FaunaDB.Types
             }
 
             return converter.Invoke(value);
+        }
+
+        static object ThrowError(Value value, Type dstType)
+        {
+            throw new InvalidOperationException($"Enumeration value '{((StringV)value).Value}' not found in {dstType}");
+        }
+
+        static Converter CreateEnumConverter(Type dstType)
+        {
+            var objExpr = Expression.Parameter(typeof(Value), "obj");
+            var varExpr = Expression.Variable(dstType, "output");
+            var target = Expression.Label(dstType);
+
+            var switchValue = Expression.MakeMemberAccess(
+                Expression.Convert(objExpr, typeof(StringV)),
+                typeof(StringV).GetMember("Value")[0]
+            );
+
+            var defaultValue = Expression.Call(
+                typeof(DecoderImpl).GetMethod("ThrowError", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(Value), typeof(Type) }, null),
+                objExpr,
+                Expression.Constant(dstType, typeof(Type))
+            );
+
+            var cases = dstType
+                .GetEnumValues()
+                .OfType<Enum>()
+                .Select(CreateSwitchCase)
+                .ToArray();
+
+            return Expression.Lambda<Converter>(
+                Expression.Switch(switchValue, defaultValue, cases),
+                objExpr
+            ).Compile();
+        }
+
+        static SwitchCase CreateSwitchCase(Enum enumValue)
+        {
+            var dstType = enumValue.GetType();
+            var enumName = Enum.GetName(dstType, enumValue);
+            var member = dstType.GetMember(enumName)[0];
+
+            var faunaEnum = member.GetCustomAttribute<FaunaEnum>();
+
+            return Expression.SwitchCase(
+                Expression.Constant(enumValue, typeof(object)),
+                Expression.Constant(
+                    faunaEnum != null ? faunaEnum.Alias : enumName,
+                    typeof(string)
+                )
+            );
         }
 
         static Converter CreateConverter(Type dstType)
