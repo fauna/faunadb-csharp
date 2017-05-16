@@ -9,6 +9,7 @@
 - Removes constructor `FaunaClient(string secret, string domain, string scheme, int? port, TimeSpan? timeout, IClientIO clientIO)`
 - Don't throw exception for missing attributes when constructing objects, assign default value
 - Fix default missing constructor for value types
+- Encode/Decode enums as strings
 
 ## 1.0.0
 

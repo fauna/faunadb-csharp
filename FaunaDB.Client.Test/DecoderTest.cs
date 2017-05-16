@@ -594,5 +594,25 @@ namespace Test
             Assert.AreEqual(default(string), missingFields2.NullableField);
             Assert.AreEqual(default(int), missingFields2.NonNullableField);
         }
+
+        enum CpuTypes
+        {
+            [FaunaEnum("x86_32")] X86,
+            [FaunaEnum("x86_64")] X86_64,
+            ARM,
+            MIPS
+        }
+
+        [Test]
+        public void TestEnumTypes()
+        {
+            Assert.AreEqual(CpuTypes.X86, Decode<CpuTypes>(StringV.Of("x86_32")));
+            Assert.AreEqual(CpuTypes.X86_64, Decode<CpuTypes>(StringV.Of("x86_64")));
+            Assert.AreEqual(CpuTypes.ARM, Decode<CpuTypes>(StringV.Of("ARM")));
+            Assert.AreEqual(CpuTypes.MIPS, Decode<CpuTypes>(StringV.Of("MIPS")));
+
+            var ex = Assert.Throws<InvalidOperationException>(() => Decode<CpuTypes>(StringV.Of("AVR")));
+            Assert.AreEqual("Enumeration value 'AVR' not found in Test.DecoderTest+CpuTypes", ex.Message);
+        }
     }
 }
