@@ -4,10 +4,7 @@
 - Rename `ValueOption` to `ToOption` in `IResult<T>` interface
 - Adds support for `@query` type
 - Adds support for user classes serialization
-- Adds support for new reference types in FaunaDB API 2.1
-  - `DatabaseV`, `ClassV`, `IndexV`, `FunctionV` and `KeyV`
-- Removes `Ref(string id)` function
-  - All static refs from now on should be created using constructors like `new RefV(...)` or `new DatabaseV(...)`
+- Adds support for recursive references
 - Adds constructor `FaunaClient(string secret, string endpoint, TimeSpan? timeout)` and `FaunaClient(IClientIO clientIO)`
 - Removes constructor `FaunaClient(string secret, string domain, string scheme, int? port, TimeSpan? timeout, IClientIO clientIO)`
 

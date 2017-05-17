@@ -19,8 +19,8 @@ namespace FaunaDB.Query
         /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-        public static Expr Database(Expr db_name) =>
-            UnescapedObject.With("database", db_name);
+        public static Expr Database(Expr db_name, Expr scope = null) =>
+            UnescapedObject.With("database", db_name, "scope", scope);
 
         /// <summary>
         /// Creates a new Index expression.
@@ -28,8 +28,8 @@ namespace FaunaDB.Query
         /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-        public static Expr Index(Expr index_name) =>
-            UnescapedObject.With("index", index_name);
+        public static Expr Index(Expr index_name, Expr scope = null) =>
+            UnescapedObject.With("index", index_name, "scope", scope);
 
         /// <summary>
         /// Creates a new Class expression.
@@ -37,8 +37,80 @@ namespace FaunaDB.Query
         /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-        public static Expr Class(Expr class_name) =>
-            UnescapedObject.With("class", class_name);
+        public static Expr Class(Expr class_name, Expr scope = null) =>
+            UnescapedObject.With("class", class_name, "scope", scope);
+
+        /// <summary>
+        /// Creates a new Function expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Function(Expr function_name, Expr scope = null) =>
+            UnescapedObject.With("function", function_name, "scope", scope);
+
+        /// <summary>
+        /// Returns an internal reference to classes object. Useful to paginate over all classes of a given scope database.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Classes(Expr scope = null) =>
+            UnescapedObject.With("classes", scope ?? Null());
+
+        /// <summary>
+        /// Returns an internal reference to indexes object. Useful to paginate over all indexes of a given scope database.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Indexes(Expr scope = null) =>
+            UnescapedObject.With("indexes", scope ?? Null());
+
+        /// <summary>
+        /// Returns an internal reference to databases object. Useful to paginate over all databases of a given scope database.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Databases(Expr scope = null) =>
+            UnescapedObject.With("databases", scope ?? Null());
+
+        /// <summary>
+        /// Returns an internal reference to functions object. Useful to paginate over all functions of a given scope database.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Functions(Expr scope = null) =>
+            UnescapedObject.With("functions", scope ?? Null());
+
+        /// <summary>
+        /// Returns an internal reference to keys object. Useful to paginate over all keys of a given scope database.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Keys(Expr scope = null) =>
+            UnescapedObject.With("keys", scope ?? Null());
+
+        /// <summary>
+        /// Returns an internal reference to tokens object. Useful to paginate over all tokens of a given scope database.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Tokens(Expr scope = null) =>
+            UnescapedObject.With("tokens", scope ?? Null());
+
+        /// <summary>
+        /// Returns an internal reference to credentials object. Useful to paginate over all credentials of a given scope database.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Credentials(Expr scope = null) =>
+            UnescapedObject.With("credentials", scope ?? Null());
 
         /// <summary>
         /// Creates a new Equals expression.

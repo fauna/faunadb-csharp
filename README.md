@@ -192,7 +192,7 @@ await client.Query(
 To convert from a `Value` type back to the `Product` type, you can use a `Decoder`:
 
 ```csharp
-Value value = await client.Query(Get(new RefV("123456789", new ClassV("product"))));
+Value value = await client.Query(Get(Ref(Class("product"), "123456789")));
 
 Product product = Decoder.Decode<Product>(value);
 ```
@@ -200,7 +200,7 @@ Product product = Decoder.Decode<Product>(value);
 or via the `To<T>()` helper method:
 
 ```csharp
-Value value = await client.Query(Get(new RefV("123456789", new ClassV("product"))));
+Value value = await client.Query(Get(Ref(Class("product"), "123456789")));
 
 IResult<Product> product = value.To<Product>();
 ```

@@ -94,6 +94,15 @@ namespace FaunaDB.Query
             NullV.Instance;
 
         /// <summary>
+        /// Creates a ref value from a string.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// </para>
+        /// </summary>
+        public static Expr Ref(String @ref) =>
+            UnescapedObject.With("@ref", @ref);
+
+        /// <summary>
         /// Calls ref function to create a ref value.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>

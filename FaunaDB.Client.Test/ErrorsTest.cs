@@ -45,7 +45,7 @@ namespace Test
 
             var client = GetClient(secret: key.Get(Field.At("secret").To<string>()));
 
-            AssertQueryException<PermissionDenied>(client, Paginate(BuiltIn.DATABASES), "permission denied", "Insufficient privileges to perform the action.");
+            AssertQueryException<PermissionDenied>(client, Paginate(Native.DATABASES), "permission denied", "Insufficient privileges to perform the action.");
         }
         #endregion
 
@@ -88,7 +88,7 @@ namespace Test
         {
             // Must be a reference to a real class or else we get InvalidExpression
             await client.Query(CreateClass(Obj("name", "foofaws")));
-            AssertQueryException<NotFound>(Get(new RefV(id: "123", @class: new ClassV("foofaws"))), "instance not found", "Instance not found.");
+            AssertQueryException<NotFound>(Get(Ref(Class("foofaws"), "123")), "instance not found", "Instance not found.");
         }
 
         [Test] public void TestValueNotFound()

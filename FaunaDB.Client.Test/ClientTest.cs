@@ -155,7 +155,7 @@ namespace Test
         public void TestUnauthorizedOnInvalidSecret()
         {
             var ex = Assert.ThrowsAsync<Unauthorized>(
-                async () => await GetClient(secret: "invalid secret").Query(new RefV(id: "1234", @class: new ClassV("spells")))
+                async () => await GetClient(secret: "invalid secret").Query(Ref(Class("spelss"), "1234"))
             );
 
             AssertErrors(ex, code: "unauthorized", description: "Unauthorized");
@@ -169,7 +169,7 @@ namespace Test
         public void TestNotFoundWhenInstanceDoesntExists()
         {
             var ex = Assert.ThrowsAsync<NotFound>(
-                async () => await client.Query(Get(new RefV(id: "1234", @class: new ClassV("spells"))))
+                async () => await client.Query(Get(Ref(Class("spells"), "1234")))
             );
 
             AssertErrors(ex, code: "instance not found", description: "Instance not found.");
@@ -410,7 +410,7 @@ namespace Test
 
             IReadOnlyDictionary<string, Value> set = res.To<SetRefV>().Value.Value;
             Assert.AreEqual("arcane", set["terms"].To<string>().Value);
-            Assert.AreEqual(new IndexV("spells_by_element"), set["match"].To<RefV>().Value);
+            Assert.AreEqual(new RefV(id: "spells_by_element", @class: Native.INDEXES), set["match"].To<RefV>().Value);
         }
 
         [Test] public async Task TestEvalAtExpression()
@@ -867,24 +867,6 @@ namespace Test
             Assert.AreEqual(BooleanV.True, await newClient.Query(Exists(Class("class_for_key_test"))));
         }
 
-        [Test] public async Task TestDatabase()
-        {
-            await adminClient.Query(CreateDatabase(Obj("name", "database_for_database_test")));
-
-            Assert.AreEqual(new DatabaseV("database_for_database_test"),
-                await client.Query(Database("database_for_database_test")));
-        }
-
-        [Test] public async Task TestIndex()
-        {
-            Assert.AreEqual(new IndexV("all_spells"), await client.Query(Index("all_spells")));
-        }
-
-        [Test] public async Task TestClass()
-        {
-            Assert.AreEqual(new ClassV("spells"), await client.Query(Class("spells")));
-        }
-
         [Test] public async Task TestAuthenticateSession()
         {
             Value createdInstance = await client.Query(
@@ -961,7 +943,7 @@ namespace Test
         {
             var spellCreated = await client.Query(
                 Create(
-                    new ClassV("spells"),
+                    Class("spells"),
                     Obj("data", Encode(new Spell("Magic Missile", "arcane", 10)))
                 )
             );
@@ -982,73 +964,95 @@ namespace Test
         [Test]
         public async Task TestRef()
         {
-            var newClient = GetClient(secret: clientKey.Get(SECRET_FIELD));
-
             Assert.AreEqual(
-                new IndexV(id: "all_spells"),
-                await newClient.Query(Index("all_spells"))
+                new RefV(id: "idx", @class: Native.INDEXES),
+                await client.Query(Index("idx"))
             );
 
             Assert.AreEqual(
-                new ClassV(id: "spells"),
-                await newClient.Query(Class("spells"))
+                new RefV(id: "cls", @class: Native.CLASSES),
+                await client.Query(Class("cls"))
             );
 
             Assert.AreEqual(
-                new DatabaseV(id: "faunadb-csharp-test"),
-                await newClient.Query(Database("faunadb-csharp-test"))
+                new RefV(id: "db", @class: Native.DATABASES),
+                await client.Query(Database("db"))
             );
 
             Assert.AreEqual(
-                new KeyV(id: "1234567890"),
-                await newClient.Query(new KeyV("1234567890"))
+                new RefV(id: "fn", @class: Native.FUNCTIONS),
+                await client.Query(Function("fn"))
             );
 
             Assert.AreEqual(
-                new FunctionV(id: "function_name"),
-                await newClient.Query(new FunctionV("function_name"))
+                new RefV(id: "1", @class: new RefV(id: "spells", @class: Native.CLASSES)),
+                await client.Query(Ref(Class("spells"), "1"))
             );
 
             Assert.AreEqual(
-                new RefV("1", new ClassV("spells")),
-                await newClient.Query(Ref(Class("spells"), "1"))
-            );
-
-            Assert.AreEqual(
-                new RefV("1", new ClassV("spells")),
-                await newClient.Query(Ref(new ClassV("spells"), "1"))
+                new RefV(id: "1", @class: new RefV(id: "spells", @class: Native.CLASSES)),
+                await client.Query(Ref("classes/spells/1"))
             );
         }
 
-        [Test] public async Task TestNestedRef()
+        [Test] public async Task TestNestedClassRef()
         {
-            var client1 = await CreateNewDatabase(adminClient, "parent-database");
-            await CreateNewDatabase(client1, "child-database");
+            var parentDb = RandomStartingWith("parent-database-");
+            var childDb = RandomStartingWith("child-database-");
+            var aClass = RandomStartingWith("a-class-");
 
-            var key = await client1.Query(CreateKey(Obj("database", Database("child-database"), "role", "server")));
+            var client1 = await CreateNewDatabase(adminClient, parentDb);
+            await CreateNewDatabase(client1, childDb);
+
+            var key = await client1.Query(CreateKey(Obj("database", Database(childDb), "role", "server")));
 
             var client2 = client1.NewSessionClient(secret: key.Get(SECRET_FIELD));
 
-            await client2.Query(CreateClass(Obj("name", "a_class")));
-
-            var nestedClassRef = new ClassV(
-                id: "a_class",
-                database: new DatabaseV(
-                    id: "child-database",
-                    database: new DatabaseV("parent-database")));
+            await client2.Query(CreateClass(Obj("name", aClass)));
 
             var client3 = client2.NewSessionClient(secret: clientKey.Get(SECRET_FIELD));
 
-            Assert.AreEqual(BooleanV.True, await client3.Query(Exists(nestedClassRef)));
+            Assert.AreEqual(BooleanV.True, await client3.Query(Exists(Class(aClass, Database(childDb, Database(parentDb))))));
 
-            var _ref = new RefV(
-                id: "classes",
-                database: new DatabaseV("child-database", new DatabaseV("parent-database")));
+            var ret = await client3.Query(Paginate(Classes(Database(childDb, Database(parentDb)))));
 
-            var ret = await client3.Query(Paginate(_ref));
+            var nestedClassRef = new RefV(
+                id: aClass,
+                @class: Native.CLASSES,
+                database: new RefV(
+                    id: childDb,
+                    @class: Native.DATABASES,
+                    database: new RefV(
+                        id: parentDb,
+                        @class: Native.DATABASES)));
 
             Assert.That(ret.Get(REF_LIST),
                         Is.EquivalentTo(new List<RefV> { nestedClassRef }));
+        }
+
+        [Test] public async Task TestNestedKeyRef()
+        {
+            var parentDb = RandomStartingWith("db-for-keys");
+            var childDb = RandomStartingWith("db-test");
+
+            var client = await CreateNewDatabase(adminClient, parentDb);
+            await client.Query(CreateDatabase(Obj("name", childDb)));
+
+            var serverKey = await client.Query(CreateKey(Obj(
+                "database", Database(childDb),
+                "role", "server"
+            )));
+
+            var adminKey = await client.Query(CreateKey(Obj(
+                "database", Database(childDb),
+                "role", "admin"
+            )));
+
+            Assert.That((await client.Query(Paginate(Keys()))).Get(DATA),
+                        Is.EquivalentTo(new List<RefV> { serverKey.Get(REF_FIELD), adminKey.Get(REF_FIELD) }));
+
+            Assert.That((await adminClient.Query(Paginate(Keys(Database(parentDb))))).Get(DATA),
+                        Is.EquivalentTo(new List<RefV> { serverKey.Get(REF_FIELD), adminKey.Get(REF_FIELD) }));
         }
 
         static async Task<FaunaClient> CreateNewDatabase(FaunaClient client, string name)
@@ -1087,7 +1091,7 @@ namespace Test
 
             await client.Query(CreateFunction(Obj("name", "concat_with_slash", "body", query)));
 
-            Assert.AreEqual(BooleanV.True, await client.Query(Exists(new FunctionV("concat_with_slash"))));
+            Assert.AreEqual(BooleanV.True, await client.Query(Exists(Function("concat_with_slash"))));
         }
 
         [Test]
@@ -1097,7 +1101,7 @@ namespace Test
 
             await client.Query(CreateFunction(Obj("name", "my_concat", "body", query)));
 
-            var result = await client.Query(Call(new FunctionV("my_concat"), "a", "b"));
+            var result = await client.Query(Call(Function("my_concat"), "a", "b"));
 
             Assert.AreEqual(StringV.Of("a/b"), result);
         }
