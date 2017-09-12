@@ -4,6 +4,8 @@ using FaunaDB.Errors;
 using FaunaDB.Query;
 using Newtonsoft.Json;
 
+using static System.Linq.Enumerable;
+
 namespace FaunaDB.Types
 {
     class ValueJsonConverter : JsonConverter
@@ -171,8 +173,13 @@ namespace FaunaDB.Types
             }
         }
 
-        Expr ReadEnclosedLambda() =>
-            Unwrap(ReadEnclosedObject());
+        IReadOnlyDictionary<string, Expr> ReadEnclosedLambda()
+        {
+            return ReadEnclosedObject().Value.ToDictionary(
+                key => key.Key,
+                value => Unwrap(value.Value)
+            );
+        }
 
         static Expr Unwrap(Expr expr)
         {

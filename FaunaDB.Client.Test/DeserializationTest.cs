@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FaunaDB.Query;
 using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -217,8 +218,10 @@ namespace Test
         [Test]
         public void TestQuery()
         {
-            AssertJsonEqual(QueryV.Of("x", Add(Var("x"), 1)), "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
-            AssertJsonEqual(QueryV.Of(x => Add(x, 1)), "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}");
+            AssertJsonEqual(
+                new QueryV(new Dictionary<string, Expr> { { "lambda", "x" }, { "expr", Add(Var("x"), 1) } }),
+                "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}"
+            );
         }
     }
 }

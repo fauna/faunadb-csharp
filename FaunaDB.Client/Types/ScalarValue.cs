@@ -96,7 +96,7 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class SetRefV : ScalarValue<IReadOnlyDictionary<string, Value>>
     {
-        public SetRefV(IReadOnlyDictionary<string, Value> value) : base(value)
+        internal SetRefV(IReadOnlyDictionary<string, Value> value) : base(value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
@@ -135,18 +135,26 @@ namespace FaunaDB.Types
         /// Construct a TimeV from an iso8601 time string.
         /// It must use the 'Z' time zone.
         /// </summary>
-        public TimeV(string iso8601Time) : base(DateTimeUtil.FromIsoTime(iso8601Time, TimeFormat)) { }
+        internal TimeV(string iso8601Time) : base(DateTimeUtil.FromIsoTime(iso8601Time, TimeFormat)) { }
 
         /// <summary>
         /// Construct a TimeV from a <see cref="DateTime"/> object.
         /// </summary>
-        public TimeV(DateTime dateTime) : base(dateTime) { }
+        internal TimeV(DateTime dateTime) : base(dateTime) { }
 
         public static TimeV Of(string isoTime) =>
             new TimeV(isoTime);
 
         public static TimeV Of(DateTime dateTime) =>
             new TimeV(dateTime);
+
+        public DateTimeOffset DateTimeOffset
+        {
+            get
+            {
+                return new DateTimeOffset(Value);
+            }
+        }
 
         /// <summary>
         /// Convert from a DateTime by rendering as iso8601.
@@ -179,7 +187,7 @@ namespace FaunaDB.Types
             Value.GetHashCode();
 
         override public string ToString() =>
-            $"FaunaDate({Value})";
+            $"FaunaTime({Value.ToIso(TimeFormat)})";
         #endregion
     }
 
@@ -194,18 +202,26 @@ namespace FaunaDB.Types
         /// <summary>
         /// Construct a DateV from an iso8601 date string.
         /// </summary>
-        public DateV(string iso8601Date) : base(DateTimeUtil.FromIsoDate(iso8601Date, DateFormat)) { }
+        internal DateV(string iso8601Date) : base(DateTimeUtil.FromIsoDate(iso8601Date, DateFormat)) { }
 
         /// <summary>
         /// Construct a DateV from a <see cref="DateTime"/> object.
         /// </summary>
-        public DateV(DateTime dateDate) : base(dateDate) { }
+        internal DateV(DateTime dateDate) : base(dateDate) { }
 
         public static DateV Of(string isoDate) =>
             new DateV(isoDate);
 
         public static DateV Of(DateTime dateTime) =>
             new DateV(dateTime);
+
+        public DateTimeOffset DateTimeOffset
+        {
+            get
+            {
+                return new DateTimeOffset(Value);
+            }
+        }
 
         /// <summary>
         /// Convert from a DateTime by rendering as iso8601.
@@ -247,8 +263,7 @@ namespace FaunaDB.Types
         public static DateTime FromIsoTime(string dateString, string format)
         {
             var dateTruncated = TruncateLastTwoDigits(dateString);
-            var dateParsed = DateTime.ParseExact(dateTruncated, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-            return dateParsed.ToUniversalTime();
+            return DateTime.ParseExact(dateTruncated, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
         }
 
         /// <summary>
@@ -258,18 +273,18 @@ namespace FaunaDB.Types
         /// </summary>
         static string TruncateLastTwoDigits(string iso)
         {
-            var index = iso.LastIndexOf(".");
+            var index = iso.LastIndexOf(".", StringComparison.InvariantCulture);
 
             if (index >= 0)
             {
                 iso = iso.Substring(0, Math.Min(iso.Length, index + 8));
 
-                if (!iso.EndsWith("Z"))
+                if (!iso.EndsWith("Z", StringComparison.InvariantCulture))
                     iso += "Z";
             }
             else
             {
-                if (iso.EndsWith("Z"))
+                if (iso.EndsWith("Z", StringComparison.InvariantCulture))
                     iso = iso.Substring(0, iso.Length - 1);
 
                 iso += ".0000000Z";
@@ -280,8 +295,7 @@ namespace FaunaDB.Types
 
         public static DateTime FromIsoDate(string iso, string format)
         {
-            var dt = DateTime.ParseExact(iso, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-            return dt.ToUniversalTime();
+            return DateTime.ParseExact(iso, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
         }
 
     }

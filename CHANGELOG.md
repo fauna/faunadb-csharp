@@ -10,6 +10,8 @@
 - Don't throw exception for missing attributes when constructing objects, assign default value
 - Fix default missing constructor for value types
 - Encode/Decode enums as strings
+- Adds support for `DateTimeOffset` class
+- `QueryV` receives a dictionary not an `Expr`
 
 ## 1.0.0
 

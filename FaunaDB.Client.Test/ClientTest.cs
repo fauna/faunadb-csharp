@@ -12,7 +12,6 @@ using NUnit.Framework.Constraints;
 using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Option;
 using static FaunaDB.Types.Encoder;
-using static FaunaDB.Types.Decoder;
 
 namespace Test
 {
@@ -801,6 +800,7 @@ namespace Test
         {
             Value res = await client.Query(Time("1970-01-01T00:00:00-04:00"));
             Assert.AreEqual(new DateTime(1970, 1, 1, 4, 0, 0), res.To<DateTime>().Value);
+            Assert.AreEqual(new DateTimeOffset(1970, 1, 1, 4, 0, 0, 0, TimeSpan.Zero), res.To<DateTimeOffset>().Value);
         }
 
         [Test] public async Task TestEvalEpochExpression()
@@ -819,12 +819,18 @@ namespace Test
             Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 500), res[1].To<DateTime>().Value);
             Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(1000), res[2].To<DateTime>().Value);
             Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0, 0).AddTicks(2), res[3].To<DateTime>().Value);
+
+            Assert.AreEqual(new DateTimeOffset(1970, 1, 1, 0, 0, 30, TimeSpan.Zero), res[0].To<DateTimeOffset>().Value);
+            Assert.AreEqual(new DateTimeOffset(1970, 1, 1, 0, 0, 0, 500, TimeSpan.Zero), res[1].To<DateTimeOffset>().Value);
+            Assert.AreEqual(new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero).AddTicks(1000), res[2].To<DateTimeOffset>().Value);
+            Assert.AreEqual(new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero).AddTicks(2), res[3].To<DateTimeOffset>().Value);
         }
 
         [Test] public async Task TestEvalDateExpression()
         {
             Value res = await client.Query(Date("1970-01-02"));
             Assert.AreEqual(new DateTime(1970, 1, 2), res.To<DateTime>().Value);
+            Assert.AreEqual(new DateTimeOffset(1970, 1, 2, 0, 0, 0, TimeSpan.Zero), res.To<DateTimeOffset>().Value);
         }
 
         [Test] public async Task TestGetNextId()
@@ -1065,29 +1071,23 @@ namespace Test
         [Test]
         public async Task TestEchoQuery()
         {
-            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+            var query = Query(Lambda((x, y) => Concat(Arr(x, "/", y))));
 
-            Assert.AreEqual(
-                query,
-                await client.Query(query)
-            );
-        }
+            var result = await client.Query(query);
 
-        [Test]
-        public async Task TestWrapQuery()
-        {
-            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+            Assert.IsInstanceOf<QueryV>(result);
 
-            Assert.AreEqual(
-                query,
-                await client.Query(Query(Lambda(Arr("x", "y"), Concat(Arr(Var("x"), "/", Var("y"))))))
-            );
+            Assert.That(((QueryV)result).Value, Is.EquivalentTo(new Dictionary<string, Expr>
+            {
+                {"lambda", Arr("x", "y")},
+                {"expr", Concat(Arr(Var("x"), "/", Var("y")))}
+            }));
         }
 
         [Test]
         public async Task TestCreateFunction()
         {
-            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+            var query = Query(Lambda((x, y) => Concat(Arr(x, "/", y))));
 
             await client.Query(CreateFunction(Obj("name", "concat_with_slash", "body", query)));
 
@@ -1097,7 +1097,7 @@ namespace Test
         [Test]
         public async Task TestCallFunction()
         {
-            var query = QueryV.Of((x, y) => Concat(Arr(x, "/", y)));
+            var query = Query(Lambda((x, y) => Concat(Arr(x, "/", y))));
 
             await client.Query(CreateFunction(Obj("name", "my_concat", "body", query)));
 

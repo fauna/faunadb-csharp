@@ -25,6 +25,9 @@ namespace Test
             Assert.AreEqual(new DateV("2001-01-01"), Encode(new DateTime(2001, 1, 1)));
             Assert.AreEqual(new TimeV("2000-01-01T01:10:30.123Z"), Encode(new DateTime(2000, 1, 1, 1, 10, 30, 123)));
 
+            Assert.AreEqual(new DateV("2001-01-01"), Encode(new DateTimeOffset(2001, 1, 1, 0, 0, 0, TimeSpan.Zero)));
+            Assert.AreEqual(new TimeV("2000-01-01T01:10:30.123Z"), Encode(new DateTimeOffset(2000, 1, 1, 1, 10, 30, 123, TimeSpan.Zero)));
+
             //float point
             Assert.AreEqual(DoubleV.Of((float)3.14), Encode((float)3.14));
             Assert.AreEqual(DoubleV.Of(3.14), Encode((double)3.14));
@@ -142,6 +145,9 @@ namespace Test
             [FaunaField("birth_date")]
             public DateTime BirthDate { get; }
 
+            [FaunaField("birth_date2")]
+            public DateTimeOffset BirthDate2 { get; }
+
             [FaunaField("address")]
             public Address Address { get; }
 
@@ -152,6 +158,7 @@ namespace Test
             {
                 Name = name;
                 BirthDate = birthDate;
+                BirthDate2 = new DateTimeOffset(birthDate, new TimeSpan(-1, 0, 0));
                 Address = address;
                 Avatar = avatar;
             }
@@ -161,7 +168,7 @@ namespace Test
         public void TestUserClass()
         {
             Assert.AreEqual(
-                ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
+                ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "birth_date2", new TimeV("1980-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
                 Encode(new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar))
             );
 
@@ -169,8 +176,8 @@ namespace Test
 
             Assert.AreEqual(
                 ArrayV.Of(
-                    ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
-                    ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
+                    ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "birth_date2", new TimeV("1980-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
+                    ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "birth_date2", new TimeV("1975-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
                 ),
                 Encode(new List<Person> {
                     new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar),
@@ -182,8 +189,8 @@ namespace Test
 
             Assert.AreEqual(
                 ObjectV.With(
-                    "first", ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
-                    "second", ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
+                    "first", ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "birth_date2", new TimeV("1980-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
+                    "second", ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "birth_date2", new TimeV("1975-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
                 ),
                 Encode(new Dictionary<string, Person> {
                     {"first", new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar)},

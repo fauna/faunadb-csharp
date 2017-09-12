@@ -130,6 +130,9 @@ namespace FaunaDB.Types
                     return null;
 
                 case TypeCode.Object:
+                    if (typeof(DateTimeOffset) == dstType)
+                        return new DateTimeOffset(ToDateTime(value));
+
                     if (typeof(byte[]) == dstType && value is BytesV)
                         return ToByteArray(value);
 
@@ -410,7 +413,7 @@ namespace FaunaDB.Types
                 .Where(p => p.CanWrite && !p.Has<FaunaIgnoreAttribute>())
                 .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p, p.PropertyType), p.PropertyType)));
 
-            return properties.Count() > 0
+            return properties.Any()
                              ? Expression.Block(fields.Concat(properties))
                              : (Expression)Expression.Empty();
         }
