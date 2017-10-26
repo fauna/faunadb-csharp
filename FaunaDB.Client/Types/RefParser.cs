@@ -21,25 +21,10 @@
         {
             var idE = id.Value;
             var classE = Cast<RefV>(cls);
-            var databaseE = Cast<DatabaseV>(db);
+            var databaseE = Cast<RefV>(db);
 
             if (classE == null && databaseE == null)
-                return BuiltIn.FromName(idE);
-
-            if (BuiltIn.DATABASES == classE)
-                return new DatabaseV(id: idE, database: databaseE);
-
-            if (BuiltIn.CLASSES == classE)
-                return new ClassV(id: idE, database: databaseE);
-
-            if (BuiltIn.INDEXES == classE)
-                return new IndexV(id: idE, database: databaseE);
-
-            if (BuiltIn.FUNCTIONS == classE)
-                return new FunctionV(id: idE, database: databaseE);
-
-            if (BuiltIn.KEYS == classE)
-                return new KeyV(id: idE, database: databaseE);
+                return Native.FromName(idE);
 
             return new RefV(id: idE, @class: classE, database: databaseE);
         }

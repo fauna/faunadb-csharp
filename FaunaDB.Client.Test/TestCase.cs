@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Errors;
+using FaunaDB.Query;
 using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ namespace Test
         protected static Field<string> SECRET_FIELD = Field.At("secret").To<string>();
 
         protected FaunaClient rootClient;
-        protected RefV DbRef;
+        protected Expr DbRef;
         protected FaunaClient client;
         protected Value clientKey;
 
@@ -44,7 +45,7 @@ namespace Test
             rootClient = new FaunaClient(secret: secret, endpoint: endpoint);
 
             const string dbName = "faunadb-csharp-test";
-            DbRef = new DatabaseV(dbName);
+            DbRef = Database(dbName);
 
             try {
                 await rootClient.Query(Delete(DbRef));

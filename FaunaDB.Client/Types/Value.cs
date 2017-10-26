@@ -27,7 +27,7 @@ namespace FaunaDB.Types
     /// Consider the <see cref="Value"/> node modeling the root of the tree:
     /// <code>
     /// {
-    ///   "ref": { "@ref": "some/ref" },
+    ///   "ref": { "@ref": { "id": "classes" } },
     ///   "data": { "someKey": "string1", "someKey2": 123 }
     /// }
     /// </code>
@@ -38,7 +38,7 @@ namespace FaunaDB.Types
     ///   Field&lt;string&gt; someKey = Field.At("data", "someKey").To&lt;string&gt;();
     ///   Field&lt;string&gt; nonExistingKey = Field.At("non-existing-key").To&lt;long&gt;();
     ///
-    ///   node.Get(ref); // new RefV("some/ref")
+    ///   node.Get(ref); // new RefV("classes")
     ///   node.Get(someKey); // "string1"
     ///   node.GetOption(nonExistingKey) // Option.None&lt;string&gt;()
     /// </code>
@@ -46,7 +46,7 @@ namespace FaunaDB.Types
     /// <para>
     /// The interface also has helpers to transverse values without <see cref="Field"/> references:
     /// <code>
-    ///   node.At("ref").To&lt;RefV&gt;().Get(); // new RefV("some/ref")
+    ///   node.At("ref").To&lt;RefV&gt;().Get(); // new RefV("classes")
     ///   node.At("data", "someKey").To&lt;string&gt;().Get() // "string1"
     ///   node.At("non-existing-key").To&lt;long&gt;().GetOption() // Option.None&lt;long&gt;()
     /// </code>

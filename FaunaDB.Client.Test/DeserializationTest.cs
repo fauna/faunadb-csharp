@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FaunaDB.Types;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -81,7 +80,7 @@ namespace Test
         [Test] public void TestSetRef()
         {
             var expected = new SetRefV(new Dictionary<string, Value> {
-                { "match", new IndexV("spells_by_element") },
+                { "match", new RefV(id: "spells_by_element", @class: Native.INDEXES) },
                 { "terms", StringV.Of("fire") } });
 
             AssertJsonEqual(expected,
@@ -117,11 +116,11 @@ namespace Test
         [Test]
         public void TestBuiltInClasses()
         {
-            AssertJsonEqual(BuiltIn.CLASSES, "{\"@ref\":{\"id\":\"classes\"}}");
-            AssertJsonEqual(BuiltIn.INDEXES, "{\"@ref\":{\"id\":\"indexes\"}}");
-            AssertJsonEqual(BuiltIn.DATABASES, "{\"@ref\":{\"id\":\"databases\"}}");
-            AssertJsonEqual(BuiltIn.FUNCTIONS, "{\"@ref\":{\"id\":\"functions\"}}");
-            AssertJsonEqual(BuiltIn.KEYS, "{\"@ref\":{\"id\":\"keys\"}}");
+            AssertJsonEqual(Native.CLASSES, "{\"@ref\":{\"id\":\"classes\"}}");
+            AssertJsonEqual(Native.INDEXES, "{\"@ref\":{\"id\":\"indexes\"}}");
+            AssertJsonEqual(Native.DATABASES, "{\"@ref\":{\"id\":\"databases\"}}");
+            AssertJsonEqual(Native.FUNCTIONS, "{\"@ref\":{\"id\":\"functions\"}}");
+            AssertJsonEqual(Native.KEYS, "{\"@ref\":{\"id\":\"keys\"}}");
         }
 
         [Test]
@@ -130,16 +129,17 @@ namespace Test
             AssertJsonEqual(
                 new RefV(
                     id: "123456789",
-                    @class: new ClassV("child-class")),
+                    @class: new RefV(id: "child-class", @class: Native.CLASSES)),
                 "{\"@ref\": {\"id\": \"123456789\", \"class\": {\"@ref\": {\"id\": \"child-class\", \"class\": {\"@ref\": {\"id\": \"classes\"}}}}}}"
             );
 
             AssertJsonEqual(
                 new RefV(
                     id: "123456789",
-                    @class: new ClassV(
+                    @class: new RefV(
                         id: "child-class",
-                        database: new DatabaseV("child-database"))),
+                        @class: Native.CLASSES,
+                        database: new RefV(id: "child-database", @class: Native.DATABASES))),
                 "{\"@ref\": {\"id\": \"123456789\", \"class\": {\"@ref\": {\"id\": \"child-class\", \"class\": {\"@ref\": {\"id\": \"classes\"}}, \"database\": {\"@ref\": {\"id\": \"child-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}}}}}"
             );
         }
@@ -148,7 +148,12 @@ namespace Test
         public void TestClassRef()
         {
             AssertJsonEqual(
-                new ClassV(id: "a-class", database: new DatabaseV("a-database")),
+                new RefV(id: "a-class", @class: Native.CLASSES),
+                "{\"@ref\": {\"id\": \"a-class\", \"class\": {\"@ref\": {\"id\": \"classes\"}}}}"
+            );
+
+            AssertJsonEqual(
+                new RefV(id: "a-class", @class: Native.CLASSES, database: new RefV(id: "a-database", @class: Native.DATABASES)),
                 "{\"@ref\": {\"id\": \"a-class\", \"class\": {\"@ref\": {\"id\": \"classes\"}}, \"database\": {\"@ref\": {\"id\": \"a-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}}}"
             );
         }
@@ -157,12 +162,12 @@ namespace Test
         public void TestDatabaseRef()
         {
             AssertJsonEqual(
-                new DatabaseV(id: "a-database"),
+                new RefV(id: "a-database", @class: Native.DATABASES),
                 "{\"@ref\": {\"id\": \"a-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}"
             );
 
             AssertJsonEqual(
-                new DatabaseV(id: "child-database", database: new DatabaseV("parent-database")),
+                new RefV(id: "child-database", @class: Native.DATABASES, database: new RefV(id: "parent-database", @class: Native.DATABASES)),
                 "{\"@ref\": {\"id\": \"child-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}, \"database\": {\"@ref\": {\"id\": \"parent-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}}}"
             );
         }
@@ -171,12 +176,12 @@ namespace Test
         public void TestIndexRef()
         {
             AssertJsonEqual(
-                new IndexV(id: "a-index"),
+                new RefV(id: "a-index", @class: Native.INDEXES),
                 "{\"@ref\": {\"id\": \"a-index\", \"class\": {\"@ref\": {\"id\": \"indexes\"}}}}"
             );
 
             AssertJsonEqual(
-                new IndexV(id: "a-index", database: new DatabaseV("a-database")),
+                new RefV(id: "a-index", @class: Native.INDEXES, database: new RefV(id: "a-database", @class: Native.DATABASES)),
                 "{\"@ref\": {\"id\": \"a-index\", \"class\": {\"@ref\": {\"id\": \"indexes\"}}, \"database\": {\"@ref\": {\"id\": \"a-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}}}"
             );
         }
@@ -185,12 +190,12 @@ namespace Test
         public void TestKeyRef()
         {
             AssertJsonEqual(
-                new KeyV(id: "a-key"),
+                new RefV(id: "a-key", @class: Native.KEYS),
                 "{\"@ref\": {\"id\": \"a-key\", \"class\": {\"@ref\": {\"id\": \"keys\"}}}}"
             );
 
             AssertJsonEqual(
-                new KeyV(id: "a-key", database: new DatabaseV("a-database")),
+                new RefV(id: "a-key", @class: Native.KEYS, database: new RefV(id: "a-database", @class: Native.DATABASES)),
                 "{\"@ref\": {\"id\": \"a-key\", \"class\": {\"@ref\": {\"id\": \"keys\"}}, \"database\": {\"@ref\": {\"id\": \"a-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}}}"
             );
         }
@@ -199,12 +204,12 @@ namespace Test
         public void TestFunctionRef()
         {
             AssertJsonEqual(
-                new FunctionV(id: "a-function"),
+                new RefV(id: "a-function", @class: Native.FUNCTIONS),
                 "{\"@ref\": {\"id\": \"a-function\", \"class\": {\"@ref\": {\"id\": \"functions\"}}}}"
             );
 
             AssertJsonEqual(
-                new FunctionV(id: "a-function", database: new DatabaseV("a-database")),
+                new RefV(id: "a-function", @class: Native.FUNCTIONS, database: new RefV(id: "a-database", @class: Native.DATABASES)),
                 "{\"@ref\": {\"id\": \"a-function\", \"class\": {\"@ref\": {\"id\": \"functions\"}}, \"database\": {\"@ref\": {\"id\": \"a-database\", \"class\": {\"@ref\": {\"id\": \"databases\"}}}}}}"
             );
         }
