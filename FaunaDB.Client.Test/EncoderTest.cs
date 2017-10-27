@@ -301,5 +301,22 @@ namespace Test
                 Encode(new FaunaTypes())
             );
         }
+
+        enum CpuTypes
+        {
+            [FaunaEnum("x86_32")] X86,
+            [FaunaEnum("x86_64")] X86_64,
+            ARM,
+            MIPS
+        }
+
+        [Test]
+        public void TestEnumTypes()
+        {
+            Assert.AreEqual(StringV.Of("x86_32"), Encode(CpuTypes.X86));
+            Assert.AreEqual(StringV.Of("x86_64"), Encode(CpuTypes.X86_64));
+            Assert.AreEqual(StringV.Of("ARM"), Encode(CpuTypes.ARM));
+            Assert.AreEqual(StringV.Of("MIPS"), Encode(CpuTypes.MIPS));
+        }
     }
 }

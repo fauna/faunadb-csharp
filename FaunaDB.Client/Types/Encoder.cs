@@ -73,6 +73,9 @@ namespace FaunaDB.Types
         {
             var type = obj.GetType();
 
+            if (type.IsEnum)
+                return WrapEnum(obj, type);
+
             switch (Type.GetTypeCode(type))
             {
                 case TypeCode.String:
@@ -150,10 +153,38 @@ namespace FaunaDB.Types
             return new ObjectV(ret);
         }
 
+        Value WrapEnum(object obj, Type type)
+        {
+            Converter converter;
+
+            try
+            {
+                locker.EnterUpgradeableReadLock();
+                if (!converters.TryGetValue(type, out converter))
+                {
+                    try
+                    {
+                        locker.EnterWriteLock();
+                        converter = CreateEnumConverter(type);
+                        converters.Add(type, converter);
+                    }
+                    finally
+                    {
+                        locker.ExitWriteLock();
+                    }
+                }
+            }
+            finally
+            {
+                locker.ExitUpgradeableReadLock();
+            }
+
+            return converter.Invoke(this, obj);
+        }
+
         Value WrapObj(object obj)
         {
             var type = obj.GetType();
-
             Converter converter;
 
             try
@@ -217,6 +248,42 @@ namespace FaunaDB.Types
             );
 
             return lambda.Compile();
+        }
+
+        Converter CreateEnumConverter(Type srcType)
+        {
+            var encoderExpr = Expression.Parameter(typeof(EncoderImpl), "encoder");
+            var objExpr = Expression.Parameter(typeof(object), "obj");
+
+            var defaultValue = Expression.Constant(null, typeof(Value));
+            var switchValue = Expression.Convert(objExpr, srcType);
+
+            var cases = srcType
+                .GetEnumValues()
+                .OfType<Enum>()
+                .Select(CreateSwitchCase)
+                .ToArray();
+
+            return Expression.Lambda<Converter>(
+                Expression.Switch(switchValue, defaultValue, cases),
+                encoderExpr,
+                objExpr
+            ).Compile();
+        }
+
+        SwitchCase CreateSwitchCase(Enum enumValue)
+        {
+            var dstType = enumValue.GetType();
+            var enumName = Enum.GetName(dstType, enumValue);
+            var member = dstType.GetMember(enumName)[0];
+            var faunaEnum = member.GetCustomAttribute<FaunaEnum>();
+
+            var body = Expression.Constant(
+                StringV.Of(faunaEnum != null ? faunaEnum.Alias : enumName),
+                typeof(Value)
+            );
+
+            return Expression.SwitchCase(body, Expression.Constant(enumValue));
         }
 
         /*
