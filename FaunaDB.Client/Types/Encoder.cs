@@ -85,7 +85,7 @@ namespace FaunaDB.Types
                     return BooleanV.Of((bool)obj);
 
                 case TypeCode.DateTime:
-                    return WrapDateTime((DateTime)obj);
+                    return Value.FromDateTime((DateTime)obj);
 
                 case TypeCode.SByte:
                 case TypeCode.Int16:
@@ -110,6 +110,9 @@ namespace FaunaDB.Types
                     return NullV.Instance;
 
                 case TypeCode.Object:
+                    if (typeof(DateTimeOffset).IsInstanceOfType(obj))
+                        return Value.FromDateTimeOffset((DateTimeOffset)obj);
+
                     if (typeof(byte[]).IsInstanceOfType(obj))
                         return new BytesV((byte[])obj);
 
@@ -123,14 +126,6 @@ namespace FaunaDB.Types
             }
 
             throw new InvalidOperationException($"Unsupported type {type} at `{obj}`");
-        }
-
-        Value WrapDateTime(DateTime date)
-        {
-            if (date.Ticks % (24 * 60 * 60 * 10000) > 0)
-                return new TimeV(date);
-
-            return new DateV(date);
         }
 
         Value WrapEnumerable(IEnumerable array)

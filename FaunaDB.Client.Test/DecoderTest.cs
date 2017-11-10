@@ -36,6 +36,9 @@ namespace Test
             Assert.AreEqual(new DateTime(2001, 1, 1), Decode<DateTime>(new DateV("2001-01-01")));
             Assert.AreEqual(new DateTime(2000, 1, 1, 1, 10, 30, 123), Decode<DateTime>(new TimeV("2000-01-01T01:10:30.123Z")));
 
+            Assert.AreEqual(new DateTimeOffset(2001, 1, 1, 0, 0, 0, TimeSpan.Zero), Decode<DateTimeOffset>(new DateV("2001-01-01")));
+            Assert.AreEqual(new DateTimeOffset(2000, 1, 1, 1, 10, 30, 123, TimeSpan.Zero), Decode<DateTimeOffset>(new TimeV("2000-01-01T01:10:30.123Z")));
+
             Assert.AreEqual(new byte[] { 1, 2, 3 }, Decode<byte[]>(new BytesV(1, 2, 3)));
         }
 
@@ -169,21 +172,30 @@ namespace Test
         {
             public string Description { get; set; }
             public double Price { get; set; }
+            public DateTime Created { get; set; }
+            public DateTimeOffset LastUpdated { get; set; }
 
             [FaunaConstructor]
-            public Product([FaunaField("Description")] string description, [FaunaField("Price")] double price)
+            public Product([FaunaField("Description")] string description,
+                           [FaunaField("Price")] double price,
+                           [FaunaField("Created")] DateTime created,
+                           [FaunaField("LastUpdated")] DateTimeOffset lastUpdated)
             {
                 Description = description;
                 Price = price;
+                Created = created;
+                LastUpdated = lastUpdated;
             }
         }
 
         [Test]
         public void TestUserClassConstructor()
         {
-            var person = Decode<Product>(ObjectV.With("Description", "Laptop", "Price", 999.9));
+            var person = Decode<Product>(ObjectV.With("Description", "Laptop", "Price", 999.9, "Created", DateV.Of("2000-01-01"), "LastUpdated", TimeV.Of("2001-01-02T11:00:00.123Z")));
             Assert.AreEqual("Laptop", person.Description);
             Assert.AreEqual(999.9, person.Price);
+            Assert.AreEqual(new DateTime(2000, 1, 1), person.Created);
+            Assert.AreEqual(new DateTimeOffset(2001, 1, 2, 11, 0, 0, 123, TimeSpan.Zero), person.LastUpdated);
         }
 
         class Order

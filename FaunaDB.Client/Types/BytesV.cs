@@ -16,13 +16,13 @@ namespace FaunaDB.Types
         /// <summary>
         /// Creates a new instance of <see cref="BytesV"/> from a base64 string.
         /// </summary>
-        public BytesV(string base64) : base(FromUrlSafeBase64(base64))
+        internal BytesV(string base64) : base(FromUrlSafeBase64(base64))
         { }
 
         /// <summary>
         /// Creates a new instance of <see cref="BytesV"/> from a variable lenght of bytes.
         /// </summary>
-        public BytesV(params byte[] value) : base(value)
+        internal BytesV(params byte[] value) : base(value)
         { }
 
         public static BytesV Of(string base64) =>

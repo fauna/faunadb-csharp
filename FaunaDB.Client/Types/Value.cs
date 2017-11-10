@@ -158,6 +158,27 @@ namespace FaunaDB.Types
         public static implicit operator Value(string s) =>
             s == null ? NullV.Instance : new StringV(s);
 
+        public static implicit operator Value(DateTime dt) =>
+            FromDateTime(dt);
+
+        public static implicit operator Value(DateTimeOffset dt) =>
+            FromDateTimeOffset(dt);
+
+        internal static Value FromDateTime(DateTime dt)
+        {
+            if (dt.Ticks % (24 * 60 * 60 * 10000) > 0)
+                return new TimeV(dt);
+
+            return new DateV(dt);
+        }
+
+        internal static Value FromDateTimeOffset(DateTimeOffset dt)
+        {
+            if (dt.UtcTicks % (24 * 60 * 60 * 10000) > 0)
+                return new TimeV(dt.UtcDateTime);
+
+            return new DateV(dt.UtcDateTime);
+        }
         #endregion
 
         #region explicit (downcasting) conversions
@@ -172,6 +193,12 @@ namespace FaunaDB.Types
 
         public static explicit operator string(Value v) =>
             ((StringV)v).Value;
+
+        public static explicit operator DateTime(Value v) =>
+            Expr.ToDateTime(v);
+
+        public static explicit operator DateTimeOffset(Value v) =>
+            Expr.ToDateTimeOffset(v);
         #endregion
     }
 

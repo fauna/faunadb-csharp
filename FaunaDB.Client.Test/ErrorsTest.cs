@@ -145,7 +145,7 @@ namespace Test
         public override bool Equals(Expr v) => false;
         protected override int HashCode() => 0;
 
-        protected override void WriteJson(JsonWriter writer)
+        protected internal override void WriteJson(JsonWriter writer)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("foo");

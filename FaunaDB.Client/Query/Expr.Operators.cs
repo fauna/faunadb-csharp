@@ -23,6 +23,12 @@ namespace FaunaDB.Query
         public static implicit operator Expr(string s) =>
             s == null ? NullV.Instance : StringV.Of(s);
 
+        public static implicit operator Expr(DateTime dt) =>
+            Value.FromDateTime(dt);
+
+        public static implicit operator Expr(DateTimeOffset dt) =>
+            Value.FromDateTimeOffset(dt);
+
         public static implicit operator Expr(ActionType action)
         {
             switch (action)
@@ -70,6 +76,38 @@ namespace FaunaDB.Query
 
         public static explicit operator string(Expr v) =>
             v == NullV.Instance ? null : ((StringV)v).Value;
+
+        public static explicit operator DateTime(Expr v) =>
+            ToDateTime(v);
+
+        public static explicit operator DateTimeOffset(Expr v) =>
+            ToDateTimeOffset(v);
+
+        internal static DateTime ToDateTime(Expr v)
+        {
+            var date = v as DateV;
+            if (date != null)
+                return date.Value;
+
+            var time = v as TimeV;
+            if (time != null)
+                return time.Value;
+
+            throw new ArgumentException($"Cannot convert {v} to DateTime");
+        }
+
+        internal static DateTimeOffset ToDateTimeOffset(Expr v)
+        {
+            var date = v as DateV;
+            if (date != null)
+                return date.DateTimeOffset;
+
+            var time = v as TimeV;
+            if (time != null)
+                return time.DateTimeOffset;
+
+            throw new ArgumentException($"Cannot convert {v} to DateTimeOffset");
+        }
 
         public static explicit operator ActionType(Expr v)
         {

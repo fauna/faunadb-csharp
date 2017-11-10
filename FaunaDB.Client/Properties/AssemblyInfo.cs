@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
@@ -13,6 +14,7 @@
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
+[assembly: InternalsVisibleTo("FaunaDB.Client.Test")]
 #else
 [assembly: AssemblyConfiguration("Release")]
 #endif
