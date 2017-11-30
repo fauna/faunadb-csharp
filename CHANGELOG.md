@@ -1,4 +1,4 @@
-## 2.0.0-SNAPSHOT
+## 2.0.0-alpha
 
 - Removes `Codec` api
 - Rename `ValueOption` to `ToOption` in `IResult<T>` interface
@@ -12,6 +12,7 @@
 - Encode/Decode enums as strings
 - Adds support for `DateTimeOffset` class
 - `QueryV` receives a dictionary not an `Expr`
+- Split code in two modules `FaunaDB.Client.Api` and `FaunaDB.Client.Commons`
 
 ## 1.0.0
 

@@ -1,6 +1,5 @@
 # FaunaDB C# Driver
 
-[![Build Status](https://img.shields.io/travis/fauna/faunadb-csharp/master.svg?maxAge=21600)](https://travis-ci.org/fauna/faunadb-csharp)
 [![NuGet](https://img.shields.io/nuget/v/FaunaDB.Client.svg?maxAge=21600)](https://www.nuget.org/packages/FaunaDB.Client/)
 [![License](https://img.shields.io/badge/license-MPL_2.0-blue.svg?maxAge=2592000)](https://raw.githubusercontent.com/fauna/faunadb-csharp/master/LICENSE)
 
@@ -20,7 +19,7 @@
 
 #### Build
 
-`& "C:\Program Files (x86)\MSBuild\14.0\Bin\amd64\MSBuild.exe" .\faunadb-csharp.sln /t:Build`
+`& MSBuild.exe .\faunadb-csharp.sln /t:Build`
 
 #### Running Tests
 

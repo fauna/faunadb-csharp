@@ -61,9 +61,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http.Primitives">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
@@ -72,18 +69,20 @@
     </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="FaunaDB.Client.Api">
+      <HintPath>..\packages\FaunaDB.Client.Api.1.0.0-alpha\lib\net45\FaunaDB.Client.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="FaunaDB.Client.Common">
+      <HintPath>..\packages\FaunaDB.Client.Common.1.0.0-alpha\lib\net45\FaunaDB.Client.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DeserializationTest.cs" />
-    <Compile Include="FieldTest.cs" />
     <Compile Include="ClientTest.cs" />
-    <Compile Include="OperatorTest.cs" />
-    <Compile Include="SerializationTest.cs" />
     <Compile Include="TestCase.cs" />
-    <Compile Include="ErrorsTest.cs" />
     <Compile Include="PageTest.cs" />
-    <Compile Include="EncoderTest.cs" />
-    <Compile Include="DecoderTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

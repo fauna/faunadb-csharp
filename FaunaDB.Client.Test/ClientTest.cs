@@ -911,9 +911,9 @@ namespace Test
 
         [Test] public async Task TestBytes()
         {
-            Value bytes = await client.Query(new BytesV(0x1, 0x2, 0x3));
+            Value bytes = await client.Query(BytesV.Of(0x1, 0x2, 0x3));
 
-            Assert.AreEqual(new BytesV(0x1, 0x2, 0x3), bytes);
+            Assert.AreEqual(BytesV.Of(0x1, 0x2, 0x3), bytes);
         }
 
         class Spell
