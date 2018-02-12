@@ -98,7 +98,7 @@ namespace Test
     class Config {
         public static async Task<Config> GetConfig()
         {
-            string directory = System.AppDomain.CurrentDomain.BaseDirectory;
+            string directory = Directory.GetCurrentDirectory();
 
             while (!File.Exists(System.IO.Path.Combine(directory, "testConfig.json")))
                 directory = System.IO.Path.GetDirectoryName(directory);

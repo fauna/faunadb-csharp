@@ -10,7 +10,7 @@ namespace FaunaDB.Query
     class UnescapedObject : Expr
     {
         public static readonly UnescapedObject Empty =
-            new UnescapedObject(ImmutableDictionary<string, Expr>.Empty);
+            new UnescapedObject(ImmutableDictionary.Empty<string, Expr>());
 
         IReadOnlyDictionary<string, Expr> Values { get; }
 

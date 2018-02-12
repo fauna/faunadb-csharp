@@ -69,11 +69,26 @@ namespace FaunaDB.Types
             }
         }
 
+        static readonly object dbNullValue = GetDBNullValue();
+
+        static object GetDBNullValue()
+        {
+#if !(NETSTANDARD1_5)
+            return DBNull.Value;
+#else
+            var dbNullType = Type.GetType("System.DBNull");
+            return dbNullType.GetField("Value").GetValue(null);
+#endif
+        }
+
         Value EncodeIntern(object obj)
         {
             var type = obj.GetType();
 
-            if (type.IsEnum)
+            if (dbNullValue.Equals(obj))
+                return NullV.Instance;
+
+            if (type.GetTypeInfo().IsEnum)
                 return WrapEnum(obj, type);
 
             switch (Type.GetTypeCode(type))
@@ -105,7 +120,11 @@ namespace FaunaDB.Types
                 case TypeCode.Decimal:
                     return DoubleV.Of(Convert.ToDouble(obj));
 
+#if !(NETSTANDARD1_5)
                 case TypeCode.DBNull:
+                    return NullV.Instance;
+#endif
+
                 case TypeCode.Empty:
                     return NullV.Instance;
 
@@ -253,7 +272,7 @@ namespace FaunaDB.Types
             var defaultValue = Expression.Constant(null, typeof(Value));
             var switchValue = Expression.Convert(objExpr, srcType);
 
-            var cases = srcType
+            var cases = srcType.GetTypeInfo()
                 .GetEnumValues()
                 .OfType<Enum>()
                 .Select(CreateSwitchCase)
