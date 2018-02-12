@@ -29,18 +29,4 @@ Global
 		{CC9D4AE2-C260-4EC0-A5F4-3A5CCCFB99A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC9D4AE2-C260-4EC0-A5F4-3A5CCCFB99A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		Policies = $0
-		$0.DotNetNamingPolicy = $1
-		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
-		$1.ResourceNamePolicy = FileFormatDefault
-		$0.TextStylePolicy = $4
-		$4.FileWidth = 120
-		$4.TabsToSpaces = False
-		$4.inheritsSet = VisualStudio
-		$4.inheritsScope = text/plain
-	EndGlobalSection
 EndGlobal

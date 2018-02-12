@@ -15,7 +15,7 @@ namespace FaunaDB.Types
     {
         #region Construction
         public static readonly ObjectV Empty =
-            new ObjectV(ImmutableDictionary<string, Value>.Empty);
+            new ObjectV(ImmutableDictionary.Empty<string, Value>());
 
         public IReadOnlyDictionary<string, Value> Value { get; }
 
@@ -37,9 +37,9 @@ namespace FaunaDB.Types
         /// </param>
         internal ObjectV(Action<Action<string, Value>> builder)
         {
-            var values = new List<KeyValuePair<string, Value>>();
-            builder((k, v) => values.Add(new KeyValuePair<string, Value>(k, v)));
-            Value = new ImmutableDictionary<string, Value>(values);
+            var values = new Dictionary<string, Value>();
+            builder((k, v) => values.Add(k, v));
+            Value = values;
         }
 
         #endregion

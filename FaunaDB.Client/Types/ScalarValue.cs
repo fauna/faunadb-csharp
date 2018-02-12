@@ -287,18 +287,18 @@ namespace FaunaDB.Types
         /// </summary>
         static string TruncateLastTwoDigits(string iso)
         {
-            var index = iso.LastIndexOf(".");
+            var index = iso.LastIndexOf(".", StringComparison.CurrentCulture);
 
             if (index >= 0)
             {
                 iso = iso.Substring(0, Math.Min(iso.Length, index + 8));
 
-                if (!iso.EndsWith("Z"))
+                if (!iso.EndsWith("Z", StringComparison.CurrentCulture))
                     iso += "Z";
             }
             else
             {
-                if (iso.EndsWith("Z"))
+                if (iso.EndsWith("Z", StringComparison.CurrentCulture))
                     iso = iso.Substring(0, iso.Length - 1);
 
                 iso += ".0000000Z";

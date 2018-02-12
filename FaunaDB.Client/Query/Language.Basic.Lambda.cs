@@ -22,7 +22,7 @@ namespace FaunaDB.Query
         /// </example>
         public static Expr Lambda(Func<Expr, Expr> lambda)
         {
-            ParameterInfo[] info = lambda.Method.GetParameters();
+            ParameterInfo[] info = lambda.GetMethodInfo().GetParameters();
             string p0 = info[0].Name;
 
             return Lambda(p0, lambda(Var(p0)));
@@ -45,7 +45,7 @@ namespace FaunaDB.Query
         /// </example>
         public static Expr Lambda(Func<Expr, Expr, Expr> lambda)
         {
-            ParameterInfo[] info = lambda.Method.GetParameters();
+            ParameterInfo[] info = lambda.GetMethodInfo().GetParameters();
             string p0 = info[0].Name;
             string p1 = info[1].Name;
 
@@ -71,7 +71,7 @@ namespace FaunaDB.Query
         /// </example>
         public static Expr Lambda(Func<Expr, Expr, Expr, Expr> lambda)
         {
-            ParameterInfo[] info = lambda.Method.GetParameters();
+            ParameterInfo[] info = lambda.GetMethodInfo().GetParameters();
             string p0 = info[0].Name;
             string p1 = info[1].Name;
             string p2 = info[2].Name;
@@ -98,7 +98,7 @@ namespace FaunaDB.Query
         /// </example>
         public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr> lambda)
         {
-            ParameterInfo[] info = lambda.Method.GetParameters();
+            ParameterInfo[] info = lambda.GetMethodInfo().GetParameters();
             string p0 = info[0].Name;
             string p1 = info[1].Name;
             string p2 = info[2].Name;
@@ -126,7 +126,7 @@ namespace FaunaDB.Query
         /// </example>
         public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr> lambda)
         {
-            ParameterInfo[] info = lambda.Method.GetParameters();
+            ParameterInfo[] info = lambda.GetMethodInfo().GetParameters();
             string p0 = info[0].Name;
             string p1 = info[1].Name;
             string p2 = info[2].Name;
@@ -155,7 +155,7 @@ namespace FaunaDB.Query
         /// </example>
         public static Expr Lambda(Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr> lambda)
         {
-            ParameterInfo[] info = lambda.Method.GetParameters();
+            ParameterInfo[] info = lambda.GetMethodInfo().GetParameters();
             string p0 = info[0].Name;
             string p1 = info[1].Name;
             string p2 = info[2].Name;
