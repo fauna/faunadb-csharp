@@ -93,6 +93,12 @@ namespace Test
             AssertJsonEqual(new BytesV(0xff), "{\"@bytes\":\"_w==\"}");
         }
 
+        [Test] public void TestAbort()
+        {
+            AssertJsonEqual(Abort("message"),
+                "{\"abort\":\"message\"}");
+        }
+
         [Test] public void TestAt()
         {
             AssertJsonEqual(At(1, Paginate(Classes())),

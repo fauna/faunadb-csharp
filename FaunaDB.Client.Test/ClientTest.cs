@@ -151,6 +151,20 @@ namespace Test
         }
 
         [Test]
+        public void TestAbort()
+        {
+            var ex = Assert.ThrowsAsync<BadRequest>(
+                async () => await client.Query(Abort("error message"))
+            );
+
+            AssertErrors(ex, code: "transaction aborted", description: "error message");
+
+            AssertEmptyFailures(ex);
+
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
+        }
+
+        [Test]
         public void TestUnauthorizedOnInvalidSecret()
         {
             var ex = Assert.ThrowsAsync<Unauthorized>(

@@ -12,6 +12,7 @@
 - Encode/Decode enums as strings
 - Adds support for `DateTimeOffset` class
 - `QueryV` receives a dictionary not an `Expr`
+- Adds `Abort(Expr msg)` function
 
 ## 1.0.0
 

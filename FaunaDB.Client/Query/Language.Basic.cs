@@ -5,6 +5,15 @@ namespace FaunaDB.Query
     public partial struct Language
     {
         /// <summary>
+        /// Creates a new Abort expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// </para>
+        /// </summary>
+        public static Expr Abort(Expr msg) =>
+            UnescapedObject.With("abort", msg);
+
+        /// <summary>
         /// Creates a new Call expression.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
