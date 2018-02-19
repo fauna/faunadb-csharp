@@ -5,6 +5,24 @@ namespace FaunaDB.Query
     public partial struct Language
     {
         /// <summary>
+        /// Creates a new Singleton expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Singleton(Expr @ref) =>
+            UnescapedObject.With("singleton", @ref);
+
+        /// <summary>
+        /// Creates a new Events expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Events(Expr refSet) =>
+            UnescapedObject.With("events", refSet);
+
+        /// <summary>
         /// Creates a new Match expression.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>

@@ -399,6 +399,20 @@ namespace Test
                 "{\"create_key\":{\"object\":{\"database\":{\"database\":\"db_name\"},\"role\":\"client\"}}}");
         }
 
+        [Test] public void TestSingleton()
+        {
+            AssertJsonEqual(
+                Singleton(Ref(Class("widget"), "123")),
+                "{\"singleton\":{\"ref\":{\"class\":\"widget\"},\"id\":\"123\"}}");
+        }
+
+        [Test] public void TestEvents()
+        {
+            AssertJsonEqual(
+                Events(Ref(Class("widget"), "123")),
+                "{\"events\":{\"ref\":{\"class\":\"widget\"},\"id\":\"123\"}}");
+        }
+
         [Test] public void TestMatch()
         {
             AssertJsonEqual(

@@ -352,6 +352,71 @@ namespace Test
             Assert.AreEqual(Null(), removedEvent);
         }
 
+        class Event
+        {
+            string action;
+            RefV instance;
+
+            [FaunaConstructor]
+            public Event(string action, RefV instance)
+            {
+                this.action = action;
+                this.instance = instance;
+            }
+
+            public override string ToString() => $"Event({action}, {instance})";
+            public override int GetHashCode() => 0;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as Event;
+                return other != null && action == other.action && instance == other.instance;
+            }
+        }
+
+        [Test] public async Task TestEvents()
+        {
+            var createdInstance = (await client.Query(
+                Create(await RandomClass(), Obj("data", Obj("x", 1)))
+            )).Get(REF_FIELD);
+
+            await client.Query(Update(createdInstance, Obj("data", Obj("x", 2))));
+            await client.Query(Delete(createdInstance));
+
+            var events = (
+                await client.Query(Paginate(Events(createdInstance)))
+            ).Get(DATA.To<List<Event>>());
+
+            Assert.AreEqual(3, events.Count);
+
+            Assert.That(events, Is.EquivalentTo(new List<Event> {
+                new Event("create", createdInstance),
+                new Event("update", createdInstance),
+                new Event("delete", createdInstance)
+            }));
+        }
+
+        [Test] public async Task TestSingleton()
+        {
+            var createdInstance = (await client.Query(
+                Create(await RandomClass(), Obj("data", Obj("x", 1)))
+            )).Get(REF_FIELD);
+
+            await client.Query(Update(createdInstance, Obj("data", Obj("x", 2))));
+            await client.Query(Delete(createdInstance));
+
+            var events = (
+                await client.Query(Paginate(Events(Singleton(createdInstance))))
+            ).Get(DATA.To<List<Event>>());
+
+            Assert.AreEqual(2, events.Count);
+
+            Assert.That(events, Is.EquivalentTo(new List<Event> {
+                new Event("add", createdInstance),
+                new Event("remove", createdInstance),
+            }));
+        }
+
         [Test] public async Task TestHandleConstraintViolations()
         {
             RefV classRef = await RandomClass();
