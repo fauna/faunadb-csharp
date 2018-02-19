@@ -551,10 +551,10 @@ namespace Test
                 "{\"date\":\"1970-01-01\"}");
         }
 
-        [Test] public void TestNextId()
+        [Test] public void TestNewId()
         {
-            AssertJsonEqual(NextId(),
-                "{\"next_id\":null}");
+            AssertJsonEqual(NewId(),
+                "{\"new_id\":null}");
         }
 
         [Test] public void TestDatabase()

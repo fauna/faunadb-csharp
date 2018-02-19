@@ -854,9 +854,9 @@ namespace Test
             Assert.AreEqual(new DateTimeOffset(1970, 1, 2, 0, 0, 0, TimeSpan.Zero), res.To<DateTimeOffset>().Value);
         }
 
-        [Test] public async Task TestGetNextId()
+        [Test] public async Task TestGetNewId()
         {
-            Value res = await client.Query(NextId());
+            Value res = await client.Query(NewId());
             Assert.IsNotNull(res.To<string>().Value);
         }
 

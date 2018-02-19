@@ -14,6 +14,8 @@
 - `QueryV` receives a dictionary not an `Expr`
 - Adds `Abort(Expr msg)` function
 - Adds normalizer argument to `Casefold(string)` function
+- Adds `NewId()` function
+- Deprecated `NextId()` in favor of `NewId()`
 
 ## 1.0.0
 

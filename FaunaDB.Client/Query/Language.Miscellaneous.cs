@@ -1,4 +1,5 @@
-﻿using FaunaDB.Types;
+﻿using System;
+using FaunaDB.Types;
 
 namespace FaunaDB.Query
 {
@@ -10,8 +11,18 @@ namespace FaunaDB.Query
         /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
+        [Obsolete("Use NewId() instead")]
         public static Expr NextId() =>
             UnescapedObject.With("next_id", NullV.Instance);
+
+        /// <summary>
+        /// Creates a new NewId expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr NewId() =>
+            UnescapedObject.With("new_id", NullV.Instance);
 
         /// <summary>
         /// Creates a new Database expression.
