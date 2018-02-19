@@ -501,6 +501,12 @@ namespace Test
         {
             AssertJsonEqual(Casefold("a string"),
                 "{\"casefold\":\"a string\"}");
+
+            AssertJsonEqual(Casefold("a string", "NFD"),
+                "{\"casefold\":\"a string\",\"normalizer\":\"NFD\"}");
+
+            AssertJsonEqual(Casefold("a string", Normalizer.NFD),
+                "{\"casefold\":\"a string\",\"normalizer\":\"NFD\"}");
         }
 
         [Test] public void TestTime()

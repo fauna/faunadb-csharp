@@ -709,8 +709,15 @@ namespace Test
 
         [Test] public async Task TestEvalCasefoldExpression()
         {
-            Value res = await client.Query(Casefold("Hen Wen"));
-            Assert.AreEqual("hen wen", res.To<string>().Value);
+            Assert.AreEqual("hen wen", (await client.Query(Casefold("Hen Wen"))).To<string>().Value);
+
+            // https://unicode.org/reports/tr15/
+            Assert.AreEqual("A\u030A", (await client.Query(Casefold("\u212B", Normalizer.NFD))).To<string>().Value);
+            Assert.AreEqual("\u00C5", (await client.Query(Casefold("\u212B", Normalizer.NFC))).To<string>().Value);
+            Assert.AreEqual("\u0073\u0323\u0307", (await client.Query(Casefold("\u1E9B\u0323", Normalizer.NFKD))).To<string>().Value);
+            Assert.AreEqual("\u1E69", (await client.Query(Casefold("\u1E9B\u0323", Normalizer.NFKC))).To<string>().Value);
+
+            Assert.AreEqual("\u00E5", (await client.Query(Casefold("\u212B", Normalizer.NFKCCaseFold))).To<string>().Value);
         }
 
         [Test] public async Task TestEvalContainsExpression()

@@ -13,6 +13,7 @@
 - Adds support for `DateTimeOffset` class
 - `QueryV` receives a dictionary not an `Expr`
 - Adds `Abort(Expr msg)` function
+- Adds normalizer argument to `Casefold(string)` function
 
 ## 1.0.0
 
