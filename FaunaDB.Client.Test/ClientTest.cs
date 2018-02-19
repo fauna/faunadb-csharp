@@ -920,6 +920,50 @@ namespace Test
             Assert.AreEqual(false, identified.To<bool>().Value);
         }
 
+        [Test] public async Task TestHasIdentity()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                    Obj("credentials",
+                        Obj("password", "abcdefg")))
+            );
+
+            Value auth = await client.Query(
+                Login(
+                    createdInstance.Get(REF_FIELD),
+                    Obj("password", "abcdefg"))
+            );
+
+            FaunaClient sessionClient = GetClient(secret: auth.Get(SECRET_FIELD));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await sessionClient.Query(HasIdentity())
+            );
+        }
+
+        [Test] public async Task TestIdentity()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                    Obj("credentials",
+                        Obj("password", "abcdefg")))
+            );
+
+            Value auth = await client.Query(
+                Login(
+                    createdInstance.Get(REF_FIELD),
+                    Obj("password", "abcdefg"))
+            );
+
+            FaunaClient sessionClient = GetClient(secret: auth.Get(SECRET_FIELD));
+
+            Assert.AreEqual(
+                createdInstance.Get(REF_FIELD),
+                await sessionClient.Query(Identity())
+            );
+        }
+
         [Test] public async Task TestKeyFromSecret()
         {
             var key = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "server")));

@@ -16,6 +16,7 @@
 - Adds normalizer argument to `Casefold(string)` function
 - Adds `NewId()` function
 - Deprecated `NextId()` in favor of `NewId()`
+- Adds `Identity()` and `HasIdentity()` functions
 
 ## 1.0.0
 

@@ -482,6 +482,18 @@ namespace Test
                 "{\"identify\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},\"password\":\"P455w0rd\"}");
         }
 
+        [Test] public void TestIdentity()
+        {
+            AssertJsonEqual(Identity(),
+                "{\"identity\":null}");
+        }
+
+        [Test] public void TestHasIdentity()
+        {
+            AssertJsonEqual(HasIdentity(),
+                "{\"has_identity\":null}");
+        }
+
         [Test] public void TestConcat()
         {
             AssertJsonEqual(Concat("str"),
