@@ -16,6 +16,11 @@
     <TargetFrameworks>netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;net45;net451;net46;net461;net47</TargetFrameworks>
   </PropertyGroup>
 
+  <Target Name="CopyConfig" AfterTargets="AfterBuild">
+    <Warning Text="Copying testConfig.json to $(OutputPath)" />
+    <Copy SourceFiles="testConfig.json" DestinationFolder="$(OutputPath)" />
+  </Target>
+
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />

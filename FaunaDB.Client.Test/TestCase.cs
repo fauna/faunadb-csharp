@@ -98,19 +98,17 @@ namespace Test
     class Config {
         public static async Task<Config> GetConfig()
         {
-            string directory = Directory.GetCurrentDirectory();
+            var directory = Directory.GetCurrentDirectory();
 
-            while (!File.Exists(System.IO.Path.Combine(directory, "testConfig.json")))
-                directory = System.IO.Path.GetDirectoryName(directory);
+            var config = Directory.GetFiles(directory, "testConfig.json", SearchOption.AllDirectories);
 
-            string configPath = System.IO.Path.Combine(directory, "testConfig.json");
-
-            if (File.Exists(configPath))
+            if (config.Length > 0)
             {
-                string text = await File.OpenText(configPath).ReadToEndAsync();
+                var text = await File.OpenText(config[0]).ReadToEndAsync();
                 return JsonConvert.DeserializeObject<Config>(text);
             }
-            return new Config();
+
+            throw new Exception("testConfig.json not found");
         }
 
         public string Domain { get; set; }
