@@ -14,6 +14,10 @@ See https://fauna.com for more information.</Description>
     <PackageProjectUrl>https://github.com/fauna/faunadb-csharp</PackageProjectUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
   <Choose>
     <When Condition="$(TargetFramework.StartsWith('net4')) == 'true'">
       <ItemGroup>
