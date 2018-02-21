@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using FaunaDB.Collections;
 
 namespace FaunaDB.Client
@@ -76,7 +76,7 @@ namespace FaunaDB.Client
         }
 
         static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers) =>
-            new ImmutableDictionary<string, IEnumerable<string>>(headers);
+            headers.ToDictionary(k => k.Key, v => v.Value);
 
         /// <summary>
         /// Encodes secret string using base64.
@@ -92,11 +92,14 @@ namespace FaunaDB.Client
         /// </summary>
         static string QueryString(IReadOnlyDictionary<string, string> query)
         {
-            // Can't just do `new NameValueCollection()` because the one returned by ParseQueryString has a different `ToString` implementation.
-            var q = HttpUtility.ParseQueryString("");
-            foreach (var kv in query)
-                q[kv.Key] = kv.Value;
-            return q.ToString();
+            var keyValues = query.Select((keyValue) =>
+            {
+                return string.Format("{0}={1}",
+                                     WebUtility.UrlEncode(keyValue.Key),
+                                     WebUtility.UrlEncode(keyValue.Value));
+            });
+
+            return string.Join("&", keyValues);
         }
 
         static HttpClient CreateClient(Uri endpoint, TimeSpan timeout)

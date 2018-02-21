@@ -14,7 +14,7 @@ namespace FaunaDB.Types
 
             var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
-            return type.GetFields(flags).Concat(GetAllFields(type.BaseType));
+            return type.GetFields(flags).Concat(GetAllFields(type.GetTypeInfo().BaseType));
         }
 
         public static string GetName(this ParameterInfo parameter)
@@ -46,8 +46,22 @@ namespace FaunaDB.Types
                 return true;
 
             return type.GetInterfaces()
-                       .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == other);
+                       .Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == other);
         }
 
+        public static MethodInfo GetMethod(this Type typeInfo, string name, BindingFlags bindingAttr, object binder, Type[] types, object modifiers)
+        {
+            return typeInfo.GetMethods(bindingAttr)
+                           .Where(method => method.Name == name)
+                           .Where(method => method.GetParameters().Select(p => p.ParameterType).SequenceEqual(types))
+                           .Single();
+        }
+
+        public static ConstructorInfo GetConstructor(this Type typeInfo, BindingFlags bindingAttr, object binder, Type[] types, object modifiers)
+        {
+            return typeInfo.GetConstructors(bindingAttr)
+                           .Where(method => method.GetParameters().Select(p => p.ParameterType).SequenceEqual(types))
+                           .Single();
+        }
     }
 }

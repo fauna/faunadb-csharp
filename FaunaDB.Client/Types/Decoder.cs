@@ -69,7 +69,7 @@ namespace FaunaDB.Types
         public static object Decode(Value value, Type dstType)
         {
             if (value == null || value == NullV.Instance)
-                return dstType.IsValueType ? Activator.CreateInstance(dstType) : null;
+                return dstType.GetTypeInfo().IsValueType ? Activator.CreateInstance(dstType) : null;
 
             return DecodeIntern(value, dstType);
         }
@@ -84,7 +84,7 @@ namespace FaunaDB.Types
                 throw new InvalidOperationException($"Cannot cast {value.GetType()} to {dstType}");
             }
 
-            if (dstType.IsEnum)
+            if (dstType.GetTypeInfo().IsEnum)
                 return ToEnum(value, dstType);
 
             switch (Type.GetTypeCode(dstType))
@@ -125,7 +125,10 @@ namespace FaunaDB.Types
                 case TypeCode.Decimal:
                     return Convert.ToDecimal(ToDouble<decimal>(value));
 
+#if !(NETSTANDARD1_5)
                 case TypeCode.DBNull:
+                    return null;
+#endif
                 case TypeCode.Empty:
                     return null;
 
@@ -139,10 +142,10 @@ namespace FaunaDB.Types
                     if (dstType.IsArray && dstType.HasElementType)
                         return FromArray(value, dstType);
 
-                    if (typeof(IDictionary).IsAssignableFrom(dstType) || (dstType.IsGenericType && dstType.Is(typeof(IDictionary<,>))))
+                    if (typeof(IDictionary).IsAssignableFrom(dstType) || (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(IDictionary<,>))))
                         return FromDictionary(value, dstType);
 
-                    if (typeof(IList).IsAssignableFrom(dstType) || (dstType.IsGenericType && dstType.Is(typeof(IEnumerable<>))))
+                    if (typeof(IList).IsAssignableFrom(dstType) || (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(IEnumerable<>))))
                         return FromEnumerable(value, dstType);
 
                     return FromObject(value, dstType);
@@ -156,12 +159,12 @@ namespace FaunaDB.Types
             if (!(value is ArrayV))
                 throw new InvalidOperationException($"Cannot convert `{value}` to {type}");
 
-            if (!type.IsGenericType)
+            if (!type.GetTypeInfo().IsGenericType)
                 throw new InvalidOperationException($"The type {type} is not generic");
 
             var valueType = type.GenericTypeArguments[0];
 
-            var createType = type.IsAbstract
+            var createType = type.GetTypeInfo().IsAbstract
                                  ? typeof(List<>).MakeGenericType(valueType)
                                  : type;
 
@@ -178,13 +181,13 @@ namespace FaunaDB.Types
             if (!(value is ObjectV))
                 throw new InvalidOperationException($"Cannot convert `{value}` to {type}");
 
-            if (!type.IsGenericType)
+            if (!type.GetTypeInfo().IsGenericType)
                 throw new InvalidOperationException($"The type {type} is not generic");
 
             var keyType = type.GenericTypeArguments[0];
             var valueType = type.GenericTypeArguments[1];
 
-            var createType = type.IsAbstract
+            var createType = type.GetTypeInfo().IsAbstract
                                  ? typeof(Dictionary<,>).MakeGenericType(keyType, valueType)
                                  : type;
 
@@ -321,7 +324,7 @@ namespace FaunaDB.Types
                 Expression.Constant(dstType, typeof(Type))
             );
 
-            var cases = dstType
+            var cases = dstType.GetTypeInfo()
                 .GetEnumValues()
                 .OfType<Enum>()
                 .Select(CreateSwitchCase)
@@ -360,7 +363,7 @@ namespace FaunaDB.Types
             var constructor = GetConstructor(dstType);
             if (constructor == null)
             {
-                if (dstType.IsValueType)
+                if (dstType.GetTypeInfo().IsValueType)
                     return FromValueType(dstType);
 
                 throw new InvalidOperationException($"No default constructor or constructor/static method annotated with attribute [FaunaConstructor] found on type `{dstType}`");
@@ -529,7 +532,7 @@ namespace FaunaDB.Types
             var defaultValue = field != null ? Encoder.Encode(field.DefaultValue) : null;
 
             var hasDefaultValue = field != null && field.DefaultValue != null;
-            if (!hasDefaultValue && memberType.IsValueType)
+            if (!hasDefaultValue && memberType.GetTypeInfo().IsValueType)
                 defaultValue = Encoder.Encode(Activator.CreateInstance(memberType));
 
             if (defaultValue == null)
@@ -550,7 +553,7 @@ namespace FaunaDB.Types
                 ? Encoder.Encode(field.DefaultValue)
                 : Encoder.Encode(parameter.DefaultValue);
 
-            if (!hasDefaultValue && parameter.ParameterType.IsValueType)
+            if (!hasDefaultValue && parameter.ParameterType.GetTypeInfo().IsValueType)
                 defaultValue = Encoder.Encode(Activator.CreateInstance(parameter.ParameterType));
 
             if (defaultValue == null)
