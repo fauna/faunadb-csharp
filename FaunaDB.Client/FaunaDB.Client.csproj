@@ -9,7 +9,7 @@
     <Description>C# Driver for FaunaDB.
 
 See https://fauna.com for more information.</Description>
-    <Copyright>© Fauna, Inc. 2017. Distributed under MPL 2.0 License</Copyright>
+    <Copyright>© Fauna, Inc. 2018. Distributed under MPL 2.0 License</Copyright>
     <PackageLicenseUrl>https://github.com/fauna/faunadb-csharp/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/fauna/faunadb-csharp</PackageProjectUrl>
   </PropertyGroup>
