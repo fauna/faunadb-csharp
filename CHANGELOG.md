@@ -12,6 +12,12 @@
 - Encode/Decode enums as strings
 - Adds support for `DateTimeOffset` class
 - `QueryV` receives a dictionary not an `Expr`
+- Adds `Abort(Expr msg)` function
+- Adds normalizer argument to `Casefold(string)` function
+- Adds `NewId()` function
+- Deprecated `NextId()` in favor of `NewId()`
+- Adds `Identity()` and `HasIdentity()` functions
+- Adds `Singleton()` and `Events()` functions
 
 ## 1.0.0
 

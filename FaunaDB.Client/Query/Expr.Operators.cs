@@ -62,6 +62,30 @@ namespace FaunaDB.Query
 
             throw new ArgumentException("Invalid time unit value");
         }
+
+        public static implicit operator Expr(Normalizer normalizer)
+        {
+            switch (normalizer)
+            {
+                case Normalizer.NFD:
+                    return "NFD";
+
+                case Normalizer.NFC:
+                    return "NFC";
+
+                case Normalizer.NFKD:
+                    return "NFKD";
+
+                case Normalizer.NFKC:
+                    return "NFKC";
+
+                case Normalizer.NFKCCaseFold:
+                    return "NFKCCaseFold";
+            }
+
+            throw new ArgumentException("Invalid normalizer value");
+        }
+
         #endregion
 
         #region explicit (downcasting) conversions
@@ -141,6 +165,29 @@ namespace FaunaDB.Query
             }
 
             throw new ArgumentException("Invalid string value. Should be \"second\", \"millisecond\", \"microsecond\" or \"nanosecond\"");
+        }
+
+        public static explicit operator Normalizer(Expr normalizer)
+        {
+            switch (((StringV)normalizer).Value)
+            {
+                case "NFD":
+                    return Normalizer.NFD;
+
+                case "NFC":
+                    return Normalizer.NFC;
+
+                case "NFKD":
+                    return Normalizer.NFKD;
+
+                case "NFKC":
+                    return Normalizer.NFKC;
+
+                case "NFKCCaseFold":
+                    return Normalizer.NFKCCaseFold;
+            }
+
+            throw new ArgumentException("Invalid string value. Should be \"NFD\", \"NFC\", \"NFKD\", \"NFKC\", \"NFKCCaseFold\"");
         }
         #endregion
     }

@@ -41,5 +41,23 @@
         /// <param name="password">Password to be validated</param>
         public static Expr Identify(Expr @ref, Expr password) =>
             UnescapedObject.With("identify", @ref, "password", password);
+
+        /// <summary>
+        /// Creates a new Identity expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#auth_functions">docs</see>.
+        /// </para>
+        /// </summary>
+        public static Expr Identity() =>
+            UnescapedObject.With("identity", Null());
+
+        /// <summary>
+        /// Creates a new HasIdentity expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#auth_functions">docs</see>.
+        /// </para>
+        /// </summary>
+        public static Expr HasIdentity() =>
+            UnescapedObject.With("has_identity", Null());
     }
 }

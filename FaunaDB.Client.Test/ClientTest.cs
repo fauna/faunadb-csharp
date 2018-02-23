@@ -151,6 +151,20 @@ namespace Test
         }
 
         [Test]
+        public void TestAbort()
+        {
+            var ex = Assert.ThrowsAsync<BadRequest>(
+                async () => await client.Query(Abort("error message"))
+            );
+
+            AssertErrors(ex, code: "transaction aborted", description: "error message");
+
+            AssertEmptyFailures(ex);
+
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
+        }
+
+        [Test]
         public void TestUnauthorizedOnInvalidSecret()
         {
             var ex = Assert.ThrowsAsync<Unauthorized>(
@@ -336,6 +350,71 @@ namespace Test
             );
 
             Assert.AreEqual(Null(), removedEvent);
+        }
+
+        class Event
+        {
+            string action;
+            RefV instance;
+
+            [FaunaConstructor]
+            public Event(string action, RefV instance)
+            {
+                this.action = action;
+                this.instance = instance;
+            }
+
+            public override string ToString() => $"Event({action}, {instance})";
+            public override int GetHashCode() => 0;
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as Event;
+                return other != null && action == other.action && instance == other.instance;
+            }
+        }
+
+        [Test] public async Task TestEvents()
+        {
+            var createdInstance = (await client.Query(
+                Create(await RandomClass(), Obj("data", Obj("x", 1)))
+            )).Get(REF_FIELD);
+
+            await client.Query(Update(createdInstance, Obj("data", Obj("x", 2))));
+            await client.Query(Delete(createdInstance));
+
+            var events = (
+                await client.Query(Paginate(Events(createdInstance)))
+            ).Get(DATA.To<List<Event>>());
+
+            Assert.AreEqual(3, events.Count);
+
+            Assert.That(events, Is.EquivalentTo(new List<Event> {
+                new Event("create", createdInstance),
+                new Event("update", createdInstance),
+                new Event("delete", createdInstance)
+            }));
+        }
+
+        [Test] public async Task TestSingleton()
+        {
+            var createdInstance = (await client.Query(
+                Create(await RandomClass(), Obj("data", Obj("x", 1)))
+            )).Get(REF_FIELD);
+
+            await client.Query(Update(createdInstance, Obj("data", Obj("x", 2))));
+            await client.Query(Delete(createdInstance));
+
+            var events = (
+                await client.Query(Paginate(Events(Singleton(createdInstance))))
+            ).Get(DATA.To<List<Event>>());
+
+            Assert.AreEqual(2, events.Count);
+
+            Assert.That(events, Is.EquivalentTo(new List<Event> {
+                new Event("add", createdInstance),
+                new Event("remove", createdInstance),
+            }));
         }
 
         [Test] public async Task TestHandleConstraintViolations()
@@ -695,8 +774,15 @@ namespace Test
 
         [Test] public async Task TestEvalCasefoldExpression()
         {
-            Value res = await client.Query(Casefold("Hen Wen"));
-            Assert.AreEqual("hen wen", res.To<string>().Value);
+            Assert.AreEqual("hen wen", (await client.Query(Casefold("Hen Wen"))).To<string>().Value);
+
+            // https://unicode.org/reports/tr15/
+            Assert.AreEqual("A\u030A", (await client.Query(Casefold("\u212B", Normalizer.NFD))).To<string>().Value);
+            Assert.AreEqual("\u00C5", (await client.Query(Casefold("\u212B", Normalizer.NFC))).To<string>().Value);
+            Assert.AreEqual("\u0073\u0323\u0307", (await client.Query(Casefold("\u1E9B\u0323", Normalizer.NFKD))).To<string>().Value);
+            Assert.AreEqual("\u1E69", (await client.Query(Casefold("\u1E9B\u0323", Normalizer.NFKC))).To<string>().Value);
+
+            Assert.AreEqual("\u00E5", (await client.Query(Casefold("\u212B", Normalizer.NFKCCaseFold))).To<string>().Value);
         }
 
         [Test] public async Task TestEvalContainsExpression()
@@ -833,9 +919,9 @@ namespace Test
             Assert.AreEqual(new DateTimeOffset(1970, 1, 2, 0, 0, 0, TimeSpan.Zero), res.To<DateTimeOffset>().Value);
         }
 
-        [Test] public async Task TestGetNextId()
+        [Test] public async Task TestGetNewId()
         {
-            Value res = await client.Query(NextId());
+            Value res = await client.Query(NewId());
             Assert.IsNotNull(res.To<string>().Value);
         }
 
@@ -897,6 +983,50 @@ namespace Test
             );
 
             Assert.AreEqual(false, identified.To<bool>().Value);
+        }
+
+        [Test] public async Task TestHasIdentity()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                    Obj("credentials",
+                        Obj("password", "abcdefg")))
+            );
+
+            Value auth = await client.Query(
+                Login(
+                    createdInstance.Get(REF_FIELD),
+                    Obj("password", "abcdefg"))
+            );
+
+            FaunaClient sessionClient = GetClient(secret: auth.Get(SECRET_FIELD));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await sessionClient.Query(HasIdentity())
+            );
+        }
+
+        [Test] public async Task TestIdentity()
+        {
+            Value createdInstance = await client.Query(
+                Create(await RandomClass(),
+                    Obj("credentials",
+                        Obj("password", "abcdefg")))
+            );
+
+            Value auth = await client.Query(
+                Login(
+                    createdInstance.Get(REF_FIELD),
+                    Obj("password", "abcdefg"))
+            );
+
+            FaunaClient sessionClient = GetClient(secret: auth.Get(SECRET_FIELD));
+
+            Assert.AreEqual(
+                createdInstance.Get(REF_FIELD),
+                await sessionClient.Query(Identity())
+            );
         }
 
         [Test] public async Task TestKeyFromSecret()

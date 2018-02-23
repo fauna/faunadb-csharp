@@ -93,6 +93,12 @@ namespace Test
             AssertJsonEqual(new BytesV(0xff), "{\"@bytes\":\"_w==\"}");
         }
 
+        [Test] public void TestAbort()
+        {
+            AssertJsonEqual(Abort("message"),
+                "{\"abort\":\"message\"}");
+        }
+
         [Test] public void TestAt()
         {
             AssertJsonEqual(At(1, Paginate(Classes())),
@@ -393,6 +399,20 @@ namespace Test
                 "{\"create_key\":{\"object\":{\"database\":{\"database\":\"db_name\"},\"role\":\"client\"}}}");
         }
 
+        [Test] public void TestSingleton()
+        {
+            AssertJsonEqual(
+                Singleton(Ref(Class("widget"), "123")),
+                "{\"singleton\":{\"ref\":{\"class\":\"widget\"},\"id\":\"123\"}}");
+        }
+
+        [Test] public void TestEvents()
+        {
+            AssertJsonEqual(
+                Events(Ref(Class("widget"), "123")),
+                "{\"events\":{\"ref\":{\"class\":\"widget\"},\"id\":\"123\"}}");
+        }
+
         [Test] public void TestMatch()
         {
             AssertJsonEqual(
@@ -476,6 +496,18 @@ namespace Test
                 "{\"identify\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},\"password\":\"P455w0rd\"}");
         }
 
+        [Test] public void TestIdentity()
+        {
+            AssertJsonEqual(Identity(),
+                "{\"identity\":null}");
+        }
+
+        [Test] public void TestHasIdentity()
+        {
+            AssertJsonEqual(HasIdentity(),
+                "{\"has_identity\":null}");
+        }
+
         [Test] public void TestConcat()
         {
             AssertJsonEqual(Concat("str"),
@@ -495,6 +527,12 @@ namespace Test
         {
             AssertJsonEqual(Casefold("a string"),
                 "{\"casefold\":\"a string\"}");
+
+            AssertJsonEqual(Casefold("a string", "NFD"),
+                "{\"casefold\":\"a string\",\"normalizer\":\"NFD\"}");
+
+            AssertJsonEqual(Casefold("a string", Normalizer.NFD),
+                "{\"casefold\":\"a string\",\"normalizer\":\"NFD\"}");
         }
 
         [Test] public void TestTime()
@@ -539,10 +577,10 @@ namespace Test
                 "{\"date\":\"1970-01-01\"}");
         }
 
-        [Test] public void TestNextId()
+        [Test] public void TestNewId()
         {
-            AssertJsonEqual(NextId(),
-                "{\"next_id\":null}");
+            AssertJsonEqual(NewId(),
+                "{\"new_id\":null}");
         }
 
         [Test] public void TestDatabase()
