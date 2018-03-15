@@ -18,6 +18,7 @@
 - Deprecated `NextId()` in favor of `NewId()`
 - Adds `Identity()` and `HasIdentity()` functions
 - Adds `Singleton()` and `Events()` functions
+- Adds `SelectAll()` function
 
 ## 1.0.0
 

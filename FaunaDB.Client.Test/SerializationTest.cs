@@ -653,6 +653,12 @@ namespace Test
                 "\"default\":\"defaultValue\"}");
         }
 
+        [Test] public void TestSelectAll()
+        {
+            AssertJsonEqual(SelectAll("foo", Obj("foo", "bar")),
+                "{\"select_all\":\"foo\",\"from\":{\"object\":{\"foo\":\"bar\"}}}");
+        }
+
         [Test] public void TestAdd()
         {
             AssertJsonEqual(Add(1), "{\"add\":1}");

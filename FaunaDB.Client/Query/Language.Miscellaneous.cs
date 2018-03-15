@@ -169,6 +169,24 @@ namespace FaunaDB.Query
             UnescapedObject.With("select", path.Segments, "from", @from, "default", @default);
 
         /// <summary>
+        /// Creates a new SelectAll expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr SelectAll(Expr path, Expr @from) =>
+             UnescapedObject.With("select_all", path, "from", @from);
+
+        /// <summary>
+        /// Creates a new SelectAll expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr SelectAll(PathSelector path, Expr @from) =>
+            UnescapedObject.With("select_all", path.Segments, "from", @from);
+
+        /// <summary>
         /// Creates a new Add expression.
         /// <para>
         /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
