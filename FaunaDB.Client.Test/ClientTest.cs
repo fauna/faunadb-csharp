@@ -810,6 +810,21 @@ namespace Test
             Assert.AreEqual("munchings", selected.To<string>().Value);
         }
 
+        [Test] public async Task TestEvalSelectAllExpression()
+        {
+            var bar = await client.Query(
+                SelectAll("foo", Arr(Obj("foo", "bar"), Obj("foo", "baz")))
+            );
+
+            Assert.AreEqual(new string[] { "bar", "baz" }, bar.To<string[]>().Value);
+
+            var numbers = await client.Query(
+                SelectAll(Arr("foo", 0), Arr(Obj("foo", Arr(0, 1)), Obj("foo", Arr(2, 3))))
+            );
+
+            Assert.AreEqual(new int[] { 0, 2 }, numbers.To<int[]>().Value);
+        }
+
         [Test] public async Task TestEvalLTExpression()
         {
             Value res = await client.Query(LT(Arr(1, 2, 3)));
