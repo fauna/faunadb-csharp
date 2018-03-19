@@ -5,57 +5,48 @@
 
 ## How to Build
 
-### Visual Studio
+### Requirements
 
-#### Necessary Tools
+* [.NET SDK](https://www.microsoft.com/net/download/all)
+* Mono if you're using macOS or Linux
 
-* Visual Studio 15
-* Nuget
-* Windows PowerShell (optional)
+### Build
 
-#### Installing Dependencies
+Running the following command will build the driver for all supported .NET frameworks:
 
-`nuget restore faunadb-csharp.sln`
+```bash
+dotnet build FaunaDB.Client
+```
 
-#### Build
+If you're using MacOS or Linux you may need to override `FrameworkPathOverride` to point to the Mono specific api:
 
-`& "C:\Program Files (x86)\MSBuild\14.0\Bin\amd64\MSBuild.exe" .\faunadb-csharp.sln /t:Build`
+```bash
+FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5-api dotnet build FaunaDB.Client/ --framework net45
+```
 
-#### Running Tests
+### Running Tests
 
-`.\packages\NUnit.ConsoleRunner.3.4.0\tools\nunit3-console.exe .\FaunaDB.Client.Test\bin\Debug\FaunaDB.Client.Test.dll --noresult`
+Running the following command will run the tests for all supported .NET frameworks
 
-### Mono
+```bash
+dotnet test FaunaDB.Client.Test
+```
 
-#### Necessary Tools
+If you're using macOS or Linux you may need to override `FrameworkPathOverride`:
 
-* Mono
-* Nuget
-
-#### Installing Dependencies
-
-`nuget restore faunadb-csharp.sln`
-
-#### Build
-
-`xbuild faunadb-csharp.sln /t:Build`
-
-#### Running Tests
-
-`mono packages/NUnit.ConsoleRunner.3.4.0/tools/nunit3-console.exe FaunaDB.Client.Test/bin/Debug/FaunaDB.Client.Test.dll --noresult`
+```bash
+FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5-api dotnet test FaunaDB.Client.Test/ --framework net45
+```
 
 ## Referencing FaunaDB Assembly
 
-First install the Nuget package by editing your `packages.config`
+First install the Nuget package by adding the package reference to your MSBuild project:
 
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<packages>
-  <package id="FaunaDB.Client" version="1.0.0" targetFramework="net45" />
-</packages>
+<PackageReference Include="FaunaDB.Client" Version="2.0.0" />
 ```
 
-And then update your dependencies. See [Installing Dependencies](#installing-dependencies).
+or by using your IDE and searching for `FaunaDB.Client`.
 
 ## Quickstart
 
@@ -220,7 +211,7 @@ There are three attributes that can be used to change the behavior of the `Encod
 
 ## License
 
-Copyright 2017 [Fauna, Inc.](https://fauna.com/)
+Copyright 2018 [Fauna, Inc.](https://fauna.com/)
 
 Licensed under the Mozilla Public License, Version 2.0 (the "License"); you may
 not use this software except in compliance with the License. You may obtain a
