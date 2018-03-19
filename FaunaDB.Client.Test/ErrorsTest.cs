@@ -110,7 +110,7 @@ namespace Test
             await client.Query(CreateIndex(Obj(
                 "name", "gerbils_by_x",
                 "source", Class("gerbils"),
-                "terms", Arr(Obj("path", "data.x")),
+                "terms", Arr(Obj("field", Arr("data", "x"))),
                 "unique", true
             )));
             await client.Query(Create(Class("gerbils"), Obj("data", Obj("x", 1))));
