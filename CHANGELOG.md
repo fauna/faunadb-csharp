@@ -1,4 +1,6 @@
-## 2.0.0-SNAPSHOT
+## 2.0.1-alpha
+
+## 2.0.0
 
 - Removes `Codec` api
 - Rename `ValueOption` to `ToOption` in `IResult<T>` interface
