@@ -13,13 +13,8 @@
      net46         => netstandard 1.0, 1.1, 1.2, 1.3
      net461        => netstandard 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 2.0
      -->
-    <TargetFrameworks>netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;net45;net451;net46;net461;net47</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;net451;net46;net461;net47</TargetFrameworks>
   </PropertyGroup>
-
-  <Target Name="CopyConfig" AfterTargets="AfterBuild">
-    <Warning Text="Copying testConfig.json to $(OutputPath)" />
-    <Copy SourceFiles="testConfig.json" DestinationFolder="$(OutputPath)" />
-  </Target>
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.9.0" />
