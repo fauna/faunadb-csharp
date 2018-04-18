@@ -803,6 +803,29 @@ namespace Test
             Assert.AreEqual("\u00E5", (await client.Query(Casefold("\u212B", Normalizer.NFKCCaseFold))).To<string>().Value);
         }
 
+        [Test] public async Task TestEvalNGramExpression()
+        {
+            Assert.AreEqual(
+                new string[] { "w", "wh", "h", "ha", "a", "at", "t" },
+                (await client.Query(NGram("what"))).To<string[]>().Value
+            );
+
+            Assert.AreEqual(
+                new string[] { "wh", "wha", "ha", "hat", "at" },
+                (await client.Query(NGram("what", min: 2, max: 3))).To<string[]>().Value
+            );
+
+            Assert.AreEqual(
+                new string[] { "j", "jo", "o", "oh", "h", "hn", "n", "d", "do", "o", "oe", "e" },
+                (await client.Query(NGram(Arr("john", "doe")))).To<string[]>().Value
+            );
+
+            Assert.AreEqual(
+                new string[] { "joh", "john", "ohn", "doe" },
+                (await client.Query(NGram(Arr("john", "doe"), min: 3, max: 4))).To<string[]>().Value
+            );
+        }
+
         [Test] public async Task TestEvalContainsExpression()
         {
             Value contains = await client.Query(
