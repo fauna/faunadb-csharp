@@ -1,5 +1,6 @@
 ## 2.1.0-alpha
 - Adds `IsEmpty()` and `IsNonEmpty()` function
+- Adds `NGram()` function
 
 ## 2.0.0
 

@@ -43,5 +43,14 @@
         /// </summary>
         public static Expr Casefold(Expr @string, Expr normalizer = null) =>
             UnescapedObject.With("casefold", @string, "normalizer", normalizer);
+
+        /// <summary>
+        /// Creates a new NGram expression.
+        /// <para>
+        /// See the <see href="https://fauna.com/documentation/queries#string_functions">FaunaDB String Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr NGram(Expr terms, Expr min = null, Expr max = null) =>
+            UnescapedObject.With("ngram", terms, "min", min, "max", max);
     }
 }

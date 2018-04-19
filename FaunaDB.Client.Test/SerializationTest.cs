@@ -547,6 +547,18 @@ namespace Test
                 "{\"casefold\":\"a string\",\"normalizer\":\"NFD\"}");
         }
 
+        [Test] public void TestNGram()
+        {
+            AssertJsonEqual(NGram("str"),
+                "{\"ngram\":\"str\"}");
+            AssertJsonEqual(NGram("str", min: 1),
+                "{\"ngram\":\"str\",\"min\":1}");
+            AssertJsonEqual(NGram("str", max: 2),
+                "{\"ngram\":\"str\",\"max\":2}");
+            AssertJsonEqual(NGram("str", min: 1, max: 2),
+                "{\"ngram\":\"str\",\"min\":1,\"max\":2}");
+        }
+
         [Test] public void TestTime()
         {
             AssertJsonEqual(Time("1970-01-01T00:00:00+00:00"),
