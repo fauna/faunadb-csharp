@@ -675,6 +675,24 @@ namespace Test
                         Is.EquivalentTo(new List<long> { 1L, 2L, 3L, 4L }));
         }
 
+        [Test] public async Task TestIsEmpty()
+        {
+            Assert.True((await client.Query(IsEmpty(Arr()))).To<bool>().Value);
+            Assert.False((await client.Query(IsEmpty(Arr(1, 2, 3)))).To<bool>().Value);
+
+            Assert.True((await client.Query(IsEmpty(Paginate(Match(Index("spells_by_element"), "iron"))))).To<bool>().Value);
+            Assert.False((await client.Query(IsEmpty(Paginate(Match(Index("spells_by_element"), "fire"))))).To<bool>().Value);
+        }
+
+        [Test] public async Task TestIsNonEmpty()
+        {
+            Assert.False((await client.Query(IsNonEmpty(Arr()))).To<bool>().Value);
+            Assert.True((await client.Query(IsNonEmpty(Arr(1, 2, 3)))).To<bool>().Value);
+
+            Assert.False((await client.Query(IsNonEmpty(Paginate(Match(Index("spells_by_element"), "iron"))))).To<bool>().Value);
+            Assert.True((await client.Query(IsNonEmpty(Paginate(Match(Index("spells_by_element"), "fire"))))).To<bool>().Value);
+        }
+
         [Test] public async Task TestReadEventsFromIndex()
         {
             Value events = await client.Query(

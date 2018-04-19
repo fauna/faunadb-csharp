@@ -34,12 +34,10 @@ namespace Test
             Func<string, string, string> Env = (name, @default) =>
                 Environment.GetEnvironmentVariable(name) ?? @default;
 
-            var cfg = await Config.GetConfig();
-
-            var domain = Env("FAUNA_DOMAIN", cfg.Domain);
-            var scheme = Env("FAUNA_SCHEME", cfg.Scheme);
-            var port = Env("FAUNA_PORT", cfg.Port);
-            var secret = Env("FAUNA_ROOT_KEY", cfg.Secret);
+            var domain = Env("FAUNA_DOMAIN", "localhost");
+            var scheme = Env("FAUNA_SCHEME", "http");
+            var port = Env("FAUNA_PORT", "8443");
+            var secret = Env("FAUNA_ROOT_KEY", "secret");
             var endpoint = $"{scheme}://{domain}:{port}";
 
             rootClient = new FaunaClient(secret: secret, endpoint: endpoint);
@@ -92,31 +90,5 @@ namespace Test
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             Task.FromResult(resp);
-    }
-
-    // Use a class to make conversion from Json easier.
-    class Config {
-        public static async Task<Config> GetConfig()
-        {
-            var directory = Directory.GetCurrentDirectory();
-
-            var config = Directory.GetFiles(directory, "testConfig.json", SearchOption.AllDirectories);
-
-            if (config.Length > 0)
-            {
-                var text = await File.OpenText(config[0]).ReadToEndAsync();
-                return JsonConvert.DeserializeObject<Config>(text);
-            }
-
-            throw new Exception("testConfig.json not found");
-        }
-
-        public string Domain { get; set; }
-        public string Scheme { get; set; }
-        public string Port { get; set; }
-        public string Secret { get; set; }
-
-        public override string ToString() =>
-            $"Config(domain: {Domain}, scheme: {Scheme}, port: {Port}, secret: {Secret})";
     }
 }

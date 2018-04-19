@@ -247,6 +247,18 @@ namespace Test
                 "{\"append\":[1,2,3],\"collection\":[4,5,6]}");
         }
 
+        [Test] public void TestIsEmpty()
+        {
+            AssertJsonEqual(IsEmpty(Arr(1, 2, 3)),
+                "{\"is_empty\":[1,2,3]}");
+        }
+
+        [Test] public void TestIsNonEmpty()
+        {
+            AssertJsonEqual(IsNonEmpty(Arr(1, 2, 3)),
+                "{\"is_nonempty\":[1,2,3]}");
+        }
+
         [Test] public void TestGet()
         {
             AssertJsonEqual(Get(Ref(Class("thing"), "123456789")),

@@ -1,4 +1,5 @@
-## 2.0.1-alpha
+## 2.1.0-alpha
+- Adds `IsEmpty()` and `IsNonEmpty()` function
 
 ## 2.0.0
 

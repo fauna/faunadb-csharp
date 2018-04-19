@@ -153,5 +153,39 @@
         /// </example>
         public static Expr Append(Expr elements, Expr collection) =>
             UnescapedObject.With("append", elements, "collection", collection);
+
+        /// <summary>
+        /// Creates a new IsEmpty expression.
+        /// <para>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// </para>
+        /// </summary>
+        /// <param name="collection">A collection expression</param>
+        /// <example>
+        /// <code>
+        /// var result = await client.Query(IsEmpty(Arr(4, 5, 6)));
+        ///
+        /// Assert.AreEqual(false, result.To<bool>().Value);
+        /// </code>
+        /// </example>
+        public static Expr IsEmpty(Expr collection) =>
+            UnescapedObject.With("is_empty", collection);
+
+        /// <summary>
+        /// Creates a new IsNonEmpty expression.
+        /// <para>
+        /// <see href="https://fauna.com/documentation/queries#collection_functions">FaunaDB Collection Functions</see>
+        /// </para>
+        /// </summary>
+        /// <param name="collection">A collection expression</param>
+        /// <example>
+        /// <code>
+        /// var result = await client.Query(IsNonEmpty(Arr(4, 5, 6)));
+        ///
+        /// Assert.AreEqual(true, result.To<bool>().Value);
+        /// </code>
+        /// </example>
+        public static Expr IsNonEmpty(Expr collection) =>
+            UnescapedObject.With("is_nonempty", collection);
     }
 }
