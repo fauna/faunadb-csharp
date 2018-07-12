@@ -938,6 +938,30 @@ namespace Test
             Assert.AreEqual(true, notR.To<bool>().Value);
         }
 
+        [Test] public async Task TestEvalToStringExpression()
+        {
+            Value str = await client.Query(ToStringExpr(42));
+            Assert.AreEqual("42", str.To<string>().Value);
+        }
+
+        [Test] public async Task TestEvalToNumberExpression()
+        {
+            Value num = await client.Query(ToNumber("42"));
+            Assert.AreEqual(42, num.To<long>().Value);
+        }
+
+        [Test] public async Task TestEvalToTimeExpression()
+        {
+            Value time = await client.Query(ToTime("1970-01-01T00:00:00Z"));
+            Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0), time.To<DateTime>().Value);
+        }
+
+        [Test] public async Task TestEvalToDateExpression()
+        {
+            Value date = await client.Query(ToDate("1970-01-01"));
+            Assert.AreEqual(new DateTime(1970, 1, 1), date.To<DateTime>().Value);
+        }
+
         [Test] public async Task TestEvalTimeExpression()
         {
             Value res = await client.Query(Time("1970-01-01T00:00:00-04:00"));

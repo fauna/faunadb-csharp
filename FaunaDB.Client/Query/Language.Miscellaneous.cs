@@ -293,5 +293,29 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Not(Expr boolean) =>
             UnescapedObject.With("not", boolean);
+
+        /// <summary>
+        ///   Converts an expression to a string literal.
+        /// </summary>
+        public static Expr ToStringExpr(Expr expr) =>
+            UnescapedObject.With("to_string", expr);
+
+        /// <summary>
+        ///   Converts an expression to a number literal.
+        /// </summary>
+        public static Expr ToNumber(Expr expr) =>
+            UnescapedObject.With("to_number", expr);
+
+        /// <summary>
+        ///   Converts an expresion to a time literal.
+        /// </summary>
+        public static Expr ToTime(Expr expr) =>
+            UnescapedObject.With("to_time", expr);
+
+        /// <summary>
+        ///   Converts an expression to a date literal.
+        /// </summary>
+        public static Expr ToDate(Expr expr) =>
+            UnescapedObject.With("to_date", expr);
     }
 }
