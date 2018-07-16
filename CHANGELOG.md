@@ -1,6 +1,7 @@
 ## 2.1.0-alpha
 - Adds `IsEmpty()` and `IsNonEmpty()` function
 - Adds `NGram()` function
+- Adds `ToStringExpr()`, `ToNumber()`, `ToTime()`, and `ToDate()` functions
 
 ## 2.0.0
 

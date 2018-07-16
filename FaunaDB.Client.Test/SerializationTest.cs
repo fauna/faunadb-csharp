@@ -755,6 +755,27 @@ namespace Test
             AssertJsonEqual(Not(false), "{\"not\":false}");
         }
 
+        [Test] public void TestToStringExpr()
+        {
+            AssertJsonEqual(ToStringExpr(42), "{\"to_string\":42}");
+        }
+
+        [Test] public void TestToNumber()
+        {
+            AssertJsonEqual(ToNumber("42"), "{\"to_number\":\"42\"}");
+        }
+
+        [Test] public void TestToTime()
+        {
+            AssertJsonEqual(ToTime("1970-01-01T00:00:00Z"),
+                            "{\"to_time\":\"1970-01-01T00:00:00Z\"}");
+        }
+
+        [Test] public void TestToDate()
+        {
+            AssertJsonEqual(ToDate("1970-01-01"), "{\"to_date\":\"1970-01-01\"}");
+        }
+
         [Test]
         public void TestInstanceRef()
         {
