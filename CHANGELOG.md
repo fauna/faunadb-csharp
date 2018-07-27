@@ -2,6 +2,7 @@
 - Adds `IsEmpty()` and `IsNonEmpty()` function
 - Adds `NGram()` function
 - Adds `ToStringExpr()`, `ToNumber()`, `ToTime()`, and `ToDate()` functions
+- Adds support for X-Last-Seen-Txn
 
 ## 2.0.0
 
