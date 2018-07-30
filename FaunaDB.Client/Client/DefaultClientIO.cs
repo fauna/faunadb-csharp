@@ -20,18 +20,21 @@ namespace FaunaDB.Client
         readonly HttpClient client;
         readonly AuthenticationHeaderValue authHeader;
 
-        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader)
+        private LastSeen lastSeen;
+
+        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen)
         {
             this.client = client;
             this.authHeader = authHeader;
+            this.lastSeen = lastSeen;
         }
 
         public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout)
-            : this(CreateClient(endpoint, timeout), AuthHeader(secret))
+            : this(CreateClient(endpoint, timeout), AuthHeader(secret), new LastSeen())
         { }
 
         public IClientIO NewSessionClient(string secret) =>
-            new DefaultClientIO(client, AuthHeader(secret));
+            new DefaultClientIO(client, AuthHeader(secret), lastSeen);
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             DoRequestAsync(method, path, data, query);
@@ -49,6 +52,11 @@ namespace FaunaDB.Client
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
 
+            var last = lastSeen.Txn;
+            if (last.HasValue) {
+                message.Headers.Add("X-Last-Seen-Txn", last.Value.ToString());
+            }
+
             var httpResponse = await client.SendAsync(message).ConfigureAwait(false);
 
             string response;
@@ -59,6 +67,13 @@ namespace FaunaDB.Client
                 response = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var endTime = DateTime.UtcNow;
+
+            if (httpResponse.Headers.Contains("X-Txn-Time")) {
+                // there shouldn't ever be more than one...
+                var time = httpResponse.Headers.GetValues("X-Txn-Time").First();
+
+                lastSeen.SetTxn(Convert.ToInt64(time));
+            }
 
             return new RequestResult(method, path, query, data, response, (int)httpResponse.StatusCode, ToDictionary(httpResponse.Headers), startTime, endTime);
         }
