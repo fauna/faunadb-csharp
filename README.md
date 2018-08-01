@@ -43,7 +43,7 @@ FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mo
 First install the Nuget package by adding the package reference to your MSBuild project:
 
 ```xml
-<PackageReference Include="FaunaDB.Client" Version="2.0.0" />
+<PackageReference Include="FaunaDB.Client" Version="2.5.0" />
 ```
 
 or by using your IDE and searching for `FaunaDB.Client`.
