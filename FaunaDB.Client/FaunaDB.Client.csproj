@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.5;netstandard2.0;net451;net46;net461;net47</TargetFrameworks>
-    <PackageVersion>2.0.1-alpha</PackageVersion>
+    <PackageVersion>2.6.0-alpha</PackageVersion>
     <PackageId>FaunaDB.Client</PackageId>
     <Title>C# Driver for FaunaDB</Title>
     <Authors>Fauna, Inc.</Authors>
