@@ -32,11 +32,12 @@ namespace Test
 
         async Task SetupTimestampedThings()
         {
-            var task = await client.Query(CreateClass(Obj("name", "timestamped_things")));
+            var task = await client.Query(CreateCollection(Obj("name", "timestamped_things")));
             tsClassRef = task.At("ref");
 
             var task1 = await client.Query(CreateIndex(Obj(
                     "name", "timestamped_things_by_class",
+                    "active", true,
                     "source", tsClassRef
             )));
             tsIndexRef = task1.At("ref");
@@ -50,11 +51,12 @@ namespace Test
 
         async Task SetupPagedThings()
         {
-            var task = await client.Query(CreateClass(Obj("name", "paged_things")));
+            var task = await client.Query(CreateCollection(Obj("name", "paged_things")));
             classRef = task.At("ref");
 
             var task2 = await client.Query(CreateIndex(Obj(
                     "name", "things_by_class",
+                    "active", true,
                     "source", classRef,
                     "values", Arr(Obj("field", Arr("data", "i")), Obj("field", "ref"))
             )));
@@ -249,7 +251,7 @@ namespace Test
                 {
                     Assert.AreNotSame(value.At("ts"), NullV.Instance);
                     Assert.AreNotSame(value.At("action"), NullV.Instance);
-                    Assert.AreNotSame(value.At("instance"), NullV.Instance);
+                    Assert.AreNotSame(value.At("document"), NullV.Instance);
                     Assert.AreNotSame(value.At("data"), NullV.Instance);
                 }
             });
@@ -285,9 +287,9 @@ namespace Test
 
                     Assert.AreNotSame(value.At("value", "ts"), NullV.Instance);
                     Assert.AreNotSame(value.At("value", "action"), NullV.Instance);
-                    Assert.AreNotSame(value.At("value", "instance"), NullV.Instance);
+                    Assert.AreNotSame(value.At("value", "document"), NullV.Instance);
                     Assert.AreNotSame(value.At("value", "data"), NullV.Instance);
-                    
+
                 }
             });
         }

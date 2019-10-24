@@ -1,6 +1,7 @@
 ﻿using FaunaDB.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FaunaDB.Query
 {
@@ -9,7 +10,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Builder for path selectors.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#misc_functions">FaunaDB Miscellaneous Functions</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
         public struct PathSelector
@@ -87,7 +88,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a null value.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Null() =>
@@ -96,7 +97,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a ref value from a string.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ref(String @ref) =>
@@ -105,7 +106,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Calls ref function to create a ref value.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ref(Expr classRef, Expr id) =>
@@ -114,7 +115,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Timestamp value.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ts(DateTime dateTime) =>
@@ -123,7 +124,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Timestamp value.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Ts(string iso8601Time) =>
@@ -132,7 +133,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Date value.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Dt(DateTime dateTime) =>
@@ -141,7 +142,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Date value.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Dt(string iso8601Date) =>
@@ -150,31 +151,35 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Array value containing the provided entries.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Arr(params Expr[] values) =>
-            UnescapedArray.Of(values);
+            new UnescapedArray(values);
 
         /// <summary>
         /// Creates a new Array value containing the provided enumerable of values.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Arr(IEnumerable<Expr> values) =>
-            UnescapedArray.Of(values);
+            new UnescapedArray(values.ToList());
 
         /// <summary>
         /// Creates a new Object value wrapping the provided map.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#values">FaunaDB Values</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
         public static Expr Obj(IReadOnlyDictionary<string, Expr> fields) =>
             UnescapedObject.With("object", new UnescapedObject(fields));
 
-        static Expr Varargs(Expr[] values) =>
-            values.Length == 1 ? values[0] : UnescapedArray.Of(values);
+        static Expr Varargs(Expr[] values)
+        {
+            if (values == null) return Null();
+
+            return values.Length == 1 ? values[0] : new UnescapedArray(values);
+        }
     }
 }

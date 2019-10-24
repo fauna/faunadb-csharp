@@ -21,7 +21,9 @@ namespace Test
         protected FaunaClient rootClient;
         protected Expr DbRef;
         protected FaunaClient client;
+        protected FaunaClient adminClient;
         protected Value clientKey;
+        protected Value adminKey;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -52,7 +54,9 @@ namespace Test
             await rootClient.Query(CreateDatabase(Obj("name", dbName)));
 
             clientKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "server")));
+            adminKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "admin")));
             client = rootClient.NewSessionClient(clientKey.Get(SECRET_FIELD));
+            adminClient = rootClient.NewSessionClient(adminKey.Get(SECRET_FIELD));
         }
 
         [OneTimeTearDown]

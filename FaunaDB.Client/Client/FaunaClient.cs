@@ -81,7 +81,7 @@ namespace FaunaDB.Client
         /// <returns>a <see cref="Task"/> containing an ordered list of root response nodes.</returns>
         public async Task<Value[]> Query(params Expr[] expressions)
         {
-            var response = await Query(UnescapedArray.Of(expressions)).ConfigureAwait(false);
+            var response = await Query(new UnescapedArray(expressions)).ConfigureAwait(false);
             return response.Collect(Field.Root).ToArray();
         }
 
@@ -99,15 +99,12 @@ namespace FaunaDB.Client
         /// <returns>a <see cref="Task"/> containing an ordered list of root response nodes.</returns>
         public async Task<IEnumerable<Value>> Query(IEnumerable<Expr> expressions)
         {
-            var response = await Query(UnescapedArray.Of(expressions)).ConfigureAwait(false);
+            var response = await Query(new UnescapedArray(expressions.ToList())).ConfigureAwait(false);
             return response.Collect(Field.Root);
         }
 
         /// <summary>
         /// Check service health.
-        /// <para>
-        /// See the <see href="https://fauna.com/documentation/rest#other">docs</see>.
-        /// </para>
         /// </summary>
         /// <param name="scope">Must be "node", "local", "global", or "all". Defaults to "global"</param>
         /// <param name="timeout">Time to wait for the ping to succeed, in milliseconds.</param>

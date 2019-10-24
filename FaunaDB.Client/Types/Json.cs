@@ -224,7 +224,12 @@ namespace FaunaDB.Types
         {
             writer.WriteStartArray();
             foreach (var value in values)
-                value.WriteJson(writer);
+            {
+                if (value == null)
+                    writer.WriteNull();
+                else
+                    value.WriteJson(writer);
+            }
             writer.WriteEndArray();
         }
 
@@ -242,7 +247,10 @@ namespace FaunaDB.Types
             foreach (var kv in props)
             {
                 writer.WritePropertyName(kv.Key);
-                kv.Value.WriteJson(writer);
+                if (kv.Value == null)
+                    writer.WriteNull();
+                else
+                    kv.Value.WriteJson(writer);
             }
             writer.WriteEndObject();
         }

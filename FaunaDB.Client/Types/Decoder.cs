@@ -66,8 +66,17 @@ namespace FaunaDB.Types
         static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Func<Value, object>>();
         static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
+        private static InvalidCastException invalidCast(object value, Type to)
+        {
+            var from = value?.GetType();
+            return new InvalidCastException($"Invalid cast from '{from}' to '{to}'.");
+        }
+
         public static object Decode(Value value, Type dstType)
         {
+            if (value == NullV.Instance && dstType == typeof(Value))
+                return value;
+
             if (value == null || value == NullV.Instance)
                 return dstType.GetTypeInfo().IsValueType ? Activator.CreateInstance(dstType) : null;
 
@@ -81,7 +90,7 @@ namespace FaunaDB.Types
                 if (dstType.IsAssignableFrom(value.GetType()))
                     return value;
 
-                throw new InvalidOperationException($"Cannot cast {value.GetType()} to {dstType}");
+                throw invalidCast(value, dstType);
             }
 
             if (dstType.GetTypeInfo().IsEnum)
@@ -99,31 +108,31 @@ namespace FaunaDB.Types
                     return ToDateTime(value);
 
                 case TypeCode.SByte:
-                    return Convert.ToSByte(ToLong<sbyte>(value));
+                    return Convert.ToSByte(ToNumber<sbyte>(value));
                 case TypeCode.Int16:
-                    return Convert.ToInt16(ToLong<short>(value));
+                    return Convert.ToInt16(ToNumber<short>(value));
                 case TypeCode.Int32:
-                    return Convert.ToInt32(ToLong<int>(value));
+                    return Convert.ToInt32(ToNumber<int>(value));
                 case TypeCode.Int64:
-                    return ToLong<long>(value);
+                    return Convert.ToInt64(ToNumber<long>(value));
 
                 case TypeCode.Char:
-                    return Convert.ToChar(ToLong<char>(value));
+                    return Convert.ToChar(ToNumber<char>(value));
                 case TypeCode.Byte:
-                    return Convert.ToByte(ToLong<byte>(value));
+                    return Convert.ToByte(ToNumber<byte>(value));
                 case TypeCode.UInt16:
-                    return Convert.ToUInt16(ToLong<ushort>(value));
+                    return Convert.ToUInt16(ToNumber<ushort>(value));
                 case TypeCode.UInt32:
-                    return Convert.ToUInt32(ToLong<uint>(value));
+                    return Convert.ToUInt32(ToNumber<uint>(value));
                 case TypeCode.UInt64:
-                    return Convert.ToUInt64(ToLong<ulong>(value));
+                    return Convert.ToUInt64(ToNumber<ulong>(value));
 
                 case TypeCode.Single:
-                    return Convert.ToSingle(ToDouble<float>(value));
+                    return Convert.ToSingle(ToNumber<float>(value));
                 case TypeCode.Double:
-                    return ToDouble<double>(value);
+                    return Convert.ToDouble(ToNumber<double>(value));
                 case TypeCode.Decimal:
-                    return Convert.ToDecimal(ToDouble<decimal>(value));
+                    return Convert.ToDecimal(ToNumber<decimal>(value));
 
 #if !(NETSTANDARD1_5)
                 case TypeCode.DBNull:
@@ -145,19 +154,50 @@ namespace FaunaDB.Types
                     if (typeof(IDictionary).IsAssignableFrom(dstType) || (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(IDictionary<,>))))
                         return FromDictionary(value, dstType);
 
+                    if (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(ISet<>)))
+                        return FromSet(value, dstType);
+
                     if (typeof(IList).IsAssignableFrom(dstType) || (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(IEnumerable<>))))
                         return FromEnumerable(value, dstType);
+
+                    if (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(Nullable<>)))
+                        return DecodeIntern(value, Nullable.GetUnderlyingType(dstType));
 
                     return FromObject(value, dstType);
             }
 
-            throw new InvalidOperationException($"Cannot convert {value} to {dstType}");
+            throw invalidCast(value, dstType);
+        }
+
+        static IEnumerable FromSet(Value value, Type type)
+        {
+            if (!(value is ArrayV))
+                throw invalidCast(value, type);
+
+            var valueType = type.GenericTypeArguments[0];
+            
+            var createType = type.GetTypeInfo().IsAbstract
+                                 ? typeof(HashSet<>).MakeGenericType(valueType)
+                                 : type;
+
+            var set = (IEnumerable)Activator.CreateInstance(createType);
+            
+            var adder = createType.GetMethod("Add", new Type[] { valueType });
+            var payload = new object[1];
+
+            foreach (var v in ((ArrayV)value).Value)
+            {
+                payload[0] = Decode(v, valueType); 
+                adder.Invoke(set, payload);
+            }
+            
+            return set;
         }
 
         static IList FromEnumerable(Value value, Type type)
         {
             if (!(value is ArrayV))
-                throw new InvalidOperationException($"Cannot convert `{value}` to {type}");
+                throw invalidCast(value, type);
 
             if (!type.GetTypeInfo().IsGenericType)
                 throw new InvalidOperationException($"The type {type} is not generic");
@@ -179,7 +219,7 @@ namespace FaunaDB.Types
         static IDictionary FromDictionary(Value value, Type type)
         {
             if (!(value is ObjectV))
-                throw new InvalidOperationException($"Cannot convert `{value}` to {type}");
+                throw invalidCast(value, type);
 
             if (!type.GetTypeInfo().IsGenericType)
                 throw new InvalidOperationException($"The type {type} is not generic");
@@ -204,7 +244,7 @@ namespace FaunaDB.Types
             var elementType = type.GetElementType();
 
             if (!(value is ArrayV))
-                throw new InvalidOperationException($"Cannot convert `{value}` to an array of type {elementType}");
+                throw invalidCast(value, type);
 
             var array = ((ArrayV)value).Value;
 
@@ -216,11 +256,22 @@ namespace FaunaDB.Types
             return ret;
         }
 
-        static long ToLong<R>(Value value) =>
-            FromScalar<long>(value, typeof(R));
+        static object ToNumber<R>(Value value)
+        {
+            var ll = value as ScalarValue<long>;
+            if (ll != null)
+                return ll.Value;
 
-        static double ToDouble<R>(Value value) =>
-            FromScalar<double>(value, typeof(R));
+            var dd = value as ScalarValue<double>;
+            if (dd != null)
+                return dd.Value;
+
+            var ss = value as ScalarValue<string>;
+            if (ss != null)
+                return ss.Value;
+
+            throw invalidCast(value, typeof(R));
+        }
 
         static string ToString(Value value) =>
             FromScalar<string>(value, typeof(string));
@@ -239,7 +290,7 @@ namespace FaunaDB.Types
             var scalar = value as ScalarValue<T>;
 
             if ((object)scalar == null)
-                throw new InvalidOperationException($"Cannot convert `{value}` to {type}");
+                throw invalidCast(value, type);
 
             return scalar.Value;
         }
@@ -408,7 +459,7 @@ namespace FaunaDB.Types
                 .GetAllFields()
                 .Where(f => !ignoreProperties.Contains(f.GetName()))
                 .Where(f => !f.Has<CompilerGeneratedAttribute>() && !f.Has<FaunaIgnoreAttribute>())
-                .Select(f => Expression.Assign(Expression.MakeMemberAccess(varExpr, f), CallDecode(CallGetValue(objExpr, f, f.FieldType), f.FieldType)));
+                .Select(f => Expression.Assign(Expression.Field(varExpr, f), CallDecode(CallGetValue(objExpr, f, f.FieldType), f.FieldType)));
 
             var properties = dstType
                 .GetProperties()
@@ -416,9 +467,11 @@ namespace FaunaDB.Types
                 .Where(p => p.CanWrite && !p.Has<FaunaIgnoreAttribute>())
                 .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p, p.PropertyType), p.PropertyType)));
 
-            return properties.Any()
-                             ? Expression.Block(fields.Concat(properties))
-                             : (Expression)Expression.Empty();
+            var concat = fields.Concat(properties);
+
+            return concat.Any()
+                ? Expression.Block(concat)
+                : (Expression)Expression.Empty();
         }
 
         static Converter Create(Func<IEnumerable<Expression>, Expression> creatorExpr, ParameterInfo[] parameters, Type dstType)
@@ -519,11 +572,15 @@ namespace FaunaDB.Types
                 "Decode", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Value), typeof(Type) }, null
             );
 
-            return Expression.Convert(Expression.Call(
+            var decodeExpr = Expression.Call(
                 decodeMethod,
                 objExpr,
                 Expression.Constant(type)
-            ), type);
+            );
+
+            return type.GetTypeInfo().IsValueType
+                ? Expression.Unbox(decodeExpr, type)
+                : Expression.Convert(decodeExpr, type);
         }
 
         static Expression CallGetValue(Expression objExpr, MemberInfo member, Type memberType)

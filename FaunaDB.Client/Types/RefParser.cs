@@ -9,10 +9,10 @@
                 None: () =>
                 {
                     var id = value.GetOption(Field.At("id").To<string>());
-                    var cls = value.GetOption(Field.At("class"));
+                    var coll = value.GetOption(Field.At("collection"));
                     var db = value.GetOption(Field.At("database"));
 
-                    return Mk(id, cls, db);
+                    return Mk(id, coll, db);
                 }
             );
         }
@@ -26,7 +26,7 @@
             if (classE == null && databaseE == null)
                 return Native.FromName(idE);
 
-            return new RefV(id: idE, @class: classE, database: databaseE);
+            return new RefV(id: idE, collection: classE, database: databaseE);
         }
 
         static T Cast<T>(IOption<Value> opt) where T : RefV =>
