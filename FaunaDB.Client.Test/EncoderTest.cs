@@ -107,7 +107,7 @@ namespace Test
 
             Assert.AreEqual(
                 ObjectV.With("field1", "value1", "field2", 10),
-                Encode(new Dictionary<string, object> { {"field1", "value1"}, {"field2", 10} })
+                Encode(new Dictionary<string, object> { { "field1", "value1" }, { "field2", 10 } })
             );
         }
 
@@ -280,7 +280,7 @@ namespace Test
             public Value nullV = NullV.Instance;
             public DateV dateV = new DateV("2001-01-01");
             public TimeV timeV = new TimeV("2000-01-01T01:10:30.123Z");
-            public RefV refV = new RefV("classes");
+            public RefV refV = new RefV("collections");
             public SetRefV setRefV = new SetRefV(new Dictionary<string, Value>());
             public ArrayV arrayV = ArrayV.Of(1, 2, 3);
             public ObjectV objectV = ObjectV.With("a", "b");
@@ -299,7 +299,7 @@ namespace Test
                     {"nullV", NullV.Instance},
                     {"dateV", new DateV("2001-01-01")},
                     {"timeV", new TimeV("2000-01-01T01:10:30.123Z")},
-                    {"refV", new RefV("classes")},
+                    {"refV", new RefV("collections")},
                     {"setRefV", new SetRefV(new Dictionary<string, Value>())},
                     {"arrayV", ArrayV.Of(1, 2, 3)},
                     {"objectV", ObjectV.With("a", "b")},

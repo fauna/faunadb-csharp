@@ -1,11 +1,13 @@
-﻿namespace FaunaDB.Query
+﻿using System;
+
+namespace FaunaDB.Query
 {
     public partial struct Language
     {
         /// <summary>
         /// Creates a new Create expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Create(Expr classRef, Expr @params) =>
@@ -14,7 +16,7 @@
         /// <summary>
         /// Creates a new Update expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Update(Expr @ref, Expr @params) =>
@@ -23,7 +25,7 @@
         /// <summary>
         /// Creates a new Replace expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Replace(Expr @ref, Expr @params) =>
@@ -32,7 +34,7 @@
         /// <summary>
         /// Creates a new Delete expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Delete(Expr @ref) =>
@@ -40,9 +42,6 @@
 
         /// <summary>
         /// Possible actions for functions <see cref="Insert(Expr, Expr, ActionType, Expr)"/> and <see cref="Remove(Expr, Expr, ActionType)"/>.
-        /// <para>
-        /// See the <see href="https://fauna.com/documentation/architecture#temporal">Temporal Data Model</see>.
-        /// </para>
         /// </summary>
         public enum ActionType
         {
@@ -53,7 +52,7 @@
         /// <summary>
         /// Creates a new Insert expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Insert(Expr @ref, Expr ts, ActionType action, Expr @params) =>
@@ -62,7 +61,7 @@
         /// <summary>
         /// Creates a new Insert expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Insert(Expr @ref, Expr ts, Expr action, Expr @params) =>
@@ -71,7 +70,7 @@
         /// <summary>
         /// Creates a new Remove expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Remove(Expr @ref, Expr ts, ActionType action) =>
@@ -80,7 +79,7 @@
         /// <summary>
         /// Creates a new Remove expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr Remove(Expr @ref, Expr ts, Expr action) =>
@@ -89,16 +88,26 @@
         /// <summary>
         /// Creates a new CreateClass expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
+        [Obsolete("CreateClass is deprecated, please use CreateCollection instead.")]
         public static Expr CreateClass(Expr class_params) =>
             UnescapedObject.With("create_class", class_params);
 
         /// <summary>
+        /// Creates a new CreateCollection expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/createcollection">FaunaDB Write Functions</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateCollection(Expr coll_params) =>
+            UnescapedObject.With("create_collection", coll_params);
+
+        /// <summary>
         /// Creates a new CreateDatabase expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr CreateDatabase(Expr db_params) =>
@@ -107,7 +116,7 @@
         /// <summary>
         /// Creates a new CreateIndex expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr CreateIndex(Expr index_params) =>
@@ -116,7 +125,7 @@
         /// <summary>
         /// Creates a new CreateKey expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr CreateKey(Expr key_params) =>
@@ -125,10 +134,19 @@
         /// <summary>
         /// Creates a new CreateFunction expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#write_functions">FaunaDB Write Functions</see>.
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
         /// </para>
         /// </summary>
         public static Expr CreateFunction(Expr function_params) =>
             UnescapedObject.With("create_function", function_params);
+
+        /// <summary>
+        /// Creates a new CreateRole expression.
+        /// <para>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">FaunaDB Write Functions</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateRole(Expr role_params) =>
+            UnescapedObject.With("create_role", role_params);
     }
 }

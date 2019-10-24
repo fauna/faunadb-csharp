@@ -41,25 +41,25 @@ namespace FaunaDB.Query
         }
 
         public static UnescapedObject With(string key1, Expr value1) =>
-            new UnescapedObject(ImmutableDictionary.Of(key1, value1));
+            new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance));
 
         public static UnescapedObject With(string key1, Expr value1, string key2, Expr value2) =>
-            new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2));
+            new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance, key2, value2));
 
         public static UnescapedObject With(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3) =>
-            new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3));
+            new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance, key2, value2, key3, value3));
 
         public static UnescapedObject With(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4) =>
-            new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4));
+            new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance, key2, value2, key3, value3, key4, value4));
 
         public static UnescapedObject With(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5) =>
-            new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5));
+            new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance, key2, value2, key3, value3, key4, value4, key5, value5));
 
         public static UnescapedObject With(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6) =>
-            new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6));
+            new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6));
 
         public static UnescapedObject With(string key1, Expr value1, string key2, Expr value2, string key3, Expr value3, string key4, Expr value4, string key5, Expr value5, string key6, Expr value6, string key7, Expr value7) =>
-            new UnescapedObject(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6, key7, value7));
+            new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6, key7, value7));
     }
 
     class UnescapedArray : Expr
@@ -70,6 +70,14 @@ namespace FaunaDB.Query
         IReadOnlyList<Expr> Value { get; }
 
         public UnescapedArray(IReadOnlyList<Expr> value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            Value = value;
+        }
+
+        public UnescapedArray(params Expr[] value)
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
@@ -91,11 +99,5 @@ namespace FaunaDB.Query
 
         public override string ToString() =>
             $"UArr({string.Join(", ", Value)})";
-
-        public static UnescapedArray Of(params Expr[] values) =>
-            new UnescapedArray(new List<Expr>(values));
-
-        public static UnescapedArray Of(IEnumerable<Expr> values) =>
-            new UnescapedArray(new List<Expr>(values));
     }
 }

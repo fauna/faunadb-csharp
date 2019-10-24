@@ -1,6 +1,22 @@
-## 2.6.0-alpha
+## 2.9.0
 
-## 2.5.0
+- Support new schema names: `Class` -> `Collection`; `Instance` -> `Document`
+- Deprecate `CreateClass()`, `Class()`, and `Classes()` in favor of `CreateCollection()`, `Collection()`, `Collections()`
+- Adds supports to encoding/decoding `ISet<>`
+- Fix nullable types decode
+- Adds new custom http header `X-Fauna-Driver`
+- Fix some casts between numbers 
+- Rename class field to collection on RefV
+
+## 2.7.0 and 2.8.0
+
+No improvements were made for these versions.
+
+## 2.6.0
+- Adds support for backrefs in Let() bindings. Requires FaunaDB 2.6.0
+- Add CreateRole, Roles, and Role functions
+
+## 2.1.0-alpha
 - Adds `IsEmpty()` and `IsNonEmpty()` function
 - Adds `NGram()` function
 - Adds `ToStringExpr()`, `ToNumber()`, `ToTime()`, and `ToDate()` functions
@@ -54,4 +70,3 @@
 ## 0.1.0
 
 - First public release
-

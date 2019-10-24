@@ -155,6 +155,11 @@ namespace Test
                 Is.EquivalentTo(new List<string> { "a", "b" })
             );
 
+            Assert.That(
+                Decode<ISet<string>>(ArrayV.Of("a", "b")),
+                Is.EquivalentTo(new HashSet<string> { "a", "b" })
+            );
+
             //concrete types
 
             Assert.That(
@@ -166,7 +171,17 @@ namespace Test
                 Decode<List<string>>(ArrayV.Of("a", "b")),
                 Is.EquivalentTo(new List<string> { "a", "b" })
             );
-        }
+
+            Assert.That(
+                Decode<HashSet<string>>(ArrayV.Of("a", "b")),
+                Is.EquivalentTo(new HashSet<string> { "a", "b" })
+            );
+            
+            Assert.That(
+                Decode<SortedSet<int>>(ArrayV.Of(1, 2, 3)),
+                Is.EquivalentTo(new SortedSet<int> { 1, 2, 3 })
+            );
+        }      
 
         class Product
         {
@@ -185,6 +200,19 @@ namespace Test
                 Price = price;
                 Created = created;
                 LastUpdated = lastUpdated;
+            }
+
+            public override bool Equals(object obj)
+            {
+                var product = obj as Product;
+
+                if (product == null)
+                    return false;
+
+                return Description == product.Description &&
+                    Price == product.Price &&
+                    Created == product.Created &&
+                    LastUpdated == product.LastUpdated;
             }
         }
 
@@ -205,6 +233,12 @@ namespace Test
 
             [FaunaField("products")]
             public List<Product> Products { get; set; }
+
+            [FaunaField("vouchers")]
+            public ISet<int> Vouchers { get; set; }
+            
+            [FaunaField("addresses")]
+            public SortedSet<String> Addresses { get; set; }
         }
 
         [Test]
@@ -213,7 +247,13 @@ namespace Test
             var product1 = ObjectV.With("Description", "Laptop", "Price", 999.9);
             var product2 = ObjectV.With("Description", "Mouse", "Price", 9.9);
 
-            var order = Decode<Order>(ObjectV.With("number", "XXXYYY999", "products", ArrayV.Of(product1, product2)));
+            var order = Decode<Order>(ObjectV.With(
+                "number", "XXXYYY999",
+                "products", ArrayV.Of(product1, product2),
+                "vouchers", ArrayV.Of(111111, 222222),
+                "addresses", ArrayV.Of("744 Montgomery Street Suite 200")
+            ));
+
             Assert.AreEqual("XXXYYY999", order.Number);
 
             Assert.AreEqual(2, order.Products.Count);
@@ -223,6 +263,11 @@ namespace Test
 
             Assert.AreEqual("Mouse", order.Products[1].Description);
             Assert.AreEqual(9.9, order.Products[1].Price);
+
+            Assert.IsTrue(order.Vouchers.Contains(111111));
+            Assert.IsTrue(order.Vouchers.Contains(222222));
+
+            Assert.IsTrue(order.Addresses.Contains("744 Montgomery Street Suite 200"));
         }
 
         class OrderWithCustomer : Order
@@ -391,7 +436,7 @@ namespace Test
             public Value nullV = NullV.Instance;
             public DateV dateV = new DateV("2001-01-01");
             public TimeV timeV = new TimeV("2000-01-01T01:10:30.123Z");
-            public RefV refV = new RefV("classes");
+            public RefV refV = new RefV("collections");
             public SetRefV setRefV = new SetRefV(new Dictionary<string, Value>());
             public ArrayV arrayV = ArrayV.Of(1, 2, 3);
             public ObjectV objectV = ObjectV.With("a", "b");
@@ -431,7 +476,7 @@ namespace Test
                     {"nullV", NullV.Instance},
                     {"dateV", new DateV("2001-01-01")},
                     {"timeV", new TimeV("2000-01-01T01:10:30.123Z")},
-                    {"refV", new RefV("classes")},
+                    {"refV", new RefV("collections")},
                     {"setRefV", new SetRefV(new Dictionary<string, Value>())},
                     {"arrayV", ArrayV.Of(1, 2, 3)},
                     {"objectV", ObjectV.With("a", "b")},
@@ -441,21 +486,86 @@ namespace Test
         }
 
         [Test]
+        public void TestCastNumbers()
+        {
+            //to long
+            Assert.AreEqual(10L, Decode<long>(10L));
+            Assert.AreEqual(10L, Decode<long>(10d));
+            Assert.AreEqual(10L, Decode<long>(10));
+            Assert.AreEqual(10L, Decode<long>("10"));
+
+            //to double
+            Assert.AreEqual(10d, Decode<double>(10L));
+            Assert.AreEqual(10d, Decode<double>(10d));
+            Assert.AreEqual(10d, Decode<double>(10));
+            Assert.AreEqual(10d, Decode<double>("10"));
+
+            //to int
+            Assert.AreEqual(10, Decode<int>(10L));
+            Assert.AreEqual(10, Decode<int>(10d));
+            Assert.AreEqual(10, Decode<int>(10));
+            Assert.AreEqual(10, Decode<int>("10"));
+
+            //to short
+            Assert.AreEqual((short)10, Decode<short>(10L));
+            Assert.AreEqual((short)10, Decode<short>(10d));
+            Assert.AreEqual((short)10, Decode<short>(10));
+            Assert.AreEqual((short)10, Decode<short>("10"));
+
+            var time = DateTime.Now;
+
+            Assert.AreEqual(
+                new Product("MacBook", 10, time, time),
+                Decode<Product>(ObjectV.With("Description", "MacBook", "Price", 10, "Created", time, "LastUpdated", time))
+            );
+        }
+
+        [Test]
         public void TestCastErrors()
         {
             Assert.AreEqual(
-                "Cannot cast FaunaDB.Types.StringV to FaunaDB.Types.ObjectV",
-                Assert.Throws<InvalidOperationException>(() => Decode<ObjectV>("a string")).Message
+                "Invalid cast from 'FaunaDB.Types.StringV' to 'FaunaDB.Types.ObjectV'.",
+                Assert.Throws<InvalidCastException>(() => Decode<ObjectV>("a string")).Message
             );
 
             Assert.AreEqual(
-                "Cannot cast FaunaDB.Types.StringV to FaunaDB.Types.LongV",
-                Assert.Throws<InvalidOperationException>(() => Decode<LongV>("a string")).Message
+                "Invalid cast from 'FaunaDB.Types.StringV' to 'FaunaDB.Types.LongV'.",
+                Assert.Throws<InvalidCastException>(() => Decode<LongV>("a string")).Message
             );
 
             Assert.AreEqual(
-                "Cannot cast FaunaDB.Types.ObjectV to FaunaDB.Types.RefV",
-                Assert.Throws<InvalidOperationException>(() => Decode<RefV>(ObjectV.Empty)).Message
+                "Invalid cast from 'FaunaDB.Types.ObjectV' to 'FaunaDB.Types.RefV'.",
+                Assert.Throws<InvalidCastException>(() => Decode<RefV>(ObjectV.Empty)).Message
+            );
+
+            Assert.AreEqual(
+                "Invalid cast from 'Double' to 'Char'.",
+                Assert.Throws<InvalidCastException>(() => Decode<char>(3.14)).Message
+            );
+
+            Assert.AreEqual(
+                "Invalid cast from 'FaunaDB.Types.LongV' to 'System.Collections.Generic.List`1[System.Int32]'.",
+                Assert.Throws<InvalidCastException>(() => Decode<List<int>>(10)).Message
+            );
+
+            Assert.AreEqual(
+                "Invalid cast from 'FaunaDB.Types.LongV' to 'System.Collections.Generic.Dictionary`2[System.String,System.Int32]'.",
+                Assert.Throws<InvalidCastException>(() => Decode<Dictionary<string, int>>(10)).Message
+            );
+
+            Assert.AreEqual(
+                "Invalid cast from 'FaunaDB.Types.StringV' to 'System.Collections.Generic.IList`1[System.Int32]'.",
+                Assert.Throws<InvalidCastException>(() => Decode<IList<int>>("a string")).Message
+            );
+
+            Assert.AreEqual(
+                "Invalid cast from 'FaunaDB.Types.StringV' to 'System.Collections.Generic.IDictionary`2[System.String,System.Int32]'.",
+                Assert.Throws<InvalidCastException>(() => Decode<IDictionary<string, int>>("a string")).Message
+            );
+
+            Assert.AreEqual(
+                "Invalid cast from 'FaunaDB.Types.StringV' to 'System.Int32[]'.",
+                Assert.Throws<InvalidCastException>(() => Decode<int[]>("a string")).Message
             );
         }
 
@@ -463,53 +573,13 @@ namespace Test
         public void TestErrors()
         {
             Assert.AreEqual(
-                "Cannot convert `StringV(a string)` to System.Int32",
-                Assert.Throws<InvalidOperationException>(() => Decode<int>("a string")).Message
-            );
-
-            Assert.AreEqual(
-                "Cannot convert `DoubleV(3.14)` to System.Char",
-                Assert.Throws<InvalidOperationException>(() => Decode<char>(3.14)).Message
-            );
-
-            Assert.AreEqual(
-                "Cannot convert `LongV(10)` to System.Collections.Generic.List`1[System.Int32]",
-                Assert.Throws<InvalidOperationException>(() => Decode<List<int>>(10)).Message
-            );
-
-            Assert.AreEqual(
-                "Cannot convert `LongV(10)` to System.Collections.Generic.Dictionary`2[System.String,System.Int32]",
-                Assert.Throws<InvalidOperationException>(() => Decode<Dictionary<string, int>>(10)).Message
-            );
-
-            Assert.AreEqual(
-                "Cannot convert `LongV(10)` to System.Double",
-                Assert.Throws<InvalidOperationException>(() => Decode<Product>(ObjectV.With("Description", "product", "Price", 10))).Message
-            );
-
-            Assert.AreEqual(
-                "Cannot convert `StringV(a string)` to System.Collections.Generic.IList`1[System.Int32]",
-                Assert.Throws<InvalidOperationException>(() => Decode<IList<int>>("a string")).Message
-            );
-
-            Assert.AreEqual(
                 "The type System.Collections.IList is not generic",
                 Assert.Throws<InvalidOperationException>(() => Decode<IList>(ArrayV.Of("a string"))).Message
             );
 
             Assert.AreEqual(
-                "Cannot convert `StringV(a string)` to System.Collections.Generic.IDictionary`2[System.String,System.Int32]",
-                Assert.Throws<InvalidOperationException>(() => Decode<IDictionary<string, int>>("a string")).Message
-            );
-
-            Assert.AreEqual(
                 "The type System.Collections.IDictionary is not generic",
                 Assert.Throws<InvalidOperationException>(() => Decode<IDictionary>(ObjectV.With("key", "vlaue"))).Message
-            );
-
-            Assert.AreEqual(
-                "Cannot convert `StringV(a string)` to an array of type System.Int32",
-                Assert.Throws<InvalidOperationException>(() => Decode<int[]>("a string")).Message
             );
 
             Assert.AreEqual(
@@ -625,6 +695,35 @@ namespace Test
 
             var ex = Assert.Throws<InvalidOperationException>(() => Decode<CpuTypes>(StringV.Of("AVR")));
             Assert.AreEqual("Enumeration value 'AVR' not found in Test.DecoderTest+CpuTypes", ex.Message);
+        }
+
+        struct NestedStruct
+        {
+            public byte? aByte;
+            public short? aShort;
+        }
+
+        struct StructWithNullableFields
+        {
+            public int? anInteger;
+            public double? aDouble;
+            public NestedStruct? aStruct;
+        }
+
+        [Test]
+        public void TestNullableFields()
+        {
+            var structWithNullableFields = Decode<StructWithNullableFields>(ObjectV.With(
+                "anInteger", LongV.Of(10),
+                "aDouble", DoubleV.Of(3.14),
+                "aStruct", ObjectV.With("aByte", LongV.Of(10))
+            ));
+
+            Assert.AreEqual(10, structWithNullableFields.anInteger);
+            Assert.AreEqual(3.14, structWithNullableFields.aDouble);
+            Assert.IsNotNull(structWithNullableFields.aStruct);
+            Assert.AreEqual(10, structWithNullableFields.aStruct?.aByte);
+            Assert.IsNull(structWithNullableFields.aStruct?.aShort);
         }
     }
 }

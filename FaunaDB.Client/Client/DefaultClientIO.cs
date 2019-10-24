@@ -124,7 +124,8 @@ namespace FaunaDB.Client
             client.Timeout = timeout;
             client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("X-FaunaDB-API-Version", "2.1");
+            client.DefaultRequestHeaders.Add("X-FaunaDB-API-Version", "2.7");
+            client.DefaultRequestHeaders.Add("X-Fauna-Driver", "csharp");
 
             return client;
         }

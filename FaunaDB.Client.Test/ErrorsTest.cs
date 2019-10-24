@@ -17,8 +17,8 @@ namespace Test
     {
         [Test] public void TestInvalidResponse()
         {
-            Assert.ThrowsAsync<UnknowException>(async() => await MockClient("I like fine wine").Query(Get(Class("any-ref"))));
-            Assert.ThrowsAsync<KeyNotFoundException>(async() => await MockClient("{\"resoars\": 1}").Query(Get(Class("any-ref"))));
+            Assert.ThrowsAsync<UnknowException>(async() => await MockClient("I like fine wine").Query(Get(Collection("any-ref"))));
+            Assert.ThrowsAsync<KeyNotFoundException>(async() => await MockClient("{\"resoars\": 1}").Query(Get(Collection("any-ref"))));
         }
 
         #region HTTP errors
@@ -36,7 +36,7 @@ namespace Test
         [Test] public void TestUnavailableError()
         {
             var client = MockClient("{\"errors\": [{\"code\": \"unavailable\", \"description\": \"on vacation\"}]}", HttpStatusCode.ServiceUnavailable);
-            Assert.ThrowsAsync<UnavailableError>(async() => await client.Query(Get(Class("any-ref"))), "unavailable");
+            Assert.ThrowsAsync<UnavailableError>(async() => await client.Query(Get(Collection("any-ref"))), "unavailable");
         }
 
         [Test] public async Task TestPermissionDenied()
@@ -57,7 +57,7 @@ namespace Test
 
         [Test] public void TestUnboundVariable()
         {
-            AssertQueryException<BadRequest>(Var("x"), "unbound variable", "No variable 'x' in scope.");
+            AssertQueryException<BadRequest>(Var("x"), "invalid expression", "Variable 'x' is not defined.");
         }
 
         [Test] public void TestInvalidArgument()
@@ -87,33 +87,34 @@ namespace Test
         [Test] public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
-            await client.Query(CreateClass(Obj("name", "foofaws")));
-            AssertQueryException<NotFound>(Get(Ref(Class("foofaws"), "123")), "instance not found", "Instance not found.");
+            await client.Query(CreateCollection(Obj("name", "foofaws")));
+            AssertQueryException<NotFound>(Get(Ref(Collection("foofaws"), "123")), "instance not found", "Document not found.");
         }
 
         [Test] public void TestValueNotFound()
         {
-            AssertQueryException<NotFound>(Select("a", Obj()), "value not found", "Value not found.");
+            AssertQueryException<NotFound>(Select("a", Obj()), "value not found", "Value not found at path [a].");
         }
 
         [Test] public async Task TestInstanceAlreadyExists()
         {
-            await client.Query(CreateClass(Obj("name", "duplicates")));
-            var @ref = (await client.Query(Create(Class("duplicates"), Obj()))).At("ref");
-            AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", "Instance already exists.", new List<string> { "create" });
+            await client.Query(CreateCollection(Obj("name", "duplicates")));
+            var @ref = (await client.Query(Create(Collection("duplicates"), Obj()))).At("ref");
+            AssertQueryException<BadRequest>(Create(@ref, Obj()), "instance already exists", "Document already exists.", new List<string> { "create" });
         }
         #endregion
 
         [Test] public async Task TestDuplicateValue()
         {
-            await client.Query(CreateClass(Obj("name", "gerbils")));
+            await client.Query(CreateCollection(Obj("name", "gerbils")));
             await client.Query(CreateIndex(Obj(
                 "name", "gerbils_by_x",
-                "source", Class("gerbils"),
+                "active", true,
+                "source", Collection("gerbils"),
                 "terms", Arr(Obj("field", Arr("data", "x"))),
                 "unique", true
             )));
-            await client.Query(Create(Class("gerbils"), Obj("data", Obj("x", 1))));
+            await client.Query(Create(Collection("gerbils"), Obj("data", Obj("x", 1))));
         }
 
         void AssertException(FaunaException exception, string code, string description, IReadOnlyList<string> position = null)

@@ -5,7 +5,7 @@
         /// <summary>
         /// Creates a new Concat expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#string_functions">FaunaDB String Functions</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#string-functions">FaunaDB String Functions</see>
         /// </para>
         /// </summary>
         public static Expr Concat(Expr strings, Expr separator = null) =>
@@ -14,7 +14,7 @@
         /// <summary>
         /// Possible normalizer values accepted by <see cref="Casefold(Expr, Normalizer)"/>.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#time_functions">FaunaDB Time and Date Functions</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#time-and-date">FaunaDB Time and Date Functions</see>
         /// </para>
         /// </summary>
         public enum Normalizer
@@ -29,7 +29,7 @@
         /// <summary>
         /// Creates a new Casefold expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#string_functions">FaunaDB String Functions</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#string-functions">FaunaDB String Functions</see>
         /// </para>
         /// </summary>
         public static Expr Casefold(Expr @string, Normalizer normalizer) =>
@@ -38,7 +38,7 @@
         /// <summary>
         /// Creates a new Casefold expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#string_functions">FaunaDB String Functions</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#string-functions">FaunaDB String Functions</see>
         /// </para>
         /// </summary>
         public static Expr Casefold(Expr @string, Expr normalizer = null) =>
@@ -47,7 +47,7 @@
         /// <summary>
         /// Creates a new NGram expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#string_functions">FaunaDB String Functions</see>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#string-functions">FaunaDB String Functions</see>
         /// </para>
         /// </summary>
         public static Expr NGram(Expr terms, Expr min = null, Expr max = null) =>

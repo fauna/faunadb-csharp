@@ -22,6 +22,7 @@ namespace Test
             AssertJsonEqual(10, "10");
             AssertJsonEqual("a string", "\"a string\"");
             AssertJsonEqual(3.14, "3.14");
+            AssertJsonEqual(-1.0, "-1.0");
             AssertJsonEqual(true, "true");
             AssertJsonEqual(false, "false");
             AssertJsonEqual(NullV.Instance, "null");
@@ -59,7 +60,7 @@ namespace Test
 
         [Test] public void TestRef()
         {
-            AssertJsonEqual(Ref(Class("people"), "id1"), "{\"ref\":{\"class\":\"people\"},\"id\":\"id1\"}");
+            AssertJsonEqual(Ref(Collection("people"), "id1"), "{\"ref\":{\"collection\":\"people\"},\"id\":\"id1\"}");
         }
 
         [Test] public void TestTimestamp()
@@ -101,11 +102,11 @@ namespace Test
 
         [Test] public void TestAt()
         {
-            AssertJsonEqual(At(1, Paginate(Classes())),
-                "{\"at\":1,\"expr\":{\"paginate\":{\"classes\":null}}}");
+            AssertJsonEqual(At(1, Paginate(Collections())),
+                "{\"at\":1,\"expr\":{\"paginate\":{\"collections\":null}}}");
 
-            AssertJsonEqual(At(Time("1970-01-01T00:00:00Z"), Paginate(Classes())),
-                "{\"at\":{\"time\":\"1970-01-01T00:00:00Z\"},\"expr\":{\"paginate\":{\"classes\":null}}}");
+            AssertJsonEqual(At(Time("1970-01-01T00:00:00Z"), Paginate(Collections())),
+                "{\"at\":{\"time\":\"1970-01-01T00:00:00Z\"},\"expr\":{\"paginate\":{\"collections\":null}}}");
         }
 
         [Test] public void TestLet()
@@ -120,12 +121,12 @@ namespace Test
             ////
 
             AssertJsonEqual(Let("x", 10).In(Var("x")),
-                "{\"let\":{\"x\":10},\"in\":{\"var\":\"x\"}}");
+                "{\"let\":[{\"x\":10}],\"in\":{\"var\":\"x\"}}");
 
             ////
 
             AssertJsonEqual(Let("x", 10, "y", 20).In(Add(Var("x"), Var("y"))),
-                "{\"let\":{\"x\":10,\"y\":20},\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
+                "{\"let\":[{\"x\":10},{\"y\":20}],\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
         }
 
         [Test] public void TestVar()
@@ -261,8 +262,8 @@ namespace Test
 
         [Test] public void TestGet()
         {
-            AssertJsonEqual(Get(Ref(Class("thing"), "123456789")),
-                "{\"get\":{\"ref\":{\"class\":\"thing\"},\"id\":\"123456789\"}}");
+            AssertJsonEqual(Get(Ref(Collection("thing"), "123456789")),
+                "{\"get\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"}}");
         }
 
         [Test] public void TestKeyFromSecret()
@@ -278,12 +279,12 @@ namespace Test
                 "{\"paginate\":{\"databases\":null}}");
 
             AssertJsonEqual(
-                Paginate(Databases(), after: Ref(Class("thing"), "123456789")),
-                "{\"paginate\":{\"databases\":null},\"after\":{\"ref\":{\"class\":\"thing\"},\"id\":\"123456789\"}}");
+                Paginate(Databases(), after: Ref(Collection("thing"), "123456789")),
+                "{\"paginate\":{\"databases\":null},\"after\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"}}");
 
             AssertJsonEqual(
-                Paginate(Databases(), before: Ref(Class("thing"), "123456789")),
-                "{\"paginate\":{\"databases\":null},\"before\":{\"ref\":{\"class\":\"thing\"},\"id\":\"123456789\"}}");
+                Paginate(Databases(), before: Ref(Collection("thing"), "123456789")),
+                "{\"paginate\":{\"databases\":null},\"before\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"}}");
 
             AssertJsonEqual(
                 Paginate(Databases(), ts: Time("1970-01-01T00:00:00Z")),
@@ -304,61 +305,61 @@ namespace Test
 
         [Test] public void TestExists()
         {
-            AssertJsonEqual(Exists(Ref(Class("thing"), "123456789")),
-                "{\"exists\":{\"ref\":{\"class\":\"thing\"},\"id\":\"123456789\"}}");
+            AssertJsonEqual(Exists(Ref(Collection("thing"), "123456789")),
+                "{\"exists\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"}}");
 
-            AssertJsonEqual(Exists(Ref(Class("thing"), "123456789"), Time("1970-01-01T00:00:00.123Z")),
-                "{\"exists\":{\"ref\":{\"class\":\"thing\"},\"id\":\"123456789\"},\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}}");
+            AssertJsonEqual(Exists(Ref(Collection("thing"), "123456789"), Time("1970-01-01T00:00:00.123Z")),
+                "{\"exists\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"},\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}}");
         }
 
         [Test] public void TestCreate()
         {
             AssertJsonEqual(
-                Create(Class("widgets"), Obj("data", "some-data")),
-                "{\"create\":{\"class\":\"widgets\"},\"params\":{\"object\":{\"data\":\"some-data\"}}}");
+                Create(Collection("widgets"), Obj("data", "some-data")),
+                "{\"create\":{\"collection\":\"widgets\"},\"params\":{\"object\":{\"data\":\"some-data\"}}}");
         }
 
         [Test] public void TestUpdate()
         {
             AssertJsonEqual(
-                Update(Ref(Class("widgets"), "123456789"), Obj("name", "things")),
-                "{\"update\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"name\":\"things\"}}}");
+                Update(Ref(Collection("widgets"), "123456789"), Obj("name", "things")),
+                "{\"update\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"name\":\"things\"}}}");
         }
 
         [Test] public void TestReplace()
         {
             AssertJsonEqual(
-                Replace(Ref(Class("widgets"), "123456789"), Obj("data", Obj("name", "Computer"))),
-                "{\"replace\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
+                Replace(Ref(Collection("widgets"), "123456789"), Obj("data", Obj("name", "Computer"))),
+                "{\"replace\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
         }
 
         [Test] public void TestDelete()
         {
             AssertJsonEqual(
-                Delete(Ref(Class("widgets"), "123456789")),
-                "{\"delete\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"}}");
+                Delete(Ref(Collection("widgets"), "123456789")),
+                "{\"delete\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"}}");
         }
 
         [Test] public void TestInsert()
         {
             AssertJsonEqual(
                 Insert(
-                    Ref(Class("widgets"), "123456789"),
+                    Ref(Collection("widgets"), "123456789"),
                     Time("1970-01-01T00:00:00.123Z"),
                     "create",
                     Obj("data", Obj("name", "Computer"))),
-                "{\"insert\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"}," +
+                "{\"insert\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"}," +
                 "\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}," +
                 "\"action\":\"create\"," +
                 "\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
 
             AssertJsonEqual(
                 Insert(
-                    Ref(Class("widgets"), "123456789"),
+                    Ref(Collection("widgets"), "123456789"),
                     Time("1970-01-01T00:00:00.123Z"),
                     ActionType.Create,
                     Obj("data", Obj("name", "Computer"))),
-                "{\"insert\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},"+
+                "{\"insert\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},"+
                 "\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"},"+
                 "\"action\":\"create\","+
                 "\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
@@ -368,27 +369,27 @@ namespace Test
         {
             AssertJsonEqual(
                 Remove(
-                    Ref(Class("widgets"), "123456789"),
+                    Ref(Collection("widgets"), "123456789"),
                     Time("1970-01-01T00:00:00.123Z"),
                     "create"),
-                "{\"remove\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},"+
+                "{\"remove\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},"+
                 "\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}," +
                 "\"action\":\"create\"}");
 
             AssertJsonEqual(
                 Remove(
-                    Ref(Class("widgets"), "123456789"),
+                    Ref(Collection("widgets"), "123456789"),
                     Time("1970-01-01T00:00:00.123Z"),
                     ActionType.Create),
-                "{\"remove\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"}," +
+                "{\"remove\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"}," +
                 "\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}," +
                 "\"action\":\"create\"}");
         }
 
         [Test] public void TestCreateClass()
         {
-            AssertJsonEqual(CreateClass(Obj("name", "class_name")),
-                "{\"create_class\":{\"object\":{\"name\":\"class_name\"}}}");
+            AssertJsonEqual(CreateCollection(Obj("name", "class_name")),
+                "{\"create_collection\":{\"object\":{\"name\":\"class_name\"}}}");
         }
 
         [Test] public void TestCreateDatabase()
@@ -400,8 +401,8 @@ namespace Test
         [Test] public void TestCreateIndex()
         {
             AssertJsonEqual(
-                CreateIndex(Obj("name", "index_name", "source", Class("class_name"))),
-                "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"class\":\"class_name\"}}}}");
+                CreateIndex(Obj("name", "index_name", "source", Collection("class_name"))),
+                "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}}");
         }
 
         [Test] public void TestCreateKey()
@@ -411,18 +412,43 @@ namespace Test
                 "{\"create_key\":{\"object\":{\"database\":{\"database\":\"db_name\"},\"role\":\"client\"}}}");
         }
 
+        [Test] public void TestCreateRole()
+        {
+            AssertJsonEqual(
+                CreateRole(Obj(
+                    "name", "role_name",
+                    "privileges", Arr(Obj(
+                        "resource", Databases(),
+                        "actions", Obj("read", true)
+                    ))
+                )),
+                "{\"create_role\":{\"object\":{\"name\":\"role_name\",\"privileges\":[{\"object\":{" +
+                "\"resource\":{\"databases\":null},\"actions\":{\"object\":{\"read\":true}}}}]}}}");
+
+            AssertJsonEqual(
+                CreateRole(Obj(
+                    "name", "role_name",
+                    "privileges", Obj(
+                        "resource", Databases(),
+                        "actions", Obj("read", true)
+                    )
+                )),
+                "{\"create_role\":{\"object\":{\"name\":\"role_name\",\"privileges\":{\"object\":{" +
+                "\"resource\":{\"databases\":null},\"actions\":{\"object\":{\"read\":true}}}}}}}");
+        }
+
         [Test] public void TestSingleton()
         {
             AssertJsonEqual(
-                Singleton(Ref(Class("widget"), "123")),
-                "{\"singleton\":{\"ref\":{\"class\":\"widget\"},\"id\":\"123\"}}");
+                Singleton(Ref(Collection("widget"), "123")),
+                "{\"singleton\":{\"ref\":{\"collection\":\"widget\"},\"id\":\"123\"}}");
         }
 
         [Test] public void TestEvents()
         {
             AssertJsonEqual(
-                Events(Ref(Class("widget"), "123")),
-                "{\"events\":{\"ref\":{\"class\":\"widget\"},\"id\":\"123\"}}");
+                Events(Ref(Collection("widget"), "123")),
+                "{\"events\":{\"ref\":{\"collection\":\"widget\"},\"id\":\"123\"}}");
         }
 
         [Test] public void TestMatch()
@@ -447,8 +473,8 @@ namespace Test
                 "{\"union\":{\"@ref\":{\"id\":\"databases\"}}}");
 
             AssertJsonEqual(
-                Union(Native.DATABASES, Class("widgets")),
-                "{\"union\":[{\"@ref\":{\"id\":\"databases\"}},{\"class\":\"widgets\"}]}");
+                Union(Native.DATABASES, Collection("widgets")),
+                "{\"union\":[{\"@ref\":{\"id\":\"databases\"}},{\"collection\":\"widgets\"}]}");
         }
 
         [Test] public void TestIntersection()
@@ -458,8 +484,8 @@ namespace Test
                 "{\"intersection\":{\"@ref\":{\"id\":\"databases\"}}}");
 
             AssertJsonEqual(
-                Intersection(Native.DATABASES, Class("widgets")),
-                "{\"intersection\":[{\"@ref\":{\"id\":\"databases\"}},{\"class\":\"widgets\"}]}");
+                Intersection(Native.DATABASES, Collection("widgets")),
+                "{\"intersection\":[{\"@ref\":{\"id\":\"databases\"}},{\"collection\":\"widgets\"}]}");
         }
 
         [Test] public void TestDifference()
@@ -469,8 +495,8 @@ namespace Test
                 "{\"difference\":{\"@ref\":{\"id\":\"databases\"}}}");
 
             AssertJsonEqual(
-                Difference(Native.DATABASES, Class("widgets")),
-                "{\"difference\":[{\"@ref\":{\"id\":\"databases\"}},{\"class\":\"widgets\"}]}");
+                Difference(Native.DATABASES, Collection("widgets")),
+                "{\"difference\":[{\"@ref\":{\"id\":\"databases\"}},{\"collection\":\"widgets\"}]}");
         }
 
         [Test] public void TestDistinct()
@@ -492,8 +518,8 @@ namespace Test
 
         [Test] public void TestLogin()
         {
-            AssertJsonEqual(Login(Ref(Class("widgets"), "123456789"), Obj("password", "P455w0rd")),
-                 "{\"login\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"password\":\"P455w0rd\"}}}");
+            AssertJsonEqual(Login(Ref(Collection("widgets"), "123456789"), Obj("password", "P455w0rd")),
+                 "{\"login\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"password\":\"P455w0rd\"}}}");
         }
 
         [Test] public void TestLogout()
@@ -504,8 +530,8 @@ namespace Test
 
         [Test] public void TestIdentify()
         {
-            AssertJsonEqual(Identify(Ref(Class("widgets"), "123456789"), "P455w0rd"),
-                "{\"identify\":{\"ref\":{\"class\":\"widgets\"},\"id\":\"123456789\"},\"password\":\"P455w0rd\"}");
+            AssertJsonEqual(Identify(Ref(Collection("widgets"), "123456789"), "P455w0rd"),
+                "{\"identify\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"password\":\"P455w0rd\"}");
         }
 
         [Test] public void TestIdentity()
@@ -621,8 +647,8 @@ namespace Test
 
         [Test] public void TestClass()
         {
-            AssertJsonEqual(Class("class_name"), "{\"class\":\"class_name\"}");
-            AssertJsonEqual(Class("class_name", Database("scope")), "{\"class\":\"class_name\",\"scope\":{\"database\":\"scope\"}}");
+            AssertJsonEqual(Collection("class_name"), "{\"collection\":\"class_name\"}");
+            AssertJsonEqual(Collection("class_name", Database("scope")), "{\"collection\":\"class_name\",\"scope\":{\"database\":\"scope\"}}");
         }
 
         [Test] public void TestFunction()
@@ -631,23 +657,31 @@ namespace Test
             AssertJsonEqual(Function("function_name", Database("scope")), "{\"function\":\"function_name\",\"scope\":{\"database\":\"scope\"}}");
         }
 
+        [Test] public void TestRole()
+        {
+            AssertJsonEqual(Role("role_name"), "{\"role\":\"role_name\"}");
+            AssertJsonEqual(Role("role_name", Database("scope")), "{\"role\":\"role_name\",\"scope\":{\"database\":\"scope\"}}");
+        }
+
         [Test] public void TestNativeRefs()
         {
-            AssertJsonEqual(Classes(), "{\"classes\":null}");
+            AssertJsonEqual(Collections(), "{\"collections\":null}");
             AssertJsonEqual(Databases(), "{\"databases\":null}");
             AssertJsonEqual(Indexes(), "{\"indexes\":null}");
             AssertJsonEqual(Functions(), "{\"functions\":null}");
             AssertJsonEqual(Keys(), "{\"keys\":null}");
             AssertJsonEqual(Tokens(), "{\"tokens\":null}");
             AssertJsonEqual(Credentials(), "{\"credentials\":null}");
+            AssertJsonEqual(Roles(), "{\"roles\":null}");
 
-            AssertJsonEqual(Classes(Database("scope")), "{\"classes\":{\"database\":\"scope\"}}");
+            AssertJsonEqual(Collections(Database("scope")), "{\"collections\":{\"database\":\"scope\"}}");
             AssertJsonEqual(Databases(Database("scope")), "{\"databases\":{\"database\":\"scope\"}}");
             AssertJsonEqual(Indexes(Database("scope")), "{\"indexes\":{\"database\":\"scope\"}}");
             AssertJsonEqual(Functions(Database("scope")), "{\"functions\":{\"database\":\"scope\"}}");
             AssertJsonEqual(Keys(Database("scope")), "{\"keys\":{\"database\":\"scope\"}}");
             AssertJsonEqual(Tokens(Database("scope")), "{\"tokens\":{\"database\":\"scope\"}}");
             AssertJsonEqual(Credentials(Database("scope")), "{\"credentials\":{\"database\":\"scope\"}}");
+            AssertJsonEqual(Roles(Database("scope")), "{\"roles\":{\"database\":\"scope\"}}");
         }
 
         [Test] public void TestEquals()
@@ -782,18 +816,18 @@ namespace Test
             AssertJsonEqual(
                 new RefV(
                     id: "123456789",
-                    @class: new RefV(id: "child-class", @class: Native.CLASSES)),
-                "{\"@ref\":{\"id\":\"123456789\",\"class\":{\"@ref\":{\"id\":\"child-class\",\"class\":{\"@ref\":{\"id\":\"classes\"}}}}}}"
+                    collection: new RefV(id: "child-class", collection: Native.COLLECTIONS)),
+                "{\"@ref\":{\"id\":\"123456789\",\"collection\":{\"@ref\":{\"id\":\"child-class\",\"collection\":{\"@ref\":{\"id\":\"collections\"}}}}}}"
             );
 
             AssertJsonEqual(
                 new RefV(
                     id: "123456789",
-                    @class: new RefV(
+                    collection: new RefV(
                         id: "child-class",
-                        @class: Native.CLASSES,
-                        database: new RefV(id: "child-database", @class: Native.DATABASES))),
-                "{\"@ref\":{\"id\":\"123456789\",\"class\":{\"@ref\":{\"id\":\"child-class\",\"class\":{\"@ref\":{\"id\":\"classes\"}},\"database\":{\"@ref\":{\"id\":\"child-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}}}}}}}}"
+                        collection: Native.COLLECTIONS,
+                        database: new RefV(id: "child-database", collection: Native.DATABASES))),
+                "{\"@ref\":{\"id\":\"123456789\",\"collection\":{\"@ref\":{\"id\":\"child-class\",\"collection\":{\"@ref\":{\"id\":\"collections\"}},\"database\":{\"@ref\":{\"id\":\"child-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}}}}}"
             );
         }
 
@@ -801,13 +835,13 @@ namespace Test
         public void TestClassRef()
         {
             AssertJsonEqual(
-                new RefV(id: "a-class", @class: Native.CLASSES),
-                "{\"@ref\":{\"id\":\"a-class\",\"class\":{\"@ref\":{\"id\":\"classes\"}}}}"
+                new RefV(id: "a-class", collection: Native.COLLECTIONS),
+                "{\"@ref\":{\"id\":\"a-class\",\"collection\":{\"@ref\":{\"id\":\"collections\"}}}}"
             );
 
             AssertJsonEqual(
-                new RefV(id: "a-class", @class: Native.CLASSES, database: new RefV(id: "a-database", @class: Native.DATABASES)),
-                "{\"@ref\":{\"id\":\"a-class\",\"class\":{\"@ref\":{\"id\":\"classes\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
+                new RefV(id: "a-class", collection: Native.COLLECTIONS, database: new RefV(id: "a-database", collection: Native.DATABASES)),
+                "{\"@ref\":{\"id\":\"a-class\",\"collection\":{\"@ref\":{\"id\":\"collections\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
             );
         }
 
@@ -815,13 +849,13 @@ namespace Test
         public void TestDatabaseRef()
         {
             AssertJsonEqual(
-                new RefV(id: "a-database", @class: Native.DATABASES),
-                "{\"@ref\":{\"id\":\"a-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}}}}"
+                new RefV(id: "a-database", collection: Native.DATABASES),
+                "{\"@ref\":{\"id\":\"a-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}"
             );
 
             AssertJsonEqual(
-                new RefV(id: "child-database", @class: Native.DATABASES, database: new RefV(id: "parent-database", @class: Native.DATABASES)),
-                "{\"@ref\":{\"id\":\"child-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}},\"database\":{\"@ref\":{\"id\":\"parent-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
+                new RefV(id: "child-database", collection: Native.DATABASES, database: new RefV(id: "parent-database", collection: Native.DATABASES)),
+                "{\"@ref\":{\"id\":\"child-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}},\"database\":{\"@ref\":{\"id\":\"parent-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
             );
         }
 
@@ -829,13 +863,13 @@ namespace Test
         public void TestIndexRef()
         {
             AssertJsonEqual(
-                new RefV(id: "a-index", @class: Native.INDEXES),
-                "{\"@ref\":{\"id\":\"a-index\",\"class\":{\"@ref\":{\"id\":\"indexes\"}}}}"
+                new RefV(id: "a-index", collection: Native.INDEXES),
+                "{\"@ref\":{\"id\":\"a-index\",\"collection\":{\"@ref\":{\"id\":\"indexes\"}}}}"
             );
 
             AssertJsonEqual(
-                new RefV(id: "a-index", @class: Native.INDEXES, database: new RefV(id: "a-database", @class: Native.DATABASES)),
-                "{\"@ref\":{\"id\":\"a-index\",\"class\":{\"@ref\":{\"id\":\"indexes\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
+                new RefV(id: "a-index", collection: Native.INDEXES, database: new RefV(id: "a-database", collection: Native.DATABASES)),
+                "{\"@ref\":{\"id\":\"a-index\",\"collection\":{\"@ref\":{\"id\":\"indexes\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
             );
         }
 
@@ -843,13 +877,13 @@ namespace Test
         public void TestKeyRef()
         {
             AssertJsonEqual(
-                new RefV(id: "a-key", @class: Native.KEYS),
-                "{\"@ref\":{\"id\":\"a-key\",\"class\":{\"@ref\":{\"id\":\"keys\"}}}}"
+                new RefV(id: "a-key", collection: Native.KEYS),
+                "{\"@ref\":{\"id\":\"a-key\",\"collection\":{\"@ref\":{\"id\":\"keys\"}}}}"
             );
 
             AssertJsonEqual(
-                new RefV(id: "a-key", @class: Native.KEYS, database: new RefV(id: "a-database", @class: Native.DATABASES)),
-                "{\"@ref\":{\"id\":\"a-key\",\"class\":{\"@ref\":{\"id\":\"keys\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
+                new RefV(id: "a-key", collection: Native.KEYS, database: new RefV(id: "a-database", collection: Native.DATABASES)),
+                "{\"@ref\":{\"id\":\"a-key\",\"collection\":{\"@ref\":{\"id\":\"keys\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
             );
         }
 
@@ -857,13 +891,27 @@ namespace Test
         public void TestFunctionRef()
         {
             AssertJsonEqual(
-                new RefV(id: "a-function", @class: Native.FUNCTIONS),
-                "{\"@ref\":{\"id\":\"a-function\",\"class\":{\"@ref\":{\"id\":\"functions\"}}}}"
+                new RefV(id: "a-function", collection: Native.FUNCTIONS),
+                "{\"@ref\":{\"id\":\"a-function\",\"collection\":{\"@ref\":{\"id\":\"functions\"}}}}"
             );
 
             AssertJsonEqual(
-                new RefV(id: "a-function", @class: Native.FUNCTIONS, database: new RefV(id: "a-database", @class: Native.DATABASES)),
-                "{\"@ref\":{\"id\":\"a-function\",\"class\":{\"@ref\":{\"id\":\"functions\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"class\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
+                new RefV(id: "a-function", collection: Native.FUNCTIONS, database: new RefV(id: "a-database", collection: Native.DATABASES)),
+                "{\"@ref\":{\"id\":\"a-function\",\"collection\":{\"@ref\":{\"id\":\"functions\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
+            );
+        }
+
+        [Test]
+        public void TestRoleRef()
+        {
+            AssertJsonEqual(
+                new RefV(id: "a-role", collection: Native.ROLES),
+                "{\"@ref\":{\"id\":\"a-role\",\"collection\":{\"@ref\":{\"id\":\"roles\"}}}}"
+            );
+
+            AssertJsonEqual(
+                new RefV(id: "a-role", collection: Native.ROLES, database: new RefV(id: "a-database", collection: Native.DATABASES)),
+                "{\"@ref\":{\"id\":\"a-role\",\"collection\":{\"@ref\":{\"id\":\"roles\"}},\"database\":{\"@ref\":{\"id\":\"a-database\",\"collection\":{\"@ref\":{\"id\":\"databases\"}}}}}}"
             );
         }
 
@@ -877,6 +925,19 @@ namespace Test
                 new QueryV(new Dictionary<string, Expr> { { "lambda", "x" }, { "expr", Add(Var("x"), 1) } }),
                 "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}"
             );
+        }
+
+        [Test]
+        public void TestHandleNulls()
+        {
+            AssertJsonEqual(Year(null), "{\"year\":null}");
+            AssertJsonEqual(Obj("key", null), "{\"object\":{\"key\":null}}");
+            AssertJsonEqual(Arr("str", null, 10), "[\"str\",null,10]");
+            AssertJsonEqual(Let("key", null).In(Var("key")), "{\"let\":[{\"key\":null}],\"in\":{\"var\":\"key\"}}");
+            AssertJsonEqual(Add(new Expr[] { null }), "{\"add\":null}");
+            AssertJsonEqual(Add(new Expr[] { null, null }), "{\"add\":[null,null]}");
+            AssertJsonEqual(Add(null), "{\"add\":null}");
+            AssertJsonEqual(Add(null, null), "{\"add\":[null,null]}");
         }
     }
 }
