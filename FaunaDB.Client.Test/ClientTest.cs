@@ -1337,6 +1337,65 @@ namespace Test
             Assert.AreEqual(BooleanV.True, await adminClient.Query(Exists(Role(name))));
         }
 
+        [Test]
+        public async Task TestMergeFunction()
+        {
+            // simple merge
+            Assert.AreEqual(
+                ObjectV.With("x", 10, "y", 20, "z", 30),
+                await client.Query(
+                    Merge(Obj("x", 10, "y", 20), Obj("z", 30))
+                )
+            );
+    
+            // replace field
+            Assert.AreEqual(
+                ObjectV.With("x", 10, "y", 20, "z", 30),
+                await client.Query(
+                    Merge(Obj("x", 10, "y", 20, "z", -1), Obj("z", 30))
+                )
+            );
+    
+            // empty obj
+            Assert.AreEqual(
+                ObjectV.With("foo", 4.2),
+                await client.Query(Merge(Obj(), Obj("foo", 4.2)))
+            );
+    
+            // remove field
+            Assert.AreEqual(
+                ObjectV.With("x", 10, "y", 20),
+                await client.Query(
+                    Merge(Obj("x", 10, "y", 20, "z", 1), Obj("z", Null()))
+                )
+            );
+    
+            // with expr lambda, replace with the 'left' value
+            Assert.AreEqual(
+                ObjectV.With("x", 10, "y", 20, "z", -1),
+                await client.Query(
+                    Merge(
+                        Obj("x", 10, "y", 20, "z", -1),
+                        Obj("z", 30),
+                        Lambda(Arr("key", "left", "right"), Var("left"))
+                    )
+                )
+            );
+    
+            // with native lambda, replace with the 'right' value
+            Assert.AreEqual(
+                ObjectV.With("x", 10, "y", 20, "z", 30),
+                await client.Query(
+                    Merge(
+                        Obj("x", 10, "y", 20, "z", 1),
+                        Obj("z", 30),
+                        ((k, l, r) => r)
+                    )
+                )
+            );
+    
+        }
+
         private async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(
