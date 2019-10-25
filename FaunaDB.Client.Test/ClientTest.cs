@@ -1396,6 +1396,18 @@ namespace Test
     
         }
 
+        [Test]
+        public async Task TestFormatFunction()
+        {
+            Assert.AreEqual(
+                StringV.Of("FaunaDB rocks"),
+                await client.Query(Format("%3$s%1$s %2$s", "DB", "rocks", "Fauna")));
+
+            Assert.AreEqual(
+                StringV.Of("Thrilled to see our community grow to 10000 strong"),
+                await client.Query(Format("Thrilled to see our community grow to %d strong", 10_000)));
+        }
+
         private async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(

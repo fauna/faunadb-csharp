@@ -52,5 +52,15 @@
         /// </summary>
         public static Expr NGram(Expr terms, Expr min = null, Expr max = null) =>
             UnescapedObject.With("ngram", terms, "min", min, "max", max);
+
+        /// <summary>
+        /// Format values into string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/format">FaunaDB Format Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Format(Expr format, params Expr[] values) =>
+            UnescapedObject.With("format", format, "values", Varargs(values));
+
     }
 }
