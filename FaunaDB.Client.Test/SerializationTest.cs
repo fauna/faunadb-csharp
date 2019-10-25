@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using FaunaDB.Query;
 using FaunaDB.Types;
@@ -938,6 +938,20 @@ namespace Test
             AssertJsonEqual(Add(new Expr[] { null, null }), "{\"add\":[null,null]}");
             AssertJsonEqual(Add(null), "{\"add\":null}");
             AssertJsonEqual(Add(null, null), "{\"add\":[null,null]}");
+        }
+
+        [Test]
+        public void TestMergeFunction()
+        {
+            AssertJsonEqual(
+                Merge(Obj("x",10), Obj("y", 20)),
+                "{\"merge\":{\"object\":{\"x\":10}},\"with\":{\"object\":{\"y\":20}}}"
+            );
+
+            AssertJsonEqual(
+                Merge(Obj("x", 10), Obj("y", 20), Lambda(x => x)),
+                "{\"merge\":{\"object\":{\"x\":10}},\"with\":{\"object\":{\"y\":20}},\"lambda\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}}}"
+            );
         }
     }
 }

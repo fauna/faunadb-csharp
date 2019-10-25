@@ -421,5 +421,23 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr ToDate(Expr expr) =>
             UnescapedObject.With("to_date", expr);
+
+        /// <summary>
+        ///   Merges two or more objects
+        /// </summary>
+        public static Expr Merge(Expr merge, Expr with) =>
+            UnescapedObject.With("merge", merge, "with", with);
+
+        /// <summary>
+        ///   Merges two or more objects
+        /// </summary>
+        public static Expr Merge(Expr merge, Expr with, Expr lambda) =>
+            UnescapedObject.With("merge", merge, "with", with, "lambda", lambda);
+
+        /// <summary>
+        ///   Merges two or more objects
+        /// </summary>
+        public static Expr Merge(Expr merge, Expr with, Func<Expr, Expr, Expr, Expr> lambda) =>
+            UnescapedObject.With("merge", merge, "with", with, "lambda", Lambda(lambda));
     }
 }
