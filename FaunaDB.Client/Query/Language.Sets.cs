@@ -81,5 +81,17 @@ namespace FaunaDB.Query
        public static Expr Join(Expr source, Expr target) =>
             UnescapedObject.With("join", source, "with", target);
 
+        /// <summary>
+        /// Filters the set based on the lower/upper bounds (inclusive).
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/range">FaunaDB Range Function</see>
+        /// </para>
+        /// </summary>
+        /// <param name="set">set to be filtered</param>
+        /// <param name="from">lower bound</param>
+        /// <param name="to">upper bound</param>
+        public static Expr Range(Expr set, Expr from, Expr to) =>
+            UnescapedObject.With("range", set, "from", from, "to", to);
+
     }
 }
