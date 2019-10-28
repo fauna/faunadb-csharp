@@ -148,5 +148,14 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr CreateRole(Expr role_params) =>
             UnescapedObject.With("create_role", role_params);
+
+        /// <summary>
+        /// Moves a database to a new hierarchy.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/movedatabase">FaunaDB MoveDatabase Function</see>.
+        /// </para>
+        /// </summary>
+        public static Expr MoveDatabase(Expr from, Expr to) =>
+            UnescapedObject.With("move_database", from, "to", to);
     }
 }
