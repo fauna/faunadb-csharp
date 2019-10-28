@@ -1460,6 +1460,50 @@ namespace Test
             return await client.Query(Select("data", Paginate(set)));
         }
 
+        [Test]
+        public async Task TestMoveDatabaseFunction()
+        {
+            var db1Name = RandomStartingWith("db_source_");
+            var db2Name = RandomStartingWith("db_target_");
+
+            var db1Client = await CreateNewDatabase(adminClient, db1Name);
+            var db2Client = await CreateNewDatabase(adminClient, db2Name);
+
+            var childDb = await CreateNewDatabase(db1Client, "child");
+            await childDb.Query(CreateCollection(Obj("name", "any_collection")));
+
+            Func<Expr, Expr> selectNames = set => Select("data", Map(Paginate(set), x => Select("name", Get(x))));
+
+            Assert.AreEqual(
+                ArrayV.Of("child"),
+                await db1Client.Query(selectNames(Databases())));
+
+            Assert.AreEqual(
+                ArrayV.Empty,
+                await db2Client.Query(selectNames(Databases())));
+
+            Assert.AreEqual(
+                ArrayV.Of("any_collection"),
+                await db1Client.Query(selectNames(Collections(Database("child")))));
+            
+            await adminClient.Query(MoveDatabase(Database("child", Database(db1Name)), Database(db2Name)));
+
+            Assert.AreEqual(
+                ArrayV.Of("child"),
+                await db2Client.Query(selectNames(Databases())));
+
+            Assert.AreEqual(
+                ArrayV.Empty,
+                await db1Client.Query(selectNames(Databases())));
+
+            var key = await db2Client.Query(CreateKey(Obj("database", Database("child"), "role", "server")));
+            var childClient = db2Client.NewSessionClient(secret: key.Get(SECRET_FIELD));
+
+            Assert.AreEqual(
+                ArrayV.Of("any_collection"),
+                await childClient.Query(selectNames(Collections())));
+        }
+
         private async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(
