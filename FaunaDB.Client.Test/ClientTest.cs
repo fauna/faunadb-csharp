@@ -1408,6 +1408,58 @@ namespace Test
                 await client.Query(Format("Thrilled to see our community grow to %d strong", 10_000)));
         }
 
+        [Test]
+        public async Task TestRangeFunction()
+        {
+            RefV aCollection = await RandomCollection();
+
+            var indexName = RandomStartingWith("foo_index_");
+
+            Value index = await client.Query(CreateIndex(Obj(
+                "name", indexName,
+                "source", aCollection,
+                "active", true,
+                "values", Arr(Obj("field", Arr("data", "value"))))));
+
+            await client.Query(
+                Foreach(
+                    Arr(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                    Lambda(i => Create(aCollection, Obj("data", Obj("value", i))))
+                )
+            );
+
+            var m = Match(Index(indexName));
+
+            Assert.AreEqual(
+                ArrayV.Of(3, 4, 5, 6, 7),
+                await SelectData(Range(m, 3, 7)));
+
+            Assert.AreEqual(
+                ArrayV.Of(4, 5, 6, 7, 8, 9, 10),
+                await SelectData(Union(Range(m, 4, 7), Range(m, 8, 10))));
+
+            Assert.AreEqual(
+                ArrayV.Of(1, 2, 3, 10),
+                await SelectData(Difference(Range(m, 1, 10), Range(m, 4, 9))));
+
+            Assert.AreEqual(
+                ArrayV.Of(4, 5, 6, 7, 8, 9),
+                await SelectData(Intersection(Range(m, 1, 10), Range(m, 4, 9))));
+
+            Assert.AreEqual(
+                ArrayV.Of(),
+                await SelectData(Range(m, 10, 0)));
+
+            Assert.AreEqual(
+                ArrayV.Of(),
+                await SelectData(Range(m, 11, 10)));
+        }
+
+        private async Task<Value> SelectData(Expr set)
+        {
+            return await client.Query(Select("data", Paginate(set)));
+        }
+
         private async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(

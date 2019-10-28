@@ -962,5 +962,13 @@ namespace Test
                 "{\"format\":\"%f %d\",\"values\":[3.14,10]}"
             );
         }
+        
+        [Test]
+        public void TestRangeFunction()
+        {
+            AssertJsonEqual(
+                Range(Match(Index("some_index")), 1, 10),
+                "{\"range\":{\"match\":{\"index\":\"some_index\"}},\"from\":1,\"to\":10}");
+        }
     }
 }
