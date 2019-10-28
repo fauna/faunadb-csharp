@@ -3,6 +3,7 @@ using FaunaDB.Errors;
 using FaunaDB.Types;
 using FaunaDB.Query;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -1502,6 +1503,66 @@ namespace Test
             Assert.AreEqual(
                 ArrayV.Of("any_collection"),
                 await childClient.Query(selectNames(Collections())));
+        }
+
+        [Test]
+        public async Task TestReduceFunction()
+        {
+            RefV aCollection = await RandomCollection();
+            var indexName = RandomStartingWith("foo_index_");
+
+            Value index = await client.Query(CreateIndex(Obj(
+                "name", indexName,
+                "source", aCollection,
+                "active", true,
+                "values", Arr(
+                    Obj("field", Arr("data", "value")),
+                    Obj("field", Arr("data", "foo"))
+            ))));
+
+            Expr[] values = Enumerable.Range(1, 100).Select(i => LongV.Of(i)).ToArray();
+
+            await adminClient.Query(
+                Foreach(
+                    Arr(values),
+                    i => Create(aCollection, Obj("data", Obj("value", i, "foo", "bar")))
+                )
+            );
+
+            // arrays
+            Assert.AreEqual(
+                LongV.Of(5060),
+                await adminClient.Query(
+                    Reduce(
+                        Lambda((acc, i) => Add(acc, i)),
+                        10,
+                        Arr(values)
+                    )
+                )
+            );
+
+            // set
+            Assert.AreEqual(
+                LongV.Of(5060),
+                 await adminClient.Query(
+                    Reduce(
+                        (acc, i) => Add(acc, Select(0, i)),
+                        10,
+                        Match(Index(indexName))
+                    )
+                )
+            );
+
+            // page
+            Assert.AreEqual(
+                ArrayV.Of(5060),
+                (await adminClient.Query(
+                    Reduce(
+                        Lambda((acc, i) => Add(acc, Select(0, i))),
+                        10,
+                        Paginate(Match(Index(indexName)), size: 100)
+                    )
+               )).Get(DATA));
         }
 
         private async Task<RefV> RandomCollection()
