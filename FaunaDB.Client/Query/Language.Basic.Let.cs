@@ -14,7 +14,7 @@ namespace FaunaDB.Query
             }
 
             public Expr In(Expr @in) =>
-                Let(vars, @in);
+                UnescapedObject.With("let", vars, "in", @in);
         }
 
         /// <summary>
