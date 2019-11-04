@@ -1276,6 +1276,60 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { serverKey.Get(REF_FIELD), adminKey.Get(REF_FIELD) }));
         }
 
+        [Test]
+        public async Task TestMathFunctions()
+        {
+            Assert.AreEqual(LongV.Of(42), await client.Query(Abs(-42)));
+            Assert.AreEqual(DoubleV.Of(12.34), await client.Query(Abs(-12.34)));
+
+            Assert.AreEqual(DoubleV.Of(1.04), await client.Query(Trunc(Acos(0.5), 2)));
+            Assert.AreEqual(DoubleV.Of(0.52), await client.Query(Trunc(Asin(0.5), 2)));
+            Assert.AreEqual(DoubleV.Of(0.46), await client.Query(Trunc(Atan(0.5), 2)));
+
+            Assert.AreEqual(LongV.Of(3), await client.Query(BitAnd(15, 7, 3)));
+            Assert.AreEqual(LongV.Of(-4), await client.Query(BitNot(3)));
+            Assert.AreEqual(LongV.Of(15), await client.Query(BitOr(15, 7, 3)));
+            Assert.AreEqual(LongV.Of(3), await client.Query(BitXor(2, 1)));
+
+            Assert.AreEqual(DoubleV.Of(2), await client.Query(Ceil(1.01)));
+
+            Assert.AreEqual(DoubleV.Of(0.87), await client.Query(Trunc(Cos(0.5), 2)));
+            Assert.AreEqual(DoubleV.Of(3.76), await client.Query(Trunc(Cosh(2), 2)));
+            Assert.AreEqual(DoubleV.Of(114.59), await client.Query(Trunc(Degrees(2.0), 2)));
+
+            Assert.AreEqual(DoubleV.Of(7.38), await client.Query(Trunc(Exp(2.0), 2)));
+
+            Assert.AreEqual(DoubleV.Of(1), await client.Query(Floor(1.99)));
+
+            Assert.AreEqual(DoubleV.Of(5), await client.Query(Hypot(3, 4)));
+
+            Assert.AreEqual(DoubleV.Of(0.69), await client.Query(Trunc(Ln(2), 2)));
+            Assert.AreEqual(DoubleV.Of(0.3), await client.Query(Trunc(Log(2), 2)));
+
+            Assert.AreEqual(LongV.Of(101), await client.Query(Max(1, 101, 10)));
+            Assert.AreEqual(DoubleV.Of(101.1), await client.Query(Max(1.1, 101.1, 10.9)));
+            Assert.AreEqual(LongV.Of(1), await client.Query(Min(1, 101, 10)));
+            Assert.AreEqual(DoubleV.Of(1.1), await client.Query(Min(1.1, 101.1, 10.9)));
+
+            Assert.AreEqual(DoubleV.Of(8.72), await client.Query(Trunc(Radians(500), 2)));
+
+            Assert.AreEqual(DoubleV.Of(12345.68), await client.Query(Round(12345.6789)));
+
+            Assert.AreEqual(LongV.Of(1), await client.Query(Sign(3)));
+
+            Assert.AreEqual(DoubleV.Of(0.47), await client.Query(Trunc(Sin(0.5), 2)));
+            Assert.AreEqual(DoubleV.Of(0.52), await client.Query(Trunc(Sinh(0.5), 2)));
+
+            Assert.AreEqual(DoubleV.Of(3), await client.Query(Sqrt(9)));
+
+            Assert.AreEqual(DoubleV.Of(0.54), await client.Query(Trunc(Tan(0.5), 2)));
+            Assert.AreEqual(DoubleV.Of(0.46), await client.Query(Trunc(Tanh(0.5), 2)));
+
+            Assert.AreEqual(DoubleV.Of(3.1415), await client.Query(Trunc(3.14159265359, 4)));
+            Assert.AreEqual(DoubleV.Of(3.14), await client.Query(Trunc(3.14159265359)));
+
+        }
+
         static async Task<FaunaClient> CreateNewDatabase(FaunaClient client, string name)
         {
             await client.Query(CreateDatabase(Obj("name", name)));
