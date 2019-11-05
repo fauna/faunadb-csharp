@@ -1,4 +1,6 @@
-﻿namespace FaunaDB.Query
+﻿using System;
+
+namespace FaunaDB.Query
 {
     public partial struct Language
     {
@@ -51,5 +53,24 @@
         /// </summary>
         public static Expr Exists(Expr @ref, Expr ts = null) =>
             UnescapedObject.With("exists", @ref, "ts", ts);
+
+        /// <summary>
+        /// Creates a new Exists expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/reduce">FaunaDB Reduce Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Reduce(Expr lambda, Expr initial, Expr collection) =>
+            UnescapedObject.With("reduce", lambda, "initial", initial, "collection", collection);
+
+        /// <summary>
+        /// Creates a new Exists expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/reduce">FaunaDB Reduce Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Reduce(Func<Expr, Expr, Expr> lambda, Expr initial, Expr collection) =>
+            Reduce(Lambda(lambda), initial, collection);
+
     }
 }
