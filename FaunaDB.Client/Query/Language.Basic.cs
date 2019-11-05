@@ -41,25 +41,13 @@ namespace FaunaDB.Query
             UnescapedObject.With("at", timestamp, "expr", expr);
 
         /// <summary>
-        /// Creates a new Let expression with the provided bindings.
-        /// <para>
-        /// This is the raw version. Usually it's easier to use the overload.
-        /// </para>
-        /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
-        /// </para>
-        /// </summary>
-        public static Expr Let(Expr vars, Expr @in) =>
-            UnescapedObject.With("let", vars, "in", @in);
-
-        /// <summary>
         /// Creates a new Let expression wrapping the provided map of bindings.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#basic_forms">FaunaDB Basic Forms</see>.
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/let">FaunaDB Let Function</see>.
         /// </para>
         /// </summary>
         public static Expr Let(IReadOnlyDictionary<string, Expr> vars, Expr @in) =>
-            Let(new UnescapedObject(vars), @in);
+            UnescapedObject.With("let", new UnescapedObject(vars), "in", @in);
 
         /// <summary>
         /// Creates a new Var expression.
