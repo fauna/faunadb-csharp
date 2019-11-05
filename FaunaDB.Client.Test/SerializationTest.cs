@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using FaunaDB.Query;
 using FaunaDB.Types;
@@ -1046,6 +1046,43 @@ namespace Test
 
             AssertJsonEqual(Trunc(1), "{\"trunc\":1}");
             AssertJsonEqual(Trunc(123.456, 2), "{\"trunc\":123.456,\"precision\":2}");
+        }
+
+        [Test]
+        public void TestStringFunctions()
+        {
+            AssertJsonEqual(FindStr("ABCDEF", "ABC"), "{\"findstr\":\"ABCDEF\",\"find\":\"ABC\"}");
+            AssertJsonEqual(FindStr("ABCDEF", "ABC", 1), "{\"findstr\":\"ABCDEF\",\"find\":\"ABC\",\"start\":1}");
+
+            AssertJsonEqual(FindStrRegex("ABCDEF", "BCD"), "{\"findstrregex\":\"ABCDEF\",\"pattern\":\"BCD\"}");
+            AssertJsonEqual(FindStrRegex("ABCDEF", "BCD", 1), "{\"findstrregex\":\"ABCDEF\",\"pattern\":\"BCD\",\"start\":1}");
+            AssertJsonEqual(FindStrRegex("ABCDEF", "BCD", 1, 3), "{\"findstrregex\":\"ABCDEF\",\"pattern\":\"BCD\",\"start\":1,\"num_results\":3}");
+
+            AssertJsonEqual(Length("ABC"), "{\"length\":\"ABC\"}");
+
+            AssertJsonEqual(LowerCase("ABC"), "{\"lowercase\":\"ABC\"}");
+
+            AssertJsonEqual(LTrim("ABC"), "{\"ltrim\":\"ABC\"}");
+
+            AssertJsonEqual(Repeat("ABC"), "{\"repeat\":\"ABC\"}");
+            AssertJsonEqual(Repeat("ABC", 2), "{\"repeat\":\"ABC\",\"number\":2}");
+
+            AssertJsonEqual(ReplaceStr("ABCDEF", "BCD", "CAR"), "{\"replacestr\":\"ABCDEF\",\"find\":\"BCD\",\"replace\":\"CAR\"}");
+
+            AssertJsonEqual(ReplaceStrRegex("ABCDEF", "BCD", "CAR"), "{\"replacestrregex\":\"ABCDEF\",\"pattern\":\"BCD\",\"replace\":\"CAR\"}");
+            AssertJsonEqual(ReplaceStrRegex("abcdef", "bcd", "car", true), "{\"replacestrregex\":\"abcdef\",\"pattern\":\"bcd\",\"replace\":\"car\",\"first\":true}");
+
+            AssertJsonEqual(RTrim("ABC"), "{\"rtrim\":\"ABC\"}");
+
+            AssertJsonEqual(Space(2), "{\"space\":2}");
+
+            AssertJsonEqual(SubString("ABC"), "{\"substring\":\"ABC\"}");
+            AssertJsonEqual(SubString("ABC", 2), "{\"substring\":\"ABC\",\"start\":2}");
+            AssertJsonEqual(SubString("ABC", 2, 3), "{\"substring\":\"ABC\",\"start\":2,\"length\":3}");
+
+            AssertJsonEqual(Trim("ABC"), "{\"trim\":\"ABC\"}");
+            AssertJsonEqual(UpperCase("ABC"), "{\"uppercase\":\"ABC\"}");
+            AssertJsonEqual(TitleCase("ABC"), "{\"titlecase\":\"ABC\"}");
         }
     }
 }

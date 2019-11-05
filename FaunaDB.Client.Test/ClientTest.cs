@@ -1619,6 +1619,79 @@ namespace Test
                )).Get(DATA));
         }
 
+        [Test]
+        public async Task TestRegexStringFunctions()
+        {
+            Assert.AreEqual(
+                StringV.Of("bye world"),
+                await client.Query(ReplaceStrRegex("hello world", "hello", "bye")));
+
+            Assert.AreEqual(
+                StringV.Of("One Dog Two Dog"),
+                await client.Query(ReplaceStrRegex("One FIsh Two fish", "[Ff][Ii]sh", "Dog")));
+
+            Assert.AreEqual(
+                StringV.Of("One Dog Two fish"),
+                await client.Query(ReplaceStrRegex("One FIsh Two fish", "[Ff][Ii]sh", "Dog", true)));
+
+            Assert.AreEqual(
+                ArrayV.Of(
+                    ObjectV.With("start", 6, "end", 10, "data", "Fauna"),
+                    ObjectV.With("start", 19, "end", 23, "data", "fauna")
+                ),
+                await client.Query(FindStrRegex("heLLo FaunaDB from fauna", "[fF]auna")));
+
+            Assert.AreEqual(
+                ArrayV.Of(
+                    ObjectV.With("start", 6, "end", 10, "data", "Fauna"),
+                    ObjectV.With("start", 19, "end", 23, "data", "fauna")
+                ),
+                await client.Query(FindStrRegex("heLLo FaunaDB from fauna", "[fF]auna", 6)));
+
+            Assert.AreEqual(
+                ArrayV.Of(
+                    ObjectV.With("start", 19, "end", 23, "data", "fauna")
+                ),
+                await client.Query(FindStrRegex("heLLo FaunaDB from fauna", "[fF]auna", 7)));
+
+            Assert.AreEqual(
+                ArrayV.Of(
+                    ObjectV.With("start", 6, "end", 10, "data", "Fauna")
+                ),
+                await client.Query(FindStrRegex("heLLo FaunaDB from fauna", "[fF]auna", 0, 1)));
+
+            Assert.AreEqual(
+                ArrayV.Of(
+                    ObjectV.With("start", 6, "end", 10, "data", "Fauna"),
+                    ObjectV.With("start", 19, "end", 23, "data", "fauna")
+                ),
+                await client.Query(FindStrRegex("heLLo FaunaDB from fauna", "[fF]auna", 0, 2)));
+
+            Assert.AreEqual(
+                ArrayV.Of(
+                    ObjectV.With("start", 19, "end", 23, "data", "fauna")
+                ),
+                await client.Query(FindStrRegex("heLLo FaunaDB from fauna", "[fF]auna", 7, 2)));
+        }
+
+        [Test]
+        public async Task TestStringFunctions()
+        {
+            Assert.AreEqual(LongV.Of(6), await client.Query(FindStr("heLLo world", "world")));
+            Assert.AreEqual(LongV.Of(11), await client.Query(Length("heLLo world")));
+            Assert.AreEqual(StringV.Of("hello world"), await client.Query(LowerCase("hEllO wORLd")));
+            Assert.AreEqual(StringV.Of("hello world"), await client.Query(LTrim("   hello world")));
+            Assert.AreEqual(StringV.Of("bye bye "), await client.Query(Repeat("bye ")));
+            Assert.AreEqual(StringV.Of("bye bye bye "), await client.Query(Repeat("bye ", 3)));
+            Assert.AreEqual(StringV.Of("bye world"), await client.Query(ReplaceStr("hello world", "hello", "bye")));
+            Assert.AreEqual(StringV.Of("hello world"), await client.Query(RTrim("hello world    ")));
+            Assert.AreEqual(StringV.Of("    "), await client.Query(Space(4)));
+            Assert.AreEqual(StringV.Of("world"), await client.Query(SubString("heLLo world", 6)));
+            Assert.AreEqual(StringV.Of("hello world"), await client.Query(Trim("    hello world    ")));
+            Assert.AreEqual(StringV.Of("Hello World"), await client.Query(TitleCase("heLLo worlD")));
+            Assert.AreEqual(StringV.Of("HELLO WORLD"), await client.Query(UpperCase("hello world")));
+        }
+
         private async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(
