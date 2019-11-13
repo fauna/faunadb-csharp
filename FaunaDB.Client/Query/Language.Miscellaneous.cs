@@ -439,5 +439,267 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Merge(Expr merge, Expr with, Func<Expr, Expr, Expr, Expr> lambda) =>
             UnescapedObject.With("merge", merge, "with", with, "lambda", Lambda(lambda));
+
+        /// <summary>
+        /// Creates a new Abs expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/abs">FaunaDB Abs Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Abs(Expr value) =>
+            UnescapedObject.With("abs", value);
+
+        /// <summary>
+        /// Creates a new Acos expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/acos">FaunaDB Acos Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Acos(Expr value) =>
+            UnescapedObject.With("acos", value);
+
+        /// <summary>
+        /// Creates a new Asin expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/asin">FaunaDB Asin Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Asin(Expr expr) =>
+          UnescapedObject.With("asin", expr);
+
+        /// <summary>
+        /// Creates a new Atan expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/atan">FaunaDB Atan Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Atan(Expr expr) =>
+          UnescapedObject.With("atan", expr);
+
+        /// <summary>
+        /// Creates a new BitAnd expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/bitand">FaunaDB BitAnd Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr BitAnd(params Expr[] terms) =>
+          UnescapedObject.With("bitand", Varargs(terms));
+
+        /// <summary>
+        /// Creates a new BitNot expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/bitnot">FaunaDB BitNot Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr BitNot(Expr expr) =>
+          UnescapedObject.With("bitnot", expr);
+
+        /// <summary>
+        /// Creates a new BitOr expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/bitor">FaunaDB BitOr Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr BitOr(params Expr[] terms) =>
+          UnescapedObject.With("bitor", Varargs(terms));
+
+        /// <summary>
+        /// Creates a new BitXor expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/bitxor">FaunaDB BitXor Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr BitXor(params Expr[] terms) =>
+          UnescapedObject.With("bitxor", Varargs(terms));
+
+        /// <summary>
+        /// Creates a new Ceil expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/ceil">FaunaDB Ceil Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Ceil(Expr expr) =>
+          UnescapedObject.With("ceil", expr);
+
+        /// <summary>
+        /// Creates a new Cos expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/cos">FaunaDB Cos Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Cos(Expr expr) =>
+          UnescapedObject.With("cos", expr);
+
+        /// <summary>
+        /// Creates a new Cosh expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/cosh">FaunaDB Cosh Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Cosh(Expr expr) =>
+          UnescapedObject.With("cosh", expr);
+
+        /// <summary>
+        /// Creates a new Degrees expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/degrees">FaunaDB Degrees Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Degrees(Expr expr) =>
+          UnescapedObject.With("degrees", expr);
+
+        /// <summary>
+        /// Creates a new Exp expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/exp">FaunaDB Exp Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Exp(Expr expr) =>
+          UnescapedObject.With("exp", expr);
+
+        /// <summary>
+        /// Creates a new Floor expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/floor">FaunaDB Floor Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Floor(Expr expr) =>
+          UnescapedObject.With("floor", expr);
+
+        /// <summary>
+        /// Creates a new Hypot expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/hypot">FaunaDB Hypot Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Hypot(Expr value, Expr exp = null) =>
+          UnescapedObject.With("hypot", value, "b", exp);
+
+        /// <summary>
+        /// Creates a new Ln expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/ln">FaunaDB Ln Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Ln(Expr expr) =>
+          UnescapedObject.With("ln", expr);
+
+        /// <summary>
+        /// Creates a new Log expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/log">FaunaDB Log Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Log(Expr expr) =>
+          UnescapedObject.With("log", expr);
+
+        /// <summary>
+        /// Creates a new Max expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/max">FaunaDB Max Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Max(params Expr[] terms) =>
+          UnescapedObject.With("max", Varargs(terms));
+
+        /// <summary>
+        /// Creates a new Min expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/min">FaunaDB Min Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Min(params Expr[] terms) =>
+          UnescapedObject.With("min", Varargs(terms));
+
+        /// <summary>
+        /// Creates a new Pow expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/pow">FaunaDB Pow Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Pow(Expr value, Expr exp = null) =>
+          UnescapedObject.With("pow", value, "exp", exp);
+
+        /// <summary>
+        /// Creates a new Radians expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/radians">FaunaDB Radians Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Radians(Expr expr) =>
+          UnescapedObject.With("radians", expr);
+
+        /// <summary>
+        /// Creates a new Round expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/round">FaunaDB Round Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Round(Expr expr, Expr precision = null) =>
+          UnescapedObject.With("round", expr, "precision", precision);
+
+        /// <summary>
+        /// Creates a new Sign expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/sign">FaunaDB Sign Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Sign(Expr expr) =>
+          UnescapedObject.With("sign", expr);
+
+        /// <summary>
+        /// Creates a new Sin expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/sin">FaunaDB Sin Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Sin(Expr expr) =>
+          UnescapedObject.With("sin", expr);
+
+        /// <summary>
+        /// Creates a new Sinh expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/sinh">FaunaDB Sinh Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Sinh(Expr expr) =>
+          UnescapedObject.With("sinh", expr);
+
+        /// <summary>
+        /// Creates a new Sqrt expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/sqrt">FaunaDB Sqrt Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Sqrt(Expr expr) =>
+          UnescapedObject.With("sqrt", expr);
+
+        /// <summary>
+        /// Creates a new Tan expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/tan">FaunaDB Tan Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Tan(Expr expr) =>
+          UnescapedObject.With("tan", expr);
+
+        /// <summary>
+        /// Creates a new Tanh expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/tanh">FaunaDB Tanh Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Tanh(Expr expr) =>
+          UnescapedObject.With("tanh", expr);
+
+        /// <summary>
+        /// Creates a new Trunc expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/trunc">FaunaDB Trunc Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Trunc(Expr expr, Expr precision = null) =>
+          UnescapedObject.With("trunc", expr, "precision", precision);
+
     }
 }

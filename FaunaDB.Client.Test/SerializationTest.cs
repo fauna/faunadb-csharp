@@ -970,5 +970,82 @@ namespace Test
                 Range(Match(Index("some_index")), 1, 10),
                 "{\"range\":{\"match\":{\"index\":\"some_index\"}},\"from\":1,\"to\":10}");
         }
+
+        [Test]
+        public void TestMathFunctions()
+        {
+            AssertJsonEqual(Abs(-100), "{\"abs\":-100}");
+            AssertJsonEqual(Abs(-100L), "{\"abs\":-100}");
+            AssertJsonEqual(Abs(-100.0), "{\"abs\":-100.0}");
+
+            AssertJsonEqual(Acos(0), "{\"acos\":0}");
+            AssertJsonEqual(Acos(0.0), "{\"acos\":0.0}");
+
+            AssertJsonEqual(Asin(0), "{\"asin\":0}");
+            AssertJsonEqual(Asin(0.0), "{\"asin\":0.0}");
+
+            AssertJsonEqual(Atan(0), "{\"atan\":0}");
+
+            AssertJsonEqual(BitAnd(7, 3), "{\"bitand\":[7,3]}");
+
+            AssertJsonEqual(BitNot(-1), "{\"bitnot\":-1}");
+
+            AssertJsonEqual(BitOr(7, 3), "{\"bitor\":[7,3]}");
+
+            AssertJsonEqual(BitXor(7, 3), "{\"bitxor\":[7,3]}");
+
+            AssertJsonEqual(Ceil(123.456), "{\"ceil\":123.456}");
+
+            AssertJsonEqual(Cos(1), "{\"cos\":1}");
+
+            AssertJsonEqual(Cosh(1), "{\"cosh\":1}");
+
+            AssertJsonEqual(Degrees(1), "{\"degrees\":1}");
+
+            AssertJsonEqual(Exp(1), "{\"exp\":1}");
+
+            AssertJsonEqual(Floor(1), "{\"floor\":1}");
+
+            AssertJsonEqual(Hypot(3, 4), "{\"hypot\":3,\"b\":4}");
+
+            AssertJsonEqual(Ln(1), "{\"ln\":1}");
+
+            AssertJsonEqual(Log(1), "{\"log\":1}");
+
+            AssertJsonEqual(Max(100, 10), "{\"max\":[100,10]}");
+            AssertJsonEqual(Max(Arr(100, 10)), "{\"max\":[100,10]}");
+
+            AssertJsonEqual(Min(100, 10), "{\"min\":[100,10]}");
+            AssertJsonEqual(Min(Arr(100, 10)), "{\"min\":[100,10]}");
+
+            AssertJsonEqual(Multiply(100, 10), "{\"multiply\":[100,10]}");
+            AssertJsonEqual(Multiply(Arr(100, 10)), "{\"multiply\":[100,10]}");
+
+            AssertJsonEqual(Pow(4), "{\"pow\":4}");
+            AssertJsonEqual(Pow(8, 3), "{\"pow\":8,\"exp\":3}");
+
+            AssertJsonEqual(Radians(1), "{\"radians\":1}");
+
+            AssertJsonEqual(Round(123.456), "{\"round\":123.456}");
+            AssertJsonEqual(Round(555.666, 2), "{\"round\":555.666,\"precision\":2}");
+
+            AssertJsonEqual(Sign(1), "{\"sign\":1}");
+
+            AssertJsonEqual(Sin(1), "{\"sin\":1}");
+
+            AssertJsonEqual(Sinh(1), "{\"sinh\":1}");
+
+            AssertJsonEqual(Sqrt(1), "{\"sqrt\":1}");
+
+            AssertJsonEqual(Subtract(100, 10), "{\"subtract\":[100,10]}");
+            AssertJsonEqual(Subtract(Arr(100, 10)), "{\"subtract\":[100,10]}");
+
+            AssertJsonEqual(Tan(1), "{\"tan\":1}");
+
+            AssertJsonEqual(Tanh(1), "{\"tanh\":1}");
+
+            AssertJsonEqual(Trunc(1), "{\"trunc\":1}");
+            AssertJsonEqual(Trunc(123.456, 2), "{\"trunc\":123.456,\"precision\":2}");
+        }
     }
 }
