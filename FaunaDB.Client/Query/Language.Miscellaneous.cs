@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using FaunaDB.Types;
 
 namespace FaunaDB.Query
@@ -700,6 +700,143 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Trunc(Expr expr, Expr precision = null) =>
           UnescapedObject.With("trunc", expr, "precision", precision);
+
+
+        /// <summary>
+        ///   Returns the offset position of a string in another string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/findstr">FaunaDB FindStr Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr FindStr(Expr expr, Expr find, Expr start = null) =>
+            UnescapedObject.With("findstr", expr, "find", find, "start", start);
+
+        /// <summary>
+        ///   Returns an array of up to 1024 objects describing where the pattern is found in the search string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/findstrregex">FaunaDB FindStrRegex Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr FindStrRegex(Expr expr, Expr pattern, Expr start = null, Expr numResults = null) =>
+            UnescapedObject.With("findstrregex", expr, "pattern", pattern, "start", start, "num_results", numResults);
+
+        /// <summary>
+        ///   Returns the number of code points in the string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/length">FaunaDB Length Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Length(Expr expr) =>
+            UnescapedObject.With("length", expr);
+
+        /// <summary>
+        ///   Returns a string in which all uppercase characters have been replaced by their corresponding lowercase characters.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/lowercase">FaunaDB LowerCase Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr LowerCase(Expr expr) =>
+            UnescapedObject.With("lowercase", expr);
+
+        /// <summary>
+        ///   Removes all white spaces, tabs, and new lines from the beginning of a string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/ltrim">FaunaDB Ltrim Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr LTrim(Expr expr) =>
+            UnescapedObject.With("ltrim", expr);
+
+        /// <summary>
+        ///   Returns a string consisting of the value string repeated number times.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/repeat">FaunaDB Repeat Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Repeat(Expr expr) =>
+            UnescapedObject.With("repeat", expr);
+
+        /// <summary>
+        ///   Returns a string consisting of the value string repeated number times.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/repeat">FaunaDB Repeat Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Repeat(Expr expr, Expr number) =>
+            UnescapedObject.With("repeat", expr, "number", number);
+
+        /// <summary>
+        ///   Replaces a string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/replacestr">FaunaDB ReplaceStr Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ReplaceStr(Expr expr, Expr find, Expr replace) =>
+            UnescapedObject.With("replacestr", expr, "find", find, "replace", replace);
+
+        /// <summary>
+        ///   Replaces all the occurrences (or the first one) of find pattern substituted with replace string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/replacestrregex">FaunaDB Length Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ReplaceStrRegex(Expr expr, Expr pattern, Expr replace, Expr first = null) =>
+            UnescapedObject.With("replacestrregex", expr, "pattern", pattern, "replace", replace, "first", first);
+
+        /// <summary>
+        ///   Replaces a string inside.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/rtrim">FaunaDB RTrim Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr RTrim(Expr expr) =>
+            UnescapedObject.With("rtrim", expr);
+
+        /// <summary>
+        ///   Replaces a string inside.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/space">FaunaDB Space Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Space(Expr count) =>
+            UnescapedObject.With("space", count);
+
+
+        /// <summary>
+        ///   Returns a portion of the string.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/substring">FaunaDB SubString Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr SubString(Expr expr, Expr start = null, Expr length = null) =>
+            UnescapedObject.With("substring", expr, "start", start, "length", length);
+
+        /// <summary>
+        ///   Returns a string which has the first letter of each word capitalized.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/titlecase">FaunaDB TitleCase Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr TitleCase(Expr expr) =>
+            UnescapedObject.With("titlecase", expr);
+
+        /// <summary>
+        ///   Returns a string which has both the leading and trailing white spaces, tabs, and new lines removed.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/trim">FaunaDB Trim Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Trim(Expr expr) =>
+            UnescapedObject.With("trim", expr);
+
+        /// <summary>
+        ///   Returns a string which has all lowercase characters in the string replaced by their corresponding uppercase characters.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/uppercase">FaunaDB UpperCase Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr UpperCase(Expr expr) =>
+            UnescapedObject.With("uppercase", expr);
 
     }
 }
