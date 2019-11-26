@@ -1,3 +1,9 @@
+## 2.10.0
+- Add string functions: `Format`, `FindStr`, `FindStrRegex`, `Length`, `LowerCase`, `LTrim`, `Repeat`, `ReplaceStr`, `ReplaceStrRegex`, `RTrim`, `Space`, `SubString`, `TitleCase`, `Trim` and `UpperCase`
+- Add math functions: `Abs`, `Acos`, `Asin`, `Atan`, `BitAnd`, `BitNot`, `BitOr`, `BitXor`, `Ceil`, `Cos`, `Cosh`, `Degrees`, `Exp`, `Floor`, `Hypot`, `Ln`, `Log`, `Max`, `Min`, `Pow`, `Radians`, `Round`, `Sign`, `Sin`, `Sinh`, `Sqrt`, `Tan`, `Tanh` and `Trunc`
+- Add functions: `Reduce`, `MoveDatabase`, `Range`, `Merge`
+- Fix invalid `Let` expressions
+
 ## 2.9.0
 
 - Support new schema names: `Class` -> `Collection`; `Instance` -> `Document`
