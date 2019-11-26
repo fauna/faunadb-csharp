@@ -2,14 +2,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.5;netstandard2.0;net451;net46;net461;net47;netstandard2.1</TargetFrameworks>
-    <PackageVersion>2.9.0</PackageVersion>
+    <PackageVersion>2.10.0</PackageVersion>
     <PackageId>FaunaDB.Client</PackageId>
     <Title>C# Driver for FaunaDB</Title>
     <Authors>Fauna, Inc.</Authors>
     <Description>C# Driver for FaunaDB.
 
 See https://fauna.com for more information.</Description>
-    <Copyright>© Fauna, Inc. 2018. Distributed under MPL 2.0 License</Copyright>
+    <Copyright>© Fauna, Inc. 2019. Distributed under MPL 2.0 License</Copyright>
     <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/fauna/faunadb-csharp</PackageProjectUrl>
   </PropertyGroup>
