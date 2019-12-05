@@ -1718,6 +1718,99 @@ namespace Test
             Assert.IsTrue((await client.Query(LTE(t1, t2, Now()))).To<Boolean>().Value);
         }
 
+        [Test]
+        public async Task TestCountFunction()
+        {
+            var colName = RandomStartingWith("foo_coll");
+            var idxName = RandomStartingWith("foo_idx");
+            await NewCollectionWithValues(colName, idxName);
+
+            // array
+            Assert.AreEqual(LongV.Of(4), await client.Query(Count(Arr(1, "2", 3.4, Obj("name", "JR")))));
+
+            Expr[] values = Enumerable.Range(1, 100).Select(i => LongV.Of(i)).ToArray();
+            Assert.AreEqual(LongV.Of(100), await client.Query(Count(Arr(values))));
+
+            // sets
+            var match = Match(Index(idxName));
+
+            Assert.AreEqual(LongV.Of(10), await client.Query(Count(match)));
+            Assert.AreEqual(LongV.Of(5), await client.Query(Count(Range(match, 2, 6))));
+
+            // page
+            Assert.AreEqual(
+                ArrayV.Of(10),
+                (await client.Query(Count(Paginate(match)))).Get(DATA));
+        }
+
+        [Test]
+        public async Task TestSumFunction()
+        {
+            var colName = RandomStartingWith("foo_coll");
+            var idxName = RandomStartingWith("foo_idx");
+            await NewCollectionWithValues(colName, idxName);
+
+            // array
+            Assert.AreEqual(DoubleV.Of(6.75), await client.Query(Sum(Arr(1, 2, 3.5, 0.25))));
+
+            // sets
+            var match = Match(Index(idxName));
+
+            Assert.AreEqual(LongV.Of(55), await client.Query(Sum(match)));
+            Assert.AreEqual(LongV.Of(20), await client.Query(Sum(Range(match, 2, 6))));
+
+            // page
+            Assert.AreEqual(
+                ArrayV.Of(55),
+                (await client.Query(Sum(Paginate(match)))).Get(DATA));
+        }
+
+        [Test]
+        public async Task TestMeanFunction()
+        {
+            var colName = RandomStartingWith("foo_coll");
+            var idxName = RandomStartingWith("foo_idx");
+            await NewCollectionWithValues(colName, idxName);
+
+            // array
+            Assert.AreEqual(DoubleV.Of(1.6875), await client.Query(Mean(Arr(1, 2, 3.5, 0.25))));
+            
+            Expr[] values = Enumerable.Range(1, 10).Select(i => LongV.Of(i)).ToArray();
+            Assert.AreEqual(DoubleV.Of(5.5), await client.Query(Mean(Arr(values))));
+
+            // sets
+            var match = Match(Index(idxName));
+
+            Assert.AreEqual(DoubleV.Of(5.5), await client.Query(Mean(match)));
+            Assert.AreEqual(DoubleV.Of(4), await client.Query(Mean(Range(match, 2, 6))));
+
+            // page
+            Assert.AreEqual(
+                ArrayV.Of(5.5),
+                (await client.Query(Mean(Paginate(match)))).Get(DATA));
+        }
+
+        private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10)
+        {
+            RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))
+                                .Get(REF_FIELD);
+
+            Expr[] values = Enumerable.Range(1, size).Select(i => LongV.Of(i)).ToArray();
+
+            Value index = await client.Query(CreateIndex(Obj(
+                "name", indexName,
+                "source", aCollection,
+                "active", true,
+                "values", Arr(Obj("field", Arr("data", "value"))))));
+
+            return await client.Query(
+                Foreach(
+                    Arr(values),
+                    Lambda(i => Create(aCollection, Obj("data", Obj("value", i))))
+                )
+            );
+        }
+
         private async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(
