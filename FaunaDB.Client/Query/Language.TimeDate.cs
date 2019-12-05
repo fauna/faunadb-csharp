@@ -51,5 +51,14 @@
         /// </summary>
         public static Expr Date(Expr date) =>
             UnescapedObject.With("date", date);
+
+        /// <summary>
+        /// Constructs a Timestamp representing the transaction’s start time.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/now">FaunaDB Now Functions</see>
+        /// </para>
+        /// </summary>
+        public static Expr Now() =>
+            UnescapedObject.With("now", Null());
     }
 }
