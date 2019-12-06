@@ -1690,6 +1690,21 @@ namespace Test
             Assert.AreEqual(StringV.Of("hello world"), await client.Query(Trim("    hello world    ")));
             Assert.AreEqual(StringV.Of("Hello World"), await client.Query(TitleCase("heLLo worlD")));
             Assert.AreEqual(StringV.Of("HELLO WORLD"), await client.Query(UpperCase("hello world")));
+
+            Assert.AreEqual(BooleanV.Of(true), await client.Query(StartsWith("ABCDEF", "ABC")));
+            Assert.AreEqual(BooleanV.Of(false), await client.Query(StartsWith("ABCDEF", "DEF")));
+
+            Assert.AreEqual(BooleanV.Of(false), await client.Query(EndsWith("ABCDEF", "ABC")));
+            Assert.AreEqual(BooleanV.Of(true), await client.Query(EndsWith("ABCDEF", "DEF")));
+
+            Assert.AreEqual(BooleanV.Of(true), await client.Query(ContainsStr("ABCDEF", "ABC")));
+            Assert.AreEqual(BooleanV.Of(false), await client.Query(ContainsStr("ABCDEF", "GHI")));
+
+            Assert.AreEqual(BooleanV.Of(true), await client.Query(ContainsStrRegex("ABCDEF", "[A-Z]")));
+            Assert.AreEqual(BooleanV.Of(false), await client.Query(ContainsStrRegex("ABCDEF", "[a-z]")));
+            Assert.AreEqual(BooleanV.Of(false), await client.Query(ContainsStrRegex("ABCDEF", "[0-9]")));
+
+            Assert.AreEqual(StringV.Of("\\QABCDEF\\E"), await client.Query(RegexEscape("ABCDEF")));
         }
 
         private async Task<RefV> RandomCollection()
