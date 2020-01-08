@@ -1707,6 +1707,17 @@ namespace Test
             Assert.AreEqual(StringV.Of("\\QABCDEF\\E"), await client.Query(RegexEscape("ABCDEF")));
         }
 
+        [Test]
+        public async Task TestNowFunction()
+        {
+            Assert.IsTrue((await client.Query(EqualsFn(Now(), Time("now")))).To<Boolean>().Value);
+
+            Value t1 = await client.Query(Now());
+            Value t2 = await client.Query(Now());
+
+            Assert.IsTrue((await client.Query(LTE(t1, t2, Now()))).To<Boolean>().Value);
+        }
+
         private async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(
