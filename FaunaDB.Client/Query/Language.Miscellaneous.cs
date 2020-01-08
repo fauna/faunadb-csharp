@@ -838,5 +838,41 @@ namespace FaunaDB.Query
         public static Expr UpperCase(Expr expr) =>
             UnescapedObject.With("uppercase", expr);
 
+        /// <summary>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/startswith">FaunaDB StartsWith Function</see>
+        /// </summary>
+        public static Expr StartsWith(Expr value, Expr search) =>
+            UnescapedObject.With("startswith", value, "search", search);
+
+        /// <summary>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/endswith">FaunaDB EndsWith Function</see>
+        /// </summary>
+        public static Expr EndsWith(Expr value, Expr search) =>
+            UnescapedObject.With("endswith", value, "search", search);
+
+        /// <summary>
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/containsstr">FaunaDB ContainsStr Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ContainsStr(Expr value, Expr search) =>
+            UnescapedObject.With("containsstr", value, "search", search);
+
+        /// <summary>
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/containsstrregex">FaunaDB ContainsStrRegex Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ContainsStrRegex(Expr value, Expr pattern) =>
+            UnescapedObject.With("containsstrregex", value, "pattern", pattern);
+
+        /// <summary>
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/regexescape">FaunaDB RegexEscape Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr RegexEscape(Expr value) =>
+            UnescapedObject.With("regexescape", value);
+
     }
 }
