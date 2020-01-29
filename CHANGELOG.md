@@ -1,3 +1,8 @@
+## 2.11.0
+- Add string functions: `StartsWith`, `EndsWith`, `ContainsStr`, `ContainsStrRegex`, and `RegexEscape`
+- Add `Now` function
+- Add math functions: `Mean`, `Sum`, and `Count`
+
 ## 2.10.0
 - Add string functions: `Format`, `FindStr`, `FindStrRegex`, `Length`, `LowerCase`, `LTrim`, `Repeat`, `ReplaceStr`, `ReplaceStrRegex`, `RTrim`, `Space`, `SubString`, `TitleCase`, `Trim` and `UpperCase`
 - Add math functions: `Abs`, `Acos`, `Asin`, `Atan`, `BitAnd`, `BitNot`, `BitOr`, `BitXor`, `Ceil`, `Cos`, `Cosh`, `Degrees`, `Exp`, `Floor`, `Hypot`, `Ln`, `Log`, `Max`, `Min`, `Pow`, `Radians`, `Round`, `Sign`, `Sin`, `Sinh`, `Sqrt`, `Tan`, `Tanh` and `Trunc`
