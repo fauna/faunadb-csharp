@@ -72,5 +72,32 @@ namespace FaunaDB.Query
         public static Expr Reduce(Func<Expr, Expr, Expr> lambda, Expr initial, Expr collection) =>
             Reduce(Lambda(lambda), initial, collection);
 
+        /// <summary>
+        /// Returns the number of items that exist in the array or set
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/count">FaunaDB Count Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Count(Expr expr) =>
+            UnescapedObject.With("count", expr);
+
+        /// <summary>
+        /// Returns the sum of all items.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/sum">FaunaDB Sum Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Sum(Expr expr) =>
+            UnescapedObject.With("sum", expr);
+
+        /// <summary>
+        /// Returns the average value of the items.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/mean">FaunaDB Mean Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Mean(Expr expr) =>
+           UnescapedObject.With("mean", expr);
+
     }
 }
