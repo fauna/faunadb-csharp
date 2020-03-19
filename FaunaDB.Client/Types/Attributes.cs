@@ -49,13 +49,22 @@ namespace FaunaDB.Types
         /// The default value used for a missing property when decoding an object.
         /// </summary>
         public object DefaultValue { get; set; }
-
+        
         public FaunaFieldAttribute(string name)
         {
             Name = name;
         }
     }
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
+    public class FaunaDate : Attribute
+    {
 
+    }
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
+    public class FaunaTime : Attribute
+    {
+
+    }
     /// <summary>
     /// Instruct the encoder to not encode the specified member.
     /// </summary>

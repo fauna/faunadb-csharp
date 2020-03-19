@@ -164,20 +164,26 @@ namespace FaunaDB.Types
         public static implicit operator Value(DateTimeOffset dt) =>
             FromDateTimeOffset(dt);
 
-        internal static Value FromDateTime(DateTime dt)
+        internal static Value FromDateTime(DateTime dt, Type forceType = null)
         {
-            if (dt.Ticks % (24 * 60 * 60 * 10000) > 0)
+            if(forceType == typeof(DateV))
+                return new DateV(dt.Date);
+
+            if (forceType == typeof(TimeV) || dt.Ticks % (24 * 60 * 60 * 10000) > 0)
                 return new TimeV(dt);
 
-            return new DateV(dt);
+            return new DateV(dt.Date);
         }
 
-        internal static Value FromDateTimeOffset(DateTimeOffset dt)
+        internal static Value FromDateTimeOffset(DateTimeOffset dt, Type forceType = null)
         {
-            if (dt.UtcTicks % (24 * 60 * 60 * 10000) > 0)
+            if (forceType == typeof(DateV))
+                return new DateV(dt.UtcDateTime.Date);
+
+            if (forceType == typeof(TimeV) || dt.UtcTicks % (24 * 60 * 60 * 10000) > 0)
                 return new TimeV(dt.UtcDateTime);
 
-            return new DateV(dt.UtcDateTime);
+            return new DateV(dt.UtcDateTime.Date);
         }
         #endregion
 

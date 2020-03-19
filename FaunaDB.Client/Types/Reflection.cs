@@ -37,6 +37,22 @@ namespace FaunaDB.Types
             return member.Name;
         }
 
+        public static Type GetOverrideType(this MemberInfo member)
+        {
+            var date = member.GetCustomAttribute<FaunaDate>();
+            var time = member.GetCustomAttribute<FaunaTime>();
+
+            if (date != null && time != null)
+                throw (new InvalidOperationException("Can't use both FaunaDate and FaunaTime on the same property."));
+            
+            if (time != null)
+                return typeof(TimeV);
+            else if (date != null)
+                return typeof(DateV);
+
+            return null;
+        }
+
         public static bool Has<T>(this MemberInfo member) where T : Attribute =>
             member.GetCustomAttribute<T>() != null;
 

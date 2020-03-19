@@ -46,7 +46,7 @@ namespace FaunaDB.Types
 
         Stack<object> stack = new Stack<object>();
 
-        public Value Encode(object obj)
+        public Value Encode(object obj, Type t = null)
         {
             if (obj == null)
                 return NullV.Instance;
@@ -61,7 +61,7 @@ namespace FaunaDB.Types
             {
                 stack.Push(obj);
 
-                return EncodeIntern(obj);
+                return EncodeIntern(obj, t);
             }
             finally
             {
@@ -81,7 +81,7 @@ namespace FaunaDB.Types
 #endif
         }
 
-        Value EncodeIntern(object obj)
+        Value EncodeIntern(object obj, Type forceType)
         {
             var type = obj.GetType();
 
@@ -100,7 +100,7 @@ namespace FaunaDB.Types
                     return BooleanV.Of((bool)obj);
 
                 case TypeCode.DateTime:
-                    return Value.FromDateTime((DateTime)obj);
+                    return Value.FromDateTime((DateTime)obj, forceType);
 
                 case TypeCode.SByte:
                 case TypeCode.Int16:
@@ -314,14 +314,14 @@ namespace FaunaDB.Types
         /*
          * encodeExpr.Encode( argExpression )
          */
-        Expression CallEncode(Expression encoderExpr, Expression argExpression)
+        Expression CallEncode(Expression encoderExpr, Expression argExpression, Expression typeExpression = null)
         {
-            var encodeMethod = typeof(EncoderImpl).GetMethod("Encode", new Type[] { typeof(object) });
+            var encodeMethod = typeof(EncoderImpl).GetMethod("Encode", new Type[] { typeof(object), typeof(Type) });
 
             return Expression.Call(
                 encoderExpr,
                 encodeMethod,
-                argExpression
+                new Expression[] { argExpression, typeExpression }
             );
         }
 
@@ -331,7 +331,8 @@ namespace FaunaDB.Types
         ElementInit AddElementToDic(Expression encoderExpr, Type srcType, MemberInfo member, MethodInfo addMethod, Expression objExpr)
         {
             var keyExpr = Expression.Constant(member.GetName());
-            var valueExpr = CallEncode(encoderExpr, AccessMember(srcType, member, objExpr));
+            var typeExpr = Expression.Constant(member.GetOverrideType(), typeof(Type));
+            var valueExpr = CallEncode(encoderExpr, AccessMember(srcType, member, objExpr), typeExpr);
 
             return Expression.ElementInit(
                 addMethod, keyExpr, valueExpr
