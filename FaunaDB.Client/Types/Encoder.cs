@@ -130,7 +130,7 @@ namespace FaunaDB.Types
 
                 case TypeCode.Object:
                     if (typeof(DateTimeOffset).IsInstanceOfType(obj))
-                        return Value.FromDateTimeOffset((DateTimeOffset)obj);
+                        return Value.FromDateTimeOffset((DateTimeOffset)obj, forceType);
 
                     if (typeof(byte[]).IsInstanceOfType(obj))
                         return new BytesV((byte[])obj);

@@ -325,6 +325,7 @@ namespace Test
             Assert.AreEqual(StringV.Of("ARM"), Encode(CpuTypes.ARM));
             Assert.AreEqual(StringV.Of("MIPS"), Encode(CpuTypes.MIPS));
         }
+
         class DateTimeOverride
         {
             [FaunaField("timev")]
@@ -341,6 +342,7 @@ namespace Test
                 this.DateV = dateV;
             }
         }
+
         [Test]
         public void TestDateTimeOverride()
         {

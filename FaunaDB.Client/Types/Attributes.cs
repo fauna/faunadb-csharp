@@ -55,16 +55,19 @@ namespace FaunaDB.Types
             Name = name;
         }
     }
+
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
     public class FaunaDate : Attribute
     {
 
     }
+
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
     public class FaunaTime : Attribute
     {
 
     }
+
     /// <summary>
     /// Instruct the encoder to not encode the specified member.
     /// </summary>
