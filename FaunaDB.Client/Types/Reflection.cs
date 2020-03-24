@@ -43,7 +43,7 @@ namespace FaunaDB.Types
             var time = member.GetCustomAttribute<FaunaTime>();
 
             if (date != null && time != null)
-                throw (new InvalidOperationException("Can't use both FaunaDate and FaunaTime on the same property."));
+                throw new InvalidOperationException("Can't use both FaunaDate and FaunaTime on the same property.");
             
             if (time != null)
                 return typeof(TimeV);
