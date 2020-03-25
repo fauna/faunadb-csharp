@@ -1084,5 +1084,11 @@ namespace Test
             AssertJsonEqual(UpperCase("ABC"), "{\"uppercase\":\"ABC\"}");
             AssertJsonEqual(TitleCase("ABC"), "{\"titlecase\":\"ABC\"}");
         }
+
+        [Test]
+        public void TestDocuments()
+        {
+            AssertJsonEqual(Documents(Collection("foo")), "{\"documents\":{\"collection\":\"foo\"}}");
+        }
     }
 }

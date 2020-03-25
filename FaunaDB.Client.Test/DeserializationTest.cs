@@ -223,5 +223,14 @@ namespace Test
                 "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}"
             );
         }
+
+        [Test]
+        public void TestDocuments()
+        {
+            AssertJsonEqual(
+                ObjectV.With("documents", ObjectV.With("collection", "foo")),
+                "{\"documents\":{\"collection\":\"foo\"}}"
+            );
+        }
     }
 }

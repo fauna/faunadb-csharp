@@ -1790,6 +1790,22 @@ namespace Test
                 (await client.Query(Mean(Paginate(match)))).Get(DATA));
         }
 
+        [Test]
+        public async Task TestDocuments()
+        {
+            var coll = await RandomCollection();
+
+            await client.Query(
+                Foreach(
+                    Arr(1, 2, 3, 4, 5, 76, 7, 8, 9, 10),
+                    i => Create(coll, Obj("data", Obj("foo", i)))
+                ));
+
+            var page = await client.Query(Paginate(Documents(coll)));
+
+            Assert.AreEqual(10, page.Get(DATA).To<Value[]>().Value.Length);
+        }
+
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))
