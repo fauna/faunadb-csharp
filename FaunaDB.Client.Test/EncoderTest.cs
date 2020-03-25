@@ -325,5 +325,32 @@ namespace Test
             Assert.AreEqual(StringV.Of("ARM"), Encode(CpuTypes.ARM));
             Assert.AreEqual(StringV.Of("MIPS"), Encode(CpuTypes.MIPS));
         }
+
+        class DateTimeOverride
+        {
+            [FaunaField("timev")]
+            [FaunaTime]
+            public DateTime TimeV { get; set; }
+
+            [FaunaField("datev")]
+            [FaunaDate]
+            public DateTime DateV { get; set; }
+
+            public DateTimeOverride(DateTime timeV, DateTime dateV)
+            {
+                this.TimeV = timeV;
+                this.DateV = dateV;
+            }
+        }
+
+        [Test]
+        public void TestDateTimeOverride()
+        {
+            DateTime testDateTime = new DateTime(2000, 1, 1, 1, 1, 1, 1);
+            Assert.AreEqual(
+                ObjectV.With("timev", new TimeV(testDateTime), "datev", new DateV(testDateTime.Date)),
+                Encode(new DateTimeOverride(testDateTime, testDateTime))
+            );
+        }
     }
 }
