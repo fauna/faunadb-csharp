@@ -35,7 +35,7 @@ namespace FaunaDB.Client
         }
 
         public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout, HttpClient httpClient = null)
-            : this(httpClient ?? CreateClient(endpoint, timeout), AuthHeader(secret), new LastSeen(), endpoint, timeout)
+            : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout)
         {
         }
 
@@ -53,7 +53,7 @@ namespace FaunaDB.Client
                 path = $"{path}?{queryString}";
 
             var startTime = DateTime.UtcNow;
-            System.Diagnostics.Debug.WriteLine($"Endpoint: {endpoint}{path}");
+
             var message = new HttpRequestMessage(new HttpMethod(method.Name()), $"{endpoint}{path}");
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
@@ -128,13 +128,9 @@ namespace FaunaDB.Client
             return string.Join("&", keyValues);
         }
 
-        static HttpClient CreateClient(Uri endpoint, TimeSpan timeout)
+        static HttpClient CreateClient()
         {
-            var client = new HttpClient();
-            //client.BaseAddress = endpoint;
-            //client.Timeout = timeout;
-
-            return client;
+            return new HttpClient();
         }
     }
 }
