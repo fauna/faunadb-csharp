@@ -17,30 +17,30 @@ namespace FaunaDB.Client
     /// </summary>
     class DefaultClientIO : IClientIO
     {
-        private Uri endpoint;
-        private TimeSpan timeout;
+        readonly Uri endpoint;
+        readonly TimeSpan timeout;
 
         readonly HttpClient client;
         readonly AuthenticationHeaderValue authHeader;
 
         private LastSeen lastSeen;
 
-        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen)
+        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan timeout)
         {
             this.client = client;
             this.authHeader = authHeader;
             this.lastSeen = lastSeen;
-        }
-
-        public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout, HttpClient httpClient = null)
-            : this(CreateClient(endpoint, timeout, httpClient), AuthHeader(secret), new LastSeen())
-        {
             this.endpoint = endpoint;
             this.timeout = timeout;
         }
 
+        public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout, HttpClient httpClient = null)
+            : this(httpClient ?? CreateClient(endpoint, timeout), AuthHeader(secret), new LastSeen(), endpoint, timeout)
+        {
+        }
+
         public IClientIO NewSessionClient(string secret) =>
-            new DefaultClientIO(client, AuthHeader(secret), lastSeen);
+            new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, timeout);
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             DoRequestAsync(method, path, data, query);
@@ -53,7 +53,7 @@ namespace FaunaDB.Client
                 path = $"{path}?{queryString}";
 
             var startTime = DateTime.UtcNow;
-
+            System.Diagnostics.Debug.WriteLine($"Endpoint: {endpoint}{path}");
             var message = new HttpRequestMessage(new HttpMethod(method.Name()), $"{endpoint}{path}");
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
@@ -128,16 +128,13 @@ namespace FaunaDB.Client
             return string.Join("&", keyValues);
         }
 
-        static HttpClient CreateClient(Uri endpoint, TimeSpan timeout, HttpClient httpClient)
+        static HttpClient CreateClient(Uri endpoint, TimeSpan timeout)
         {
             var client = new HttpClient();
-            client.BaseAddress = endpoint;
-            client.Timeout = timeout;
+            //client.BaseAddress = endpoint;
+            //client.Timeout = timeout;
 
-            if (httpClient != null)
-                return httpClient;
-            else
-                return client;
+            return client;
         }
     }
 }
