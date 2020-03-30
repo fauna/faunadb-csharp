@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
 using System.Threading;
+using FaunaDB.Query;
 
 namespace FaunaDB.Types
 {
@@ -140,6 +141,9 @@ namespace FaunaDB.Types
 
                     if (typeof(IEnumerable).IsInstanceOfType(obj))
                         return WrapEnumerable((IEnumerable)obj);
+
+                    if (typeof(Expr).IsInstanceOfType(obj))
+                        return ExprV.Of((Expr)obj);
 
                     return WrapObj(obj);
             }

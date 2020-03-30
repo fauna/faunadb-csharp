@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FaunaDB.Types;
 using NUnit.Framework;
 
+using static FaunaDB.Query.Language;
 using static FaunaDB.Types.Encoder;
 
 namespace Test
@@ -350,6 +351,22 @@ namespace Test
             Assert.AreEqual(
                 ObjectV.With("timev", new TimeV(testDateTime), "datev", new DateV(testDateTime.Date)),
                 Encode(new DateTimeOverride(testDateTime, testDateTime))
+            );
+        }
+
+        [Test]
+        public void TestEncodeRawExpressions()
+        {
+
+            var indexCfg = new Dictionary<string, object>()
+            {
+                { "name", "index_name" },
+                { "source",  Collection("class_name") }
+            };
+
+            Assert.AreEqual(
+                ObjectV.With("name", "index_name", "source", ExprV.Of(Collection("class_name"))),
+                Encode(indexCfg)
             );
         }
     }

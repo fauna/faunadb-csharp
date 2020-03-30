@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 
 using static FaunaDB.Query.Language;
+using static FaunaDB.Types.Encoder;
 
 namespace Test
 {
@@ -1090,5 +1091,26 @@ namespace Test
         {
             AssertJsonEqual(Documents(Collection("foo")), "{\"documents\":{\"collection\":\"foo\"}}");
         }
+
+        [Test]
+        public void TestEncodeRawExpressions()
+        {
+            var indexCfg = new Dictionary<string, object>()
+            {
+                { "name", "index_name" },
+                { "source", Collection("class_name") }
+            };
+
+            AssertJsonEqual(
+                Encode(indexCfg),
+                "{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}"
+           );
+
+            AssertJsonEqual(
+                CreateIndex(Encode(indexCfg)),
+                 "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}}"
+            );
+        }
+
     }
 }
