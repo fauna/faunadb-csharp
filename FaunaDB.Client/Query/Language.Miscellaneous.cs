@@ -874,5 +874,13 @@ namespace FaunaDB.Query
         public static Expr RegexEscape(Expr value) =>
             UnescapedObject.With("regexescape", value);
 
+
+        /// <summary>
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/documents">FaunaDB Documents Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr Documents(Expr collection) =>
+            UnescapedObject.With("documents", collection);
     }
 }
