@@ -55,6 +55,9 @@ namespace FaunaDB.Types
             if (typeof(Value).IsInstanceOfType(obj))
                 return (Value)obj;
 
+            if (typeof(Expr).IsInstanceOfType(obj))
+                return ExprV.Of((Expr)obj);
+
             if (stack.Contains(obj, ReferenceComparer.Default))
                 throw new InvalidOperationException($"Self referencing loop detected for object `{obj}`");
 
@@ -141,9 +144,6 @@ namespace FaunaDB.Types
 
                     if (typeof(IEnumerable).IsInstanceOfType(obj))
                         return WrapEnumerable((IEnumerable)obj);
-
-                    if (typeof(Expr).IsInstanceOfType(obj))
-                        return ExprV.Of((Expr)obj);
 
                     return WrapObj(obj);
             }

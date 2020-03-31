@@ -1809,19 +1809,19 @@ namespace Test
         [Test]
         public async Task TestCreateObjectsWithRawExpressions()
         {
-            var collectionConfig = new Dictionary<string, object>()
+            var collectionConfig = new Dictionary<string, Expr>()
             {
                 { "name",  RandomStartingWith("coll_") },
                 { "history_days",  2 }
             };
 
-            Value collValue = await client.Query(CreateCollection(Encode(collectionConfig)));
+            Value collValue = await client.Query(CreateCollection(collectionConfig));
             
             Assert.AreEqual(2, collValue.Get(Field.At("history_days")).To<long>().Value);
 
             RefV collRef = GetRef(collValue);
 
-            var indexCfg = new Dictionary<string, object>()
+            var indexCfg = new Dictionary<string, Expr>()
             {
                 { "name", RandomStartingWith("idx_") },
                 { "source", collRef },
@@ -1829,7 +1829,7 @@ namespace Test
                 { "values", Arr(Obj("field", Arr("data", "foo"))) }
             };
 
-            Value idxValue = await client.Query(CreateIndex(Encode(indexCfg)));
+            Value idxValue = await client.Query(CreateIndex((Expr)indexCfg));
 
             Assert.AreEqual(1, idxValue.Get(Field.At("values")).To<ArrayV>().Value.Length);
 

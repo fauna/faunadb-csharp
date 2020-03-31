@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FaunaDB.Types;
 
 using static FaunaDB.Query.Language;
@@ -28,6 +29,9 @@ namespace FaunaDB.Query
 
         public static implicit operator Expr(DateTimeOffset dt) =>
             Value.FromDateTimeOffset(dt);
+
+        public static implicit operator Expr(Dictionary<string, Expr> dict) =>
+            Encoder.Encode(dict);
 
         public static implicit operator Expr(ActionType action)
         {

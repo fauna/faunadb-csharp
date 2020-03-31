@@ -1095,7 +1095,7 @@ namespace Test
         [Test]
         public void TestEncodeRawExpressions()
         {
-            var indexCfg = new Dictionary<string, object>()
+            var indexCfg = new Dictionary<string, Expr>()
             {
                 { "name", "index_name" },
                 { "source", Collection("class_name") }
@@ -1107,7 +1107,7 @@ namespace Test
            );
 
             AssertJsonEqual(
-                CreateIndex(Encode(indexCfg)),
+                CreateIndex((Expr)indexCfg),
                  "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}}"
             );
         }
