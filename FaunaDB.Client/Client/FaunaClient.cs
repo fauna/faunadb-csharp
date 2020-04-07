@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Http;
 using FaunaDB.Collections;
 using FaunaDB.Errors;
 using FaunaDB.Query;
@@ -34,7 +35,7 @@ namespace FaunaDB.Client
             string secret,
             string endpoint = "https://db.fauna.com:443",
             TimeSpan? timeout = null,
-            System.Net.Http.HttpClient httpClient = null)
+            HttpClient httpClient = null)
             : this(CreateClient(secret, endpoint, timeout, httpClient))
         { }
 

@@ -36,8 +36,7 @@ namespace FaunaDB.Client
 
         public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout, HttpClient httpClient = null)
             : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout)
-        {
-        }
+        { }
 
         public IClientIO NewSessionClient(string secret) =>
             new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, timeout);
