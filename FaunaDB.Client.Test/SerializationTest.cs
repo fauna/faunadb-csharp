@@ -1107,7 +1107,7 @@ namespace Test
            );
 
             AssertJsonEqual(
-                CreateIndex((Expr)indexCfg),
+                CreateIndex(indexCfg),
                  "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}}"
             );
         }
