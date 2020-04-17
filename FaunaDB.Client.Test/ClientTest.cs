@@ -479,7 +479,60 @@ namespace Test
             Assert.AreEqual(3, page2.Get(DATA).To<Value[]>().Value.Length);
             Assert.AreNotEqual(page1.At("data"), page2.Get(DATA));
             Assert.NotNull(page2.At("before"));
-            Assert.AreEqual(None(), page2.At("after").To<Value>().ToOption);
+            Assert.AreEqual(None(), page2.At("after").To<Value>().ToOption);           
+        }
+
+        [Test] public async Task TestPaginateWithCursor()
+        {
+            string idxName = RandomStartingWith("foo_idx_");
+            string collName = RandomStartingWith("foo_coll_");
+
+            await NewCollectionWithValues(collName, idxName, indexWithAllValues: true);
+            
+            Expr matcher = Match(Index(idxName));
+
+            Func<Value, Value[]> getData = value => value.Get(DATA).To<Value[]>().Value;
+
+            Func<Cursor, Task<Value[]>> paginateCursor = async cursor =>
+                getData(await client.Query(Paginate(matcher, cursor: cursor)));
+
+            Value firstPage = await client.Query(Paginate(matcher, size: 7));
+
+            Assert.AreEqual(
+                ArrayV.Of(1, 2, 3, 4, 5, 6, 7),
+                getData(firstPage));
+
+            Assert.AreEqual(
+                ArrayV.Of(8, 9, 10),
+                await paginateCursor(After(firstPage.At("after"))));
+            
+            Assert.AreEqual(
+                ArrayV.Of(1, 2),
+                await paginateCursor(Before(3)));
+
+            Assert.AreEqual(
+                ArrayV.Of(1, 2),
+                await paginateCursor(RawCursor(Obj("before", Arr(3)))));
+
+            Assert.AreEqual(
+                ArrayV.Of(8, 9, 10),
+                await paginateCursor(RawCursor(Obj("after", 8))));
+
+            // complex RawCursor
+
+            Expr matcherValues = Match(Index($"{idxName}_values"));
+            Value afterValue = (await client.Query(Paginate(matcherValues, size: 7))).At("after");
+            Value[] afterValueArr = afterValue.To<Value[]>().Value;
+
+            Cursor rawCursor1 = RawCursor(Obj("after", Arr(afterValueArr[0], afterValueArr[1], afterValueArr[2], afterValueArr[3])));
+            Cursor rawCursor2 = RawCursor(Obj("after", afterValue));
+
+            Value[] lastPageValues1 = getData(await client.Query(Paginate(matcherValues, cursor: rawCursor1)));
+            Value[] lastPageValues2 = getData(await client.Query(Paginate(matcherValues, cursor: rawCursor2)));
+
+            Assert.AreEqual(3, lastPageValues1.Length);
+            Assert.AreEqual(3, lastPageValues2.Length);
+            Assert.AreEqual(lastPageValues1, lastPageValues2);
         }
 
         [Test] public async Task TestDealWithSetRef()
@@ -1844,7 +1897,7 @@ namespace Test
             Assert.AreEqual(10, page.Get(DATA).To<Value[]>().Value.Length);
         }
 
-        private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10)
+        private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))
                                 .Get(REF_FIELD);
@@ -1857,6 +1910,19 @@ namespace Test
                 "active", true,
                 "values", Arr(Obj("field", Arr("data", "value"))))));
 
+            if (indexWithAllValues)
+            {
+                await client.Query(CreateIndex(Obj(
+                    "name", $"{indexName}_values",
+                    "source", aCollection,
+                    "active", true,
+                    "values", Arr(
+                        Obj("field", Arr("data", "value")),
+                        Obj("field", "ref"),
+                        Obj("field", "ts")
+                ))));
+            }
+                
             return await client.Query(
                 Foreach(
                     Arr(values),

@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 
 using static FaunaDB.Query.Language;
+using static FaunaDB.Query.UnescapedObject;
 using static FaunaDB.Types.Encoder;
 
 namespace Test
@@ -302,6 +303,21 @@ namespace Test
             AssertJsonEqual(
                 Paginate(Databases(), sources: true),
                 "{\"paginate\":{\"databases\":null},\"sources\":true}");
+
+            AssertJsonEqual(
+                Paginate(Databases(), size: 42, cursor: After(Ref(Collection("thing"), "222"))),
+                "{\"paginate\":{\"databases\":null},\"size\":42,\"cursor\":{\"object\":{\"after\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"222\"}}}}"
+            );
+
+            AssertJsonEqual(
+                Paginate(Databases(), cursor: Before(Arr(42,  Ref(Collection("thing"), "333")))),
+                "{\"paginate\":{\"databases\":null},\"cursor\":{\"object\":{\"before\":[42,{\"ref\":{\"collection\":\"thing\"},\"id\":\"333\"}]}}}"
+            );
+
+            AssertJsonEqual(
+                Paginate(Databases(), cursor: RawCursor(Obj("before", UnescapedObject.With("ts", "1234567890")))),
+                "{\"paginate\":{\"databases\":null},\"cursor\":{\"object\":{\"before\":{\"ts\":\"1234567890\"}}}}"
+            );
         }
 
         [Test] public void TestExists()

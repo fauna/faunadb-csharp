@@ -38,6 +38,12 @@ If you're using macOS or Linux you may need to override `FrameworkPathOverride`:
 FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5-api dotnet test FaunaDB.Client.Test/ --framework net45
 ```
 
+specific tests:
+
+```bash
+FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5-api dotnet test FaunaDB.Client.Test/ --framework net45 --filter Name~EncoderTest
+```
+
 ## Referencing FaunaDB Assembly
 
 First install the Nuget package by adding the package reference to your MSBuild project:

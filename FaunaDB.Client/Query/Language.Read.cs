@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using FaunaDB.Types;
 
 namespace FaunaDB.Query
 {
+
     public partial struct Language
     {
         /// <summary>
@@ -25,7 +28,7 @@ namespace FaunaDB.Query
         /// <summary>
         /// Creates a new Paginate expression.
         /// <para>
-        /// See the <see href="https://fauna.com/documentation/queries#read_functions">FaunaDB Read Functions</see>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/paginate">FaunaDB Paginate Function</see>
         /// </para>
         /// </summary>
         public static Expr Paginate(
@@ -35,15 +38,48 @@ namespace FaunaDB.Query
             Expr before = null,
             Expr size = null,
             Expr events = null,
-            Expr sources = null) =>
-                UnescapedObject.With(
-                    "paginate", set,
-                    "ts", ts,
-                    "after", after,
-                    "before", before,
-                    "size", size,
-                    "events", events,
-                    "sources", sources);
+            Expr sources = null,
+            Cursor cursor = null) =>
+            UnescapedObject.With(new Dictionary<string, Expr>
+            {
+                { "paginate", set ?? NullV.Instance },
+                { "ts", ts },
+                { "size", size },
+                { "events", events },
+                { "sources", sources },
+                { "after", after },
+                { "before", before },
+                { "cursor", cursor?.Source }
+            });
+        
+
+        /// <summary>
+        /// Creates a new Cursor to be used with a Paginate expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/paginate">FaunaDB Paginate Function</see>
+        /// </para>
+        /// </summary>
+        public class Cursor
+        {
+
+            public Expr Source { get; }
+
+            internal Cursor(Expr expr)
+            {
+                Source = expr;
+            }
+
+        }
+
+        public static Cursor RawCursor(Expr expr) =>
+                new Cursor(expr);
+
+        public static Cursor After(Expr expr) =>
+                new Cursor(Obj("after", expr));
+
+        public static Cursor Before(Expr expr) =>
+                new Cursor(Obj("before", expr));
+
 
         /// <summary>
         /// Creates a new Exists expression.
