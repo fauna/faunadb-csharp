@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Errors;
@@ -41,8 +42,10 @@ namespace Test
             var port = Env("FAUNA_PORT", "8443");
             var secret = Env("FAUNA_ROOT_KEY", "secret");
             var endpoint = $"{scheme}://{domain}:{port}";
+            var httpClient = new HttpClient();
+            httpClient.BaseAddress = new Uri("https://www.wrongbaseaddress.com");
 
-            rootClient = new FaunaClient(secret: secret, endpoint: endpoint);
+            rootClient = new FaunaClient(secret: secret, endpoint: endpoint, httpClient: httpClient);
 
             const string dbName = "faunadb-csharp-test";
             DbRef = Database(dbName);

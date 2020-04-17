@@ -17,24 +17,29 @@ namespace FaunaDB.Client
     /// </summary>
     class DefaultClientIO : IClientIO
     {
+        readonly Uri endpoint;
+        readonly TimeSpan timeout;
+
         readonly HttpClient client;
         readonly AuthenticationHeaderValue authHeader;
 
         private LastSeen lastSeen;
 
-        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen)
+        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan timeout)
         {
             this.client = client;
             this.authHeader = authHeader;
             this.lastSeen = lastSeen;
+            this.endpoint = endpoint;
+            this.timeout = timeout;
         }
 
-        public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout)
-            : this(CreateClient(endpoint, timeout), AuthHeader(secret), new LastSeen())
+        public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout, HttpClient httpClient = null)
+            : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout)
         { }
 
         public IClientIO NewSessionClient(string secret) =>
-            new DefaultClientIO(client, AuthHeader(secret), lastSeen);
+            new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, timeout);
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             DoRequestAsync(method, path, data, query);
@@ -48,9 +53,13 @@ namespace FaunaDB.Client
 
             var startTime = DateTime.UtcNow;
 
-            var message = new HttpRequestMessage(new HttpMethod(method.Name()), path);
+            var message = new HttpRequestMessage(new HttpMethod(method.Name()), $"{endpoint}{path}");
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
+            message.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+            message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            message.Headers.Add("X-FaunaDB-API-Version", "2.7");
+            message.Headers.Add("X-Fauna-Driver", "csharp");
 
             var last = lastSeen.Txn;
             if (last.HasValue) {
@@ -117,17 +126,9 @@ namespace FaunaDB.Client
             return string.Join("&", keyValues);
         }
 
-        static HttpClient CreateClient(Uri endpoint, TimeSpan timeout)
+        static HttpClient CreateClient()
         {
-            var client = new HttpClient();
-            client.BaseAddress = endpoint;
-            client.Timeout = timeout;
-            client.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("X-FaunaDB-API-Version", "2.7");
-            client.DefaultRequestHeaders.Add("X-Fauna-Driver", "csharp");
-
-            return client;
+            return new HttpClient();
         }
     }
 }
