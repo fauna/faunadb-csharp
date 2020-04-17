@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
@@ -28,6 +29,9 @@ namespace Test
             Assert.AreEqual(TimeV.Of("2000-01-01T01:01:01.123Z"), (Expr)new DateTime(2000, 1, 1, 1, 1, 1, 123, DateTimeKind.Utc));
             Assert.AreEqual(TimeV.Of("2000-01-01T01:01:01.123Z"), (Expr)new DateTimeOffset(2000, 1, 1, 1, 1, 1, 123, TimeSpan.Zero));
             Assert.AreEqual(NullV.Instance, (Expr)(string)null);
+            Assert.AreEqual(
+                ObjectV.With("name", "foo", "count", 42),
+                (Expr)new Dictionary<string, Expr>() {{ "name", "foo" }, { "count", 42 }});
         }
 
         [Test]

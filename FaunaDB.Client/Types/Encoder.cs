@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Linq.Expressions;
 using System.Threading;
+using FaunaDB.Query;
 
 namespace FaunaDB.Types
 {
@@ -53,6 +54,9 @@ namespace FaunaDB.Types
 
             if (typeof(Value).IsInstanceOfType(obj))
                 return (Value)obj;
+
+            if (typeof(Expr).IsInstanceOfType(obj))
+                return ExprV.Of((Expr)obj);
 
             if (stack.Contains(obj, ReferenceComparer.Default))
                 throw new InvalidOperationException($"Self referencing loop detected for object `{obj}`");

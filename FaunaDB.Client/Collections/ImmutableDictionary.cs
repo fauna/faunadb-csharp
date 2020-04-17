@@ -9,6 +9,10 @@ namespace FaunaDB.Collections
         public static IReadOnlyDictionary<TKey, TValue> Empty<TKey, TValue>() =>
             new Dictionary<TKey, TValue>();
 
+
+        public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(Dictionary<TKey, TValue> dict) =>
+            dict?.FilterNulls();
+
         public static IReadOnlyDictionary<TKey, TValue> Of<TKey, TValue>(TKey k0, TValue v0)
         {
             return new Dictionary<TKey, TValue> {

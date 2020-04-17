@@ -40,6 +40,9 @@ namespace FaunaDB.Query
             return $"UObject({props})";
         }
 
+        public static UnescapedObject With(Dictionary<string, Expr> exprs) =>
+            new UnescapedObject(ImmutableDictionary.Of(exprs));
+
         public static UnescapedObject With(string key1, Expr value1) =>
             new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance));
 

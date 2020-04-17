@@ -1806,6 +1806,44 @@ namespace Test
             Assert.AreEqual(10, page.Get(DATA).To<Value[]>().Value.Length);
         }
 
+        [Test]
+        public async Task TestCreateObjectsWithRawExpressions()
+        {
+            var collectionConfig = new Dictionary<string, Expr>()
+            {
+                { "name",  RandomStartingWith("coll_") },
+                { "history_days",  2 }
+            };
+
+            Value collValue = await client.Query(CreateCollection(collectionConfig));
+            
+            Assert.AreEqual(2, collValue.Get(Field.At("history_days")).To<long>().Value);
+
+            RefV collRef = GetRef(collValue);
+
+            var indexCfg = new Dictionary<string, Expr>()
+            {
+                { "name", RandomStartingWith("idx_") },
+                { "source", collRef },
+                { "active", true },
+                { "values", Arr(Obj("field", Arr("data", "foo"))) }
+            };
+
+            Value idxValue = await client.Query(CreateIndex((Expr)indexCfg));
+
+            Assert.AreEqual(1, idxValue.Get(Field.At("values")).To<ArrayV>().Value.Length);
+
+            await client.Query(
+                Foreach(
+                    Arr(1, 2, 3, 4, 5, 76, 7, 8, 9, 10),
+                    i => Create(collRef, Obj("data", Obj("foo", i)))
+                ));
+
+            var page = await client.Query(Paginate(Match(GetRef(idxValue))));
+
+            Assert.AreEqual(10, page.Get(DATA).To<Value[]>().Value.Length);
+        }
+
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))

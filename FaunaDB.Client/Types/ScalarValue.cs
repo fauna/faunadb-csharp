@@ -124,6 +124,25 @@ namespace FaunaDB.Types
     }
 
     /// <summary>
+    /// A FaunaDB Expression wrapped as a Value
+    /// </summary>
+    public class ExprV : ScalarValue<Expr>
+    {
+        internal ExprV(Expr value) : base(value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+        }
+
+        protected internal override void WriteJson(JsonWriter writer) =>
+            Value.WriteJson(writer);
+
+        internal static ExprV Of(Expr e) =>
+            new ExprV(e);
+        
+    }
+       
+    /// <summary>
     /// Represents a Timestamp value in the FaunaDB query language.
     /// <para>
     /// See the <see href="https://fauna.com/documentation/queries#values-special_types">FaunaDB Special Types</see>.
