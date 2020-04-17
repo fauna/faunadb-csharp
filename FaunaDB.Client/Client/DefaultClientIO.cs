@@ -60,7 +60,6 @@ namespace FaunaDB.Client
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             message.Headers.Add("X-FaunaDB-API-Version", "2.7");
             message.Headers.Add("X-Fauna-Driver", "csharp");
-            message.SetTimeout(timeout);
 
             var last = lastSeen.Txn;
             if (last.HasValue) {
