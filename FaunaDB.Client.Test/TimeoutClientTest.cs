@@ -11,7 +11,7 @@ using static FaunaDB.Query.Language;
 
 namespace Test
 {
-#if NETFRAMEWORK
+#if (NETFRAMEWORK || NETCOREAPP2_0 || NETCOREAPP3_0)
 
     [TestFixture]
     public class TimeoutClientTest

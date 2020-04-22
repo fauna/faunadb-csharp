@@ -1,73 +1,46 @@
 version: 2.1
 description: FaunaDB C# Driver Tests
 
-orbs:
-  windows: circleci/windows@2.2.0
-
-commands:
-  build_and_test:
-    description: "Run C# tests"
+executors:
+  core:
     parameters:
       version:
         type: enum
         enum: ["stable", "nightly"]
+    resource_class: large
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+
+      - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:latest
+        name: core
+        auth:
+          username: _json_key
+          password: $GCR_KEY
+    environment:
+      FAUNA_ROOT_KEY: secret
+      FAUNA_DOMAIN: core
+      FAUNA_SCHEME: http
+      FAUNA_PORT: 8443
+      FAUNA_TIMEOUT: 60s
+
+commands:
+  build_and_test:
+    description: "Run C# tests"
     steps:
       - checkout
 
       - run:
-          name: Install Tools
-          command: choco install openjdk11 awscli
-
-      - run:
-          name: Install FaunaDB
+          name: Wait FaunaDB init
           command: |
-            aws s3 cp s3://fauna-repo/zip/<<parameters.version>>/latest.zip faunadb.zip
-            mkdir -p faunadb/{log,data}
-            cd faunadb
-            unzip -j ../faunadb.zip
-          shell: bash.exe
-
-      - run:
-          name: Configure FaunaDB
-          command: |
-            echo "auth_root_key: secret" >> faunadb.yml
-            echo "cluster_name: fauna-windows" >> faunadb.yml
-            echo "network_broadcast_address: 127.0.0.1" >> faunadb.yml
-            echo "storage_data_path: $PWD/data" >> faunadb.yml
-            echo "log_path: $PWD/log" >> faunadb.yml
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Start FaunaDB
-          command: ./faunadb
-          background: true
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Wait for FaunaDB to start
-          command: "while ! netstat -tna | grep 'LISTEN' | grep '8444'; do sleep 0.1; done"
-          shell: bash.exe
-
-      - run:
-          name: Initialize FaunaDB
-          command: ./faunadb-admin -r windows init
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Wait for FaunaDB to init
-          command: "while ! $(curl --output /dev/null --silent --fail localhost:8443/ping); do sleep 0.1; done"
-          shell: bash.exe
+            while ! $(curl --output /dev/null --silent --fail http://core:8443/ping); do sleep 1; done
 
       - run:
           name: Run Tests
           command: |
-            mkdir -p results/junit
+            dotnet --info
+            mkdir results
             dotnet restore
-            dotnet test --framework netcoreapp2.0 --logger "junit;LogFilePath=./results/junit/results.xml" FaunaDB.Client.Test
-          shell: bash.exe
+            dotnet test --framework netcoreapp3.0 --logger "junit;LogFilePath=./results/results.xml" FaunaDB.Client.Test
 
       - store_test_results:
           path: FaunaDB.Client.Test/results/
@@ -75,23 +48,17 @@ commands:
 jobs:
   core-stable:
     executor:
-      name: windows/default
-    environment:
-      FAUNA_ROOT_KEY: secret
-      FAUNA_ENDPOINT: http://localhost:8443
+      name: core
+      version: stable
     steps:
-      - build_and_test:
-          version: stable
+      - build_and_test
 
   core-nightly:
     executor:
-      name: windows/default
-    environment:
-      FAUNA_ROOT_KEY: secret
-      FAUNA_ENDPOINT: http://localhost:8443
+      name: core
+      version: nightly
     steps:
-      - build_and_test:
-          version: nightly
+      - build_and_test
 
 workflows:
   version: 2
