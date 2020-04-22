@@ -176,13 +176,13 @@ namespace FaunaDB.Client
         static IClientIO CreateClient(
             string secret,
             string endpoint,
-            TimeSpan? timeout,
-            System.Net.Http.HttpClient httpClient = null)
+            TimeSpan? timeout = null,
+            HttpClient httpClient = null)
         {
             return new DefaultClientIO(
                 secret: secret,
                 endpoint: new Uri(endpoint),
-                timeout: timeout ?? TimeSpan.FromSeconds(60),
+                timeout: timeout,
                 httpClient: httpClient
             );
         }

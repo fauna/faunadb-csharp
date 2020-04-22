@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FaunaDB.Collections;
 
@@ -18,14 +19,14 @@ namespace FaunaDB.Client
     class DefaultClientIO : IClientIO
     {
         readonly Uri endpoint;
-        readonly TimeSpan timeout;
+        readonly TimeSpan? timeout;
 
         readonly HttpClient client;
         readonly AuthenticationHeaderValue authHeader;
 
         private LastSeen lastSeen;
 
-        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan timeout)
+        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout)
         {
             this.client = client;
             this.authHeader = authHeader;
@@ -34,7 +35,7 @@ namespace FaunaDB.Client
             this.timeout = timeout;
         }
 
-        public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout, HttpClient httpClient = null)
+        public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null)
             : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout)
         { }
 
@@ -62,11 +63,17 @@ namespace FaunaDB.Client
             message.Headers.Add("X-Fauna-Driver", "csharp");
 
             var last = lastSeen.Txn;
-            if (last.HasValue) {
+            if (last.HasValue)
+            {
                 message.Headers.Add("X-Last-Seen-Txn", last.Value.ToString());
             }
 
-            var httpResponse = await client.SendAsync(message).ConfigureAwait(false);
+            if (timeout.HasValue)
+            {
+                message.Headers.Add("X-Query-Timeout", timeout.Value.TotalMilliseconds.ToString());
+            }
+
+            var httpResponse = await client.SendAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             string response;
 

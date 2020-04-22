@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Threading;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
-using Newtonsoft.Json;
 using NUnit.Framework;
 
 using static FaunaDB.Query.Language;
@@ -18,6 +17,7 @@ namespace Test
     public class TestCase
     {
         protected static Field<string> SECRET_FIELD = Field.At("secret").To<string>();
+        protected const string testDbName = "faunadb-csharp-test";
 
         protected FaunaClient rootClient;
         protected Expr DbRef;
@@ -25,6 +25,8 @@ namespace Test
         protected FaunaClient adminClient;
         protected Value clientKey;
         protected Value adminKey;
+        protected String faunaEndpoint;
+        protected String faunaSecret;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -40,21 +42,18 @@ namespace Test
             var domain = Env("FAUNA_DOMAIN", "localhost");
             var scheme = Env("FAUNA_SCHEME", "http");
             var port = Env("FAUNA_PORT", "8443");
-            var secret = Env("FAUNA_ROOT_KEY", "secret");
-            var endpoint = $"{scheme}://{domain}:{port}";
-            var httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("https://www.wrongbaseaddress.com");
 
-            rootClient = new FaunaClient(secret: secret, endpoint: endpoint, httpClient: httpClient);
+            faunaSecret = Env("FAUNA_ROOT_KEY", "secret");
+            faunaEndpoint = $"{scheme}://{domain}:{port}/";
+            rootClient = new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint);
 
-            const string dbName = "faunadb-csharp-test";
-            DbRef = Database(dbName);
+            DbRef = Database(testDbName);
 
             try {
                 await rootClient.Query(Delete(DbRef));
             } catch (BadRequest) {}
 
-            await rootClient.Query(CreateDatabase(Obj("name", dbName)));
+            await rootClient.Query(CreateDatabase(Obj("name", testDbName)));
 
             clientKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "server")));
             adminKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "admin")));
@@ -98,4 +97,19 @@ namespace Test
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
             Task.FromResult(resp);
     }
+
+    class HttpClientWrapper : HttpClient
+    {
+
+        HttpRequestMessage LastMessage;
+
+        public override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            LastMessage = request;
+            return base.SendAsync(request, cancellationToken);
+        }
+
+        public HttpRequestMessage lastMessage => LastMessage;
+    }
+
 }
