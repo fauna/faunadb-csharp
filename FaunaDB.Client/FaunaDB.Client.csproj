@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard1.5;netstandard2.0;net451;net46;net461;net47;netstandard2.1</TargetFrameworks>
-    <PackageVersion>2.11.0</PackageVersion>
+    <PackageVersion>2.12.0</PackageVersion>
     <PackageId>FaunaDB.Client</PackageId>
     <Title>C# Driver for FaunaDB</Title>
     <Authors>Fauna, Inc.</Authors>
