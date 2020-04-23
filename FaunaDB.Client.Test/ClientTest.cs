@@ -1909,7 +1909,7 @@ namespace Test
 
             await faunaClient.Query(Count(Databases()));
 
-            var headers = customHttp.lastMessage.Headers;
+            var headers = customHttp.LastMessage.Headers;
             Assert.AreEqual("csharp", headers.GetValues("X-Fauna-Driver").First());
             Assert.AreEqual("2.7", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.IsFalse(headers.Contains("X-Query-Timeout"));
@@ -1924,11 +1924,25 @@ namespace Test
             await faunaClientTimeout.Query(Count(Databases()));
             await faunaClientTimeout.Query(Count(Collections()));
 
-            headers = customHttp.lastMessage.Headers;
+            headers = customHttp.LastMessage.Headers;
 
             Assert.AreEqual("2.7", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.AreEqual("42000", headers.GetValues("X-Query-Timeout").First());
             Assert.IsTrue(long.Parse(headers.GetValues("X-Last-Seen-Txn").First()) > 0);
+
+            // specific query timeout
+            await faunaClientTimeout.Query(Count(Collections()), TimeSpan.FromSeconds(10));
+            Assert.AreEqual("10000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
+
+            await faunaClientTimeout.Query(TimeSpan.FromSeconds(11), Count(Collections()), Count(Databases()));
+            Assert.AreEqual("11000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
+
+            // unmodified client timeout
+            await faunaClientTimeout.Query(Count(Collections()), Count(Databases()));
+            Assert.AreEqual("42000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
+
+            await faunaClientTimeout.Query(Count(Collections()));
+            Assert.AreEqual("42000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
         }
 
         [Test]
@@ -1942,8 +1956,8 @@ namespace Test
                 (await client.Query(Count(Collections(Database(testDbName))))).To<long>().Value >= 1
             );
 
-            Assert.AreEqual("POST", myHttpClient.lastMessage.Method.ToString());
-            Assert.AreEqual(faunaEndpoint, myHttpClient.lastMessage.RequestUri.ToString());
+            Assert.AreEqual("POST", myHttpClient.LastMessage.Method.ToString());
+            Assert.AreEqual(faunaEndpoint, myHttpClient.LastMessage.RequestUri.ToString());
         }
 
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)

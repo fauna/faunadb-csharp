@@ -94,14 +94,14 @@ namespace Test
         public IClientIO NewSessionClient(string secret) =>
             new MockClientIO(resp);
 
-        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
+        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null) =>
             Task.FromResult(resp);
     }
 
     class HttpClientWrapper : HttpClient
     {
 
-        HttpRequestMessage LastMessage;
+        public HttpRequestMessage LastMessage { get; private set; }
 
         public override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
@@ -109,7 +109,6 @@ namespace Test
             return base.SendAsync(request, cancellationToken);
         }
 
-        public HttpRequestMessage lastMessage => LastMessage;
     }
 
 }
