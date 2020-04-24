@@ -107,7 +107,7 @@ This small example shows how to use pretty much every aspect of the library.
 #### How to instantiate a FaunaDB `FaunaClient`
 
 ```csharp
-var client = new FaunaClient(endpoint: ENDPOINT, secret: SECRET);
+var client = new FaunaClient(endpoint: ENDPOINT, secret: SECRET, httpClient: HTTP_CLIENT, timeout: TIMEOUT);
 ```
 
 Except `secret` all other arguments are optional.
@@ -118,7 +118,13 @@ Except `secret` all other arguments are optional.
 Value result = await client.Query(Paginate(Match(Index("spells"))));
 ```
 
-`Query` methods receives an `Expr` object. `Expr` objects can be composed with others `Expr` to create complex query objects. `FaunaDB.Query.Language` is a helper class where you can find all available expressions in the library.
+`Query` methods receives an `Expr` object. `Expr` objects can be composed with others `Expr` to create complex query objects. `FaunaDB.Query.Language` is a helper class where you can find all available expressions in the library. 
+
+You can also pass a `TimeSpan queryTimeout` argument to that specific query as well:
+
+```csharp
+Value result = await client.Query(Paginate(Match(Index("spells"))), TimeSpan.FromSeconds(42));
+```
 
 #### How to access objects fields and convert to primitive values
 

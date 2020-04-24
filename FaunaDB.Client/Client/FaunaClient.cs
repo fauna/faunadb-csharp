@@ -98,7 +98,7 @@ namespace FaunaDB.Client
         /// <param name="queryTimeout">Timeout for that specific query (it will override the client timetout, if any).</param>
         /// <param name="expressions">the list of query expressions to be sent to FaunaDB.</param>
         /// <returns>a <see cref="Task"/> containing an ordered list of root response nodes.</returns>
-        public async Task<Value[]> Query(TimeSpan? queryTimeout, params Expr[] expressions)
+        public async Task<Value[]> Query(TimeSpan queryTimeout, params Expr[] expressions)
         {
             var response = await Query(new UnescapedArray(expressions), queryTimeout).ConfigureAwait(false);
             return response.Collect(Field.Root).ToArray();
