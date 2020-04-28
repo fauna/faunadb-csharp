@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FaunaDB.Collections;
 
@@ -18,33 +19,33 @@ namespace FaunaDB.Client
     class DefaultClientIO : IClientIO
     {
         readonly Uri endpoint;
-        readonly TimeSpan timeout;
+        readonly TimeSpan? clientTimeout;
 
         readonly HttpClient client;
         readonly AuthenticationHeaderValue authHeader;
 
         private LastSeen lastSeen;
 
-        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan timeout)
+        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout)
         {
             this.client = client;
             this.authHeader = authHeader;
             this.lastSeen = lastSeen;
             this.endpoint = endpoint;
-            this.timeout = timeout;
+            this.clientTimeout = timeout;
         }
 
-        public DefaultClientIO(string secret, Uri endpoint, TimeSpan timeout, HttpClient httpClient = null)
+        public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null)
             : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout)
         { }
 
         public IClientIO NewSessionClient(string secret) =>
-            new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, timeout);
+            new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, clientTimeout);
 
-        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null) =>
-            DoRequestAsync(method, path, data, query);
+        public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null) =>
+            DoRequestAsync(method, path, data, query, queryTimeout);
 
-        async Task<RequestResult> DoRequestAsync(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null)
+        async Task<RequestResult> DoRequestAsync(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null)
         {
             var dataString = data == null ?  null : new StringContent(data);
             var queryString = query == null ? null : QueryString(query);
@@ -62,11 +63,18 @@ namespace FaunaDB.Client
             message.Headers.Add("X-Fauna-Driver", "csharp");
 
             var last = lastSeen.Txn;
-            if (last.HasValue) {
+            if (last.HasValue)
+            {
                 message.Headers.Add("X-Last-Seen-Txn", last.Value.ToString());
             }
 
-            var httpResponse = await client.SendAsync(message).ConfigureAwait(false);
+            TimeSpan? timeout = queryTimeout ?? clientTimeout;
+            if (timeout.HasValue)
+            {
+                message.Headers.Add("X-Query-Timeout", timeout.Value.TotalMilliseconds.ToString());
+            }
+
+            var httpResponse = await client.SendAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             string response;
 
