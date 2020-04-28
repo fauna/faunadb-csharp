@@ -82,8 +82,11 @@ namespace FaunaDB.Client
         /// </summary>
         /// <param name="expressions">the list of query expressions to be sent to FaunaDB.</param>
         /// <returns>a <see cref="Task"/> containing an ordered list of root response nodes.</returns>
-        public async Task<Value[]> Query(params Expr[] expressions) =>
-            await Query(null, expressions);
+        public async Task<Value[]> Query(params Expr[] expressions)
+        {
+            var response = await Query(new UnescapedArray(expressions)).ConfigureAwait(false);
+            return response.Collect(Field.Root).ToArray();
+        }
 
         /// <summary>
         /// Issues multiple queries to FaunaDB.
