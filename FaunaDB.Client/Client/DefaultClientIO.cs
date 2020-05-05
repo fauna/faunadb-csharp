@@ -68,9 +68,10 @@ namespace FaunaDB.Client
                 message.Headers.Add("X-Last-Seen-Txn", last.Value.ToString());
             }
 
-            TimeSpan? timeout = queryTimeout ?? clientTimeout;
+            TimeSpan? timeout = queryTimeout ?? clientTimeout ?? client.Timeout;
             if (timeout.HasValue)
             {
+                message.SetTimeout(timeout);
                 message.Headers.Add("X-Query-Timeout", timeout.Value.TotalMilliseconds.ToString());
             }
 
@@ -134,9 +135,73 @@ namespace FaunaDB.Client
             return string.Join("&", keyValues);
         }
 
-        static HttpClient CreateClient()
+        static HttpClient CreateClient() =>
+            new HttpClient(new TimeoutHandler());        
+    }
+
+    /// <summary>
+    /// Http Client proper timing out
+    /// </summary>
+
+    static class HttpRequestExtensions
+    {
+        private static string TimeoutPropertyKey = "RequestTimeout";
+
+        public static void SetTimeout(this HttpRequestMessage request, TimeSpan? timeout)
         {
-            return new HttpClient();
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            request.Properties[TimeoutPropertyKey] = timeout;
+        }
+
+        public static TimeSpan? GetTimeout(this HttpRequestMessage request)
+        {
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            if (request.Properties.TryGetValue(TimeoutPropertyKey, out var value) && value is TimeSpan timeout)
+                return timeout;
+
+            return null;
+        }
+    }
+
+    class TimeoutHandler : DelegatingHandler
+    {
+        public TimeoutHandler()
+        {
+            base.InnerHandler = new HttpClientHandler();
+        }
+
+        protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            var timeout = request.GetTimeout();
+
+            if (!timeout.HasValue)
+            {
+                return await base.SendAsync(request, cancellationToken);
+            }
+                
+            using(var source = NewCancellationTokenSource(timeout.Value, cancellationToken))
+            {
+                try
+                {
+                    return await base.SendAsync(request, source.Token);
+                }
+                catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+                {
+                    throw new TimeoutException();
+                }
+            }
+            
+        }
+
+        private CancellationTokenSource NewCancellationTokenSource(TimeSpan timeout, CancellationToken token)
+        {
+            var source = CancellationTokenSource.CreateLinkedTokenSource(token);
+            source.CancelAfter(timeout);
+            return source;
         }
     }
 }

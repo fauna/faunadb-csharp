@@ -1902,27 +1902,30 @@ namespace Test
         {
             var customHttp = new HttpClientWrapper();
 
-            var faunaClient = new FaunaClient(
+            var faunaClient0 = new FaunaClient(
                 secret: faunaSecret,
                 endpoint: faunaEndpoint,
                 httpClient: customHttp);
 
-            await faunaClient.Query(Count(Databases()));
+            await faunaClient0.Query(Count(Databases()));
 
             var headers = customHttp.LastMessage.Headers;
             Assert.AreEqual("csharp", headers.GetValues("X-Fauna-Driver").First());
             Assert.AreEqual("2.7", headers.GetValues("X-FaunaDB-API-Version").First());
-            Assert.IsFalse(headers.Contains("X-Query-Timeout"));
             Assert.IsFalse(headers.Contains("X-Last-Seen-Txn"));
 
-            var faunaClientTimeout = new FaunaClient(
+            // the default HttpClient.Timeout is 100 seconds
+            Assert.IsTrue(headers.Contains("X-Query-Timeout"));
+            Assert.AreEqual("100000", headers.GetValues("X-Query-Timeout").First());
+
+            var faunaClient1 = new FaunaClient(
                 secret: faunaSecret,
                 endpoint: faunaEndpoint,
                 httpClient: customHttp,
                 timeout: TimeSpan.FromSeconds(42));
 
-            await faunaClientTimeout.Query(Count(Databases()));
-            await faunaClientTimeout.Query(Count(Collections()));
+            await faunaClient1.Query(Count(Databases()));
+            await faunaClient1.Query(Count(Collections()));
 
             headers = customHttp.LastMessage.Headers;
 
@@ -1931,18 +1934,36 @@ namespace Test
             Assert.IsTrue(long.Parse(headers.GetValues("X-Last-Seen-Txn").First()) > 0);
 
             // specific query timeout
-            await faunaClientTimeout.Query(Count(Collections()), TimeSpan.FromSeconds(10));
+            await faunaClient1.Query(Count(Collections()), TimeSpan.FromSeconds(10));
             Assert.AreEqual("10000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
 
-            await faunaClientTimeout.Query(TimeSpan.FromSeconds(11), Count(Collections()), Count(Databases()));
+            await faunaClient1.Query(TimeSpan.FromSeconds(11), Count(Collections()), Count(Databases()));
             Assert.AreEqual("11000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
 
             // unmodified client timeout
-            await faunaClientTimeout.Query(Count(Collections()), Count(Databases()));
+            await faunaClient1.Query(Count(Collections()), Count(Databases()));
             Assert.AreEqual("42000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
 
-            await faunaClientTimeout.Query(Count(Collections()));
+            await faunaClient1.Query(Count(Collections()));
             Assert.AreEqual("42000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
+
+            // set timeout on HttpClient
+
+            var customHttp2 = new HttpClientWrapper
+            {
+                Timeout = TimeSpan.FromSeconds(33)
+            };
+
+            var faunaClient2 = new FaunaClient(
+                secret: faunaSecret,
+                endpoint: faunaEndpoint,
+                httpClient: customHttp2);
+
+            await faunaClient2.Query(Now());
+
+            headers = customHttp2.LastMessage.Headers;
+            Assert.IsTrue(headers.Contains("X-Query-Timeout"));
+            Assert.AreEqual("33000", headers.GetValues("X-Query-Timeout").First());
         }
 
         [Test]
