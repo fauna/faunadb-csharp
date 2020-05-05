@@ -16,7 +16,9 @@ commands:
 
       - run:
           name: Install Tools
-          command: choco install openjdk11 --install-directory="/c/openjdk11"
+          command: |
+            choco install openjdk11
+            mv "/c/Program\\ Files/OpenJDK/openjdk-11.0.7_10/" "/c/openjdk11/"
 
       - run:
           name: Install FaunaDB
