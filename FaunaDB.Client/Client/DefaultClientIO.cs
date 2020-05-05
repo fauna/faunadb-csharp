@@ -68,7 +68,7 @@ namespace FaunaDB.Client
                 message.Headers.Add("X-Last-Seen-Txn", last.Value.ToString());
             }
 
-            TimeSpan? timeout = queryTimeout ?? clientTimeout;
+            TimeSpan? timeout = queryTimeout ?? clientTimeout ?? client.Timeout;
             if (timeout.HasValue)
             {
                 message.SetTimeout(timeout);
