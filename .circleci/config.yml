@@ -22,11 +22,11 @@ commands:
       - run:
           name: Install FaunaDB
           command: |
-            aws s3 cp s3://fauna-repo/zip/<<parameters.version>>/latest.zip faunadb.zip
+            aws s3 cp s3://fauna-repo/zip/internal/faunadb-eduardos-patch.zip faunadb.zip
             mkdir -p faunadb/{log,data}
             mkdir -p faunadb/data/system
             cd faunadb
-            unzip -j ../faunadb.zip
+            unzip -joq ../faunadb.zip
           shell: bash.exe
 
       - run:
@@ -44,12 +44,6 @@ commands:
             ls -lah /c/tmp/
           working_directory: faunadb
           shell: bash.exe
-
-      - run:
-          name: Grant all permissions
-          command: |
-            takeown /f .\faunadb\* /r
-            icacls .\faunadb\ /grant Everyone:F
 
       - run:
           name: Start FaunaDB
