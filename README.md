@@ -112,6 +112,16 @@ var client = new FaunaClient(endpoint: ENDPOINT, secret: SECRET, httpClient: HTT
 
 Except `secret` all other arguments are optional.
 
+You can also pass a custom HttpClient when creating a new FaunaClient:
+
+```csharp
+var http = new HttpClient();
+http.DefaultRequestHeaders.Add("User-Agent", "C# console program");
+http.Timeout = TimeSpan.FromSeconds(15);
+
+var client = new FaunaClient("secret", "http://localhost:9090/", httpClient: http);
+```
+
 #### How to execute a query
 
 ```csharp
@@ -185,7 +195,7 @@ Product product = new Product("Smartphone", 649.90);
 
 await client.Query(
     Create(
-        Ref("classes/product"),
+        Collection("product"),
         Obj("data", Encoder.Encode(product))
     )
 );
@@ -205,6 +215,15 @@ or via the `To<T>()` helper method:
 Value value = await client.Query(Get(Ref(Collection("product"), "123456789")));
 
 IResult<Product> product = value.At("data").To<Product>();
+product.Match(
+    Success: p => Console.WriteLine("Product loaded: {0}", p.Description),
+    Failure: reason => Console.WriteLine($"Something went wrong: {reason}")
+);
+
+// or even:
+
+Product prod = productLoaded.At("data").To<Product>().Value;
+Console.WriteLine("Product loaded: {0}", prod.Description);
 ```
 
 Note that in this case the return type is `IResult<T>`.
