@@ -1,3 +1,12 @@
+## 2.12.0
+- Add `Documents` function
+- Improve encoding from `DateTime` to `DateV` and `TimeV`
+- Improve encoding (with implicit conversion) from `Dictinary<>` to `ObjectV`
+- Add a `HttpClient` to the `FaunaClient` initilization
+- Fix the issue with `NewSessionClient` not passing endpoint/timeout
+- Add query and client `timeout`
+- Add cursor pagination objects: `Cursor`, `After`, and `Before`
+
 ## 2.11.0
 - Add string functions: `StartsWith`, `EndsWith`, `ContainsStr`, `ContainsStrRegex`, and `RegexEscape`
 - Add `Now` function
