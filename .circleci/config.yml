@@ -37,6 +37,8 @@ commands:
             echo "network_broadcast_address: 127.0.0.1" >> faunadb.yml
             echo "storage_data_path: $PWD/data" >> faunadb.yml
             echo "log_path: $PWD/log" >> faunadb.yml
+            echo "temp_path: $PWD/data/tempo" >> faunadb.yml
+            echo "snapshot_path: $PWD/data/snaps" >> faunadb.yml
             touch /c/tmp/gc.log
             java -version
             ls -lah /c/tmp/
