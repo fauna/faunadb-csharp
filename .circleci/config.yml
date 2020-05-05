@@ -18,8 +18,7 @@ commands:
           name: Install Tools
           command: |
             choco install openjdk11
-            mv "/c/Program\\ Files/OpenJDK/openjdk-11.0.7_10/" "/c/openjdk11/"
-
+            New-Item -ItemType SymbolicLink -Target "c:\Program Files\OpenJDK\openjdk-11.0.7_10" -Path "C:\openjdk11"
       - run:
           name: Install FaunaDB
           command: |
