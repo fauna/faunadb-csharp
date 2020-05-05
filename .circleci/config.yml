@@ -46,6 +46,12 @@ commands:
           shell: bash.exe
 
       - run:
+          name: Grant all permissions
+          command: |
+            takeown /f .\faunadb\* /r
+            icacls .\faunadb\ /grant Everyone:F
+
+      - run:
           name: Start FaunaDB
           command: ./faunadb
           background: true
