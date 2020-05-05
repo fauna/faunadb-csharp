@@ -21,7 +21,7 @@ commands:
       - run:
           name: Install FaunaDB
           command: |
-            aws s3 cp s3://fauna-releases/<<parameters.version>>/latest-zip/faunadb.zip .
+            aws s3 cp s3://fauna-repo/zip/<<parameters.version>>/latest.zip .
             mkdir -p faunadb/{log,data}
             cd faunadb
             unzip -j ../faunadb.zip
