@@ -16,15 +16,14 @@ commands:
 
       - run:
           name: Install Tools
-          command: |
-            choco install openjdk11
-            refreshenv
+          command: choco install openjdk11 --install-directory="/c/openjdk11"
 
       - run:
           name: Install FaunaDB
           command: |
             aws s3 cp s3://fauna-repo/zip/<<parameters.version>>/latest.zip faunadb.zip
             mkdir -p faunadb/{log,data}
+            mkdir -p faunadb/data/system
             cd faunadb
             unzip -j ../faunadb.zip
           shell: bash.exe
@@ -37,8 +36,8 @@ commands:
             echo "network_broadcast_address: 127.0.0.1" >> faunadb.yml
             echo "storage_data_path: $PWD/data" >> faunadb.yml
             echo "log_path: $PWD/log" >> faunadb.yml
-            echo "temp_path: $PWD/data/tempo" >> faunadb.yml
-            echo "snapshot_path: $PWD/data/snaps" >> faunadb.yml
+            echo "storage_temp_path: $PWD/data/tempp" >> faunadb.yml
+            echo "storage_snapshot_path: $PWD/data/snaps" >> faunadb.yml
             touch /c/tmp/gc.log
             java -version
             ls -lah /c/tmp/
@@ -87,6 +86,7 @@ jobs:
       FAUNA_ROOT_KEY: secret
       FAUNA_ENDPOINT: http://localhost:8443
       GC_LOG_OPTS: "-Xlog:safepoint,gc*:file=C:\\tmp\\gc.log:time,tid,pid,level:filecount=10,filesize=10m"
+      JAVA: "/c/openjdk11/bin/java"
     steps:
       - build_and_test:
           version: stable
@@ -98,6 +98,7 @@ jobs:
       FAUNA_ROOT_KEY: secret
       FAUNA_ENDPOINT: http://localhost:8443
       GC_LOG_OPTS: "-Xlog:safepoint,gc*:file=C:\\tmp\\gc.log:time,tid,pid,level:filecount=10,filesize=10m"
+      JAVA: "/c/openjdk11/bin/java"
     steps:
       - build_and_test:
           version: nightly
