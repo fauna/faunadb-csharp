@@ -16,7 +16,9 @@ commands:
 
       - run:
           name: Install Tools
-          command: choco install openjdk11 awscli
+          command: |
+            choco install openjdk11
+            refreshenv
 
       - run:
           name: Install FaunaDB
@@ -35,6 +37,9 @@ commands:
             echo "network_broadcast_address: 127.0.0.1" >> faunadb.yml
             echo "storage_data_path: $PWD/data" >> faunadb.yml
             echo "log_path: $PWD/log" >> faunadb.yml
+            touch /c/tmp/gc.log
+            java -version
+            ls -lah /c/tmp/
           working_directory: faunadb
           shell: bash.exe
 
@@ -79,6 +84,7 @@ jobs:
     environment:
       FAUNA_ROOT_KEY: secret
       FAUNA_ENDPOINT: http://localhost:8443
+      GC_LOG_OPTS: "-Xlog:safepoint,gc*:file=C:\\tmp\\gc.log:time,tid,pid,level:filecount=10,filesize=10m"
     steps:
       - build_and_test:
           version: stable
@@ -89,6 +95,7 @@ jobs:
     environment:
       FAUNA_ROOT_KEY: secret
       FAUNA_ENDPOINT: http://localhost:8443
+      GC_LOG_OPTS: "-Xlog:safepoint,gc*:file=C:\\tmp\\gc.log:time,tid,pid,level:filecount=10,filesize=10m"
     steps:
       - build_and_test:
           version: nightly
