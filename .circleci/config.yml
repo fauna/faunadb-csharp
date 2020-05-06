@@ -2,64 +2,14 @@ version: 2.1
 description: FaunaDB C# Driver Tests
 
 orbs:
-  windows: circleci/windows@2.2.0
+  win: circleci/windows@2.2.0
 
-commands:
-  build_and_test:
-    description: "Run C# tests"
-    parameters:
-      version:
-        type: enum
-        enum: ["stable", "nightly"]
+jobs:
+  build:
+    executor: win/default
     steps:
+     
       - checkout
-
-      - run:
-          name: Install Tools
-          command: choco install openjdk11 awscli
-
-      - run:
-          name: Install FaunaDB
-          command: |
-            aws s3 cp s3://fauna-repo/zip/<<parameters.version>>/latest.zip faunadb.zip
-            mkdir -p faunadb/{log,data}
-            cd faunadb
-            unzip -j ../faunadb.zip
-          shell: bash.exe
-
-      - run:
-          name: Configure FaunaDB
-          command: |
-            echo "auth_root_key: secret" >> faunadb.yml
-            echo "cluster_name: fauna-windows" >> faunadb.yml
-            echo "network_broadcast_address: 127.0.0.1" >> faunadb.yml
-            echo "storage_data_path: $PWD/data" >> faunadb.yml
-            echo "log_path: $PWD/log" >> faunadb.yml
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Start FaunaDB
-          command: ./faunadb
-          background: true
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Wait for FaunaDB to start
-          command: "while ! netstat -tna | grep 'LISTEN' | grep '8444'; do sleep 0.1; done"
-          shell: bash.exe
-
-      - run:
-          name: Initialize FaunaDB
-          command: ./faunadb-admin -r windows init
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Wait for FaunaDB to init
-          command: "while ! $(curl --output /dev/null --silent --fail localhost:8443/ping); do sleep 0.1; done"
-          shell: bash.exe
 
       - run:
           name: Run Tests
@@ -71,33 +21,3 @@ commands:
 
       - store_test_results:
           path: FaunaDB.Client.Test/results/
-
-jobs:
-  core-stable:
-    executor:
-      name: windows/default
-    environment:
-      FAUNA_ROOT_KEY: secret
-      FAUNA_ENDPOINT: http://localhost:8443
-    steps:
-      - build_and_test:
-          version: stable
-
-  core-nightly:
-    executor:
-      name: windows/default
-    environment:
-      FAUNA_ROOT_KEY: secret
-      FAUNA_ENDPOINT: http://localhost:8443
-    steps:
-      - build_and_test:
-          version: nightly
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - core-stable:
-          context: faunadb-drivers
-      - core-nightly:
-          context: faunadb-drivers
