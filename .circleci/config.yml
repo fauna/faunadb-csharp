@@ -1,114 +1,28 @@
 version: 2.1
 description: FaunaDB C# Driver Tests
-
-orbs:
-  windows: circleci/windows@2.2.0
-
-commands:
-  build_and_test:
-    description: "Run C# tests"
-    parameters:
-      version:
-        type: enum
-        enum: ["stable", "nightly"]
+jobs:
+  build:
+    macos:
+      xcode: 11.3.0
     steps:
       - checkout
-
       - run:
-          name: Install Tools
+          name: Run Unit Tests
+          command: xcodebuild -version
+      - run:
+          name: Install Dotnet
           command: |
-            choco install openjdk11
-            New-Item -ItemType SymbolicLink -Target "c:\Program Files\OpenJDK\openjdk-11.0.7_10" -Path "C:\openjdk11"
-      - run:
-          name: Install FaunaDB
-          command: |
-            aws s3 cp s3://fauna-repo/zip/internal/faunadb-eduardos-patch.zip faunadb.zip
-            mkdir -p faunadb/{log,data}
-            mkdir -p faunadb/data/system
-            cd faunadb
-            unzip -joq ../faunadb.zip
-          shell: bash.exe
-
-      - run:
-          name: Configure FaunaDB
-          command: |
-            echo "auth_root_key: secret" >> faunadb.yml
-            echo "cluster_name: fauna-windows" >> faunadb.yml
-            echo "network_broadcast_address: 127.0.0.1" >> faunadb.yml
-            echo "storage_data_path: $PWD/data" >> faunadb.yml
-            echo "log_path: $PWD/log" >> faunadb.yml
-            echo "storage_temp_path: $PWD/data/tempp" >> faunadb.yml
-            echo "storage_snapshot_path: $PWD/data/snaps" >> faunadb.yml
-            touch /c/tmp/gc.log
-            java -version
-            ls -lah /c/tmp/
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Start FaunaDB
-          command: ./faunadb
-          background: true
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Wait for FaunaDB to start
-          command: "while ! netstat -tna | grep 'LISTEN' | grep '8444'; do sleep 0.1; done"
-          shell: bash.exe
-
-      - run:
-          name: Initialize FaunaDB
-          command: ./faunadb-admin -r windows init
-          working_directory: faunadb
-          shell: bash.exe
-
-      - run:
-          name: Wait for FaunaDB to init
-          command: "while ! $(curl --output /dev/null --silent --fail localhost:8443/ping); do sleep 0.1; done"
-          shell: bash.exe
-
+            curl https://download.visualstudio.microsoft.com/download/pr/5b8d25c1-85e1-4b18-8d96-b14115586319/78ff638656c3a90324e810f8dd157422/dotnet-sdk-2.2.207-osx-x64.tar.gz --output install.tar.gz 
+            mkdir install-dotnet/
+            cd install-dotnet
+            tar -xzvf ../install.tar.gz
+            ./dotnet --version
+            cd ../
       - run:
           name: Run Tests
           command: |
             mkdir -p results/junit
-            dotnet restore
-            dotnet test --framework netcoreapp2.0 --logger "junit;LogFilePath=./results/junit/results.xml" FaunaDB.Client.Test
-          shell: bash.exe
-
+            ./install-dotnet/dotnet restore
+            ./install-dotnet/dotnet test --framework netcoreapp2.0 --logger "junit;LogFilePath=./results/junit/results.xml" FaunaDB.Client.Test
       - store_test_results:
           path: FaunaDB.Client.Test/results/
-
-jobs:
-  core-stable:
-    executor:
-      name: windows/default
-    environment:
-      FAUNA_ROOT_KEY: secret
-      FAUNA_ENDPOINT: http://localhost:8443
-      GC_LOG_OPTS: "-Xlog:safepoint,gc*:file=C:\\tmp\\gc.log:time,tid,pid,level:filecount=10,filesize=10m"
-      JAVA: "/c/openjdk11/bin/java"
-    steps:
-      - build_and_test:
-          version: stable
-
-  core-nightly:
-    executor:
-      name: windows/default
-    environment:
-      FAUNA_ROOT_KEY: secret
-      FAUNA_ENDPOINT: http://localhost:8443
-      GC_LOG_OPTS: "-Xlog:safepoint,gc*:file=C:\\tmp\\gc.log:time,tid,pid,level:filecount=10,filesize=10m"
-      JAVA: "/c/openjdk11/bin/java"
-    steps:
-      - build_and_test:
-          version: nightly
-
-workflows:
-  version: 2
-  build_and_test:
-    jobs:
-      - core-stable:
-          context: faunadb-drivers
-      - core-nightly:
-          context: faunadb-drivers
