@@ -115,8 +115,12 @@ Except `secret` all other arguments are optional.
 You can also pass a custom HttpClient when creating a new FaunaClient:
 
 ```csharp
+// using System.Net.Http;
 var http = new HttpClient();
-http.DefaultRequestHeaders.Add("User-Agent", "C# console program");
+
+// The default request headers can be any string values, but should be specific to your application.
+http.DefaultRequestHeaders.Add("X-Custom-Header", "42");
+
 http.Timeout = TimeSpan.FromSeconds(15);
 
 var client = new FaunaClient("secret", "http://localhost:9090/", httpClient: http);
