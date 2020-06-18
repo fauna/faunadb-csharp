@@ -1323,11 +1323,20 @@ namespace Test
                 "role", "admin"
             )));
 
+            RefV serverKeyRef = serverKey.Get(REF_FIELD);
+            RefV adminKeyRef = adminKey.Get(REF_FIELD);
+
             Assert.That((await client.Query(Paginate(Keys()))).Get(DATA),
-                        Is.EquivalentTo(new List<RefV> { serverKey.Get(REF_FIELD), adminKey.Get(REF_FIELD) }));
+                        Is.EquivalentTo(new List<RefV> { serverKeyRef, adminKeyRef }));
+
+            RefV parentDbRef = new RefV(id: parentDb, collection: new RefV("databases"));
+            RefV nestedKeyRef = new RefV(id: "keys", database: parentDbRef);
 
             Assert.That((await adminClient.Query(Paginate(Keys(Database(parentDb))))).Get(DATA),
-                        Is.EquivalentTo(new List<RefV> { serverKey.Get(REF_FIELD), adminKey.Get(REF_FIELD) }));
+                        Is.EquivalentTo(new List<RefV> {
+                            new RefV(id: serverKeyRef.Id, collection: nestedKeyRef),
+                            new RefV(id: adminKeyRef.Id, collection: nestedKeyRef)
+                        }));
         }
 
         [Test]
