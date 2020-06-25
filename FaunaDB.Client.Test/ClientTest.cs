@@ -880,16 +880,105 @@ namespace Test
             );
         }
 
-        [Test] public async Task TestEvalContainsExpression()
+        [Test] public async Task TestEvalContainsExpressions()
         {
-            Value contains = await client.Query(
-                Contains(
-                    Path("favorites", "foods"),
-                    Obj("favorites",
-                        Obj("foods", Arr("crunchings", "munchings"))))
-            );
+            var foodsObj = Obj("foods",
+                Arr(
+                    Obj("crunchings", "apple"),
+                    Obj("munchings", "peanuts")
+                ));
 
-            Assert.AreEqual(BooleanV.True, contains);
+            var favoritesObj = Obj("favorites", foodsObj);
+
+            // Deprecated
+
+            Assert.AreEqual(BooleanV.True,
+                await client.Query(Contains(Path("favorites", "foods"), favoritesObj)));
+
+            // Field
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsField(StringV.Of("favorites"), favoritesObj)));
+                        
+            Assert.AreEqual(
+                BooleanV.False,
+                await client.Query(ContainsField(StringV.Of("foods"), favoritesObj)));
+
+            // Path
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsPath(Path("favorites"), favoritesObj)));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsPath(Path("favorites", "foods"), favoritesObj)));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsPath(Path(1), Arr("favorites", "foods"))));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(
+                    ContainsPath(Path("wrapped", "favorites", "foods"),
+                    Obj("wrapped", favoritesObj))));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(
+                    ContainsPath(Path("wrapped", "favorites", "foods", 1, "munchings"),
+                    Obj("wrapped", favoritesObj))));
+
+            Assert.AreEqual(
+                BooleanV.False,
+                await client.Query(
+                    ContainsPath(Path("wrapped", "favorites", "foods", 2),
+                    Obj("wrapped", favoritesObj))));
+
+            // Values
+
+            Assert.AreEqual(
+                BooleanV.False,
+                await client.Query(ContainsValue("foo", Obj("foo", "bar"))));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsValue("bar", Obj("foo", "bar"))));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsValue("bar", Arr("foo", "bar"))));
+
+            // refs and sets
+
+            RefV aCollection = await RandomCollection();
+
+            var indexName = RandomStartingWith("foo_index_");
+
+            await client.Query(CreateIndex(Obj(
+                "name", indexName,
+                "source", aCollection,
+                "active", true,
+                "terms", Arr(Obj("field", Arr("data", "name"))),
+                "values", Arr(Obj("field", Arr("data", "color")))
+            )));
+
+            RefV newRef = GetRef(await client.Query(Create(
+                Ref(aCollection, "122333"),
+                Obj("data", Obj("name", "apple", "color", "green"))
+             )));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsValue("122333", newRef)));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsValue(
+                    "green",
+                    Match(Index(indexName), "apple"))));
         }
 
         [Test] public async Task TestEvalSelectExpression()
@@ -1920,7 +2009,7 @@ namespace Test
 
             var headers = customHttp.LastMessage.Headers;
             Assert.AreEqual("csharp", headers.GetValues("X-Fauna-Driver").First());
-            Assert.AreEqual("2.7", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("3", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.IsFalse(headers.Contains("X-Last-Seen-Txn"));
 
             // the default HttpClient.Timeout is 100 seconds
@@ -1938,7 +2027,7 @@ namespace Test
 
             headers = customHttp.LastMessage.Headers;
 
-            Assert.AreEqual("2.7", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("3", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.AreEqual("42000", headers.GetValues("X-Query-Timeout").First());
             Assert.IsTrue(long.Parse(headers.GetValues("X-Last-Seen-Txn").First()) > 0);
 
