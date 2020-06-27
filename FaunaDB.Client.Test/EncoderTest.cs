@@ -369,5 +369,33 @@ namespace Test
                 Encode(indexCfg)
             );
         }
+
+        class StringOverride
+        {
+            [FaunaField("uri")]
+            [FaunaString]
+            public Uri Uri { get; set; }
+
+            [FaunaField("guid")]
+            [FaunaString]
+            public Guid Guid { get; set; }
+
+            public StringOverride(Uri uri, Guid guid)
+            {
+                this.Uri = uri;
+                this.Guid = guid;
+            }
+        }
+
+        [Test]
+        public void TestStringOverride()
+        {
+            Uri testUri = new Uri("https://fauna.com");
+            Guid testGuid = Guid.NewGuid();
+            Assert.AreEqual(
+                ObjectV.With("uri", new StringV(testUri.ToString()), "guid", new StringV(testGuid.ToString())),
+                Encode(new StringOverride(testUri, testGuid))
+            );
+        }
     }
 }

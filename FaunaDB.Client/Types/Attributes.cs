@@ -92,7 +92,31 @@ namespace FaunaDB.Types
     /// </example>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
     public class FaunaTime : Attribute
-    {}
+    { }
+
+    /// <summary>
+    /// Instruct the encoder that this object should be treated as a string when
+    /// stored in Fauna. The Encoder will call the object or primative type's
+    /// .ToString() method. The Decoder will attempt to create an object with the
+    /// constructor with a single string parameter. If it does not have that
+    /// constructor the Decoder will fail. For primatives the Decoder will attempt
+    /// to use standard system conversions to convert the string back to the
+    /// primative type.
+    /// </summary>
+    /// <example>
+    /// class Website
+    /// {
+    ///     [FaunaString]
+    ///     public Uri MyLink { get; set; }
+    /// }
+    ///
+    /// var web = new Website { MyLink = new Uri("http://fauanadb.com") };
+    ///
+    /// var encodedWebsite = Encoder.Encode(web);
+    /// </example>
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
+    public class FaunaString : Attribute
+    { }
 
     /// <summary>
     /// Instruct the encoder to not encode the specified member.

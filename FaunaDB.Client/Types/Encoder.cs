@@ -47,7 +47,7 @@ namespace FaunaDB.Types
 
         Stack<object> stack = new Stack<object>();
 
-        public Value Encode(object obj, Type type = null)
+        public Value Encode(object obj, Type forceType = null)
         {
             if (obj == null)
                 return NullV.Instance;
@@ -65,7 +65,7 @@ namespace FaunaDB.Types
             {
                 stack.Push(obj);
 
-                return EncodeIntern(obj, type);
+                return EncodeIntern(obj, forceType);
             }
             finally
             {
@@ -88,6 +88,11 @@ namespace FaunaDB.Types
         Value EncodeIntern(object obj, Type forceType)
         {
             var type = obj.GetType();
+
+            if (forceType == typeof(StringV))
+            {
+                return StringV.Of(obj.ToString());
+            }
 
             if (dbNullValue.Equals(obj))
                 return NullV.Instance;
