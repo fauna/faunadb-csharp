@@ -59,5 +59,41 @@
         /// </summary>
         public static Expr HasIdentity() =>
             UnescapedObject.With("has_identity", Null());
+
+        /// <summary>
+        /// Creates a new AccessProviders expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/accessprovider">docs</see>.
+        /// </para>
+        /// </summary>
+        public static Expr AccessProviders(Expr scope = null) =>
+            UnescapedObject.With("access_providers", scope ?? Null());
+
+        /// <summary>
+        /// Creates a new AccessProvider expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/accessprovider">docs</see>.
+        /// </para>
+        /// </summary>
+        public static Expr AccessProvider(Expr name) =>
+            UnescapedObject.With("access_provider", name);
+
+        /// <summary>
+        /// Creates a new AccessProvider expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/accessprovider">docs</see>.
+        /// </para>
+        /// </summary>
+        public static Expr AccessProvider(Expr name, Expr scope) =>
+            UnescapedObject.With("access_provider", name, "scope", scope);
+
+        /// <summary>
+        /// Creates a new CreateAccessProvider expression.
+        /// <para>
+        /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#write-functions">docs</see>.
+        /// </para>
+        /// </summary>
+        public static Expr CreateAccessProvider(Expr expr) =>
+            UnescapedObject.With("create_access_provider", expr);
     }
 }

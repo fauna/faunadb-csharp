@@ -1920,7 +1920,7 @@ namespace Test
 
             var headers = customHttp.LastMessage.Headers;
             Assert.AreEqual("csharp", headers.GetValues("X-Fauna-Driver").First());
-            Assert.AreEqual("2.7", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("3", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.IsFalse(headers.Contains("X-Last-Seen-Txn"));
 
             // the default HttpClient.Timeout is 100 seconds
@@ -1938,7 +1938,7 @@ namespace Test
 
             headers = customHttp.LastMessage.Headers;
 
-            Assert.AreEqual("2.7", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("3", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.AreEqual("42000", headers.GetValues("X-Query-Timeout").First());
             Assert.IsTrue(long.Parse(headers.GetValues("X-Last-Seen-Txn").First()) > 0);
 
@@ -1988,6 +1988,92 @@ namespace Test
 
             Assert.AreEqual("POST", myHttpClient.LastMessage.Method.ToString());
             Assert.AreEqual(faunaEndpoint, myHttpClient.LastMessage.RequestUri.ToString());
+        }
+
+        [Test]
+        public async Task TestAuthProviders()
+        {
+            string roleName = RandomStartingWith("role_");
+            string accessProviderName = RandomStartingWith("access_prov_");
+            string issuerName = RandomStartingWith("issuer_");
+            string jwksUri = "https://xxxx.auth0.com/";
+
+            RefV collection = await RandomCollection();
+
+            RefV role = GetRef(await adminClient.Query(CreateRole(Obj(
+                    "name", roleName,
+                    "privileges", Arr(Obj(
+                        "resource", collection,
+                        "actions", Obj("read", true)
+                    ))
+            ))));
+
+            Value accessProvider = await adminClient.Query(CreateAccessProvider(
+                Obj(
+                    "name", accessProviderName,
+                    "issuer", issuerName,
+                    "jwks_uri", jwksUri,
+                    "allowed_collections", Arr(collection),
+                    "allowed_roles", Arr(role)
+                )));
+
+            Assert.AreEqual(
+                accessProviderName,
+                accessProvider.Get(Field.At("name")).To<string>().Value);
+
+            Assert.AreEqual(
+                issuerName,
+                accessProvider.Get(Field.At("issuer")).To<string>().Value);
+
+            Assert.AreEqual(
+                "https://xxxx.auth0.com/",
+                accessProvider.Get(Field.At("jwks_uri")).To<string>().Value);
+
+            Assert.AreEqual(
+                collection,
+                accessProvider.Get(Field.At("allowed_collections")).To<ArrayV>().Value.First());
+
+            Assert.AreEqual(
+                role,
+                accessProvider.Get(Field.At("allowed_roles")).To<ArrayV>().Value.First());
+
+            // Retrieving
+
+            Value accessProviderFromDB =
+                await adminClient.Query(Get(AccessProvider(accessProviderName)));
+
+            Assert.AreEqual(accessProvider, accessProviderFromDB);
+            Assert.AreEqual(
+                jwksUri,
+                accessProviderFromDB.Get(Field.At("jwks_uri")).To<string>().Value);
+
+            // Retrieving: Denied
+
+            var ex = Assert.ThrowsAsync<PermissionDenied>(
+              async () => await client.Query(Get(AccessProvider(accessProviderName)))
+            );
+
+            AssertErrors(ex, code: "permission denied", description: "Insufficient privileges to perform the action.");
+            AssertEmptyFailures(ex);
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
+
+            // Paginating
+
+            var otherName = RandomStartingWith("ap_");
+
+            await adminClient.Query(CreateAccessProvider(
+                Obj(
+                    "name", otherName,
+                    "issuer", RandomStartingWith("ap_"),
+                    "jwks_uri", jwksUri
+                )));
+
+            Value page = await adminClient.Query(Paginate(AccessProviders()));
+            RefV[] pageData = page.Get(DATA).To<RefV[]>().Value;
+
+            Assert.AreEqual(2, pageData.Length);
+            Assert.AreEqual(accessProviderName, pageData.First().Id);
+            Assert.AreEqual(otherName, pageData.Last().Id);
         }
 
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)

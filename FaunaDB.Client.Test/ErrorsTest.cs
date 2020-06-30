@@ -77,8 +77,8 @@ namespace Test
             AssertQueryException<BadRequest>(LTE(), "invalid argument", "Non-empty array expected.", new List<string> { "lte" });
             AssertQueryException<BadRequest>(GT(), "invalid argument", "Non-empty array expected.", new List<string> { "gt" });
             AssertQueryException<BadRequest>(GTE(), "invalid argument", "Non-empty array expected.", new List<string> { "gte" });
-            AssertQueryException<BadRequest>(And(), "invalid argument", "Non-empty array expected.", new List<string> { "and" });
-            AssertQueryException<BadRequest>(Or(), "invalid argument", "Non-empty array expected.", new List<string> { "or" });
+            AssertQueryException<BadRequest>(And(), "invalid expression", "Expression list cannot be empty.", new List<string> { "and" });
+            AssertQueryException<BadRequest>(Or(), "invalid expression", "Expression list cannot be empty.", new List<string> { "or" });
             AssertQueryException<BadRequest>(Union(), "invalid argument", "Non-empty array expected.", new List<string> { "union" });
             AssertQueryException<BadRequest>(Intersection(), "invalid argument", "Non-empty array expected.", new List<string> { "intersection" });
             AssertQueryException<BadRequest>(Difference(), "invalid argument", "Non-empty array expected.", new List<string> { "difference" });
