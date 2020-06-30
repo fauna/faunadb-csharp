@@ -176,7 +176,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-        [Obsolete("Contains is deprecated, please use ContainsField instead.")]
+        [Obsolete("Contains is deprecated, please use ContaisPath instead.")]
         public static Expr Contains(Expr path, Expr @in) =>
             UnescapedObject.With("contains", path, "in", @in);
 
