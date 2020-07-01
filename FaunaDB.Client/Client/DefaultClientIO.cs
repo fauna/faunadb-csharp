@@ -59,7 +59,7 @@ namespace FaunaDB.Client
             message.Headers.Authorization = authHeader;
             message.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            message.Headers.Add("X-FaunaDB-API-Version", "2.7");
+            message.Headers.Add("X-FaunaDB-API-Version", "3");
             message.Headers.Add("X-Fauna-Driver", "csharp");
 
             var last = lastSeen.Txn;

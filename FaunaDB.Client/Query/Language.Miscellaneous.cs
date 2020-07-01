@@ -176,8 +176,27 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
+        [Obsolete("Contains is deprecated, please use ContaisPath instead.")]
         public static Expr Contains(Expr path, Expr @in) =>
             UnescapedObject.With("contains", path, "in", @in);
+
+        /// <summary>
+        /// Creates a new ContainsField expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/containsfield">FaunaDB ConstainsField Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ContainsField(Expr path, Expr @in) =>
+            UnescapedObject.With("contains_field", path, "in", @in);
+
+        /// <summary>
+        /// Creates a new ContainsValue expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/containsvalue">FaunaDB ConstainsValue Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ContainsValue(Expr value, Expr @in) =>
+            UnescapedObject.With("contains_value", value, "in", @in); 
 
         /// <summary>
         /// Creates a new Contains expression.
@@ -185,8 +204,18 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
+        [Obsolete("Contains is deprecated, please use ContainsPath instead.")]
         public static Expr Contains(PathSelector path, Expr @in) =>
             UnescapedObject.With("contains", path.Segments, "in", @in);
+
+        /// <summary>
+        /// Creates a new ContainsPath expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/containspath">FaunaDB ConstainsPath Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ContainsPath(PathSelector path, Expr @in) =>
+            UnescapedObject.With("contains_path", path.Segments, "in", @in);
 
         /// <summary>
         /// Creates a new Select expression.
@@ -194,7 +223,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-       public static Expr Select(Expr path, Expr @from, Expr @default = null) =>
+        public static Expr Select(Expr path, Expr @from, Expr @default = null) =>
             UnescapedObject.With("select", path, "from", @from, "default", @default);
 
         /// <summary>
