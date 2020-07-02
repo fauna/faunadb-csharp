@@ -1490,7 +1490,7 @@ namespace Test
         }
 
         [Test]
-        public async Task TestEchoQuery()
+        public async Task TestVersionedQuery()
         {
             var query = Query(Lambda((x, y) => Concat(Arr(x, "/", y))));
 
@@ -1501,7 +1501,29 @@ namespace Test
             Assert.That(((QueryV)result).Value, Is.EquivalentTo(new Dictionary<string, Expr>
             {
                 {"lambda", Arr("x", "y")},
-                {"expr", Concat(Arr(Var("x"), "/", Var("y")))}
+                {"expr", Concat(Arr(Var("x"), "/", Var("y")))},
+                { "api_version", "3" }
+            }));
+        }
+
+        [Test]
+        public async Task TestQueryLegacy()
+        {
+            var query = new QueryV(new Dictionary<string, Expr>
+            {
+                {"lambda", Arr("x")},
+                {"expr", Add(Var("x"), 1)}
+            });
+
+            var result = await client.Query(query);
+
+            Assert.IsInstanceOf<QueryV>(result);
+
+            Assert.That(((QueryV)result).Value, Is.EquivalentTo(new Dictionary<string, Expr>
+            {
+                {"lambda", Arr("x")},
+                {"expr", Add(Var("x"), 1)},
+                { "api_version", "2.12" }
             }));
         }
 
