@@ -1,3 +1,11 @@
+## 3.0.0
+- Deprecate `Contains` in favor of specific functions `ContainsField`, `ContainsPath`, and `ContainsValue`
+- Add `Reverse` function
+- Add new Fauna attributes annotations:`FaunaString`, `FaunaTime`, and `FaunaDate`
+- implicit `BytesV` conversion from `bytes[]`
+- Improve `ToString` for Fauna types
+- Support versioned lambdas
+
 ## 2.12.0
 - Add `Documents` function
 - Improve encoding from `DateTime` to `DateV` and `TimeV`
