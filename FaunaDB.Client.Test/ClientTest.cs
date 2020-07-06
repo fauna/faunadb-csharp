@@ -1661,6 +1661,40 @@ namespace Test
                 await SelectData(Range(m, 11, 10)));
         }
 
+        [Test]
+        public async Task TestReverseFunction()
+        {
+            // array
+
+            Assert.AreEqual(
+                new int[] { 3, 2, 1, 0 },
+                (await client.Query(Reverse(Arr(0, 1, 2, 3)))).To<int[]>().Value);
+
+            Assert.AreEqual(
+                new int[] { 0, 1, 2, 3 },
+                (await client.Query(Reverse(Reverse(Arr(0, 1, 2, 3))))).To<int[]>().Value);
+
+            Assert.AreEqual(
+                ArrayV.Empty,
+                await client.Query(Reverse(Arr())));
+
+            // set/page
+
+            var colName = RandomStartingWith("foo_coll");
+            var idxName = RandomStartingWith("foo_idx");
+            await NewCollectionWithValues(colName, idxName, size: 5);
+
+            var match = Match(Index(idxName));
+
+            Assert.AreEqual(
+                ArrayV.Of(5, 4, 3, 2, 1),
+                (await client.Query(Paginate(Reverse(match)))).Get(DATA));
+
+            Assert.AreEqual(
+                ArrayV.Of(5, 4, 3, 2, 1),
+                (await client.Query(Reverse(Paginate(match)))).Get(DATA));
+        }
+
         private async Task<Value> SelectData(Expr set)
         {
             return await client.Query(Select("data", Paginate(set)));

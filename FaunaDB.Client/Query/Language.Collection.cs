@@ -187,5 +187,23 @@
         /// </example>
         public static Expr IsNonEmpty(Expr collection) =>
             UnescapedObject.With("is_nonempty", collection);
+
+
+        /// <summary>
+        /// Creates a new Reverse expression.
+        /// <para>
+        /// <see href="https://docs.fauna.com/fauna/current/api/fql/functions/reverse">FaunaDB Reverse Function</see>
+        /// </para>
+        /// </summary>
+        /// <param name="expr">An expression</param>
+        /// <example>
+        /// <code>
+        /// var result = await client.Query(Reverse(Arr(0, 1, 2, 3)));
+        ///
+        /// Assert.AreEqual(new int[] { 3, 2, 1, 0 }, result.To<int[]>().Value);
+        /// </code>
+        /// </example>
+        public static Expr Reverse(Expr expr) =>
+            UnescapedObject.With("reverse", expr);
     }
 }
