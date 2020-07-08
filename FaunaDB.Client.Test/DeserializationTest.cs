@@ -222,6 +222,15 @@ namespace Test
                 new QueryV(new Dictionary<string, Expr> { { "lambda", "x" }, { "expr", Add(Var("x"), 1) } }),
                 "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]}}}"
             );
+
+            AssertJsonEqual(
+              new QueryV(new Dictionary<string, Expr> {
+                    { "lambda", "x" },
+                    { "expr", Add(Var("x"), 1) },
+                    { "api_version", "2.12" }
+              }),
+              "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]},\"api_version\":\"2.12\"}}"
+          );
         }
 
         [Test]
