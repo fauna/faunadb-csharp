@@ -725,5 +725,113 @@ namespace Test
             Assert.AreEqual(10, structWithNullableFields.aStruct?.aByte);
             Assert.IsNull(structWithNullableFields.aStruct?.aShort);
         }
+
+        class StringOverride
+        {
+            [FaunaField("uri")]
+            [FaunaString]
+            public Uri Uri { get; set; }
+
+            [FaunaField("guid")]
+            [FaunaString]
+            public Guid Guid { get; set; }
+
+            [FaunaField("int")]
+            [FaunaString]
+            public int Int { get; set; }
+
+            [FaunaField("double")]
+            [FaunaString]
+            public double Double { get; set; }
+
+            [FaunaConstructor]
+            public StringOverride()
+            { }
+
+            public StringOverride(Uri uri, Guid guid)
+            {
+                this.Uri = uri;
+                this.Guid = guid;
+            }
+        }
+
+        [Test]
+        public void TestStringOverride()
+        {
+            string uriString = "https://fauna.com/";
+            Uri testUri = new Uri(uriString);
+            Guid testGuid = Guid.NewGuid();
+            string guidString = testGuid.ToString();
+
+            int @int = 1;
+            double @double = 4.5;
+
+            StringOverride obj = Decode<StringOverride>(ObjectV.With(
+                "uri", new StringV(uriString),
+                "guid", new StringV(guidString),
+                "double", new StringV(@double.ToString()),
+                "int", new StringV(@int.ToString())
+                ));
+            Assert.AreEqual(obj.Uri.ToString(), uriString);
+            Assert.AreEqual(obj.Guid.ToString(), guidString);
+            Assert.AreEqual(obj.Int, @int);
+            Assert.AreEqual(obj.Double, @double);
+        }
+
+        class StringOverrideOnConstuctorCreator
+        {
+            [FaunaField("uri")]
+            [FaunaString]
+            public Uri Uri { get; set; }
+
+            [FaunaField("guid")]
+            [FaunaString]
+            public Guid Guid { get; set; }
+
+            [FaunaField("int")]
+            [FaunaString]
+            public int Int { get; set; }
+
+            [FaunaField("double")]
+            [FaunaString]
+            public double Double { get; set; }
+
+            [FaunaConstructor]
+            public StringOverrideOnConstuctorCreator(
+                [FaunaString][FaunaField("uri")] Uri uri,
+                [FaunaString][FaunaField("guid")]Guid guid,
+                [FaunaString][FaunaField("int")]int @int,
+                [FaunaString][FaunaField("double")]double @double)
+            {
+                this.Uri = uri;
+                this.Guid = guid;
+                this.Int = @int;
+                this.Double = @double;
+            }
+        }
+
+        [Test]
+        public void TestStringOverrideOnConstuctorCreator()
+        {
+            string uriString = "https://fauna.com/";
+            Uri testUri = new Uri(uriString);
+            Guid testGuid = Guid.NewGuid();
+            string guidString = testGuid.ToString();
+
+            int @int = 1;
+            double @double = 4.5;
+
+            StringOverrideOnConstuctorCreator obj = Decode<StringOverrideOnConstuctorCreator>(ObjectV.With(
+                "uri", new StringV(uriString),
+                "guid", new StringV(guidString),
+                "double", new StringV(@double.ToString()),
+                "int", new StringV(@int.ToString())
+                ));
+
+            Assert.AreEqual(obj.Uri.ToString(), uriString);
+            Assert.AreEqual(obj.Guid.ToString(), guidString);
+            Assert.AreEqual(obj.Int, @int);
+            Assert.AreEqual(obj.Double, @double);
+        }
     }
 }

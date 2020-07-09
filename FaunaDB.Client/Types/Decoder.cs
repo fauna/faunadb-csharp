@@ -72,7 +72,7 @@ namespace FaunaDB.Types
             return new InvalidCastException($"Invalid cast from '{from}' to '{to}'.");
         }
 
-        public static object Decode(Value value, Type dstType)
+        public static object Decode(Value value, Type dstType, Type forceType = null)
         {
             if (value == NullV.Instance && dstType == typeof(Value))
                 return value;
@@ -80,10 +80,10 @@ namespace FaunaDB.Types
             if (value == null || value == NullV.Instance)
                 return dstType.GetTypeInfo().IsValueType ? Activator.CreateInstance(dstType) : null;
 
-            return DecodeIntern(value, dstType);
+            return DecodeIntern(value, dstType, forceType);
         }
 
-        static object DecodeIntern(Value value, Type dstType)
+        static object DecodeIntern(Value value, Type dstType, Type forceType = null)
         {
             if (typeof(Value).IsAssignableFrom(dstType))
             {
@@ -143,7 +143,17 @@ namespace FaunaDB.Types
 
                 case TypeCode.Object:
                     if (typeof(DateTimeOffset) == dstType)
+                    {
+                        if (forceType == typeof(StringV) && value.GetType() == typeof(StringV))
+                        {
+                            if (value != null && value != NullV.Instance)
+                                return new DateTimeOffset(Convert.ToDateTime(ToString(value)));
+                            else if (dstType.Is(typeof(Nullable<>)))
+                                return null;
+                            return default(DateTimeOffset);
+                        }
                         return new DateTimeOffset(ToDateTime(value));
+                    }
 
                     if (typeof(byte[]) == dstType && value is BytesV)
                         return ToByteArray(value);
@@ -159,6 +169,14 @@ namespace FaunaDB.Types
 
                     if (typeof(IList).IsAssignableFrom(dstType) || (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(IEnumerable<>))))
                         return FromEnumerable(value, dstType);
+
+                    // All other objects with forcetype StringV
+                    if (forceType == typeof(StringV) && value.GetType() == typeof(StringV))
+                    {
+                        if (value != null && value != NullV.Instance)
+                            return Activator.CreateInstance(dstType, ToString(value));
+                        return null;
+                    }
 
                     if (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(Nullable<>)))
                         return DecodeIntern(value, Nullable.GetUnderlyingType(dstType));
@@ -419,7 +437,6 @@ namespace FaunaDB.Types
 
                 throw new InvalidOperationException($"No default constructor or constructor/static method annotated with attribute [FaunaConstructor] found on type `{dstType}`");
             }
-
             return FromConstructor(constructor, dstType);
         }
 
@@ -459,13 +476,13 @@ namespace FaunaDB.Types
                 .GetAllFields()
                 .Where(f => !ignoreProperties.Contains(f.GetName()))
                 .Where(f => !f.Has<CompilerGeneratedAttribute>() && !f.Has<FaunaIgnoreAttribute>())
-                .Select(f => Expression.Assign(Expression.Field(varExpr, f), CallDecode(CallGetValue(objExpr, f, f.FieldType), f.FieldType)));
+                .Select(f => Expression.Assign(Expression.Field(varExpr, f), CallDecode(CallGetValue(objExpr, f, f.FieldType), f.FieldType, f.GetOverrideType())));
 
             var properties = dstType
                 .GetProperties()
                 .Where(p => !ignoreProperties.Contains(p.GetName()))
                 .Where(p => p.CanWrite && !p.Has<FaunaIgnoreAttribute>())
-                .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p, p.PropertyType), p.PropertyType)));
+                .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p, p.PropertyType), p.PropertyType, p.GetOverrideType())));
 
             var concat = fields.Concat(properties);
 
@@ -481,7 +498,7 @@ namespace FaunaDB.Types
             var target = Expression.Label(dstType);
 
             var parametersExpr = parameters
-                .Select(p => CallDecode(CallGetValue(objExpr, p), p.ParameterType));
+                .Select(p => CallDecode(CallGetValue(objExpr, p), p.ParameterType, p.GetOverrideType()));
 
             var ignoreProperties = parameters.Select(p => p.GetName());
 
@@ -566,16 +583,15 @@ namespace FaunaDB.Types
         /*
          * Decode( objExpr, type )
          */
-        static Expression CallDecode(Expression objExpr, Type type)
+        static Expression CallDecode(Expression objExpr, Type type, Type overrideType = null)
         {
             var decodeMethod = typeof(DecoderImpl).GetMethod(
-                "Decode", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Value), typeof(Type) }, null
+                "Decode", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Value), typeof(Type), typeof(Type) }, null
             );
 
             var decodeExpr = Expression.Call(
                 decodeMethod,
-                objExpr,
-                Expression.Constant(type)
+                new Expression[] { objExpr, Expression.Constant(type), Expression.Constant(overrideType, typeof(Type)) }
             );
 
             return type.GetTypeInfo().IsValueType
