@@ -1264,9 +1264,37 @@ namespace Test
 
         [Test] public async Task TestBytes()
         {
-            Value bytes = await client.Query(new BytesV(0x1, 0x2, 0x3));
+            BytesV expected = BytesV.Of(0x1, 0x2, 0x3);
 
-            Assert.AreEqual(new BytesV(0x1, 0x2, 0x3), bytes);
+            //type
+            Assert.AreEqual(
+                expected,
+                await client.Query(expected)
+            );
+
+            //implicit conversion
+            Assert.AreEqual(
+                expected,
+                await client.Query(new byte[] { 0x1, 0x2, 0x3 })
+            );
+
+            //function call
+            Assert.AreEqual(
+                expected,
+                await client.Query(Bytes(0x1, 0x2, 0x3))
+            );
+
+            //nested object
+            Value obj = await client.Query(Obj(
+                "x", new byte[] { 0x1, 0x2, 0x3 },
+                "y", Bytes(0x1, 0x2, 0x3),
+                "z", expected
+            ));
+            Assert.AreEqual(ObjectV.With(
+                "x", expected,
+                "y", expected,
+                "z", expected
+            ), obj);
         }
 
         class Spell

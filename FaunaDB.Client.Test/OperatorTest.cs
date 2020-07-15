@@ -32,6 +32,7 @@ namespace Test
             Assert.AreEqual(
                 ObjectV.With("name", "foo", "count", 42),
                 (Expr)new Dictionary<string, Expr>() {{ "name", "foo" }, { "count", 42 }});
+            Assert.AreEqual(BytesV.Of(1, 2, 3), (Expr)new byte[] { 1, 2, 3 });
         }
 
         [Test]
@@ -54,6 +55,7 @@ namespace Test
             Assert.AreEqual(TimeV.Of("2000-01-01T01:01:01.123Z"), (Value)new DateTime(2000, 1, 1, 1, 1, 1, 123, DateTimeKind.Utc));
             Assert.AreEqual(TimeV.Of("2000-01-01T01:01:01.123Z"), (Value)new DateTimeOffset(2000, 1, 1, 1, 1, 1, 123, TimeSpan.Zero));
             Assert.AreEqual(NullV.Instance, (Value)(string)null);
+            Assert.AreEqual(BytesV.Of(1, 2, 3), (Value)new byte[] { 1, 2, 3 });
         }
 
 

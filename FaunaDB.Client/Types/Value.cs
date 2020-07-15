@@ -164,6 +164,9 @@ namespace FaunaDB.Types
         public static implicit operator Value(DateTimeOffset dt) =>
             FromDateTimeOffset(dt);
 
+        public static implicit operator Value(byte[] bytes) =>
+            new BytesV(bytes);
+
         internal static Value FromDateTime(DateTime dt, Type forceType = null)
         {
             if(forceType == typeof(DateV))
