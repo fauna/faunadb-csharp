@@ -48,7 +48,7 @@ namespace FaunaDB.Types
         public override string ToString()
         {
             var str = Value.Select(b => string.Format("0x{0:x2}", b));
-            return "BytesV(" + string.Join(", ", str) + ")";
+            return "Bytes(" + string.Join(", ", str) + ")";
         }
 
         /// <summary>
