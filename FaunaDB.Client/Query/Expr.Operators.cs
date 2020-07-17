@@ -33,6 +33,9 @@ namespace FaunaDB.Query
         public static implicit operator Expr(Dictionary<string, Expr> dict) =>
             Encoder.Encode(dict);
 
+        public static implicit operator Expr(byte[] bytes) =>
+            BytesV.Of(bytes);
+
         public static implicit operator Expr(ActionType action)
         {
             switch (action)

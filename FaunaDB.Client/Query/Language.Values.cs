@@ -185,6 +185,12 @@ namespace FaunaDB.Query
         public static Expr Obj(IReadOnlyDictionary<string, Expr> fields) =>
             UnescapedObject.With("object", new UnescapedObject(fields));
 
+        /// <summary>
+        /// Creates a new Bytes value
+        /// </summary>
+        public static Expr Bytes(params byte[] bytes) =>
+            BytesV.Of(bytes);
+
         static Expr Varargs(Expr[] values)
         {
             if (values == null) return Null();
