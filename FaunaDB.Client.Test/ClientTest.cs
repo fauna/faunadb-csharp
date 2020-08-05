@@ -913,7 +913,15 @@ namespace Test
 
             Assert.AreEqual(
                 BooleanV.True,
+                await client.Query(ContainsPath("favorites", favoritesObj)));
+
+            Assert.AreEqual(
+                BooleanV.True,
                 await client.Query(ContainsPath(Path("favorites", "foods"), favoritesObj)));
+
+            Assert.AreEqual(
+                BooleanV.True,
+                await client.Query(ContainsPath(Arr("favorites", "foods"), favoritesObj)));
 
             Assert.AreEqual(
                 BooleanV.True,

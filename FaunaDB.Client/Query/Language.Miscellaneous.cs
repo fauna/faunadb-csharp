@@ -218,6 +218,15 @@ namespace FaunaDB.Query
             UnescapedObject.With("contains_path", path.Segments, "in", @in);
 
         /// <summary>
+        /// Creates a new ContainsPath expression.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/containspath">FaunaDB ConstainsPath Function</see>
+        /// </para>
+        /// </summary>
+        public static Expr ContainsPath(Expr expr, Expr @in) =>
+            UnescapedObject.With("contains_path", expr, "in", @in);
+
+        /// <summary>
         /// Creates a new Select expression.
         /// <para>
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
