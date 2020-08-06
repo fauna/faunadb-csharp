@@ -71,7 +71,6 @@ namespace FaunaDB.Types
 
     public static class Native
     {
-        public static readonly RefV ACCESS_PROVIDERS = new RefV("access_providers"); 
         public static readonly RefV COLLECTIONS = new RefV("collections");
         public static readonly RefV INDEXES = new RefV("indexes");
         public static readonly RefV DATABASES = new RefV("databases");
@@ -85,7 +84,6 @@ namespace FaunaDB.Types
         {
             switch (name)
             {
-                case "access_providers": return ACCESS_PROVIDERS;
                 case "collections": return COLLECTIONS;
                 case "indexes": return INDEXES;
                 case "databases": return DATABASES;
