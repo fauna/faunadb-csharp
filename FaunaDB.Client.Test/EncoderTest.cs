@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
 
@@ -396,6 +397,50 @@ namespace Test
                 ObjectV.With("uri", new StringV(testUri.ToString()), "guid", new StringV(testGuid.ToString())),
                 Encode(new StringOverride(testUri, testGuid))
             );
+        }
+
+        [Test]
+        public void TestToStringTypes()
+        {
+            Assert.AreEqual(
+                "SetRef({\"match\": Ref(id=\"spells_by_element\", collection=Ref(id=\"indexes\")), \"terms\": \"water\"})",
+                new SetRefV(new Dictionary<string, Value>() {
+                    { "terms", StringV.Of("water") },
+                    { "match", new RefV("spells_by_element", new RefV("indexes")) }
+                }).ToString()
+            );
+
+            Assert.AreEqual("true", BooleanV.Of(true).ToString());
+            Assert.AreEqual("3.14", DoubleV.Of(3.14).ToString());
+            Assert.AreEqual("42", LongV.Of(42).ToString());
+            Assert.AreEqual("null", NullV.Instance.ToString());
+            Assert.AreEqual("Date(\"2001-01-01\")", new DateV("2001-01-01").ToString());
+            Assert.AreEqual("Time(\"2000-01-01T01:10:30.123Z\")", new TimeV("2000-01-01T01:10:30.123Z").ToString());
+            Assert.AreEqual(@"[1, 3.14, true, ""foo bar"", ""my \""quote""]", ArrayV.Of(1, 3.14, true, "foo bar", "my \"quote").ToString());
+            Assert.AreEqual("Bytes(0x01, 0x02, 0x03)", BytesV.Of(0x1, 0x2, 0x3).ToString());
+
+            Assert.AreEqual("{\"answer\": 42, \"question\": \"meaning\"}",
+                ObjectV.With("answer", 42, "question", "meaning").ToString());
+            Assert.AreEqual("{\"answer\": 42, \"question\": \"meaning\"}",
+                ObjectV.With("question", "meaning", "answer", 42).ToString());
+
+            Assert.AreEqual(
+               "Query({\"api_version\": \"3\", \"expr\": {\"add\": [{\"var\": \"x\"}, 1]}, \"lambda\": \"x\"})",
+                new QueryV(new Dictionary<string, Expr>() {
+                     {"lambda", StringV.Of("x")},
+                     {"expr", ObjectV.With("add", ArrayV.Of(ObjectV.With("var", "x"), 1))},
+                     { "api_version", StringV.Of("3") }
+               }).ToString()
+           );
+
+            Assert.AreEqual(
+               "Query({\"api_version\": \"3\", \"expr\": {\"add\": [{\"var\": \"x\"}, 1, 3.14]}, \"lambda\": \"x\"})",
+                new QueryV(new Dictionary<string, Expr>() {
+                         {"lambda", "x"},
+                         {"expr", Add(Var("x"), 1, 3.14)},
+                         { "api_version", "3" }
+               }).ToString()
+           );
         }
     }
 }

@@ -78,8 +78,8 @@ namespace FaunaDB.Types
 
         public override string ToString()
         {
-            var props = string.Join(",", from kv in Value select $"{kv.Key}: {kv.Value}");
-            return $"ObjectV({props})";
+            var props = Value.Debug();
+            return $"{{{props}}}";
         }
         #endregion
 
