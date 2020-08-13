@@ -36,8 +36,8 @@ namespace FaunaDB.Query
 
         public override string ToString()
         {
-            var props = Values.Debug();
-            return $"{{{props}}}";
+            var props = string.Join(",", from kv in Values select $"{kv.Key}: {kv.Value}");
+            return $"UObject({props})";
         }
 
         public static UnescapedObject With(Dictionary<string, Expr> exprs) =>
@@ -101,6 +101,6 @@ namespace FaunaDB.Query
             writer.WriteArray(Value);
 
         public override string ToString() =>
-            $"[{string.Join(", ", Value)}]";
+            $"UArr({string.Join(", ", Value)})";
     }
 }

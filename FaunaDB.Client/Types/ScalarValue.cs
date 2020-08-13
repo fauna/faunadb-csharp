@@ -35,7 +35,7 @@ namespace FaunaDB.Types
             Value.GetHashCode();
 
         public override string ToString() =>
-            $"{Value}";
+            $"{GetType().Name}({Value})";
         #endregion
     }
 
@@ -51,9 +51,6 @@ namespace FaunaDB.Types
 
         public static readonly BooleanV True = new BooleanV(true);
         public static readonly BooleanV False = new BooleanV(false);
-
-        public override string ToString() =>
-            Value.ToString().ToLower();
     }
 
     /// <summary>
@@ -91,14 +88,6 @@ namespace FaunaDB.Types
 
         public static StringV Of(string v) =>
             new StringV(v);
-
-        public override string ToString()
-        {
-            var s = Value.ToString().Replace("\"", "\\\"");
-            return $"\"{s}\"";
-        }
-
-
     }
 
     /// <summary>
@@ -124,7 +113,6 @@ namespace FaunaDB.Types
             writer.WriteEndObject();
         }
 
-        #region boilerplate
         public override bool Equals(Expr v)
         {
             var other = v as SetRefV;
@@ -133,13 +121,6 @@ namespace FaunaDB.Types
 
         public override int GetHashCode() =>
             Value.GetHashCode();
-
-        public override string ToString()
-        {
-            var content = Value.Debug();
-            return $"SetRef({{{content}}})";
-        }
-        #endregion
     }
 
     /// <summary>
@@ -225,7 +206,7 @@ namespace FaunaDB.Types
             Value.GetHashCode();
 
         override public string ToString() =>
-            $"Time(\"{Value.ToIso(TimeFormat)}\")";
+            $"FaunaTime({Value.ToIso(TimeFormat)})";
         #endregion
     }
 
@@ -289,7 +270,7 @@ namespace FaunaDB.Types
             Value.GetHashCode();
 
         override public string ToString() =>
-            $"Date(\"{Value.ToIso(DateFormat)}\")";
+            $"FaunaDate({Value})";
         #endregion
     }
 
