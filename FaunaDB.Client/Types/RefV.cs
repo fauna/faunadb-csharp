@@ -62,10 +62,10 @@ namespace FaunaDB.Types
 
         public override string ToString()
         {
-            var cls = Collection != null ? $", collection={Collection}" : string.Empty;
-            var db = Database != null ? $", database={Database}" : string.Empty;
+            var cls = Collection != null ? $", collection = {Collection}" : string.Empty;
+            var db = Database != null ? $", database = {Database}" : string.Empty;
 
-            return $"Ref(id=\"{Id}\"{cls}{db})";
+            return $"RefV(id = \"{Id}\"{cls}{db})";
         }
     }
 

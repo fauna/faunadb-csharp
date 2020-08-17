@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 
 namespace FaunaDB.Collections
@@ -26,24 +25,6 @@ namespace FaunaDB.Collections
 
         public static Dictionary<TKey, TValue> FilterNulls<TKey, TValue>(this Dictionary<TKey, TValue> dict) =>
             dict.Where(kv => kv.Value != null).ToDictionary(kv => kv.Key, kv => kv.Value);
-
-        public static string Debug<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> source)
-            where TKey: IComparable
-        {
-            List<TKey> elements = source.Keys.ToList();
-            elements.Sort();
-
-            string[] result = new string[elements.Count];
-
-            for (int i = 0; i < result.Length; i++)
-            {
-                var key = elements[i];
-                var value = source[key].ToString();
-                result[i] = $"\"{key}\": {value}";
-            }
-
-            return string.Join(", ", result);
-        }
     }
 }
 

@@ -3,7 +3,6 @@
 - Add `Reverse` function
 - Add new Fauna attributes annotations:`FaunaString`, `FaunaTime`, and `FaunaDate`
 - implicit `BytesV` conversion from `bytes[]`
-- Improve `ToString` for Fauna types
 - Support versioned lambdas
 
 ## 2.12.0

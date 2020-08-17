@@ -81,7 +81,7 @@ namespace FaunaDB.Types
             HashUtil.Hash(Value);
 
         public override string ToString() =>
-            $"[{string.Join(", ", Value)}]";
+            $"Arr({string.Join(", ", Value)})";
         #endregion
     }
 }

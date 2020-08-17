@@ -30,11 +30,5 @@ namespace FaunaDB.Types
             var w = v as QueryV;
             return w != null && Value.DictEquals(w.Value);
         }
-
-        public override string ToString()
-        {
-            var content = Value.Debug();
-            return $"Query({{{content}}})";
-        }
     }
 }

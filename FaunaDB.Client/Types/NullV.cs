@@ -22,7 +22,7 @@ namespace FaunaDB.Types
             object.ReferenceEquals(this, v);
 
         public override string ToString() =>
-            "null";
+            "NullV";
 
         protected override int HashCode() =>
             0;
