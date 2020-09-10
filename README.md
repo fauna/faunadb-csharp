@@ -226,7 +226,7 @@ product.Match(
 
 // or even:
 
-Product prod = productLoaded.At("data").To<Product>().Value;
+Product productLoaded = value.At("data").To<Product>().Value;
 Console.WriteLine("Product loaded: {0}", prod.Description);
 ```
 
