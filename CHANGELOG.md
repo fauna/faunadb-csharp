@@ -1,3 +1,6 @@
+## 4.0.0
+- Bump API_VERSION
+
 ## 3.0.0
 - Deprecate `Contains` in favor of specific functions `ContainsField`, `ContainsPath`, and `ContainsValue`
 - Add `Reverse` function

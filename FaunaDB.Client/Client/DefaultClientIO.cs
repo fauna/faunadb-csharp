@@ -18,6 +18,8 @@ namespace FaunaDB.Client
     /// </summary>
     class DefaultClientIO : IClientIO
     {
+        const string FAUNA_API_VERSION = "4";
+
         readonly Uri endpoint;
         readonly TimeSpan? clientTimeout;
 
@@ -59,7 +61,7 @@ namespace FaunaDB.Client
             message.Headers.Authorization = authHeader;
             message.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            message.Headers.Add("X-FaunaDB-API-Version", "3");
+            message.Headers.Add("X-FaunaDB-API-Version", FAUNA_API_VERSION);
             message.Headers.Add("X-Fauna-Driver", "csharp");
 
             var last = lastSeen.Txn;
