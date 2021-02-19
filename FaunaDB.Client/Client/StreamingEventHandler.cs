@@ -5,15 +5,15 @@ using FaunaDB.Types;
 
 namespace FaunaDB.Client
 {
-    public class StreamingEventHandler : IObservable<Value>
+    public class StreamingEventHandler : IObservable<Value>, IDisposable
     {
         private readonly List<IObserver<Value>> observers;
-        private Stream dataSource;
+        private StreamReader streamReader;
         
         public StreamingEventHandler(Stream dataSource)
         {
             observers = new List<IObserver<Value>>();
-            this.dataSource = dataSource;
+            streamReader = new StreamReader(dataSource);
         }
         
         public IDisposable Subscribe(IObserver<Value> observer)
@@ -28,9 +28,19 @@ namespace FaunaDB.Client
             return new Unsubscriber<Value>(observers, observer);
         }
         
-        private void SendEvents()
+        public async void RequestData()
         {
-    
+            var data = await streamReader.ReadLineAsync();
+            var value = FaunaClient.FromJson(data);
+            foreach (var observer in observers)
+            {
+                observer.OnNext(value);
+            }
+        }
+
+        public void Dispose()
+        {
+            streamReader.Dispose();
         }
     }
 

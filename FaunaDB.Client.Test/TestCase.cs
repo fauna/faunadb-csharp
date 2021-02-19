@@ -96,6 +96,11 @@ namespace Test
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null) =>
             Task.FromResult(resp);
+
+        public Task<StreamingRequestResult> DoStreamingRequest(string data, IReadOnlyDictionary<string, string> query = null)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     class HttpClientWrapper : HttpClient

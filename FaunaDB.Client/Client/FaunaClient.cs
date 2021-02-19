@@ -146,7 +146,7 @@ namespace FaunaDB.Client
             return responseContent["resource"];
         }
 
-        async Task<IObservable<Value>> Stream(Expr data = null, IReadOnlyDictionary<string, string> query = null)
+        public async Task<StreamingEventHandler> Stream(Expr data = null, IReadOnlyDictionary<string, string> query = null)
         {
             var dataString = data == null ?  null : JsonConvert.SerializeObject(data, Formatting.None);
             var responseHttp = await clientIO.DoStreamingRequest(dataString, query);
@@ -155,6 +155,7 @@ namespace FaunaDB.Client
             // RaiseForStatusCode(responseHttp);
             
             // todo: create and return observable
+            return new StreamingEventHandler(responseHttp.ResponseContent);
         }
 
         internal struct ErrorsWrapper
@@ -192,7 +193,7 @@ namespace FaunaDB.Client
             }
         }
 
-        static ObjectV FromJson(string json)
+        public static ObjectV FromJson(string json)
         {
             try
             {

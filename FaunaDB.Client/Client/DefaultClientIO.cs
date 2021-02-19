@@ -112,7 +112,10 @@ namespace FaunaDB.Client
             
             var startTime = DateTime.UtcNow;
             
-            var message = new HttpRequestMessage(new HttpMethod(StreamingHttpMethod.Name()), $"{endpoint}{path}");
+            var message = new HttpRequestMessage(new HttpMethod(StreamingHttpMethod.Name()), $"{endpoint}{path}")
+            {
+                Version = new Version(2, 0)
+            };
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
             message.Headers.Add("X-FaunaDB-API-Version", "4");

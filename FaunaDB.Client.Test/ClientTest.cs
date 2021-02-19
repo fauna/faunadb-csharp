@@ -2171,6 +2171,25 @@ namespace Test
             Assert.AreEqual(faunaEndpoint, myHttpClient.LastMessage.RequestUri.ToString());
         }
 
+        [Test]
+        public async Task TestThatStreamFailsIfTargetDoesNotExist()
+        {
+            var res = await adminClient.Stream(Get(Ref(Collection("spells"), "1234")));
+            
+            AsyncTestDelegate doc = async () =>
+            {
+                await adminClient.Stream(Get(Ref(Collection("spells"), "1234")));
+            };
+                
+            var ex = Assert.ThrowsAsync<BadRequest>(doc);
+
+            Assert.AreEqual("instance not unique: document is not unique.", ex.Message);
+
+            AssertErrors(ex, code: "instance not unique", description: "document is not unique.");
+
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { "create" }));
+        }
+
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))
