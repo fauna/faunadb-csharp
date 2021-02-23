@@ -35,6 +35,11 @@ namespace FaunaDB.Client
         /// Http status code result of the request.
         /// </summary>
         public int StatusCode { get; }
+        
+        /// <summary>
+        /// Http content message in case request results in an error response.
+        /// </summary>
+        public string ErrorContent { get; }
 
         /// <summary>
         /// Response headers returned by the FaunaDB server.
@@ -61,6 +66,7 @@ namespace FaunaDB.Client
             string requestContent,
             Stream responseContent,
             int statusCode,
+            string errorContent,
             IReadOnlyDictionary<string, IEnumerable<string>> responseHeaders,
             DateTime startTime,
             DateTime endTime)
@@ -71,6 +77,7 @@ namespace FaunaDB.Client
             RequestContent = requestContent;
             ResponseContent = responseContent;
             StatusCode = statusCode;
+            ErrorContent = errorContent;
             ResponseHeaders = responseHeaders;
             StartTime = startTime;
             EndTime = endTime;

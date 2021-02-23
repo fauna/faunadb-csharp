@@ -146,15 +146,16 @@ namespace FaunaDB.Client
             return responseContent["resource"];
         }
 
-        public async Task<StreamingEventHandler> Stream(Expr data = null, IReadOnlyDictionary<string, string> query = null)
+        public async Task<StreamingEventHandler> Stream(Expr data = null, IReadOnlyList<EventField> fields = null)
         {
             var dataString = data == null ?  null : JsonConvert.SerializeObject(data, Formatting.None);
-            var responseHttp = await clientIO.DoStreamingRequest(dataString, query);
+            var queryParams = fields != null
+                ? ImmutableDictionary.Of("fields", String.Join(",", fields.Select(v => v.Value)))
+                : null;
+            var responseHttp = await clientIO.DoStreamingRequest(dataString, queryParams);
             
-            // todo: check response content on errors
-            // RaiseForStatusCode(responseHttp);
-            
-            // todo: create and return observable
+            RaiseForStatusCode(responseHttp);
+
             return new StreamingEventHandler(responseHttp.ResponseContent);
         }
 
@@ -171,6 +172,36 @@ namespace FaunaDB.Client
                 return;
 
             var wrapper = JsonConvert.DeserializeObject<ErrorsWrapper>(resultRequest.ResponseContent);
+
+            var response = new QueryErrorResponse(statusCode, wrapper.Errors);
+
+            switch (statusCode)
+            {
+                case 400:
+                    throw new BadRequest(response);
+                case 401:
+                    throw new Unauthorized(response);
+                case 403:
+                    throw new PermissionDenied(response);
+                case 404:
+                    throw new NotFound(response);
+                case 500:
+                    throw new InternalError(response);
+                case 503:
+                    throw new UnavailableError(response);
+                default:
+                    throw new UnknowException(response);
+            }
+        }
+        
+        internal static void RaiseForStatusCode(StreamingRequestResult resultRequest)
+        {
+            var statusCode = resultRequest.StatusCode;
+
+            if (statusCode >= 200 && statusCode < 300)
+                return;
+
+            var wrapper = JsonConvert.DeserializeObject<ErrorsWrapper>(resultRequest.ErrorContent);
 
             var response = new QueryErrorResponse(statusCode, wrapper.Errors);
 

@@ -111,11 +111,8 @@ namespace FaunaDB.Client
                 path = $"{path}?{queryString}";
             
             var startTime = DateTime.UtcNow;
-            
-            var message = new HttpRequestMessage(new HttpMethod(StreamingHttpMethod.Name()), $"{endpoint}{path}")
-            {
-                Version = new Version(2, 0)
-            };
+
+            var message = new HttpRequestMessage(new HttpMethod(StreamingHttpMethod.Name()), $"{endpoint}{path}");
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
             message.Headers.Add("X-FaunaDB-API-Version", "4");
@@ -130,7 +127,7 @@ namespace FaunaDB.Client
             var httpResponse = await client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None).ConfigureAwait(false);
             
             Stream response = await httpResponse.Content.ReadAsStreamAsync();
-            
+
             var endTime = DateTime.UtcNow;
 
             if (httpResponse.Headers.Contains("X-Txn-Time")) {
@@ -139,8 +136,15 @@ namespace FaunaDB.Client
 
                 lastSeen.SetTxn(Convert.ToInt64(time));
             }
-            
-            return new StreamingRequestResult(query, data, response, (int)httpResponse.StatusCode, ToDictionary(httpResponse.Headers), startTime, endTime);
+
+            var errorContent = String.Empty;
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                StreamReader streamReader = new StreamReader(response);
+                errorContent = await streamReader.ReadLineAsync();
+            }
+
+            return new StreamingRequestResult(query, data, response, (int)httpResponse.StatusCode, errorContent, ToDictionary(httpResponse.Headers), startTime, endTime);
         }
 
         static async Task<string> DecompressGZip(HttpContent content)

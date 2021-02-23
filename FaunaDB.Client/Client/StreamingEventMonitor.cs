@@ -7,6 +7,19 @@ namespace FaunaDB.Client
     {
         private IDisposable cancellation;
         private StreamingEventHandler provider;
+
+        private Action<Value> Next;
+        private Action<Exception> Error;
+        private Action Completed;
+        
+        public StreamingEventMonitor() {}
+
+        public StreamingEventMonitor(Action<Value> onNext, Action<Exception> onError, Action onCompleted)
+        {
+            this.Next = onNext;
+            this.Error = onError;
+            this.Completed = onCompleted;
+        }
         
         public void Subscribe(StreamingEventHandler provider)
         {
@@ -22,17 +35,32 @@ namespace FaunaDB.Client
         
         public virtual void OnNext(Value value)
         {
-            throw new NotImplementedException();
+            if (Next == null)
+            {
+                throw new NotImplementedException();
+            }
+            
+            Next(value);
         }
 
         public virtual void OnError(Exception error)
         {
-            throw new NotImplementedException();
+            if (Error == null)
+            {
+                throw new NotImplementedException();
+            }
+
+            Error(error);
         }
 
         public virtual void OnCompleted()
         {
-            throw new NotImplementedException();
+            if (Completed == null)
+            {
+                throw new NotImplementedException();
+            }
+
+            Completed();
         }
 
         public void RequestData()

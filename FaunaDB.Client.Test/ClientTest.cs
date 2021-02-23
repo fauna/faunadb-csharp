@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
@@ -2174,20 +2176,174 @@ namespace Test
         [Test]
         public async Task TestThatStreamFailsIfTargetDoesNotExist()
         {
-            var res = await adminClient.Stream(Get(Ref(Collection("spells"), "1234")));
+            AsyncTestDelegate doc = async () => { await adminClient.Stream(Get(Ref(Collection("spells"), "1234"))); };
+
+            var ex = Assert.ThrowsAsync<NotFound>(doc);
+            Assert.AreEqual("instance not found: Document not found.", ex.Message);
+            AssertErrors(ex, code: "instance not found", description: "Document not found.");
+        }
+
+        [Test]
+        public async Task TestStreamFailsIfQueryIsNotReadOnly()
+        {
+            AsyncTestDelegate doc = async () => { await adminClient.Stream(CreateCollection(Collection("spells"))); };
             
-            AsyncTestDelegate doc = async () =>
-            {
-                await adminClient.Stream(Get(Ref(Collection("spells"), "1234")));
-            };
-                
             var ex = Assert.ThrowsAsync<BadRequest>(doc);
+            Assert.AreEqual("invalid expression: Write effect in read-only query expression.", ex.Message);
+            AssertErrors(ex, code: "invalid expression", description: "Write effect in read-only query expression.");
+        }
 
-            Assert.AreEqual("instance not unique: document is not unique.", ex.Message);
+        [Test]
+        public async Task TestStreamEventsOnDocumentReferenceWithDocumentFieldByDefault()
+        {
+            Value createdInstance = await adminClient.Query(
+                    Create(await RandomCollection(),
+                        Obj("credentials",
+                            Obj("password", "abcdefg"))));
 
-            AssertErrors(ex, code: "instance not unique", description: "document is not unique.");
+            var docRef = createdInstance.At("ref");
 
-            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { "create" }));
+            var provider = await client.Stream(docRef);
+            
+            var done = new TaskCompletionSource<object>();
+
+            List<Value> events = new List<Value>();
+            
+            var monitor = new StreamingEventMonitor(
+                value =>
+                {
+                    events.Add(value);
+                    if (events.Count == 4)
+                    {
+                        provider.Complete();
+                    }
+                    else
+                    {
+                        provider.RequestData();
+                    }
+                },
+                ex => { done.SetException(ex); },
+                () => { done.SetResult(null); }
+            );
+            
+            // subscribe to data provider
+            monitor.Subscribe(provider);
+
+            // push 3 updates
+            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "testValue1"))));
+            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "testValue2"))));
+            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "testValue3"))));
+
+            // blocking until we receive all the events
+            await done.Task;
+            
+            Value startEvent = events[0];
+            Assert.AreEqual("start", startEvent.At("type").To<string>().Value);
+
+            Value e1 = events[1];
+            Assert.AreEqual("version", e1.At("type").To<string>().Value);
+            Assert.AreEqual("testValue1", e1.At("event", "document", "data", "testField").To<string>().Value);
+            
+            Value e2 = events[2];
+            Assert.AreEqual("version", e1.At("type").To<string>().Value);
+            Assert.AreEqual("testValue2", e2.At("event", "document", "data", "testField").To<string>().Value);
+            
+            Value e3 = events[3];
+            Assert.AreEqual("version", e1.At("type").To<String>().Value);
+            Assert.AreEqual("testValue3", e3.At("event", "document", "data", "testField").To<string>().Value);
+        }
+
+        [Test]
+        public async Task TeststreamEventsOnDocumentReferenceWithOptInFields()
+        {
+            Value createdInstance = await adminClient.Query(
+                Create(await RandomCollection(),
+                    Obj("data",
+                        Obj("testField", "testValue0"))));
+
+            var docRef = createdInstance.At("ref");
+            
+            var fields = ImmutableList.Create(
+                EventField.ActionField,
+                EventField.DiffField,
+                EventField.DocumentField,
+                EventField.PrevField);
+
+            var provider = await client.Stream(docRef, fields);
+            
+            var done = new TaskCompletionSource<object>();
+
+            List<Value> events = new List<Value>();
+            
+            var monitor = new StreamingEventMonitor(
+                value =>
+                {
+                    events.Add(value);
+                    if (events.Count == 4)
+                    {
+                        provider.Complete();
+                    }
+                    else
+                    {
+                        provider.RequestData();
+                    }
+                },
+                ex => { done.SetException(ex); },
+                () => { done.SetResult(null); }
+            );
+            
+            // subscribe to data provider
+            monitor.Subscribe(provider);
+            
+            // push 3 updates
+            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "testValue1"))));
+            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "testValue2"))));
+            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "testValue3"))));
+            
+            // blocking until we receive all the events
+            await done.Task;
+            
+            Value startEvent = events[0];
+            Assert.AreEqual("start", startEvent.At("type").To<string>().Value);
+            
+            Value e1 = events[1];
+            Assert.AreEqual("version", e1.At("type").To<string>().Value);
+            Assert.AreEqual("update", e1.At("event", "action").To<string>().Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue1")),
+                ((ObjectV)e1.At("event", "diff", "data")).Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue1")),
+                ((ObjectV)e1.At("event", "document", "data")).Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue0")),
+                ((ObjectV)e1.At("event", "prev", "data")).Value);
+            
+            Value e2 = events[2];
+            Assert.AreEqual("version", e2.At("type").To<string>().Value);
+            Assert.AreEqual("update", e2.At("event", "action").To<string>().Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue2")),
+                ((ObjectV)e2.At("event", "diff", "data")).Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue2")),
+                ((ObjectV)e2.At("event", "document", "data")).Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue1")),
+                ((ObjectV)e2.At("event", "prev", "data")).Value);
+            
+            Value e3 = events[3];
+            Assert.AreEqual("version", e3.At("type").To<string>().Value);
+            Assert.AreEqual("update", e3.At("event", "action").To<string>().Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue3")),
+                ((ObjectV)e3.At("event", "diff", "data")).Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue3")),
+                ((ObjectV)e3.At("event", "document", "data")).Value);
+            Assert.AreEqual(
+                FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue2")),
+                ((ObjectV)e3.At("event", "prev", "data")).Value);
         }
 
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)

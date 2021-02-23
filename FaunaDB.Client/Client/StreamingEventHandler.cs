@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FaunaDB.Types;
 
 namespace FaunaDB.Client
@@ -21,8 +22,6 @@ namespace FaunaDB.Client
             if (!observers.Contains(observer))
             {
                 observers.Add(observer);
-                // todo: handle snapshot event
-                // observer.OnNext();
             }
 
             return new Unsubscriber<Value>(observers, observer);
@@ -32,9 +31,17 @@ namespace FaunaDB.Client
         {
             var data = await streamReader.ReadLineAsync();
             var value = FaunaClient.FromJson(data);
-            foreach (var observer in observers)
+            foreach (var observer in observers.ToList())
             {
                 observer.OnNext(value);
+            }
+        }
+
+        public void Complete()
+        {
+            foreach (var observer in observers.ToList())
+            {
+                observer.OnCompleted();
             }
         }
 
