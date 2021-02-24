@@ -224,7 +224,7 @@ namespace FaunaDB.Client
             }
         }
 
-        public static ObjectV FromJson(string json)
+        static ObjectV FromJson(string json)
         {
             try
             {

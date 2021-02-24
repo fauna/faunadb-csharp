@@ -95,7 +95,7 @@ namespace FaunaDB.Errors
     }
 
     /// <summary>
-    /// An exception thrown if an error response return during consumption of a stream
+    /// An exception thrown if an error response returned during consumption of a stream
     /// </summary>
     public class StreamingException : FaunaException
     {

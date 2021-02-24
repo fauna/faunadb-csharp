@@ -248,7 +248,7 @@ There are three attributes that can be used to change the behavior of the `Encod
 
 Fauna supports document streaming, where changes to a streamed document are pushed to all clients subscribing to that document.
 
-The streaming API is built using the Observer pattern which enable a subscriber to register with and receive notifications from a provider.  
+The streaming API is built using the Observer pattern which enables a subscriber to register with and receive notifications from a provider.  
 Provider is implemented within `StreamingEventHandler` class, and subscriber within `StreamingEventMonitor` class.
 
 The following example assumes that you have already created a `FaunaClient`.
