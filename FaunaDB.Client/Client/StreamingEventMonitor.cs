@@ -35,32 +35,17 @@ namespace FaunaDB.Client
         
         public virtual void OnNext(Value value)
         {
-            if (Next == null)
-            {
-                throw new NotImplementedException();
-            }
-            
-            Next(value);
+            Next?.Invoke(value);
         }
 
         public virtual void OnError(Exception error)
         {
-            if (Error == null)
-            {
-                throw new NotImplementedException();
-            }
-
-            Error(error);
+            Error?.Invoke(error);
         }
 
         public virtual void OnCompleted()
         {
-            if (Completed == null)
-            {
-                throw new NotImplementedException();
-            }
-
-            Completed();
+            Completed?.Invoke();
         }
 
         public void RequestData()

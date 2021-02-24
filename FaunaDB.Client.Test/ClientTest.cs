@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
@@ -2237,6 +2236,9 @@ namespace Test
             // blocking until we receive all the events
             await done.Task;
             
+            // clear the subscription
+            monitor.Unsubscribe();
+            
             Value startEvent = events[0];
             Assert.AreEqual("start", startEvent.At("type").To<string>().Value);
 
@@ -2302,6 +2304,9 @@ namespace Test
             
             // blocking until we receive all the events
             await done.Task;
+            
+            // clear the subscription
+            monitor.Unsubscribe();
             
             Value startEvent = events[0];
             Assert.AreEqual("start", startEvent.At("type").To<string>().Value);
@@ -2410,6 +2415,9 @@ namespace Test
             
             // blocking until we get an exception
             var exception = Assert.ThrowsAsync<StreamingException>(res);
+            
+            // clear the subscription
+            monitor.Unsubscribe();
             
             // validating exception message
             Assert.AreEqual("permission denied: Authorization lost during stream evaluation.", exception.Message);

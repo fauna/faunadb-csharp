@@ -30,14 +30,24 @@ namespace FaunaDB.Client
         
         public async void RequestData()
         {
-            var data = await streamReader.ReadLineAsync();
-            var value = FaunaClient.FromJson(data);
-            Action<IObserver<Value>> ev = observer => observer.OnNext(value);
-            if (value.At("type").To<String>().Value == "error")
+            Action<IObserver<Value>> ev;
+            try
             {
-                FaunaException ex = constructStreamingException(value);
-                ev = observer => observer.OnError(ex);
+                var data = await streamReader.ReadLineAsync();
+                var value = FaunaClient.FromJson(data);
+                ev = observer => observer.OnNext(value);
+                if (value.At("type").To<String>().Value == "error")
+                {
+                    FaunaException ex = constructStreamingException(value);
+                    ev = observer => observer.OnError(ex);
+                }
             }
+            catch (Exception ex)
+            {
+                FaunaException fex = constructStreamingException(ex);
+                ev = observer => observer.OnError(fex);
+            }
+
             foreach (var observer in observers.ToList())
             {
                 ev(observer);
@@ -55,6 +65,13 @@ namespace FaunaDB.Client
         public void Dispose()
         {
             streamReader.Dispose();
+        }
+
+        private FaunaException constructStreamingException(Exception ex)
+        {
+            var queryError = new QueryError(null, "internal exception", ex.Message, null);
+            var response = new QueryErrorResponse(500, new List<QueryError> {queryError});
+            return new StreamingException(response);
         }
 
         private FaunaException constructStreamingException(ObjectV value)
