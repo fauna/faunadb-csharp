@@ -2203,7 +2203,7 @@ namespace Test
 
             var docRef = createdInstance.At("ref");
 
-            var provider = await client.Stream(docRef);
+            var provider = await adminClient.Stream(docRef);
             
             var done = new TaskCompletionSource<object>();
 
@@ -2269,7 +2269,7 @@ namespace Test
                 EventField.DocumentField,
                 EventField.PrevField);
 
-            var provider = await client.Stream(docRef, fields);
+            var provider = await adminClient.Stream(docRef, fields);
             
             var done = new TaskCompletionSource<object>();
 
@@ -2344,6 +2344,76 @@ namespace Test
             Assert.AreEqual(
                 FaunaDB.Collections.ImmutableDictionary.Of("testField", StringV.Of("testValue2")),
                 ((ObjectV)e3.At("event", "prev", "data")).Value);
+        }
+
+        [Test]
+        public async Task TestStreamHandlesLossOfAuthorization()
+        {
+            await adminClient.Query(
+                CreateCollection(Obj("name", "streamed-things-auth"))
+            );
+            
+            Value createdInstance = await adminClient.Query(
+                Create(Collection("streamed-things-auth"),
+                    Obj("credentials",
+                        Obj("password", "abcdefg"))));
+
+            var docRef = createdInstance.At("ref");
+            
+            // new key + client
+            Value newKey = await adminClient.Query(CreateKey(Obj("role", "server-readonly")));
+            FaunaClient streamingClient = adminClient.NewSessionClient(newKey.At("secret").To<string>().Value);
+            
+            var provider = await streamingClient.Stream(docRef);
+            
+            var done = new TaskCompletionSource<object>();
+
+            List<Value> events = new List<Value>();
+            
+            var monitor = new StreamingEventMonitor(
+                async value =>
+                {
+                    if (events.Count == 0)
+                    {
+                        try
+                        {
+                            // update doc on `start` event
+                            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "afterStart"))));
+
+                            // delete key
+                            await adminClient.Query(Delete(newKey.At("ref").To<RefV>().Value));
+
+                            // push an update to force auth revalidation.
+                            await adminClient.Query(Update(docRef, Obj("data", Obj("testField", "afterKeyDelete"))));
+                        }
+                        catch (Exception ex)
+                        {
+                            done.SetException(ex);
+                        }
+                    }
+                    
+                    // capture element
+                    events.Add(value);
+                        
+                    // ask for more elements
+                    provider.RequestData();
+                },
+                ex => { done.SetException(ex); },
+                () => { done.SetResult(null); }
+            );
+            
+            // subscribe to data provider
+            monitor.Subscribe(provider);
+            
+            // wrapping an asynchronous call
+            AsyncTestDelegate res = async () => await done.Task;
+            
+            // blocking until we get an exception
+            var exception = Assert.ThrowsAsync<StreamingException>(res);
+            
+            // validating exception message
+            Assert.AreEqual("permission denied: Authorization lost during stream evaluation.", exception.Message);
+            AssertErrors(exception, code: "permission denied", description: "Authorization lost during stream evaluation.");
         }
 
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)

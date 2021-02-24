@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FaunaDB.Errors;
 using FaunaDB.Types;
 
 namespace FaunaDB.Client
@@ -31,9 +32,15 @@ namespace FaunaDB.Client
         {
             var data = await streamReader.ReadLineAsync();
             var value = FaunaClient.FromJson(data);
+            Action<IObserver<Value>> ev = observer => observer.OnNext(value);
+            if (value.At("type").To<String>().Value == "error")
+            {
+                FaunaException ex = constructStreamingException(value);
+                ev = observer => observer.OnError(ex);
+            }
             foreach (var observer in observers.ToList())
             {
-                observer.OnNext(value);
+                ev(observer);
             }
         }
 
@@ -48,6 +55,15 @@ namespace FaunaDB.Client
         public void Dispose()
         {
             streamReader.Dispose();
+        }
+
+        private FaunaException constructStreamingException(ObjectV value)
+        {
+            var code = value.At("event", "code").To<string>().Value;
+            var description = value.At("event", "description").To<string>().Value;
+            var queryError = new QueryError(null, code, description, null);
+            var response = new QueryErrorResponse(500, new List<QueryError> {queryError});
+            return new StreamingException(response);
         }
     }
 
