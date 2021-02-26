@@ -1538,7 +1538,7 @@ namespace Test
             {
                 {"lambda", Arr("x", "y")},
                 {"expr", Concat(Arr(Var("x"), "/", Var("y")))},
-                { "api_version", "3" }
+                { "api_version", "4" }
             }));
         }
 
@@ -2101,7 +2101,7 @@ namespace Test
 
             var headers = customHttp.LastMessage.Headers;
             Assert.AreEqual("csharp", headers.GetValues("X-Fauna-Driver").First());
-            Assert.AreEqual("3", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("4", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.IsFalse(headers.Contains("X-Last-Seen-Txn"));
 
             // the default HttpClient.Timeout is 100 seconds
