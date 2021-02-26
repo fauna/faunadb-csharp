@@ -59,7 +59,7 @@ namespace FaunaDB.Client
             message.Headers.Authorization = authHeader;
             message.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            message.Headers.Add("X-FaunaDB-API-Version", "3");
+            message.Headers.Add("X-FaunaDB-API-Version", "4");
             message.Headers.Add("X-Fauna-Driver", "csharp");
 
             var last = lastSeen.Txn;
@@ -112,12 +112,11 @@ namespace FaunaDB.Client
             headers.ToDictionary(k => k.Key, v => v.Value);
 
         /// <summary>
-        /// Encodes secret string using base64.
+        /// Adds a header with Bearer Auth Token.
         /// </summary>
-        static AuthenticationHeaderValue AuthHeader(string secret)
+        static AuthenticationHeaderValue AuthHeader(string authToken)
         {
-            var bytes = Encoding.ASCII.GetBytes(secret);
-            return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(bytes));
+            return new AuthenticationHeaderValue("Bearer", authToken);
         }
 
         /// <summary>

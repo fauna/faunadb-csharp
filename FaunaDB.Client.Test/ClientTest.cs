@@ -2171,6 +2171,195 @@ namespace Test
             Assert.AreEqual(faunaEndpoint, myHttpClient.LastMessage.RequestUri.ToString());
         }
 
+        [Test]
+        public async Task TestSomething()
+        {
+            var res = (await client.Query(Count(Collections()))).To<long>().Value;
+        }
+        
+        [Test]
+        public async Task TestAuthProviders()
+        {
+            string roleName = RandomStartingWith("role_");
+            string accessProviderName = RandomStartingWith("access_prov_");
+            string issuerName = RandomStartingWith("issuer_");
+            string jwksUri = "https://xxxx.auth0.com/";
+
+            RefV collection = await RandomCollection();
+
+            RefV role = GetRef(await adminClient.Query(CreateRole(Obj(
+                    "name", roleName,
+                    "privileges", Arr(Obj(
+                        "resource", collection,
+                        "actions", Obj("read", true)
+                    ))
+            ))));
+
+            Value accessProvider = await adminClient.Query(CreateAccessProvider(
+                Obj(
+                    "name", accessProviderName,
+                    "issuer", issuerName,
+                    "jwks_uri", jwksUri,
+                    "roles", Arr(role)
+                )));
+
+            IReadOnlyList<RefV> roles = accessProvider.At("roles").Collect(Field.To<RefV>());
+            Assert.AreEqual(1, roles.Count);
+
+            Assert.AreEqual(
+                accessProviderName,
+                accessProvider.Get(Field.At("name")).To<string>().Value);
+
+            Assert.AreEqual(
+                issuerName,
+                accessProvider.Get(Field.At("issuer")).To<string>().Value);
+
+            Assert.AreEqual(
+                "https://xxxx.auth0.com/",
+                accessProvider.Get(Field.At("jwks_uri")).To<string>().Value);
+
+            Assert.IsNotEmpty(accessProvider.Get(Field.At("audience")).To<string>().Value);
+
+            // Retrieving
+
+            var accessProviderFromDb =
+                await adminClient.Query(Get(AccessProvider(accessProviderName)));
+
+            Assert.AreEqual(accessProvider, accessProviderFromDb);
+            Assert.AreEqual(
+                jwksUri,
+                accessProviderFromDb.Get(Field.At("jwks_uri")).To<string>().Value);
+
+            // Retrieving: Denied
+
+            var ex = Assert.ThrowsAsync<PermissionDenied>(
+              async () => await client.Query(Get(AccessProvider(accessProviderName)))
+            );
+
+            AssertErrors(ex, code: "permission denied", description: "Insufficient privileges to perform the action.");
+            AssertEmptyFailures(ex);
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
+
+            // Paginating
+
+            var otherName = RandomStartingWith("ap_");
+
+            await adminClient.Query(CreateAccessProvider(
+                Obj(
+                    "name", otherName,
+                    "issuer", RandomStartingWith("ap_"),
+                    "jwks_uri", jwksUri
+                )));
+
+            Value page = await adminClient.Query(Paginate(AccessProviders()));
+            RefV[] pageData = page.Get(DATA).To<RefV[]>().Value;
+
+            Assert.AreEqual(2, pageData.Length);
+            Assert.AreEqual(accessProviderName, pageData.First().Id);
+            Assert.AreEqual(otherName, pageData.Last().Id);
+        }
+
+        [Test]
+        public async Task TestCurrentIdentity()
+        {
+            Value createdInstance = await adminClient.Query(
+                Create(await RandomCollection(),
+                    Obj("credentials",
+                        Obj("password", "sekret"))));
+
+            Value auth = await adminClient.Query(
+                Login(createdInstance.At("ref"),
+                    Obj("password", "sekret")
+                )
+            );
+
+            string secret = auth.At("secret").To<string>().Value;
+
+            FaunaClient sessionClient = adminClient.NewSessionClient(secret);
+            Assert.AreEqual(createdInstance.At("ref"), await sessionClient.Query(CurrentIdentity()));
+        }
+
+        [Test]
+        public async Task TestHasCurrentIdentity()
+        {
+            Value createdInstance = await adminClient.Query(
+                Create(await RandomCollection(),
+                    Obj("credentials",
+                        Obj("password", "sekret"))));
+            
+            Value auth = await adminClient.Query(
+                Login(createdInstance.At("ref"),
+                    Obj("password", "sekret")
+                )
+            );
+            
+            string secret = auth.At("secret").To<string>().Value;
+            
+            FaunaClient sessionClient = adminClient.NewSessionClient(secret);
+            Assert.IsTrue((await sessionClient.Query(HasCurrentIdentity())).To<bool>().Value);
+        }
+
+        [Test]
+        public async Task TestCurrentTokenWithInternalToken()
+        {
+            Value createdInstance = await adminClient.Query(
+                Create(await RandomCollection(),
+                    Obj("credentials",
+                        Obj("password", "sekret"))));
+            
+            Value auth = await adminClient.Query(
+                Login(createdInstance.At("ref"),
+                    Obj("password", "sekret")
+                )
+            );
+            
+            string secret = auth.At("secret").To<string>().Value;
+            Value tokenRef = auth.At("ref");
+            
+            FaunaClient sessionClient = adminClient.NewSessionClient(secret);
+            Assert.AreEqual(tokenRef, await sessionClient.Query(CurrentToken()));
+        }
+
+        [Test]
+        public async Task TestCurrentTokenWithInternalKey()
+        {
+            Value clientKey = await adminClient.Query(
+                CreateKey(Obj("role", "client"))
+            );
+            
+            string secret = clientKey.At("secret").To<string>().Value;
+            Value keyRef = clientKey.At("ref");
+            
+            FaunaClient sessionClient = adminClient.NewSessionClient(secret);
+            Assert.AreEqual(keyRef, await sessionClient.Query(CurrentToken()));
+        }
+
+        [Test]
+        public async Task TestHasCurrentTokenWithInternalToken()
+        {
+            Value createdInstance = await adminClient.Query(
+                Create(await RandomCollection(),
+                    Obj("credentials",
+                        Obj("password", "sekret"))));
+            
+            Value auth = await adminClient.Query(
+                Login(createdInstance.At("ref"),
+                    Obj("password", "sekret")
+                )
+            );
+            
+            string secret = auth.At("secret").To<string>().Value;
+            
+            FaunaClient sessionClient = adminClient.NewSessionClient(secret);
+            Assert.IsTrue((await sessionClient.Query(HasCurrentToken())).To<bool>().Value);
+        }
+
+        [Test]
+        public async Task TestHasCurrentTokenWithInternalKey()
+        {
+            Assert.IsFalse((await adminClient.Query(HasCurrentToken())).To<bool>().Value);
+        }
+
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))

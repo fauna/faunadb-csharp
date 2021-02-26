@@ -556,11 +556,35 @@ namespace Test
             AssertJsonEqual(Identity(),
                 "{\"identity\":null}");
         }
+        
+        [Test] public void TestCurrentIdentity()
+        {
+            AssertJsonEqual(CurrentIdentity(),
+                "{\"current_identity\":null}");
+        }
 
         [Test] public void TestHasIdentity()
         {
             AssertJsonEqual(HasIdentity(),
                 "{\"has_identity\":null}");
+        }
+        
+        [Test] public void TestHasCurrentIdentity()
+        {
+            AssertJsonEqual(HasCurrentIdentity(),
+                "{\"has_current_identity\":null}");
+        }
+        
+        [Test] public void TestCurrentToken()
+        {
+            AssertJsonEqual(CurrentToken(),
+                "{\"current_token\":null}");
+        }
+        
+        [Test] public void TestHasCurrentToken()
+        {
+            AssertJsonEqual(HasCurrentToken(),
+                "{\"has_current_token\":null}");
         }
 
         [Test] public void TestConcat()
