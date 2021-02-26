@@ -2172,12 +2172,6 @@ namespace Test
         }
 
         [Test]
-        public async Task TestSomething()
-        {
-            var res = (await client.Query(Count(Collections()))).To<long>().Value;
-        }
-        
-        [Test]
         public async Task TestAuthProviders()
         {
             string roleName = RandomStartingWith("role_");

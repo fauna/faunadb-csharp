@@ -586,6 +586,25 @@ namespace Test
             AssertJsonEqual(HasCurrentToken(),
                 "{\"has_current_token\":null}");
         }
+        
+        [Test] public void TestCreateAccessProvider()
+        {
+            AssertJsonEqual(CreateAccessProvider(
+                Obj(
+                    "name", "role_name",
+                    "issuer", "issuer_name",
+                    "jwks_uri", "https://auth0.com",
+                    "membership", Arr()
+                )),
+                "{\"create_access_provider\":{\"object\":{\"name\":\"role_name\",\"issuer\":\"issuer_name\",\"jwks_uri\":\"https://auth0.com\",\"membership\":[]}}}");
+        }
+
+        [Test]
+        public void TestAccessProvider()
+        {
+            AssertJsonEqual(AccessProvider("access-provider"),
+                "{\"access_provider\":\"access-provider\"}");
+        }
 
         [Test] public void TestConcat()
         {
