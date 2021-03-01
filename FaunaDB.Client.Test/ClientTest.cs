@@ -20,10 +20,16 @@ namespace Test
     public class ClientTest : TestCase
     {
         private static Field<Value> DATA = Field.At("data");
+        private static Field<Value> ROLES = Field.At("roles");
         private static Field<RefV> REF_FIELD = Field.At("ref").To<RefV>();
         private static Field<long> TS_FIELD = Field.At("ts").To<long>();
         private static Field<RefV> DOCUMENT_FIELD = Field.At("document").To<RefV>();
+        private static Field<string> AUTH_NAME_FIELD = Field.At("name").To<string>();
+        private static Field<string> ISSUER_FIELD = Field.At("issuer").To<string>();
+        private static Field<string> JWKS_URI_FIELD = Field.At("jwks_uri").To<string>();
+        private static Field<string> AUDIENCE_FIELD = Field.At("audience").To<string>();
         private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To<RefV>());
+        private static Field<IReadOnlyList<RefV>> ROLES_LIST = ROLES.Collect(Field.To<RefV>());
 
         private static Field<string> NAME_FIELD = DATA.At(Field.At("name")).To<string>();
         private static Field<string> ELEMENT_FIELD = DATA.At(Field.At("element")).To<string>();
@@ -2197,22 +2203,22 @@ namespace Test
                     "roles", Arr(role)
                 )));
 
-            IReadOnlyList<RefV> roles = accessProvider.At("roles").Collect(Field.To<RefV>());
+            var roles = accessProvider.Get(ROLES_LIST);
             Assert.AreEqual(1, roles.Count);
 
             Assert.AreEqual(
                 accessProviderName,
-                accessProvider.Get(Field.At("name")).To<string>().Value);
+                accessProvider.Get(AUTH_NAME_FIELD));
 
             Assert.AreEqual(
                 issuerName,
-                accessProvider.Get(Field.At("issuer")).To<string>().Value);
+                accessProvider.Get(ISSUER_FIELD));
 
             Assert.AreEqual(
                 "https://xxxx.auth0.com/",
-                accessProvider.Get(Field.At("jwks_uri")).To<string>().Value);
+                accessProvider.Get(JWKS_URI_FIELD));
 
-            Assert.IsNotEmpty(accessProvider.Get(Field.At("audience")).To<string>().Value);
+            Assert.IsNotEmpty(accessProvider.Get(AUDIENCE_FIELD));
 
             // Retrieving
 
@@ -2222,7 +2228,7 @@ namespace Test
             Assert.AreEqual(accessProvider, accessProviderFromDb);
             Assert.AreEqual(
                 jwksUri,
-                accessProviderFromDb.Get(Field.At("jwks_uri")).To<string>().Value);
+                accessProviderFromDb.Get(JWKS_URI_FIELD));
 
             // Retrieving: Denied
 
@@ -2246,9 +2252,9 @@ namespace Test
                 )));
 
             Value page = await adminClient.Query(Paginate(AccessProviders()));
-            RefV[] pageData = page.Get(DATA).To<RefV[]>().Value;
+            var pageData = page.Get(REF_LIST);
 
-            Assert.AreEqual(2, pageData.Length);
+            Assert.AreEqual(2, pageData.Count);
             Assert.AreEqual(accessProviderName, pageData.First().Id);
             Assert.AreEqual(otherName, pageData.Last().Id);
         }
@@ -2267,10 +2273,10 @@ namespace Test
                 )
             );
 
-            string secret = auth.At("secret").To<string>().Value;
+            string secret = auth.Get(SECRET_FIELD);
 
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
-            Assert.AreEqual(createdInstance.At("ref"), await sessionClient.Query(CurrentIdentity()));
+            Assert.AreEqual(createdInstance.Get(REF_FIELD), await sessionClient.Query(CurrentIdentity()));
         }
 
         [Test]
@@ -2282,12 +2288,12 @@ namespace Test
                         Obj("password", "sekret"))));
             
             Value auth = await adminClient.Query(
-                Login(createdInstance.At("ref"),
+                Login(createdInstance.Get(REF_FIELD),
                     Obj("password", "sekret")
                 )
             );
-            
-            string secret = auth.At("secret").To<string>().Value;
+
+            string secret = auth.Get(SECRET_FIELD);
             
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.IsTrue((await sessionClient.Query(HasCurrentIdentity())).To<bool>().Value);
@@ -2306,9 +2312,9 @@ namespace Test
                     Obj("password", "sekret")
                 )
             );
-            
-            string secret = auth.At("secret").To<string>().Value;
-            Value tokenRef = auth.At("ref");
+
+            string secret = auth.Get(SECRET_FIELD);
+            Value tokenRef = auth.Get(REF_FIELD);
             
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.AreEqual(tokenRef, await sessionClient.Query(CurrentToken()));
@@ -2320,9 +2326,9 @@ namespace Test
             Value clientKey = await adminClient.Query(
                 CreateKey(Obj("role", "client"))
             );
-            
-            string secret = clientKey.At("secret").To<string>().Value;
-            Value keyRef = clientKey.At("ref");
+
+            string secret = clientKey.Get(SECRET_FIELD);
+            Value keyRef = clientKey.Get(REF_FIELD);
             
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.AreEqual(keyRef, await sessionClient.Query(CurrentToken()));
@@ -2341,8 +2347,8 @@ namespace Test
                     Obj("password", "sekret")
                 )
             );
-            
-            string secret = auth.At("secret").To<string>().Value;
+
+            string secret = auth.Get(SECRET_FIELD);
             
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.IsTrue((await sessionClient.Query(HasCurrentToken())).To<bool>().Value);

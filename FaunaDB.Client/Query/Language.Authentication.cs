@@ -104,23 +104,14 @@
         /// </summary>
         public static Expr AccessProviders(Expr scope = null) =>
             UnescapedObject.With("access_providers", scope ?? Null());
-        
+
         /// <summary>
         /// Creates a new AccessProvider expression.
         /// <para>
         /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/accessprovider">docs</see>.
         /// </para>
         /// </summary>
-        public static Expr AccessProvider(Expr name) =>
-            UnescapedObject.With("access_provider", name);
-        
-        /// <summary>
-        /// Creates a new AccessProvider expression.
-        /// <para>
-        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/accessprovider">docs</see>.
-        /// </para>
-        /// </summary>
-        public static Expr AccessProvider(Expr name, Expr scope) =>
+        public static Expr AccessProvider(Expr name, Expr scope = null) =>
             UnescapedObject.With("access_provider", name, "scope", scope);
         
         /// <summary>
