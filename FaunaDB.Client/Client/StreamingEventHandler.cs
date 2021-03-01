@@ -12,6 +12,10 @@ namespace FaunaDB.Client
         private readonly List<IObserver<Value>> observers;
         private StreamReader streamReader;
         
+        private static Field<string> CODE = Field.At("event", "code").To<string>();
+        private static Field<string> DESCRIPTION = Field.At("event", "description").To<string>();
+        private static Field<string> TYPE = Field.At("type").To<string>();
+        
         public StreamingEventHandler(Stream dataSource)
         {
             observers = new List<IObserver<Value>>();
@@ -36,15 +40,15 @@ namespace FaunaDB.Client
                 var data = await streamReader.ReadLineAsync();
                 var value = FaunaClient.FromJson(data);
                 ev = observer => observer.OnNext(value);
-                if (value.At("type").To<String>().Value == "error")
+                if (value.Get(TYPE) == "error")
                 {
-                    FaunaException ex = constructStreamingException(value);
+                    FaunaException ex = ConstructStreamingException(value);
                     ev = observer => observer.OnError(ex);
                 }
             }
             catch (Exception ex)
             {
-                FaunaException fex = constructStreamingException(ex);
+                FaunaException fex = ConstructStreamingException(ex);
                 ev = observer => observer.OnError(fex);
             }
 
@@ -67,17 +71,17 @@ namespace FaunaDB.Client
             streamReader.Dispose();
         }
 
-        private FaunaException constructStreamingException(Exception ex)
+        private FaunaException ConstructStreamingException(Exception ex)
         {
             var queryError = new QueryError(null, "internal exception", ex.Message, null);
             var response = new QueryErrorResponse(500, new List<QueryError> {queryError});
             return new StreamingException(response);
         }
 
-        private FaunaException constructStreamingException(ObjectV value)
+        private FaunaException ConstructStreamingException(ObjectV value)
         {
-            var code = value.At("event", "code").To<string>().Value;
-            var description = value.At("event", "description").To<string>().Value;
+            var code = value.Get(CODE);
+            var description = value.Get(DESCRIPTION);
             var queryError = new QueryError(null, code, description, null);
             var response = new QueryErrorResponse(500, new List<QueryError> {queryError});
             return new StreamingException(response);
