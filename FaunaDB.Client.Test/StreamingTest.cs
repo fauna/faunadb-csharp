@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Errors;
@@ -128,11 +127,12 @@ namespace Test
 
             var docRef = createdInstance.At("ref");
             
-            var fields = ImmutableList.Create(
+            var fields = new List<EventField> {
                 EventField.ActionField,
                 EventField.DiffField,
                 EventField.DocumentField,
-                EventField.PrevField);
+                EventField.PrevField
+            };
 
             var provider = await adminClient.Stream(docRef, fields);
             
