@@ -146,6 +146,19 @@ namespace FaunaDB.Client
             return responseContent["resource"];
         }
 
+        public async Task<StreamingEventHandler> Stream(Expr data = null, IReadOnlyList<EventField> fields = null)
+        {
+            var dataString = data == null ?  null : JsonConvert.SerializeObject(data, Formatting.None);
+            var queryParams = fields != null
+                ? ImmutableDictionary.Of("fields", String.Join(",", fields.Select(v => v.Value)))
+                : null;
+            var responseHttp = await clientIO.DoStreamingRequest(dataString, queryParams);
+            
+            RaiseForStatusCode(responseHttp);
+
+            return new StreamingEventHandler(responseHttp.ResponseContent);
+        }
+
         internal struct ErrorsWrapper
         {
             public IReadOnlyList<QueryError> Errors;
@@ -180,8 +193,38 @@ namespace FaunaDB.Client
                     throw new UnknowException(response);
             }
         }
+        
+        internal static void RaiseForStatusCode(StreamingRequestResult resultRequest)
+        {
+            var statusCode = resultRequest.StatusCode;
 
-        static ObjectV FromJson(string json)
+            if (statusCode >= 200 && statusCode < 300)
+                return;
+
+            var wrapper = JsonConvert.DeserializeObject<ErrorsWrapper>(resultRequest.ErrorContent);
+
+            var response = new QueryErrorResponse(statusCode, wrapper.Errors);
+
+            switch (statusCode)
+            {
+                case 400:
+                    throw new BadRequest(response);
+                case 401:
+                    throw new Unauthorized(response);
+                case 403:
+                    throw new PermissionDenied(response);
+                case 404:
+                    throw new NotFound(response);
+                case 500:
+                    throw new InternalError(response);
+                case 503:
+                    throw new UnavailableError(response);
+                default:
+                    throw new UnknowException(response);
+            }
+        }
+
+        public static ObjectV FromJson(string json)
         {
             try
             {

@@ -4,7 +4,6 @@ using FaunaDB.Types;
 using FaunaDB.Query;
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using NUnit.Framework;
@@ -20,7 +19,6 @@ namespace Test
     public class ClientTest : TestCase
     {
         private static Field<Value> DATA = Field.At("data");
-        private static Field<RefV> REF_FIELD = Field.At("ref").To<RefV>();
         private static Field<long> TS_FIELD = Field.At("ts").To<long>();
         private static Field<RefV> DOCUMENT_FIELD = Field.At("document").To<RefV>();
         private static Field<IReadOnlyList<RefV>> REF_LIST = DATA.Collect(Field.To<RefV>());
@@ -37,9 +35,6 @@ namespace Test
         private static RefV thor;
         private static RefV thorSpell1;
         private static RefV thorSpell2;
-
-        RefV GetRef(Value v) =>
-            v.Get(REF_FIELD);
 
         [OneTimeSetUp]
         new public void SetUp()
@@ -2205,28 +2200,7 @@ namespace Test
             );
         }
 
-        private async Task<RefV> RandomCollection()
-        {
-            Value coll = await client.Query(
-              CreateCollection(
-                Obj("name", RandomStartingWith("some_coll_")))
-            );
-
-            return GetRef(coll);
-        }
-
-        private string RandomStartingWith(params string[] strs)
-        {
-            StringBuilder builder = new StringBuilder();
-            foreach (var str in strs)
-                builder.Append(str);
-
-            builder.Append(new Random().Next(0, int.MaxValue));
-
-            return builder.ToString();
-        }
-
-        static void AssertErrors(FaunaException ex, string code, string description)
+        internal static void AssertErrors(FaunaException ex, string code, string description)
         {
             Assert.That(ex.Errors, Has.Count.EqualTo(1));
             Assert.AreEqual(code, ex.Errors[0].Code);

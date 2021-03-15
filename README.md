@@ -244,6 +244,99 @@ There are three attributes that can be used to change the behavior of the `Encod
 - Primitive arrays, generic collections such as `List<T>`, and their respective interfaces such as `IList<T>`.
 - Dictionaries with string keys, such as `Dictionary<string, T>` and its respective interface `IDictionary<string, T>`.
 
+### Document streaming
+
+Fauna supports document streaming, where changes to a streamed document are pushed to all clients subscribing to that document.
+
+The streaming API is built using the Observer pattern which enables a subscriber to register with and receive notifications from a provider.  
+Provider is implemented within `StreamingEventHandler` class, and subscriber within `StreamingEventMonitor` class.
+
+The following example assumes that you have already created a `FaunaClient`.
+
+In the example below, we are capturing the 4 first messages by manually binding a subscriber.
+
+```csharp
+// docRef is a reference to the document for which we want to stream updates.
+// You can acquire a document reference with a query like the following, but it
+// needs to work with the documents that you have.
+// var docRef = Get(Ref(Collection("scoreboards"), "123"));
+
+// create a data provider
+var provider = await adminClient.Stream(docRef);
+
+// we use this object to signalize a completion of
+// asynchronous operation for the current example
+var done = new TaskCompletionSource<object>();
+
+// a collection for storage of incoming events from the provider
+List<Value> events = new List<Value>();
+
+// creating a subscriber
+// it takes 3 lambdas that describe the following:
+// - next event processing
+// - error processing
+// - completion processing
+var monitor = new StreamingEventMonitor(
+    value =>
+    {
+        events.Add(value);
+        if (events.Count == 4)
+        {
+            provider.Complete();
+        }
+        else
+        {
+            provider.RequestData();
+        }
+    },
+    ex => { done.SetException(ex); },
+    () => { done.SetResult(null); }
+);
+
+// subscribe to data provider
+monitor.Subscribe(provider);
+
+// blocking until we receive all the events
+await done.Task;
+
+// clear the subscription
+monitor.Unsubscribe();
+```
+
+You can also extend a base class instead of passing lambdas:
+```csharp
+private class MyStreamingMonitor : StreamingEventMonitor
+{
+    // optionally override OnNext event
+    public override void OnNext(Value value)
+    {
+        // process your event
+        RequestData();
+    }
+
+    // optionally override OnError event
+    public override void OnError(Exception error)
+    {
+        // process an error
+    }
+
+    // optionally override OnCompleted event
+    public override void OnCompleted()
+    {
+        // process completion event
+    }
+}
+
+// creating a subscriber
+var monitor = new MyStreamingMonitor();
+
+// subscribe to data provider
+monitor.Subscribe(provider);
+
+// clear the subscription
+monitor.Unsubscribe();
+```
+
 ## License
 
 Copyright 2021 [Fauna, Inc.](https://fauna.com/)

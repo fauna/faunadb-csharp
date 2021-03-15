@@ -95,6 +95,14 @@ namespace FaunaDB.Errors
     }
 
     /// <summary>
+    /// An exception thrown if an error response returned during consumption of a stream
+    /// </summary>
+    public class StreamingException : FaunaException
+    {
+        internal StreamingException(QueryErrorResponse response) : base(response) {}
+    }
+
+    /// <summary>
     /// An exception thrown if a FaunaDB response is unknown or unparseable by the client.
     /// </summary>
     public class UnknowException : FaunaException
