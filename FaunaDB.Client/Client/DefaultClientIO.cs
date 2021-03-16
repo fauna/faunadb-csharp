@@ -67,6 +67,7 @@ namespace FaunaDB.Client
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             message.Headers.Add("X-FaunaDB-API-Version", "4");
             message.Headers.Add("X-Fauna-Driver", "csharp");
+            message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct());
 
             var last = lastSeen.Txn;
             if (last.HasValue)
@@ -117,6 +118,7 @@ namespace FaunaDB.Client
             message.Headers.Authorization = authHeader;
             message.Headers.Add("X-FaunaDB-API-Version", "4");
             message.Headers.Add("X-Fauna-Driver", "csharp");
+            message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct());
             
             var last = lastSeen.Txn;
             if (last.HasValue)
@@ -252,6 +254,81 @@ namespace FaunaDB.Client
             var source = CancellationTokenSource.CreateLinkedTokenSource(token);
             source.CancelAfter(timeout);
             return source;
+        }
+    }
+
+    internal class RuntimeEnvironmentHeader
+    {
+        private string runtime;
+        private string driverVersion;
+        private string operatingSystem;
+        private string environment;
+
+        private static RuntimeEnvironmentHeader instance;
+
+        private RuntimeEnvironmentHeader() {}
+
+        private void GatherEnvironmentInfo()
+        {
+            this.environment = getRuntimeEnvironment();
+            this.operatingSystem = Environment.OSVersion.VersionString;
+            this.runtime = typeof(string).Assembly.ImageRuntimeVersion;
+            this.driverVersion = GetType().Assembly.GetName().Version.ToString();
+        }
+
+        private string getRuntimeEnvironment()
+        {
+            if (Environment.GetEnvironmentVariable("NETLIFY_IMAGES_CDN_DOMAIN") != null)
+            {
+                return "Netlify";
+            }
+
+            if (Environment.GetEnvironmentVariable("VERCEL") != null)
+            {
+                return "Vercel";
+            }
+
+            if (Environment.GetEnvironmentVariable("PATH") != null &&
+                Environment.GetEnvironmentVariable("PATH").Contains("heroku"))
+            {
+                return "Heroku";
+            }
+
+            if (Environment.GetEnvironmentVariable("AWS_LAMBDA_FUNCTION_VERSION") != null)
+            {
+                return "AWS Lambda";
+            }
+
+            if (Environment.GetEnvironmentVariable("_") != null && Environment.GetEnvironmentVariable("_").Contains("google"))
+            {
+                return "GCP Cloud Functions";
+            }
+
+            if (Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT") != null)
+            {
+                return "GCP Compute Instances";
+            }
+
+            if (Environment.GetEnvironmentVariable("ORYX_ENV_TYPE") != null &&
+                Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID") != null &&
+                Environment.GetEnvironmentVariable("ORYX_ENV_TYPE").Contains("AppService"))
+            {
+                return "Azure Compute";
+            }
+
+            return "Unknown";
+        }
+
+        public static string Construct()
+        {
+            if (instance == null)
+            {
+                instance = new RuntimeEnvironmentHeader();
+                instance.GatherEnvironmentInfo();
+            }
+
+            return
+                $"driver=csharp-{instance.driverVersion}; runtime={instance.runtime}; env={instance.environment}; os={instance.operatingSystem}";
         }
     }
 }
