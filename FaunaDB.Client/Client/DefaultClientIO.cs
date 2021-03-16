@@ -26,6 +26,9 @@ namespace FaunaDB.Client
 
         private LastSeen lastSeen;
 
+        public const string StreamingPath = "stream";
+        public const HttpMethodKind StreamingHttpMethod = HttpMethodKind.Post;
+
         internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout)
         {
             this.client = client;
@@ -44,6 +47,9 @@ namespace FaunaDB.Client
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null) =>
             DoRequestAsync(method, path, data, query, queryTimeout);
+
+        public Task<StreamingRequestResult> DoStreamingRequest(string data, IReadOnlyDictionary<string, string> query = null) =>
+            DoStreamingRequestAsync(data, query);
 
         async Task<RequestResult> DoRequestAsync(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null)
         {
@@ -94,6 +100,51 @@ namespace FaunaDB.Client
             }
 
             return new RequestResult(method, path, query, data, response, (int)httpResponse.StatusCode, ToDictionary(httpResponse.Headers), startTime, endTime);
+        }
+
+        async Task<StreamingRequestResult> DoStreamingRequestAsync(string data, IReadOnlyDictionary<string, string> query = null)
+        {
+            var path = StreamingPath;
+            var dataString = data == null ?  null : new StringContent(data, Encoding.UTF8, "application/json");
+            var queryString = query == null ? null : QueryString(query);
+            if (queryString != null)
+                path = $"{path}?{queryString}";
+            
+            var startTime = DateTime.UtcNow;
+
+            var message = new HttpRequestMessage(new HttpMethod(StreamingHttpMethod.Name()), $"{endpoint}{path}");
+            message.Content = dataString;
+            message.Headers.Authorization = authHeader;
+            message.Headers.Add("X-FaunaDB-API-Version", "4");
+            message.Headers.Add("X-Fauna-Driver", "csharp");
+            
+            var last = lastSeen.Txn;
+            if (last.HasValue)
+            {
+                message.Headers.Add("X-Last-Seen-Txn", last.Value.ToString());
+            }
+
+            var httpResponse = await client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None).ConfigureAwait(false);
+            
+            Stream response = await httpResponse.Content.ReadAsStreamAsync();
+
+            var endTime = DateTime.UtcNow;
+
+            if (httpResponse.Headers.Contains("X-Txn-Time")) {
+                // there shouldn't ever be more than one...
+                var time = httpResponse.Headers.GetValues("X-Txn-Time").First();
+
+                lastSeen.SetTxn(Convert.ToInt64(time));
+            }
+
+            var errorContent = String.Empty;
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                StreamReader streamReader = new StreamReader(response);
+                errorContent = await streamReader.ReadLineAsync();
+            }
+
+            return new StreamingRequestResult(query, data, response, (int)httpResponse.StatusCode, errorContent, ToDictionary(httpResponse.Headers), startTime, endTime);
         }
 
         static async Task<string> DecompressGZip(HttpContent content)

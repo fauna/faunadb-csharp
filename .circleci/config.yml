@@ -11,11 +11,9 @@ executors:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:3.1
 
-      - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:latest
+      - image: fauna/faunadb
         name: core
-        auth:
-          username: _json_key
-          password: $GCR_KEY
+
     environment:
       FAUNA_ROOT_KEY: secret
       FAUNA_DOMAIN: core
