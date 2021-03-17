@@ -556,11 +556,54 @@ namespace Test
             AssertJsonEqual(Identity(),
                 "{\"identity\":null}");
         }
+        
+        [Test] public void TestCurrentIdentity()
+        {
+            AssertJsonEqual(CurrentIdentity(),
+                "{\"current_identity\":null}");
+        }
 
         [Test] public void TestHasIdentity()
         {
             AssertJsonEqual(HasIdentity(),
                 "{\"has_identity\":null}");
+        }
+        
+        [Test] public void TestHasCurrentIdentity()
+        {
+            AssertJsonEqual(HasCurrentIdentity(),
+                "{\"has_current_identity\":null}");
+        }
+        
+        [Test] public void TestCurrentToken()
+        {
+            AssertJsonEqual(CurrentToken(),
+                "{\"current_token\":null}");
+        }
+        
+        [Test] public void TestHasCurrentToken()
+        {
+            AssertJsonEqual(HasCurrentToken(),
+                "{\"has_current_token\":null}");
+        }
+        
+        [Test] public void TestCreateAccessProvider()
+        {
+            AssertJsonEqual(CreateAccessProvider(
+                Obj(
+                    "name", "role_name",
+                    "issuer", "issuer_name",
+                    "jwks_uri", "https://auth0.com",
+                    "membership", Arr()
+                )),
+                "{\"create_access_provider\":{\"object\":{\"name\":\"role_name\",\"issuer\":\"issuer_name\",\"jwks_uri\":\"https://auth0.com\",\"membership\":[]}}}");
+        }
+
+        [Test]
+        public void TestAccessProvider()
+        {
+            AssertJsonEqual(AccessProvider("access-provider"),
+                "{\"access_provider\":\"access-provider\"}");
         }
 
         [Test] public void TestConcat()
