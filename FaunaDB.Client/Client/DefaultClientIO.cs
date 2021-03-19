@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -270,48 +272,108 @@ namespace FaunaDB.Client
 
         private void GatherEnvironmentInfo()
         {
-            this.environment = getRuntimeEnvironment();
-            this.operatingSystem = Environment.OSVersion.VersionString;
-            this.runtime = typeof(string).Assembly.ImageRuntimeVersion;
-            this.driverVersion = GetType().Assembly.GetName().Version.ToString();
+            this.environment = GetRuntimeEnvironment();
+            this.operatingSystem = GetOperatingSystemName();
+            this.runtime = GetCurrentRuntime();
+            this.driverVersion = Assembly.Load(new AssemblyName("FaunaDB.Client")).GetName().Version.ToString();
         }
 
-        private string getRuntimeEnvironment()
+        private static string GetOperatingSystemName()
         {
-            if (Environment.GetEnvironmentVariable("NETLIFY_IMAGES_CDN_DOMAIN") != null)
+#if NETCOREAPP
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return "OSX";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return "Linux";
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return "Windows";
+            }
+            return "Unknown";
+#else
+            // if we're under one of the .net frameworks than OS is Windows
+            return "Windows";
+#endif
+        }
+
+        private static string GetCurrentRuntime()
+        {
+#if NET45
+            return ".net framework 4.5";
+#elif NET451
+            return ".net framework 4.51";
+#elif NET46
+            return ".net framework 4.6";
+#elif NET461
+            return ".net framework 4.61";
+#elif NET47
+            return ".net framework 4.7";
+#elif NETCOREAPP1_0
+            return ".net core 1.0";
+#elif NETCOREAPP1_1
+            return ".net core 1.1";
+#elif NETCOREAPP2_0
+            return ".net core 2.0";
+#elif NETCOREAPP2_1
+            return ".net core 2.1";
+#elif NETCOREAPP3_0
+            return ".net core 3.0";
+#elif NETCOREAPP3_1
+            return ".net core 3.1";
+#elif NETFRAMEWORK
+            return ".net framework";
+#elif NETCOREAPP
+            return ".net core";
+#else
+            return "unknown .net runtime";
+#endif
+        }
+
+        private static string GetRuntimeEnvironment()
+        {
+            var envNetlify = Environment.GetEnvironmentVariable("NETLIFY_IMAGES_CDN_DOMAIN");
+            if (envNetlify != null)
             {
                 return "Netlify";
             }
 
-            if (Environment.GetEnvironmentVariable("VERCEL") != null)
+            var envVercel = Environment.GetEnvironmentVariable("VERCEL");
+            if (envVercel != null)
             {
                 return "Vercel";
             }
 
-            if (Environment.GetEnvironmentVariable("PATH") != null &&
-                Environment.GetEnvironmentVariable("PATH").Contains("heroku"))
+            var envPath = Environment.GetEnvironmentVariable("PATH");
+            if (envPath != null && envPath.Contains("heroku"))
             {
                 return "Heroku";
             }
 
-            if (Environment.GetEnvironmentVariable("AWS_LAMBDA_FUNCTION_VERSION") != null)
+            var envAwsLambda = Environment.GetEnvironmentVariable("AWS_LAMBDA_FUNCTION_VERSION");
+            if (envAwsLambda != null)
             {
                 return "AWS Lambda";
             }
 
-            if (Environment.GetEnvironmentVariable("_") != null && Environment.GetEnvironmentVariable("_").Contains("google"))
+            var envGcpFunctions = Environment.GetEnvironmentVariable("_");
+            if (envGcpFunctions != null && envGcpFunctions.Contains("google"))
             {
                 return "GCP Cloud Functions";
             }
 
-            if (Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT") != null)
+            var envGoogleCloud = Environment.GetEnvironmentVariable("GOOGLE_CLOUD_PROJECT");
+            if (envGoogleCloud != null)
             {
                 return "GCP Compute Instances";
             }
 
-            if (Environment.GetEnvironmentVariable("ORYX_ENV_TYPE") != null &&
-                Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID") != null &&
-                Environment.GetEnvironmentVariable("ORYX_ENV_TYPE").Contains("AppService"))
+            var envOryx = Environment.GetEnvironmentVariable("ORYX_ENV_TYPE");
+            var envWebsiteInstance = Environment.GetEnvironmentVariable("WEBSITE_INSTANCE_ID");
+            if (envOryx != null && envWebsiteInstance != null && envOryx.Contains("AppService"))
             {
                 return "Azure Compute";
             }
