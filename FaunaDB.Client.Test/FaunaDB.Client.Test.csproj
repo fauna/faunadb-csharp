@@ -13,7 +13,7 @@
      net46         => netstandard 1.0, 1.1, 1.2, 1.3
      net461        => netstandard 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 2.0
      -->
-    <TargetFrameworks>net45;netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp3.0;netcoreapp3.1;net451;net46;net461;net47</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp3.0;netcoreapp3.1;net451;net46;net461;net47;net48;net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
