@@ -49,7 +49,7 @@ namespace Test
             var port = Env("FAUNA_PORT", "8443");
 
             faunaSecret = Env("FAUNA_ROOT_KEY", "secret");
-            faunaEndpoint = $"{scheme}://{domain}:{port}/";
+            faunaEndpoint = port != "443" ? $"{scheme}://{domain}:{port}/" : $"{scheme}://{domain}/";
             rootClient = new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint);
 
             DbRef = Database(testDbName);
