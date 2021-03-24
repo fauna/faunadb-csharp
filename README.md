@@ -44,6 +44,26 @@ specific tests:
 FrameworkPathOverride=/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5-api dotnet test FaunaDB.Client.Test/ --framework net45 --filter Name~EncoderTest
 ```
 
+If you're using .net core (which is cross-platform for Windows, Mac or Linux), use the following examples for running tests:
+```bash
+# runs all the tests for all target frameworks from csproj file
+dotnet test FaunaDB.Client.Test
+
+# runs tests for a specific target framework
+dotnet test FaunaDB.Client.Test --framework net45
+dotnet test FaunaDB.Client.Test --framework netcoreapp3.1
+dotnet test FaunaDB.Client.Test --framework net5.0
+
+# runs all the tests in a specified test class (format: namespace.class)
+dotnet test FaunaDB.Client.Test --filter FullyQualifiedName~Test.EnvironmentHeaderTest --framework netcoreapp3.1
+
+# runs a single test
+dotnet test FaunaDB.Client.Test --filter Name=TestNetlifyEnvironment --framework netcoreapp3.1
+
+# runs all the tests starting with TestUnknownEnvironment
+dotnet test FaunaDB.Client.Test --filter FullyQualifiedName~Test.EnvironmentHeaderTest.TestUnknownEnvironment --framework netcoreapp3.1
+```
+
 ## Referencing FaunaDB Assembly
 
 First install the Nuget package by adding the package reference to your MSBuild project:
