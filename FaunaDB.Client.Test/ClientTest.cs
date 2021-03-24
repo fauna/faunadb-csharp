@@ -2101,7 +2101,7 @@ namespace Test
             await faunaClient0.Query(Count(Databases()));
 
             var headers = customHttp.LastMessage.Headers;
-            Assert.AreEqual("csharp", headers.GetValues("X-Fauna-Driver").First());
+            Assert.That(headers.GetValues("X-Driver-Env").First(), Does.Match("driver=csharp-.*; runtime=.*; env=.*; os=.*"));
             Assert.AreEqual("4", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.IsFalse(headers.Contains("X-Last-Seen-Txn"));
 
