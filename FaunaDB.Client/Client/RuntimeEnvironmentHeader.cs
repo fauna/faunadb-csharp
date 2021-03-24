@@ -40,8 +40,7 @@ namespace FaunaDB.Client
             }
             return "Unknown";
 #else
-            // if we're under one of the .net frameworks than OS is Windows
-            return "Windows";
+            return Environment.OSVersion.ToString();
 #endif
         }
 
