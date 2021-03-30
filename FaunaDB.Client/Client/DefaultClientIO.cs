@@ -39,7 +39,7 @@ namespace FaunaDB.Client
             this.lastSeen = lastSeen;
             this.endpoint = endpoint;
             this.clientTimeout = timeout;
-            this.httpVersion = httpVersion == null ? HttpVersion.Version11 : httpVersion;
+            this.httpVersion = httpVersion == null ? new Version(1, 1) : httpVersion;
         }
 
         public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null, Version httpVersion = null)
@@ -123,6 +123,7 @@ namespace FaunaDB.Client
             message.Headers.Add("X-FaunaDB-API-Version", "4");
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
             message.Version = httpVersion;
+            message.SetTimeout(Timeout.InfiniteTimeSpan);
             
             var last = lastSeen.Txn;
             if (last.HasValue)
@@ -132,7 +133,7 @@ namespace FaunaDB.Client
 
             var httpResponse = await client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None).ConfigureAwait(false);
             
-            Stream response = await httpResponse.Content.ReadAsStreamAsync();
+            Stream response = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             var endTime = DateTime.UtcNow;
 
