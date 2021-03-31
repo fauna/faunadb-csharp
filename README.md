@@ -155,7 +155,7 @@ We've also added an optional parameter if you want to specify the version of the
 var adminClient = new FaunaClient(
     endpoint: endpoint,
     secret: secret,
-    httpVersion: HttpVersion.Version20
+    httpVersion: HttpVersion.Version11
 );
 ```
 
