@@ -39,7 +39,11 @@ namespace FaunaDB.Client
             this.lastSeen = lastSeen;
             this.endpoint = endpoint;
             this.clientTimeout = timeout;
+#if NETSTANDARD2_1
+            this.httpVersion = httpVersion == null ? new Version(2, 0) : httpVersion;
+#else
             this.httpVersion = httpVersion == null ? new Version(1, 1) : httpVersion;
+#endif
         }
 
         public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null, Version httpVersion = null)
