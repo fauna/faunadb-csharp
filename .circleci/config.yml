@@ -41,7 +41,7 @@ commands:
             dotnet --info
             mkdir results
             dotnet restore
-            dotnet test --framework netcoreapp3.0 --logger "junit;LogFilePath=./results/results.xml" FaunaDB.Client.Test
+            dotnet test --framework netcoreapp3.1 --logger "junit;LogFilePath=./results/results.xml" FaunaDB.Client.Test
 
       - store_test_results:
           path: FaunaDB.Client.Test/results/

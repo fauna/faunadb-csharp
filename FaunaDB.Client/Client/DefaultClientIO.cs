@@ -6,6 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.InteropServices;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -66,7 +68,7 @@ namespace FaunaDB.Client
             message.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             message.Headers.Add("X-FaunaDB-API-Version", "4");
-            message.Headers.Add("X-Fauna-Driver", "csharp");
+            message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
 
             var last = lastSeen.Txn;
             if (last.HasValue)
@@ -116,7 +118,7 @@ namespace FaunaDB.Client
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
             message.Headers.Add("X-FaunaDB-API-Version", "4");
-            message.Headers.Add("X-Fauna-Driver", "csharp");
+            message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
             
             var last = lastSeen.Txn;
             if (last.HasValue)

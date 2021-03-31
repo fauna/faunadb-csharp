@@ -5,15 +5,14 @@
      https://docs.microsoft.com/en-us/dotnet/standard/net-standard#net-implementation-support
      https://github.com/dotnet/standard/blob/master/docs/versions.md
 
-     netcoreapp1.0 => netstandard 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
-     netcoreapp1.1 => netstandard 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
-     netcoreapp2.0 => netstandard 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 2.0
-     net45         => netstandard 1.0, 1.1
-     net451        => netstandard 1.0, 1.1, 1.2
-     net46         => netstandard 1.0, 1.1, 1.2, 1.3
-     net461        => netstandard 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 2.0
+     netcoreapp1.1 => netstandard 1.5 FuanaDB.Client build will be used
+     netcoreapp2.1 => netstandard 2.0 FuanaDB.Client build will be used
+     netcoreapp3.1 => netstandard 2.1 FuanaDB.Client build will be used
+     net5.0        => netstandard 2.1 FuanaDB.Client build will be used (should be changed to 6.0 after the release)
+     net45         => applicable for .net framework version up to 4.8, means if you target
+                      .net frameworks net45 till net48, FaunaDB.Client net45 build will be used
      -->
-    <TargetFrameworks>net45;netcoreapp1.0;netcoreapp1.1;netcoreapp2.0;netcoreapp3.0;net451;net46;net461;net47</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
