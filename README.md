@@ -147,9 +147,9 @@ var client = new FaunaClient("secret", "http://localhost:9090/", httpClient: htt
 ```
 
 #### HTTP 2.0 support
-Starting from 4.0.0 version of the driver you have HTTP 2.0 support enabled by default for .net standard 2.1,  
-so if you use .net core 3.1 which supports that standard you'll be sending requests to faunadb server on HTTP 2.0  
-Standards lower than 2.1 as well as .net frameworks 4.5-4.8 have HTTP 1.1 as a default protocol version, since they lack of support for it.  
+Starting from version 4.0.0 of this driver (faunadb-csharp), HTTP/2 support is enabled by default for .NET standards 2.1 and above.
+This means that if you use .NET core 3.1 and above (which support that standard), you'll be sending requests to Fauna on HTTP/2. 
+.NET standards lower than 2.1 and .NET frameworks 4.5-4.8 have HTTP/1.1 enabled as the default protocol version, since they lack of support for HTTP/2.
 We've also added an optional parameter if you want to specify the version of the protocol directly:
 ```
 var adminClient = new FaunaClient(
