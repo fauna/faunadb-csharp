@@ -31,12 +31,14 @@ namespace FaunaDB.Client
         /// <param name="secret">Auth token for the FaunaDB server.</param>
         /// <param name="endpoint">URL for the FaunaDB server. Defaults to "https://db.fauna.com:443"</param>
         /// <param name="timeout">Timeout for I/O operations. Defaults to 1 minute.</param>
+        /// <param name="httpVersion">Version of http. Default value is HttpVersion.Version11, is you use .net core 3.0 and above you can enable http/2 support by passing HttpVersion.Version20</param>
         public FaunaClient(
             string secret,
             string endpoint = "https://db.fauna.com:443",
             TimeSpan? timeout = null,
-            HttpClient httpClient = null)
-            : this(CreateClient(secret, endpoint, timeout, httpClient))
+            HttpClient httpClient = null,
+            Version httpVersion = null)
+            : this(CreateClient(secret, endpoint, timeout, httpClient, httpVersion))
         { }
 
         /// <summary>
@@ -241,13 +243,15 @@ namespace FaunaDB.Client
             string secret,
             string endpoint,
             TimeSpan? timeout = null,
-            HttpClient httpClient = null)
+            HttpClient httpClient = null,
+            Version httpVersion = null)
         {
             return new DefaultClientIO(
                 secret: secret,
                 endpoint: new Uri(endpoint),
                 timeout: timeout,
-                httpClient: httpClient
+                httpClient: httpClient,
+                httpVersion: httpVersion
             );
         }
     }
