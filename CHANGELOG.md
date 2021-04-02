@@ -1,3 +1,8 @@
+## 4.0.0-rc
+- Streaming support
+- 3rd party auth support
+- HTTP/2 support for .net standard 2.1 and above
+
 ## 3.0.0
 - Deprecate `Contains` in favor of specific functions `ContainsField`, `ContainsPath`, and `ContainsValue`
 - Add `Reverse` function
