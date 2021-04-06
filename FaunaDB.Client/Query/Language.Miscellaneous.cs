@@ -920,5 +920,23 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Documents(Expr collection) =>
             UnescapedObject.With("documents", collection);
+        
+        /// <summary>
+        /// Try to convert an object into an array of (field, value).
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/toarray">ToArray</see>
+        /// </para>
+        /// </summary>
+        public static Expr ToArray(Expr expr) =>
+            UnescapedObject.With("to_array", expr);
+        
+        /// <summary>
+        /// Try to convert an array of (field, value) into an object.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/toobject">ToObject</see>
+        /// </para>
+        /// </summary>
+        public static Expr ToObject(Expr fields) =>
+            UnescapedObject.With("to_object", fields);
     }
 }
