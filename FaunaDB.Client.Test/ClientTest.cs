@@ -2609,8 +2609,8 @@ namespace Test
         [Test]
         public async Task TestTimeAdd()
         {
-            var res1 = await adminClient.Query(TimeAdd(Epoch(0, TimeUnit.Second), 1, FaunaTimeUnit.Hour));
-            var res2 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 1, FaunaTimeUnit.Day));
+            var res1 = await adminClient.Query(TimeAdd(Epoch(0, TimeUnit.Second), 1, TimeUnit.Hour));
+            var res2 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 1, TimeUnit.Day));
             var res3 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 2, "days"));
             
             Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(1), res1.To<DateTime>().Value);
@@ -2621,8 +2621,8 @@ namespace Test
         [Test]
         public async Task TestTimeSubtract()
         {
-            var res1 = await adminClient.Query(TimeSubtract(Epoch(0, TimeUnit.Second), 1, FaunaTimeUnit.Hour));
-            var res2 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 1, FaunaTimeUnit.Day));
+            var res1 = await adminClient.Query(TimeSubtract(Epoch(0, TimeUnit.Second), 1, TimeUnit.Hour));
+            var res2 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 1, TimeUnit.Day));
             var res3 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 2, "days"));
             
             Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(-1), res1.To<DateTime>().Value);
@@ -2634,7 +2634,7 @@ namespace Test
         public async Task TestTimeDiff()
         {
             var res1 = await adminClient.Query(TimeDiff(Epoch(0, TimeUnit.Second), Epoch(1, TimeUnit.Second), TimeUnit.Second));
-            var res2 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-02"), FaunaTimeUnit.Day));
+            var res2 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-02"), TimeUnit.Day));
             var res3 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-03"), "days"));
             
             Assert.AreEqual(1L, res1.To<long>().Value);
