@@ -2549,7 +2549,7 @@ namespace Test
                 await adminClient.Query(ToArray(Obj("k0", 10, "k1", 20)))
             );
         }
-
+        
         [Test]
         public async Task TestToArrayAndToObject()
         {
@@ -2560,6 +2560,50 @@ namespace Test
                 obj,
                 await adminClient.Query(ToObject(ToArray(obj)))
             );
+        }
+
+        [Test]
+        public async Task TestToDouble()
+        {
+            var res1 = await adminClient.Query(ToDouble(10L));
+            Assert.AreEqual(res1.To<double>().Value, 10.0);
+            
+            var res2 = await adminClient.Query(ToDouble(3.14));
+            Assert.AreEqual(res2.To<double>().Value, 3.14);
+            
+            var res3 = await adminClient.Query(ToDouble("3.14"));
+            Assert.AreEqual(res3.To<double>().Value, 3.14);
+        }
+
+        [Test]
+        public async Task TestThrowBadRequestOnDouble()
+        {
+            var ex = Assert.ThrowsAsync<BadRequest>(
+                async () => await adminClient.Query(ToDouble(Now()))
+            );
+            Assert.AreEqual("invalid argument: Cannot cast Time to Double.", ex.Message);
+        }
+        
+        [Test]
+        public async Task TestToInteger()
+        {
+            var res1 = await adminClient.Query(ToInteger(10L));
+            Assert.AreEqual(res1.To<long>().Value, 10L);
+            
+            var res2 = await adminClient.Query(ToInteger(10.0));
+            Assert.AreEqual(res2.To<long>().Value, 10L);
+            
+            var res3 = await adminClient.Query(ToInteger("10"));
+            Assert.AreEqual(res3.To<long>().Value, 10L);
+        }
+
+        [Test]
+        public async Task TestThrowBadRequestOnInteger()
+        {
+            var ex = Assert.ThrowsAsync<BadRequest>(
+                async () => await adminClient.Query(ToInteger(Now()))
+            );
+            Assert.AreEqual("invalid argument: Cannot cast Time to Integer.", ex.Message);
         }
 
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
