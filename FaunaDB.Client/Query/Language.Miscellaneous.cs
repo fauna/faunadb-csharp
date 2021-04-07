@@ -1016,7 +1016,8 @@ namespace FaunaDB.Query
 
     /// <summary>
     /// Type for time units.
-    /// <see cref="Insert(Expr, Expr, ActionType, Expr)"/> and <see cref="Remove(Expr, Expr, ActionType)"/>.
+    /// <see cref="TimeAdd(Expr, Expr, FaunaTimeUnit)"/>, <see cref="TimeSubtract(Expr, Expr, FaunaTimeUnit)"/>
+    /// and <see cref="TimeDiff(Expr, Expr, FaunaTimeUnit)"/>.
     /// </summary>
     public class FaunaTimeUnit
     {
