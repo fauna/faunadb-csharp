@@ -956,5 +956,84 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr ToInteger(Expr value) =>
             UnescapedObject.With("to_integer", value);
+
+        /// <summary>
+        /// Returns a new time or date with the offset in terms of the unit added.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timeadd">TimeAdd</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeAdd(Expr value, Expr offset, Expr unit) =>
+            UnescapedObject.With("time_add", value, "offset", offset, "unit", unit);
+        
+        /// <summary>
+        /// Returns a new time or date with the offset in terms of the unit added.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timeadd">TimeAdd</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeAdd(Expr value, Expr offset, FaunaTimeUnit unit) =>
+            TimeAdd(value, offset, unit.Value);
+        
+        /// <summary>
+        /// Returns a new time or date with the offset in terms of the unit subtracted.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timesubtract">TimeSubtract</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeSubtract(Expr value, Expr offset, Expr unit) =>
+            UnescapedObject.With("time_subtract", value, "offset", offset, "unit", unit);
+        
+        /// <summary>
+        /// Returns a new time or date with the offset in terms of the unit subtracted.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timesubtract">TimeSubtract</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeSubtract(Expr value, Expr offset, FaunaTimeUnit unit) =>
+            TimeSubtract(value, offset, unit.Value);
+        
+        /// <summary>
+        /// Returns the number of intervals in terms of the unit between
+        /// two times or dates. Both start and finish must be of the same type.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timediff">TimeDiff</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeDiff(Expr start, Expr finish, Expr unit) =>
+            UnescapedObject.With("time_diff", start, "other", finish, "unit", unit);
+
+        /// <summary>
+        /// Returns the number of intervals in terms of the unit between
+        /// two times or dates. Both start and finish must be of the same type.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timediff">TimeDiff</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeDiff(Expr start, Expr finish, FaunaTimeUnit unit) =>
+            TimeDiff(start, finish, unit.Value);
+    }
+
+    /// <summary>
+    /// Type for time units.
+    /// <see cref="Insert(Expr, Expr, ActionType, Expr)"/> and <see cref="Remove(Expr, Expr, ActionType)"/>.
+    /// </summary>
+    public class FaunaTimeUnit
+    {
+        public string Value { get; }
+
+        private FaunaTimeUnit(string value)
+        {
+            Value = value;
+        }
+        
+        public static FaunaTimeUnit Day => new FaunaTimeUnit("day");
+        public static FaunaTimeUnit HalfDay => new FaunaTimeUnit("half day");
+        public static FaunaTimeUnit Hour => new FaunaTimeUnit("hour");
+        public static FaunaTimeUnit Minute => new FaunaTimeUnit("minute");
+        public static FaunaTimeUnit Second => new FaunaTimeUnit("second");
+        public static FaunaTimeUnit Millisecond => new FaunaTimeUnit("millisecond");
+        public static FaunaTimeUnit Microsecond => new FaunaTimeUnit("microsecond");
+        public static FaunaTimeUnit Nanosecond => new FaunaTimeUnit("nanosecond");
     }
 }

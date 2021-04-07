@@ -2606,6 +2606,42 @@ namespace Test
             Assert.AreEqual("invalid argument: Cannot cast Time to Integer.", ex.Message);
         }
 
+        [Test]
+        public async Task TestTimeAdd()
+        {
+            var res1 = await adminClient.Query(TimeAdd(Epoch(0, TimeUnit.Second), 1, FaunaTimeUnit.Hour));
+            var res2 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 1, FaunaTimeUnit.Day));
+            var res3 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 2, "days"));
+            
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(1), res1.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(1), res2.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(2), res3.To<DateTime>().Value);
+        }
+        
+        [Test]
+        public async Task TestTimeSubtract()
+        {
+            var res1 = await adminClient.Query(TimeSubtract(Epoch(0, TimeUnit.Second), 1, FaunaTimeUnit.Hour));
+            var res2 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 1, FaunaTimeUnit.Day));
+            var res3 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 2, "days"));
+            
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(-1), res1.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(-1), res2.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(-2), res3.To<DateTime>().Value);
+        }
+        
+        [Test]
+        public async Task TestTimeDiff()
+        {
+            var res1 = await adminClient.Query(TimeDiff(Epoch(0, TimeUnit.Second), Epoch(1, TimeUnit.Second), TimeUnit.Second));
+            var res2 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-02"), FaunaTimeUnit.Day));
+            var res3 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-03"), "days"));
+            
+            Assert.AreEqual(1L, res1.To<long>().Value);
+            Assert.AreEqual(1L, res2.To<long>().Value);
+            Assert.AreEqual(2L, res3.To<long>().Value);
+        }
+
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))
