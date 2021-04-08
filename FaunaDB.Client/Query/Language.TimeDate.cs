@@ -19,6 +19,10 @@
         /// </summary>
         public enum TimeUnit
         {
+            Day,
+            HalfDay,
+            Hour,
+            Minute,
             Second,
             Millisecond,
             Microsecond,
@@ -60,5 +64,33 @@
         /// </summary>
         public static Expr Now() =>
             UnescapedObject.With("now", Null());
+        
+        /// <summary>
+        /// Returns a new time or date with the offset in terms of the unit added.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timeadd">TimeAdd</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeAdd(Expr value, Expr offset, Expr unit) =>
+            UnescapedObject.With("time_add", value, "offset", offset, "unit", unit);
+
+        /// <summary>
+        /// Returns a new time or date with the offset in terms of the unit subtracted.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timesubtract">TimeSubtract</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeSubtract(Expr value, Expr offset, Expr unit) =>
+            UnescapedObject.With("time_subtract", value, "offset", offset, "unit", unit);
+
+        /// <summary>
+        /// Returns the number of intervals in terms of the unit between
+        /// two times or dates. Both start and finish must be of the same type.
+        /// <para>
+        /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/timediff">TimeDiff</see>
+        /// </para>
+        /// </summary>
+        public static Expr TimeDiff(Expr start, Expr finish, Expr unit) =>
+            UnescapedObject.With("time_diff", start, "other", finish, "unit", unit);
     }
 }

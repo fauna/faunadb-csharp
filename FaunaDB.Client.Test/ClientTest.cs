@@ -2355,6 +2355,293 @@ namespace Test
             Assert.IsFalse((await adminClient.Query(HasCurrentToken())).To<bool>().Value);
         }
 
+        [Test]
+        public async Task TestTypeCheckers()
+        {
+            var coll = (await adminClient.Query(CreateCollection(Obj("name", RandomStartingWith())))).Get(REF_FIELD);
+            var index = (await adminClient.Query(CreateIndex(Obj("name", RandomStartingWith(), "source", coll, "active", true)))).Get(REF_FIELD);
+            var doc = (await adminClient.Query(Create(coll, Obj("credentials", Obj("password", "sekret"))))).Get(REF_FIELD);
+            var db = (await adminClient.Query(CreateDatabase(Obj("name", RandomStartingWith())))).Get(REF_FIELD);
+            var fn = (await adminClient.Query(CreateFunction(Obj("name", RandomStartingWith(), "body", Query(Lambda("x", Var("x"))))))).Get(REF_FIELD);
+            var key = (await adminClient.Query(CreateKey(Obj("database", db, "role", "admin")))).Get(REF_FIELD);
+            var tok = await adminClient.Query(Login(doc, Obj("password", "sekret")));
+            var role = (await adminClient.Query(CreateRole(Obj("name", RandomStartingWith(), "membership", Arr(), "privileges", Arr())))).Get(REF_FIELD);
+            
+            var cli = adminClient.NewSessionClient(tok.Get(SECRET_FIELD));
+            var cred = (await cli.Query(Get(Ref("credentials/self")))).Get(REF_FIELD);
+            var token = tok.Get(REF_FIELD);
+
+            var trueExprs = new List<Expr>
+            {
+                IsNumber(3.14),
+                IsNumber(10L),
+                IsDouble(3.14),
+                IsInteger(10L),
+                IsBoolean(true),
+                IsBoolean(false),
+                IsNull(Null()),
+                IsBytes(new byte[] {0x1, 0x2, 0x3, 0x4}),
+                IsTimestamp(Now()),
+                IsTimestamp(Epoch(1, TimeUnit.Second)),
+                IsTimestamp(Time("1970-01-01T00:00:00Z")),
+                IsDate(ToDate(Now())),
+                IsDate(Date("1970-01-01")),
+                IsString("string"),
+                IsArray(Arr(10)),
+                IsObject(Obj("x", 10)),
+                IsObject(Paginate(Collections())),
+                IsObject(Get(doc)),
+                IsRef(coll),
+                IsSet(Collections()),
+                IsSet(Match(index)),
+                IsSet(Union(Match(index))),
+                IsDoc(doc),
+                IsDoc(Get(doc)),
+                IsLambda(Query(Lambda("x", Var("x")))),
+                IsCollection(coll),
+                IsCollection(Get(coll)),
+                IsDatabase(db),
+                IsDatabase(Get(db)),
+                IsIndex(index),
+                IsIndex(Get(index)),
+                IsFunction(fn),
+                IsFunction(Get(fn)),
+                IsKey(key),
+                IsKey(Get(key)),
+                IsToken(token),
+                IsToken(Get(token)),
+                IsCredentials(cred),
+                IsCredentials(Get(cred)),
+                IsRole(role),
+                IsRole(Get(role))
+            };
+
+            var falseExprs = new List<Expr>
+            {
+                IsNumber("string"),
+                IsNumber(Arr()),
+                IsDouble(10L),
+                IsInteger(3.14),
+                IsBoolean("string"),
+                IsBoolean(10),
+                IsNull("string"),
+                IsBytes(Arr(0x1, 0x2, 0x3, 0x4)),
+                IsTimestamp(ToDate(Now())),
+                IsTimestamp(10),
+                IsDate(Now()),
+                IsString(Arr()),
+                IsString(10),
+                IsArray(Obj("x", 10)),
+                IsObject(Arr(10)),
+                IsRef(Match(index)),
+                IsRef(10),
+                IsSet("string"),
+                IsDoc(Obj()),
+                IsLambda(fn),
+                IsLambda(Get(fn)),
+                IsCollection(db),
+                IsCollection(Get(db)),
+                IsDatabase(coll),
+                IsDatabase(Get(coll)),
+                IsIndex(coll),
+                IsIndex(Get(db)),
+                IsFunction(index),
+                IsFunction(Get(coll)),
+                IsKey(db),
+                IsKey(Get(index)),
+                IsToken(index),
+                IsToken(Get(cred)),
+                IsCredentials(token),
+                IsCredentials(Get(role)),
+                IsRole(coll),
+                IsRole(Get(index))
+            };
+
+            var trueResults = await adminClient.Query(trueExprs);
+            foreach (var result in trueResults)
+            {
+                Assert.IsTrue(result.To<bool>().Value);
+            }
+
+            var falseResults = await adminClient.Query(falseExprs);
+            foreach (var result in falseResults)
+            {
+                Assert.IsFalse(result.To<bool>().Value);
+            }
+        }
+
+        [Test]
+        public async Task TestAllAny()
+        {
+            var coll = await adminClient.Query(CreateCollection(Obj("name", RandomStartingWith())));
+            var index = await adminClient.Query(CreateIndex(Obj(
+              "name", RandomStartingWith(),
+              "source", coll.Get(REF_FIELD),
+              "active", true,
+              "terms", Arr(Obj("field", Arr("data", "foo"))),
+              "values", Arr(Obj("field", Arr("data", "value")))
+            )));
+
+            await adminClient.Query(Do(
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "true", "value", true))),
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "true", "value", true))),
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "true", "value", true))),
+
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "false", "value", false))),
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "false", "value", false))),
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "false", "value", false))),
+
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", true))),
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", false))),
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", true))),
+                Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", false)))
+            ));
+
+            //all: array
+            Assert.IsTrue((await adminClient.Query(All(Arr(true, true, true)))).To<bool>().Value);
+            Assert.IsFalse((await adminClient.Query(All(Arr(true, false, true)))).To<bool>().Value);
+
+            //all: page
+            Assert.IsTrue(
+                (await adminClient.Query(Select(Path("data").At(0), All(Paginate(Match(index.Get(REF_FIELD), "true")))))).To<bool>().Value
+            );
+            Assert.IsFalse(
+                (await adminClient.Query(Select(Path("data").At(0), All(Paginate(Match(index.Get(REF_FIELD), "false")))))).To<bool>().Value
+            );
+            Assert.IsFalse(
+                (await adminClient.Query(Select(Path("data").At(0), All(Paginate(Match(index.Get(REF_FIELD), "mixed")))))).To<bool>().Value
+            );
+
+            //all: set
+            Assert.IsTrue((await adminClient.Query(All(Match(index.Get(REF_FIELD), "true")))).To<bool>().Value);
+            Assert.IsFalse((await adminClient.Query(All(Match(index.Get(REF_FIELD), "false")))).To<bool>().Value);
+            Assert.IsFalse((await adminClient.Query(All(Match(index.Get(REF_FIELD), "mixed")))).To<bool>().Value);
+
+            //any: array
+            Assert.IsFalse((await adminClient.Query(Any(Arr(false, false, false)))).To<bool>().Value);
+            Assert.IsTrue((await adminClient.Query(Any(Arr(true, false, true)))).To<bool>().Value);
+
+            //any: page
+            Assert.IsTrue(
+              (await adminClient.Query(Select(Path("data").At(0), Any(Paginate(Match(index.Get(REF_FIELD), "true")))))).To<bool>().Value
+            );
+            Assert.IsFalse(
+                (await adminClient.Query(Select(Path("data").At(0), Any(Paginate(Match(index.Get(REF_FIELD), "false")))))).To<bool>().Value
+            );
+            Assert.IsTrue(
+                (await adminClient.Query(Select(Path("data").At(0), Any(Paginate(Match(index.Get(REF_FIELD), "mixed")))))).To<bool>().Value
+            );
+
+            //any: set
+            Assert.IsTrue((await adminClient.Query(Any(Match(index.Get(REF_FIELD), "true")))).To<bool>().Value);
+            Assert.IsFalse((await adminClient.Query(Any(Match(index.Get(REF_FIELD), "false")))).To<bool>().Value);
+            Assert.IsTrue((await adminClient.Query(Any(Match(index.Get(REF_FIELD), "mixed")))).To<bool>().Value);
+        }
+
+        [Test]
+        public async Task TestToArray()
+        {
+            Assert.AreEqual(
+                new ArrayV(new List<Value>() {
+                    new ArrayV(new List<Value>() {new StringV("k0"), new LongV(10)}),
+                    new ArrayV(new List<Value>() {new StringV("k1"), new LongV(20)})
+                }),
+                await adminClient.Query(ToArray(Obj("k0", 10, "k1", 20)))
+            );
+        }
+        
+        [Test]
+        public async Task TestToArrayAndToObject()
+        {
+            var keys = new Dictionary<string, Value> {["k0"] = new LongV(10), ["k1"] = new LongV(20)};
+            var obj = new ObjectV(keys);
+
+            Assert.AreEqual(
+                obj,
+                await adminClient.Query(ToObject(ToArray(obj)))
+            );
+        }
+
+        [Test]
+        public async Task TestToDouble()
+        {
+            var res1 = await adminClient.Query(ToDouble(10L));
+            Assert.AreEqual(res1.To<double>().Value, 10.0);
+            
+            var res2 = await adminClient.Query(ToDouble(3.14));
+            Assert.AreEqual(res2.To<double>().Value, 3.14);
+            
+            var res3 = await adminClient.Query(ToDouble("3.14"));
+            Assert.AreEqual(res3.To<double>().Value, 3.14);
+        }
+
+        [Test]
+        public async Task TestThrowBadRequestOnDouble()
+        {
+            var ex = Assert.ThrowsAsync<BadRequest>(
+                async () => await adminClient.Query(ToDouble(Now()))
+            );
+            Assert.AreEqual("invalid argument: Cannot cast Time to Double.", ex.Message);
+        }
+        
+        [Test]
+        public async Task TestToInteger()
+        {
+            var res1 = await adminClient.Query(ToInteger(10L));
+            Assert.AreEqual(res1.To<long>().Value, 10L);
+            
+            var res2 = await adminClient.Query(ToInteger(10.0));
+            Assert.AreEqual(res2.To<long>().Value, 10L);
+            
+            var res3 = await adminClient.Query(ToInteger("10"));
+            Assert.AreEqual(res3.To<long>().Value, 10L);
+        }
+
+        [Test]
+        public async Task TestThrowBadRequestOnInteger()
+        {
+            var ex = Assert.ThrowsAsync<BadRequest>(
+                async () => await adminClient.Query(ToInteger(Now()))
+            );
+            Assert.AreEqual("invalid argument: Cannot cast Time to Integer.", ex.Message);
+        }
+
+        [Test]
+        public async Task TestTimeAdd()
+        {
+            var res1 = await adminClient.Query(TimeAdd(Epoch(0, TimeUnit.Second), 1, TimeUnit.Hour));
+            var res2 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 1, TimeUnit.Day));
+            var res3 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 2, "days"));
+            
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(1), res1.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(1), res2.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(2), res3.To<DateTime>().Value);
+        }
+        
+        [Test]
+        public async Task TestTimeSubtract()
+        {
+            var res1 = await adminClient.Query(TimeSubtract(Epoch(0, TimeUnit.Second), 1, TimeUnit.Hour));
+            var res2 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 1, TimeUnit.Day));
+            var res3 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 2, "days"));
+            
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(-1), res1.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(-1), res2.To<DateTime>().Value);
+            Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(-2), res3.To<DateTime>().Value);
+        }
+        
+        [Test]
+        public async Task TestTimeDiff()
+        {
+            var res1 = await adminClient.Query(TimeDiff(Epoch(0, TimeUnit.Second), Epoch(1, TimeUnit.Second), TimeUnit.Second));
+            var res2 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-02"), TimeUnit.Day));
+            var res3 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-03"), "days"));
+            
+            Assert.AreEqual(1L, res1.To<long>().Value);
+            Assert.AreEqual(1L, res2.To<long>().Value);
+            Assert.AreEqual(2L, res3.To<long>().Value);
+        }
+
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))
