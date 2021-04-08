@@ -205,5 +205,39 @@
         /// </example>
         public static Expr Reverse(Expr expr) =>
             UnescapedObject.With("reverse", expr);
+        
+        /// <summary>
+        /// Evaluates to true if all elements of the collection is true.
+        /// <para>
+        /// <see href="https://docs.fauna.com/fauna/current/api/fql/functions/all">All function</see>
+        /// </para>
+        /// </summary>
+        /// <param name="collection">A collection expression</param>
+        /// <example>
+        /// <code>
+        /// var result = await client.Query(All(Arr(true, true, true)));
+        ///
+        /// Assert.IsTrue(true, result.To<bool>().Value);
+        /// </code>
+        /// </example>
+        public static Expr All(Expr collection) =>
+            UnescapedObject.With("all", collection);
+        
+        /// <summary>
+        /// Evaluates to true if any element of the collection is true.
+        /// <para>
+        /// <see href="https://docs.fauna.com/fauna/current/api/fql/functions/any">Any function</see>
+        /// </para>
+        /// </summary>
+        /// <param name="collection">A collection expression</param>
+        /// <example>
+        /// <code>
+        /// var result = await client.Query(Any(Arr(true, false, false)));
+        ///
+        /// Assert.IsTrue(true, result.To<bool>().Value);
+        /// </code>
+        /// </example>
+        public static Expr Any(Expr collection) =>
+            UnescapedObject.With("any", collection);
     }
 }
