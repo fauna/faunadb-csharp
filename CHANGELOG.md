@@ -1,3 +1,9 @@
+## 4.0.0-rc
+- Streaming support
+- 3rd party auth support
+- HTTP/2 support for .net standard 2.1 and above
+- Add functions: `All`, `Any`, `IsArray`, `IsBoolean`, `IsBytes`, `IsCollection`, `IsCredentials`, `IsDatabase`, `IsDate`, `IsDoc`, `IsDouble`, `IsFunction`, `IsIndex`, `IsInteger`, `IsKey`, `IsLambda`, `IsNull`, `IsNumber`, `IsObject`, `IsRef`, `IsRole`, `IsSet`, `IsString`, `IsTimestamp`, `IsToken`, `TimeAdd`, `TimeSubtract`, `TimeDiff`, `ToArray`, `ToDouble`, `ToInteger`, `ToObject`
+
 ## 3.0.0
 - Deprecate `Contains` in favor of specific functions `ContainsField`, `ContainsPath`, and `ContainsValue`
 - Add `Reverse` function
