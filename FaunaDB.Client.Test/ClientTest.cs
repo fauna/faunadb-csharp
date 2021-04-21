@@ -1065,6 +1065,17 @@ namespace Test
             Value res = await client.Query(Divide(100, 10));
             Assert.AreEqual(10L, res.To<long>().Value);
         }
+        
+        [Test] public async Task TestEvalDivideExpressionWrongArgument()
+        {
+            var ex = Assert.ThrowsAsync<BadRequest>(
+                    async() => await client.Query(Divide(Null(), 10))
+            );
+
+            AssertErrors(ex, code: "invalid argument", description: "Number expected, Null provided.");
+            AssertEmptyFailures(ex);
+            AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { "divide", "0" }));
+        }
 
         [Test] public async Task TestEvalModuloExpression()
         {
