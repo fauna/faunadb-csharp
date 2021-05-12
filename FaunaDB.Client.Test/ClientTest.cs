@@ -892,6 +892,10 @@ namespace Test
             var favoritesObj = Obj("favorites", foodsObj);
 
             // Deprecated
+#pragma warning disable CS0618 // Type or member is obsolete
+            Assert.AreEqual(BooleanV.True,
+                await client.Query(Contains(Path("favorites", "foods"), favoritesObj)));
+#pragma warning restore CS0618 // Type or member is obsolete
 
             Assert.AreEqual(BooleanV.True,
                 await client.Query(ContainsPath(Path("favorites", "foods"), favoritesObj)));
