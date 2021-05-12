@@ -46,6 +46,11 @@ namespace Test
         {
             public int X;
             public int Y;
+            public Point(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
         }
 
         struct Rect
@@ -213,6 +218,11 @@ namespace Test
                     Price == product.Price &&
                     Created == product.Created &&
                     LastUpdated == product.LastUpdated;
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
             }
         }
 

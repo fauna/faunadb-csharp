@@ -894,7 +894,7 @@ namespace Test
             // Deprecated
 
             Assert.AreEqual(BooleanV.True,
-                await client.Query(Contains(Path("favorites", "foods"), favoritesObj)));
+                await client.Query(ContainsPath(Path("favorites", "foods"), favoritesObj)));
 
             // Field
 
@@ -1066,7 +1066,7 @@ namespace Test
             Assert.AreEqual(10L, res.To<long>().Value);
         }
         
-        [Test] public async Task TestEvalDivideExpressionWrongArgument()
+        [Test] public void TestEvalDivideExpressionWrongArgument()
         {
             var ex = Assert.ThrowsAsync<BadRequest>(
                     async() => await client.Query(Divide(Null(), 10))
@@ -2587,7 +2587,7 @@ namespace Test
         }
 
         [Test]
-        public async Task TestThrowBadRequestOnDouble()
+        public void TestThrowBadRequestOnDouble()
         {
             var ex = Assert.ThrowsAsync<BadRequest>(
                 async () => await adminClient.Query(ToDouble(Now()))
@@ -2609,7 +2609,7 @@ namespace Test
         }
 
         [Test]
-        public async Task TestThrowBadRequestOnInteger()
+        public void TestThrowBadRequestOnInteger()
         {
             var ex = Assert.ThrowsAsync<BadRequest>(
                 async () => await adminClient.Query(ToInteger(Now()))
