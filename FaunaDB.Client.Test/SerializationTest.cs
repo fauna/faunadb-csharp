@@ -755,8 +755,17 @@ namespace Test
 
         [Test] public void TestContains()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             AssertJsonEqual(Contains(Arr("favorites", "foods"), Obj("favorites", Obj("foods", Arr("crunchings", "munchings", "lunchings")))),
                 "{\"contains\":[\"favorites\",\"foods\"],\"in\":{\"object\":{\"favorites\":{\"object\":{\"foods\":[\"crunchings\",\"munchings\",\"lunchings\"]}}}}}");
+#pragma warning restore CS0618 // Type or member is obsolete
+        }
+
+        [Test]
+        public void TestContainsPath()
+        {
+            AssertJsonEqual(ContainsPath(Arr("favorites", "foods"), Obj("favorites", Obj("foods", Arr("crunchings", "munchings", "lunchings")))),
+                "{\"contains_path\":[\"favorites\",\"foods\"],\"in\":{\"object\":{\"favorites\":{\"object\":{\"foods\":[\"crunchings\",\"munchings\",\"lunchings\"]}}}}}");
         }
 
         [Test] public void TestSelect()

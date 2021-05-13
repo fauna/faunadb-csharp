@@ -25,7 +25,7 @@ namespace Test
         }
         
         [Test]
-        public async Task TestThatStreamFailsIfTargetDoesNotExist()
+        public void TestThatStreamFailsIfTargetDoesNotExist()
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(Get(Ref(Collection("streams_test"), "1234"))); };
 
@@ -35,7 +35,7 @@ namespace Test
         }
         
         [Test]
-        public async Task TestStreamFailsIfIncorrectValuePassedToStreamMethod()
+        public void TestStreamFailsIfIncorrectValuePassedToStreamMethod()
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(Collection("streams_test")); };
             
@@ -45,7 +45,7 @@ namespace Test
         }
 
         [Test]
-        public async Task TestStreamFailsIfQueryIsNotReadOnly()
+        public void TestStreamFailsIfQueryIsNotReadOnly()
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(CreateCollection(Collection("streams_test"))); };
             
