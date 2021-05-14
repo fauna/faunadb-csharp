@@ -18,6 +18,8 @@ namespace FaunaDB.Client
         
         public StreamingEventHandler(Stream dataSource)
         {
+            if (dataSource == null)
+                throw new ArgumentNullException(nameof(dataSource));
             observers = new List<IObserver<Value>>();
             streamReader = new StreamReader(dataSource);
         }

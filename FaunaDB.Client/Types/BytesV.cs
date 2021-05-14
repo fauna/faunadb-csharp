@@ -63,6 +63,8 @@ namespace FaunaDB.Types
         /// </summary>
         static byte[] FromUrlSafeBase64(string urlSafe)
         {
+            if (urlSafe == null)
+                throw new ArgumentNullException(nameof(urlSafe));
             var base64 = urlSafe.Replace('_', '/').Replace('-', '+');
 
             return Convert.FromBase64String(base64);

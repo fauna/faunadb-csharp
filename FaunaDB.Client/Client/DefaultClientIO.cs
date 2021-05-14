@@ -34,6 +34,22 @@ namespace FaunaDB.Client
 
         internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout, Version httpVersion)
         {
+            if (client == null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+            if (authHeader == null)
+            {
+                throw new ArgumentNullException(nameof(authHeader));
+            }
+            if (endpoint == null)
+            {
+                throw new ArgumentNullException(nameof(endpoint));
+            }
+            if (lastSeen == null)
+            {
+                throw new ArgumentNullException(nameof(lastSeen));
+            }
             this.client = client;
             this.authHeader = authHeader;
             this.lastSeen = lastSeen;

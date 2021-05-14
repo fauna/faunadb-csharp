@@ -27,6 +27,10 @@ namespace FaunaDB.Query
                           Expr events = null,
                           Expr sources = null)
         {
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
+            if (set == null)
+                throw new ArgumentNullException(nameof(set));
             this.client = client;
             this.set = set;
             this.ts = ts;
