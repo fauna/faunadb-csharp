@@ -1,5 +1,6 @@
 using System;
 using FaunaDB.Types;
+using FaunaDB.Errors;
 
 namespace FaunaDB.Client
 {
@@ -23,8 +24,7 @@ namespace FaunaDB.Client
         
         public void Subscribe(StreamingEventHandler provider)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
+            provider.AssertNotNull(nameof(provider));
             cancellation = provider.Subscribe(this);
             this.provider = provider;
             this.provider.RequestData();

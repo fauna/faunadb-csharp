@@ -1,5 +1,6 @@
 ﻿using FaunaDB.Query;
 using FaunaDB.Utils;
+using FaunaDB.Errors;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -28,18 +29,14 @@ namespace FaunaDB.Types
 
         internal ArrayV(IEnumerable<Value> values)
         {
+            values.AssertNotNull(nameof(values));
             Value = new List<Value>(values);
-
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
         }
 
         internal ArrayV(IReadOnlyList<Value> value)
         {
+            value.AssertNotNull(nameof(value));
             Value = value;
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
         }
 
         internal ArrayV(Action<Action<Value>> builder)

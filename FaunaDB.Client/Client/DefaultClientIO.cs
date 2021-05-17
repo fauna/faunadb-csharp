@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FaunaDB.Collections;
+using FaunaDB.Errors;
 
 namespace FaunaDB.Client
 {
@@ -34,22 +35,11 @@ namespace FaunaDB.Client
 
         internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout, Version httpVersion)
         {
-            if (client == null)
-            {
-                throw new ArgumentNullException(nameof(client));
-            }
-            if (authHeader == null)
-            {
-                throw new ArgumentNullException(nameof(authHeader));
-            }
-            if (endpoint == null)
-            {
-                throw new ArgumentNullException(nameof(endpoint));
-            }
-            if (lastSeen == null)
-            {
-                throw new ArgumentNullException(nameof(lastSeen));
-            }
+            client.AssertNotNull(nameof(client));
+            authHeader.AssertNotNull(nameof(authHeader));
+            endpoint.AssertNotNull(nameof(endpoint));
+            lastSeen.AssertNotNull(nameof(lastSeen));
+
             this.client = client;
             this.authHeader = authHeader;
             this.lastSeen = lastSeen;
@@ -226,16 +216,13 @@ namespace FaunaDB.Client
 
         public static void SetTimeout(this HttpRequestMessage request, TimeSpan? timeout)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-
+            request.AssertNotNull(nameof(request));
             request.Properties[TimeoutPropertyKey] = timeout;
         }
 
         public static TimeSpan? GetTimeout(this HttpRequestMessage request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            request.AssertNotNull(nameof(request));
 
             if (request.Properties.TryGetValue(TimeoutPropertyKey, out var value) && value is TimeSpan timeout)
                 return timeout;

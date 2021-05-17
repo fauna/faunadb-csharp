@@ -46,10 +46,7 @@ namespace FaunaDB.Client
         /// </summary>
         public FaunaClient(IClientIO clientIO)
         {
-            if (clientIO == null)
-            {
-                throw new ArgumentNullException(nameof(clientIO));
-            }
+            clientIO.AssertNotNull(nameof(clientIO));
             this.clientIO = clientIO;
         }
 
@@ -250,14 +247,9 @@ namespace FaunaDB.Client
             HttpClient httpClient = null,
             Version httpVersion = null)
         {
-            if (secret == null)
-            {
-                throw new ArgumentNullException(nameof(secret));
-            }
-            if (endpoint == null)
-            {
-                throw new ArgumentNullException(nameof(endpoint));
-            }
+            secret.AssertNotNull(nameof(secret));
+            endpoint.AssertNotNull(nameof(secret));
+
             return new DefaultClientIO(
                 secret: secret,
                 endpoint: new Uri(endpoint),

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using FaunaDB.Errors;
 
 namespace FaunaDB.Utils
 {
@@ -12,8 +13,8 @@ namespace FaunaDB.Utils
 
         public static int Hash(IEnumerable<object> values)
         {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            values.AssertNotNull(nameof(values));
+
             int hash = 17;
             foreach (object x in values)
                 if (x != null)

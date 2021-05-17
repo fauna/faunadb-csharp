@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Query;
+using FaunaDB.Errors;
 using Newtonsoft.Json;
 using System;
 using System.Globalization;
@@ -82,8 +83,7 @@ namespace FaunaDB.Types
     {
         internal StringV(string value) : base(value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            value.AssertNotNull(nameof(value));
         }
 
         public static StringV Of(string v) =>
@@ -98,8 +98,7 @@ namespace FaunaDB.Types
     {
         internal SetRefV(IReadOnlyDictionary<string, Value> value) : base(value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            value.AssertNotNull(nameof(value));
         }
 
         public SetRefV Of(IReadOnlyDictionary<string, Value> value) =>
@@ -130,8 +129,7 @@ namespace FaunaDB.Types
     {
         internal ExprV(Expr value) : base(value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            value.AssertNotNull(nameof(value));
         }
 
         protected internal override void WriteJson(JsonWriter writer) =>
