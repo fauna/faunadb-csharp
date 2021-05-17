@@ -79,7 +79,7 @@ namespace FaunaDB.Client.Test
         private IList<FaunaClient> GetClientsPool()
         {
             List<FaunaClient> clients = new List<FaunaClient>();
-            for (int i =0; i<10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 clients.Add(new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint));
             }
