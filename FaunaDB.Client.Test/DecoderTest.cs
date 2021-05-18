@@ -46,12 +46,22 @@ namespace Test
         {
             public int X;
             public int Y;
+            public Point(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
         }
 
         struct Rect
         {
             public Point UpperLeft;
-            public Point BottonRight;
+            public Point BottomRight;
+            public Rect(Point upperLeft, Point bottomRight)
+            {
+                UpperLeft = upperLeft;
+                BottomRight = bottomRight;
+            }
         }
 
         [Test]
@@ -78,7 +88,7 @@ namespace Test
 
             Assert.AreEqual(default(Rect), Decode<Rect>(NullV.Instance));
             Assert.AreEqual(default(Rect), Decode<Rect>(ObjectV.Empty));
-            Assert.AreEqual(default(Rect), Decode<Rect>(ObjectV.With("UpperLeft", NullV.Instance, "BottonRight", NullV.Instance)));
+            Assert.AreEqual(default(Rect), Decode<Rect>(ObjectV.With("UpperLeft", NullV.Instance, "BottomRight", NullV.Instance)));
 
             //
 
@@ -213,6 +223,11 @@ namespace Test
                     Price == product.Price &&
                     Created == product.Created &&
                     LastUpdated == product.LastUpdated;
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
             }
         }
 
@@ -369,7 +384,7 @@ namespace Test
             public string Field1 { get; set; }
 
             [FaunaField("a_missing_field")]
-            string field2;
+            string field2 = default(string);
 
             public string Field2 { get { return field2; } }
 
@@ -399,7 +414,7 @@ namespace Test
             public string Field1 { get; set; }
 
             [FaunaField("a_missing_field")]
-            string field2;
+            string field2 = default(string);
 
             public string Field2 { get { return field2; } }
 
@@ -701,6 +716,11 @@ namespace Test
         {
             public byte? aByte;
             public short? aShort;
+            public NestedStruct(byte? abyte, short? ashort)
+            {
+                aByte = abyte;
+                aShort = ashort;
+            }
         }
 
         struct StructWithNullableFields
@@ -708,6 +728,12 @@ namespace Test
             public int? anInteger;
             public double? aDouble;
             public NestedStruct? aStruct;
+            public StructWithNullableFields(int? intVal, double? doubleVal, NestedStruct? structVal)
+            {
+                anInteger = intVal;
+                aDouble = doubleVal;
+                aStruct = structVal;
+            }
         }
 
         [Test]

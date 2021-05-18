@@ -12,7 +12,11 @@
      net45         => applicable for .net framework version up to 4.8, means if you target
                       .net frameworks net45 till net48, FaunaDB.Client net45 build will be used
      -->
-    <TargetFrameworks>net45;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net45;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <WarningsAsErrors>;NU1605</WarningsAsErrors>
+    <NoWarn>1701;1702;</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
