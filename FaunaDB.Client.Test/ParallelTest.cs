@@ -5,11 +5,11 @@ using FaunaDB.Types;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Test;
 using static FaunaDB.Query.Language;
 using System.Collections.Concurrent;
+using FaunaDB.Client;
 
-namespace FaunaDB.Client.Test
+namespace Test
 {
     public class ParallelTest: TestCase
     {
