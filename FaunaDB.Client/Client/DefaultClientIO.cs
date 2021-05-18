@@ -9,11 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-<<<<<<< HEAD
-using FaunaDB.Collections;
 using FaunaDB.Errors;
-=======
->>>>>>> master
 
 namespace FaunaDB.Client
 {
