@@ -2657,6 +2657,25 @@ namespace Test
             Assert.AreEqual(2L, res3.To<long>().Value);
         }
 
+        [Test]
+        public void GetClientExceptionTest()
+        {
+            var exception1 = Assert.Throws<ArgumentNullException>(
+              () => new FaunaClient(secret: null, endpoint: faunaEndpoint)
+            );
+            Assert.AreEqual(exception1.Message, $"Value cannot be null.{Environment.NewLine}Parameter name: secret");
+
+            var exception2 = Assert.Throws<ArgumentNullException>(
+              () => new FaunaClient(secret: faunaSecret, endpoint: null)
+            );
+            Assert.AreEqual(exception2.Message, $"Value cannot be null.{Environment.NewLine}Parameter name: endpoint");
+
+            var exception3 = Assert.Throws<ArgumentNullException>(
+              () => new FaunaClient(secret: null, endpoint: null)
+            );
+            Assert.AreEqual(exception3.Message, $"Value cannot be null.{Environment.NewLine}Parameter name: secret");
+        }
+
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
         {
             RefV aCollection = (await client.Query(CreateCollection(Obj("name", colName))))

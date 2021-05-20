@@ -248,7 +248,7 @@ namespace FaunaDB.Client
             Version httpVersion = null)
         {
             secret.AssertNotNull(nameof(secret));
-            endpoint.AssertNotNull(nameof(secret));
+            endpoint.AssertNotNull(nameof(endpoint));
 
             return new DefaultClientIO(
                 secret: secret,
