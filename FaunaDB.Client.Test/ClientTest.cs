@@ -2663,17 +2663,18 @@ namespace Test
             var exception1 = Assert.Throws<ArgumentNullException>(
               () => new FaunaClient(secret: null, endpoint: faunaEndpoint)
             );
-            Assert.AreEqual(exception1.Message, $"Value cannot be null.{Environment.NewLine}Parameter name: secret");
+
+            Assert.That(exception1.Message, Does.Contain("Value cannot be null."));
 
             var exception2 = Assert.Throws<ArgumentNullException>(
               () => new FaunaClient(secret: faunaSecret, endpoint: null)
             );
-            Assert.AreEqual(exception2.Message, $"Value cannot be null.{Environment.NewLine}Parameter name: endpoint");
+            Assert.That(exception2.Message, Does.Contain("Value cannot be null."));
 
             var exception3 = Assert.Throws<ArgumentNullException>(
               () => new FaunaClient(secret: null, endpoint: null)
             );
-            Assert.AreEqual(exception3.Message, $"Value cannot be null.{Environment.NewLine}Parameter name: secret");
+            Assert.That(exception3.Message, Does.Contain("Value cannot be null."));
         }
 
         private async Task<Value> NewCollectionWithValues(string colName, string indexName, int size = 10, bool indexWithAllValues = false)
