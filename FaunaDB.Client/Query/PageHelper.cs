@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Types;
+using FaunaDB.Errors;
 
 namespace FaunaDB.Query
 {
@@ -27,6 +28,9 @@ namespace FaunaDB.Query
                           Expr events = null,
                           Expr sources = null)
         {
+            client.AssertNotNull(nameof(client));
+            set.AssertNotNull(nameof(set));
+
             this.client = client;
             this.set = set;
             this.ts = ts;

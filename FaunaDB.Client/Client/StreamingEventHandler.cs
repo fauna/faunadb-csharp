@@ -18,6 +18,7 @@ namespace FaunaDB.Client
         
         public StreamingEventHandler(Stream dataSource)
         {
+            dataSource.AssertNotNull(nameof(dataSource));
             observers = new List<IObserver<Value>>();
             streamReader = new StreamReader(dataSource);
         }

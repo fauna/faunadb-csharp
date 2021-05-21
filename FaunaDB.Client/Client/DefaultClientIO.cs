@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FaunaDB.Errors;
 
 namespace FaunaDB.Client
 {
@@ -31,6 +32,11 @@ namespace FaunaDB.Client
 
         internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout, Version httpVersion)
         {
+            client.AssertNotNull(nameof(client));
+            authHeader.AssertNotNull(nameof(authHeader));
+            endpoint.AssertNotNull(nameof(endpoint));
+            lastSeen.AssertNotNull(nameof(lastSeen));
+
             this.client = client;
             this.authHeader = authHeader;
             this.lastSeen = lastSeen;
@@ -207,16 +213,13 @@ namespace FaunaDB.Client
 
         public static void SetTimeout(this HttpRequestMessage request, TimeSpan? timeout)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
-
+            request.AssertNotNull(nameof(request));
             request.Properties[TimeoutPropertyKey] = timeout;
         }
 
         public static TimeSpan? GetTimeout(this HttpRequestMessage request)
         {
-            if (request == null)
-                throw new ArgumentNullException(nameof(request));
+            request.AssertNotNull(nameof(request));
 
             if (request.Properties.TryGetValue(TimeoutPropertyKey, out var value) && value is TimeSpan timeout)
                 return timeout;

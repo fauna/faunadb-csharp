@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using FaunaDB.Query;
+using FaunaDB.Errors;
 using Newtonsoft.Json;
 
 namespace FaunaDB.Types
@@ -63,6 +64,8 @@ namespace FaunaDB.Types
         /// </summary>
         static byte[] FromUrlSafeBase64(string urlSafe)
         {
+            urlSafe.AssertNotNull(nameof(urlSafe));
+
             var base64 = urlSafe.Replace('_', '/').Replace('-', '+');
 
             return Convert.FromBase64String(base64);

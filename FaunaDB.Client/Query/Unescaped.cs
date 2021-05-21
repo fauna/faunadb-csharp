@@ -1,4 +1,5 @@
 ﻿using FaunaDB.Types;
+using FaunaDB.Errors;
 using Newtonsoft.Json;
 using System.Linq;
 using System;
@@ -16,9 +17,7 @@ namespace FaunaDB.Query
 
         public UnescapedObject(IReadOnlyDictionary<string, Expr> values)
         {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
-
+            values.AssertNotNull(nameof(values));
             Values = values;
         }
 
@@ -74,17 +73,13 @@ namespace FaunaDB.Query
 
         public UnescapedArray(IReadOnlyList<Expr> value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
+            value.AssertNotNull(nameof(value));
             Value = value;
         }
 
         public UnescapedArray(params Expr[] value)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-
+            value.AssertNotNull(nameof(value));
             Value = value;
         }
 

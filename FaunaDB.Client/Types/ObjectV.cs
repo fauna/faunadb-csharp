@@ -1,5 +1,6 @@
 ﻿using FaunaDB.Collections;
 using FaunaDB.Query;
+using FaunaDB.Errors;
 using FaunaDB.Utils;
 using Newtonsoft.Json;
 using System;
@@ -23,10 +24,8 @@ namespace FaunaDB.Types
 
         internal ObjectV(IReadOnlyDictionary<string, Value> value)
         {
+            value.AssertNotNull(nameof(value));
             Value = value;
-
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
