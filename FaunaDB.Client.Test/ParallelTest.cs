@@ -71,6 +71,7 @@ namespace Test
                     tasks.Add(Task.Run(async () =>await query(clients[random.Next(0, clients.Count-1)])));
                 }
                 Task.WaitAll(tasks.ToArray());
+                Task.Delay(500);
             }
 
             Assert.IsFalse(exceptions.Any(), $"Exceptions occured. Details:{Environment.NewLine}{PrintExceptions(exceptions)}");
