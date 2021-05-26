@@ -69,7 +69,7 @@ dotnet test FaunaDB.Client.Test --filter FullyQualifiedName~Test.EnvironmentHead
 First install the Nuget package by adding the package reference to your MSBuild project:
 
 ```xml
-<PackageReference Include="FaunaDB.Client" Version="4.0.0-preview" />
+<PackageReference Include="FaunaDB.Client" Version="4.0.0" />
 ```
 
 or by using your IDE and searching for `FaunaDB.Client`.

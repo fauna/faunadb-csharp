@@ -1,4 +1,4 @@
-## 4.0.0-preview
+## 4.0.0
 - Streaming support
 - 3rd party auth support
 - HTTP/2 support for .net standard 2.1 and above
