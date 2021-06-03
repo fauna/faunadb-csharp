@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FaunaDB.Client.Utils;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
@@ -328,6 +329,13 @@ namespace Test
             Assert.That(item2, Has.Length.EqualTo(2));
             Assert.AreEqual(96, refsToIndex[item2.At(0, 1)]);
             Assert.AreEqual(97, refsToIndex[item2.At(1, 1)]);
+        }
+
+        [Test]
+        public async Task PackagesTest()
+        {
+            CheckLatestVersion ver = new CheckLatestVersion();
+            await ver.GetVersionAsync();
         }
     }
 }
