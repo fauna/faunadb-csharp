@@ -330,13 +330,6 @@ namespace Test
             Assert.AreEqual(96, refsToIndex[item2.At(0, 1)]);
             Assert.AreEqual(97, refsToIndex[item2.At(1, 1)]);
         }
-
-        [Test]
-        public async Task PackagesTest()
-        {
-            CheckLatestVersion ver = new CheckLatestVersion();
-            await ver.GetVersionAsync();
-        }
     }
 }
 

@@ -1,40 +1,65 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FaunaDB.Client.Utils
 {
     public class CheckLatestVersion
     {
-        [System.AttributeUsage(System.AttributeTargets.Assembly, Inherited = false, AllowMultiple = false)]
-        sealed class ConfigurationLocationAttribute : System.Attribute
+        private const string packageName = "FaunaDB.Client";
+        private static bool? alreadyChecked = null;
+        public static async Task GetVersionAsync()
         {
-            public string ConfigurationLocation { get; }
-            public ConfigurationLocationAttribute(string configurationLocation)
+            if (alreadyChecked.HasValue) return;
+            var latestNuGetVesrionString = string.Empty;
+            var url = $"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json";
+            try
             {
-                this.ConfigurationLocation = configurationLocation;
+                var httpClient = new HttpClient();
+#if NET45
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+#endif
+                var response = await httpClient.GetAsync(url);
+                string versionsResponse = await response.Content.ReadAsStringAsync();
+                Newtonsoft.Json.Linq.JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(versionsResponse);
+                var latestNuGetVesrion = ((Newtonsoft.Json.Linq.JArray)jObject.First.First).Children().LastOrDefault();
+                latestNuGetVesrionString = latestNuGetVesrion.ToString();
+                alreadyChecked = true;
+            }
+            catch(Exception ex)
+            {
+                alreadyChecked = false;
+                var message = $"Enable to check new Fauna driver version. Exception: {ex.Message}";
+                return;
+            }
+
+            Assembly asm = typeof(CheckLatestVersion).GetTypeInfo().Assembly;
+            var currentVersion =  asm.GetName().Version;
+            var currentVersionString = $"{currentVersion.Major}.{currentVersion.Minor}.{currentVersion.Build}";
+            if (!latestNuGetVesrionString.Equals(currentVersionString))
+            {
+                var message =  GetMessage(latestNuGetVesrionString, currentVersionString);
+                Debug.WriteLine(message);
+                System.Console.WriteLine(message);
             }
         }
-        public async Task GetVersionAsync()
-        {
-            var packageName = "FaunaDB.Client";
-            var url = $"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json";
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(url);
-            string versionsResponse = await response.Content.ReadAsStringAsync();
-            Newtonsoft.Json.Linq.JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(versionsResponse);
-            var latestVesrion = ((Newtonsoft.Json.Linq.JArray)jObject.First.First).Children().LastOrDefault();
-            var currentVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
-            var fileVersion = System.Reflection.Assembly.GetEntryAssembly().GetName().FullName;
-//#if NET20_OR_GREATER
-            //string Version = System.Reflection.Assembly.GetEntryAssembly().GetCustomAttribute<System.Reflection.AssemblyInformationalVersionAttribute>().InformationalVersion.ToString();
 
-//            var asmbl =  System.AppDomain.CurrentDomain.GetAssemblies();
-//#endif
-            //var configurationLocation = Assembly.GetEntryAssembly()
-            //            .GetCustomAttribute<ConfigurationLocationAttribute>()
-            //            .ConfigurationLocation;
+        private static string GetMessage(string latestNuGetVesrion, string currentVersion)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("".PadLeft(80, '='));
+            sb.Append(System.Environment.NewLine);
+            sb.Append($"New fauna version available {currentVersion} -> {latestNuGetVesrion}");
+            sb.Append(System.Environment.NewLine);
+            sb.Append($"Changelog: https://github.com/fauna/faunadb-csharp/blob/master/CHANGELOG.md");
+            sb.Append(System.Environment.NewLine);
+            sb.Append("".PadLeft(80, '='));
+            return sb.ToString();
         }
     }
 }
