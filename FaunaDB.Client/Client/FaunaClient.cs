@@ -8,6 +8,7 @@ using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using Newtonsoft.Json;
+using FaunaDB.Client.Utils;
 
 namespace FaunaDB.Client
 {
@@ -32,13 +33,15 @@ namespace FaunaDB.Client
         /// <param name="endpoint">URL for the FaunaDB server. Defaults to "https://db.fauna.com:443"</param>
         /// <param name="timeout">Timeout for I/O operations. Defaults to 1 minute.</param>
         /// <param name="httpVersion">Version of http. Default value is HttpVersion.Version11, is you use .net core 3.0 and above you can enable http/2 support by passing HttpVersion.Version20</param>
+        /// <param name="dontCheckNewVersion">Don't check new NuGet package driver version. Default value is null (Check new version).</param>
         public FaunaClient(
             string secret,
             string endpoint = "https://db.fauna.com:443",
             TimeSpan? timeout = null,
             HttpClient httpClient = null,
-            Version httpVersion = null)
-            : this(CreateClient(secret, endpoint, timeout, httpClient, httpVersion))
+            Version httpVersion = null,
+            bool? dontCheckNewVersion = null)
+            : this(CreateClient(secret, endpoint, timeout, httpClient, httpVersion, dontCheckNewVersion))
         { }
 
         /// <summary>
@@ -245,11 +248,15 @@ namespace FaunaDB.Client
             string endpoint,
             TimeSpan? timeout = null,
             HttpClient httpClient = null,
-            Version httpVersion = null)
+            Version httpVersion = null,
+            bool? dontCheckNewVersion = null)
         {
             secret.AssertNotNull(nameof(secret));
             endpoint.AssertNotNull(nameof(endpoint));
-
+            if (dontCheckNewVersion.HasValue)
+            {
+                CheckLatestVersion.AlreadyChecked = dontCheckNewVersion;
+            }
             return new DefaultClientIO(
                 secret: secret,
                 endpoint: new Uri(endpoint),

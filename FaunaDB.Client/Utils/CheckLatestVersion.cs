@@ -12,10 +12,10 @@ namespace FaunaDB.Client.Utils
     public class CheckLatestVersion
     {
         private const string packageName = "FaunaDB.Client";
-        private static bool? alreadyChecked = null;
+        public static bool? AlreadyChecked { get; set; } = null;
         public static async Task GetVersionAsync()
         {
-            if (alreadyChecked.HasValue) return;
+            if (AlreadyChecked.HasValue) return;
             var latestNuGetVesrionString = string.Empty;
             var url = $"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json";
             try
@@ -29,11 +29,11 @@ namespace FaunaDB.Client.Utils
                 Newtonsoft.Json.Linq.JObject jObject = Newtonsoft.Json.Linq.JObject.Parse(versionsResponse);
                 var latestNuGetVesrion = ((Newtonsoft.Json.Linq.JArray)jObject.First.First).Children().LastOrDefault();
                 latestNuGetVesrionString = latestNuGetVesrion.ToString();
-                alreadyChecked = true;
+                AlreadyChecked = true;
             }
             catch(Exception ex)
             {
-                alreadyChecked = false;
+                AlreadyChecked = false;
                 var message = $"Enable to check new Fauna driver version. Exception: {ex.Message}";
                 return;
             }
@@ -54,9 +54,14 @@ namespace FaunaDB.Client.Utils
             StringBuilder sb = new StringBuilder();
             sb.Append("".PadLeft(80, '='));
             sb.Append(System.Environment.NewLine);
+            sb.Append(System.Environment.NewLine);
+            sb.Append(System.Environment.NewLine);
             sb.Append($"New fauna version available {currentVersion} -> {latestNuGetVesrion}");
             sb.Append(System.Environment.NewLine);
             sb.Append($"Changelog: https://github.com/fauna/faunadb-csharp/blob/master/CHANGELOG.md");
+            sb.Append(System.Environment.NewLine);
+            sb.Append(System.Environment.NewLine);
+            sb.Append(System.Environment.NewLine);
             sb.Append(System.Environment.NewLine);
             sb.Append("".PadLeft(80, '='));
             return sb.ToString();

@@ -47,7 +47,10 @@ namespace FaunaDB.Client
 #else
             this.httpVersion = httpVersion == null ? new Version(1, 1) : httpVersion;
 #endif
-            Task.Run(()=> FaunaDB.Client.Utils.CheckLatestVersion.GetVersionAsync()).Wait();
+            if (!Utils.CheckLatestVersion.AlreadyChecked.HasValue)
+            {
+                Task.Run(() => Utils.CheckLatestVersion.GetVersionAsync()).Wait();
+            }
         }
 
         public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null, Version httpVersion = null)
