@@ -15,7 +15,10 @@ namespace FaunaDB.Client.Utils
         public static bool? AlreadyChecked { get; set; } = null;
         public static async Task GetVersionAsync()
         {
-            if (AlreadyChecked.HasValue) return;
+            if (AlreadyChecked.HasValue)
+                if (!AlreadyChecked.Value) 
+                    return;
+
             var latestNuGetVesrionString = string.Empty;
             var url = $"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json";
             try
