@@ -33,7 +33,7 @@ namespace FaunaDB.Client
         /// <param name="endpoint">URL for the FaunaDB server. Defaults to "https://db.fauna.com:443"</param>
         /// <param name="timeout">Timeout for I/O operations. Defaults to 1 minute.</param>
         /// <param name="httpVersion">Version of http. Default value is HttpVersion.Version11, is you use .net core 3.0 and above you can enable http/2 support by passing HttpVersion.Version20</param>
-        /// <param name="dontCheckNewVersion">Don't check new NuGet package driver version. Default value is null (Check new version).</param>
+        /// <param name="checkNewVersion">Check new NuGet package driver version. Default value is true (Check new version).</param>
         public FaunaClient(
             string secret,
             string endpoint = "https://db.fauna.com:443",
@@ -253,9 +253,10 @@ namespace FaunaDB.Client
         {
             secret.AssertNotNull(nameof(secret));
             endpoint.AssertNotNull(nameof(endpoint));
-            if (!checkNewVersion)
+            
+            if (checkNewVersion && !CheckLatestVersion.AlreadyChecked)
             {
-                CheckLatestVersion.AlreadyChecked = checkNewVersion;
+                Task.Run(() => CheckLatestVersion.GetVersionAsync());
             }
 
             return new DefaultClientIO(

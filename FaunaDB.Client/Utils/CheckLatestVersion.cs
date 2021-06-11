@@ -12,13 +12,10 @@ namespace FaunaDB.Client.Utils
     public class CheckLatestVersion
     {
         private const string packageName = "FaunaDB.Client";
-        public static bool? AlreadyChecked { get; set; } = null;
+        public static bool AlreadyChecked { get; set; } = false;
         public static async Task GetVersionAsync()
         {
-            if (AlreadyChecked.HasValue)
-                if (!AlreadyChecked.Value) 
-                    return;
-
+            if (AlreadyChecked) return;
             var latestNuGetVesrionString = string.Empty;
             var url = $"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json";
             try
@@ -36,7 +33,7 @@ namespace FaunaDB.Client.Utils
             }
             catch(Exception ex)
             {
-                AlreadyChecked = false;
+                AlreadyChecked = true;
                 var message = $"Enable to check new Fauna driver version. Exception: {ex.Message}";
                 return;
             }
