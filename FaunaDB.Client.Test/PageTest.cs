@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FaunaDB.Client.Utils;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
