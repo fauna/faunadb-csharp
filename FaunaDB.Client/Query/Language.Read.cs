@@ -4,7 +4,6 @@ using FaunaDB.Types;
 
 namespace FaunaDB.Query
 {
-
     public partial struct Language
     {
         /// <summary>
@@ -49,9 +48,8 @@ namespace FaunaDB.Query
                 { "sources", sources },
                 { "after", after },
                 { "before", before },
-                { "cursor", cursor?.Source }
+                { "cursor", cursor?.Source },
             });
-        
 
         /// <summary>
         /// Creates a new Cursor to be used with a Paginate expression.
@@ -61,14 +59,12 @@ namespace FaunaDB.Query
         /// </summary>
         public class Cursor
         {
-
             public Expr Source { get; }
 
             internal Cursor(Expr expr)
             {
                 Source = expr;
             }
-
         }
 
         public static Cursor RawCursor(Expr expr) =>
@@ -79,7 +75,6 @@ namespace FaunaDB.Query
 
         public static Cursor Before(Expr expr) =>
                 new Cursor(Obj("before", expr));
-
 
         /// <summary>
         /// Creates a new Exists expression.
@@ -134,6 +129,5 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Mean(Expr expr) =>
            UnescapedObject.With("mean", expr);
-
     }
 }

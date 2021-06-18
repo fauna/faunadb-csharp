@@ -1,33 +1,34 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using FaunaDB.Types;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static FaunaDB.Query.Language;
-using System.Collections.Concurrent;
 using FaunaDB.Client;
+using FaunaDB.Types;
+using NUnit.Framework;
+using static FaunaDB.Query.Language;
 
 namespace Test
 {
-    public class ParallelTest: TestCase
+    public class ParallelTest : TestCase
     {
         private const int IN_PARALLEL = 1000;
         private const int MAX_ATTEMPTS = 10;
         private const string COLLECTION_NAME = "ParallelTestCollection";
-        
+
         [OneTimeSetUp]
         public void SetUpCollection()
         {
             SetUpCollectionAsync().Wait();
         }
+
         public async Task SetUpCollectionAsync()
         {
             var client = new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint);
             bool collectionExist = (await client.Query(Exists(Collection(COLLECTION_NAME)))).To<bool>().Value;
-            
-            //create collection and fill documents
+
+            // create collection and fill documents
             if (!collectionExist)
             {
                 await client.Query(CreateCollection(Obj("name", COLLECTION_NAME)));
@@ -36,7 +37,7 @@ namespace Test
                     await client.Query(
                             Create(
                                     Collection(COLLECTION_NAME),
-                                    Obj("data", FaunaDB.Types.Encoder.Encode(new SampleDocument() { Id = i+1, Text=$"Document {i+1}" }))
+                                    Obj("data", FaunaDB.Types.Encoder.Encode(new SampleDocument() { Id = i + 1, Text = $"Document {i + 1}" }))
                                 )
                         );
                 }
@@ -70,7 +71,7 @@ namespace Test
                 try
                 {
                     Task.Run(async () => await client.Query(Map(Paginate(Documents(Collection(COLLECTION_NAME))), reference => Get(reference))));
-                    Task.Run(async () => await client.Query(Sum(Arr(1, 2, 3.5, 0.25)))); 
+                    Task.Run(async () => await client.Query(Sum(Arr(1, 2, 3.5, 0.25))));
                 }
                 catch (Exception e)
                 {
@@ -89,6 +90,7 @@ namespace Test
                     tasks.Add(Task.Run(() => queryCore21(clients[random.Next(0, clients.Count - 1)])));
 #endif
                 }
+
                 Task.WaitAll(tasks.ToArray());
             }
 
@@ -102,6 +104,7 @@ namespace Test
             {
                 clients.Add(new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint));
             }
+
             return clients;
         }
 
@@ -114,18 +117,23 @@ namespace Test
             {
                 string message = printException(exception);
                 if (exception.InnerException != null)
+                {
                     message += $"Inner exception:{Environment.NewLine}" + printException(exception.InnerException);
+                }
+
                 sb.AppendLine(message);
             }
+
             return sb.ToString();
         }
 
-        class SampleDocument
+        private class SampleDocument
         {
             [FaunaField("id")]
-            public int Id;
+            public int Id { get; set; }
+
             [FaunaField("text")]
-            public string Text;
+            public string Text { get; set; }
         }
     }
 }

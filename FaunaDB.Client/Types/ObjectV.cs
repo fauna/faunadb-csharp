@@ -1,11 +1,11 @@
-﻿using FaunaDB.Collections;
-using FaunaDB.Query;
-using FaunaDB.Errors;
-using FaunaDB.Utils;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FaunaDB.Collections;
+using FaunaDB.Errors;
+using FaunaDB.Query;
+using FaunaDB.Utils;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Types
 {
@@ -109,6 +109,4 @@ namespace FaunaDB.Types
         public static ObjectV With(string key1, Value value1, string key2, Value value2, string key3, Value value3, string key4, Value value4, string key5, Value value5, string key6, Value value6, string key7, Value value7) =>
             new ObjectV(ImmutableDictionary.Of(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6, key7, value7));
     }
-
 }
-

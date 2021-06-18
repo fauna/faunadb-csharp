@@ -10,7 +10,9 @@ namespace FaunaDB.Types
         public static IEnumerable<FieldInfo> GetAllFields(this Type type)
         {
             if (type == null)
+            {
                 return Enumerable.Empty<FieldInfo>();
+            }
 
             var flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
 
@@ -22,7 +24,9 @@ namespace FaunaDB.Types
             var field = parameter.GetCustomAttribute<FaunaFieldAttribute>();
 
             if (field != null)
+            {
                 return field.Name;
+            }
 
             return parameter.Name;
         }
@@ -32,7 +36,9 @@ namespace FaunaDB.Types
             var field = member.GetCustomAttribute<FaunaFieldAttribute>();
 
             if (field != null)
+            {
                 return field.Name;
+            }
 
             return member.Name;
         }
@@ -59,32 +65,51 @@ namespace FaunaDB.Types
         {
             int totalNotNull = 0;
             if (date != null)
+            {
                 totalNotNull += 1;
+            }
+
             if (time != null)
+            {
                 totalNotNull += 1;
+            }
+
             if (@string != null)
+            {
                 totalNotNull += 1;
+            }
 
             if (totalNotNull > 1)
+            {
                 throw new InvalidOperationException("Can't use more then one of FaunaDate, FaunaTime, FaunaString on the same property.");
+            }
 
             if (time != null)
+            {
                 return typeof(TimeV);
+            }
             else if (date != null)
+            {
                 return typeof(DateV);
+            }
             else if (@string != null)
+            {
                 return typeof(StringV);
+            }
 
             return null;
         }
 
-        public static bool Has<T>(this MemberInfo member) where T : Attribute =>
+        public static bool Has<T>(this MemberInfo member)
+            where T : Attribute =>
             member.GetCustomAttribute<T>() != null;
 
         public static bool Is(this Type type, Type other)
         {
             if (type.GetGenericTypeDefinition() == other)
+            {
                 return true;
+            }
 
             return type.GetInterfaces()
                        .Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == other);

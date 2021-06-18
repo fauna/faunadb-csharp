@@ -1,19 +1,19 @@
-﻿using FaunaDB.Types;
-using FaunaDB.Errors;
-using Newtonsoft.Json;
-using System.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FaunaDB.Collections;
+using FaunaDB.Errors;
+using FaunaDB.Types;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Query
 {
-    class UnescapedObject : Expr
+    internal class UnescapedObject : Expr
     {
         public static readonly UnescapedObject Empty =
             new UnescapedObject(ImmutableDictionary.Empty<string, Expr>());
 
-        IReadOnlyDictionary<string, Expr> Values { get; }
+        private IReadOnlyDictionary<string, Expr> Values { get; }
 
         public UnescapedObject(IReadOnlyDictionary<string, Expr> values)
         {
@@ -64,12 +64,12 @@ namespace FaunaDB.Query
             new UnescapedObject(ImmutableDictionary.Of(key1, value1 ?? NullV.Instance, key2, value2, key3, value3, key4, value4, key5, value5, key6, value6, key7, value7));
     }
 
-    class UnescapedArray : Expr
+    internal class UnescapedArray : Expr
     {
         public static readonly UnescapedArray Empty =
             new UnescapedArray(new List<Expr>());
 
-        IReadOnlyList<Expr> Value { get; }
+        private IReadOnlyList<Expr> Value { get; }
 
         public UnescapedArray(IReadOnlyList<Expr> value)
         {

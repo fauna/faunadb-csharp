@@ -2,7 +2,6 @@ using System;
 
 namespace FaunaDB.Client
 {
-
     /// <summary>
     /// A method used by the <see cref="FaunaClient"/>.
     /// </summary>
@@ -12,7 +11,7 @@ namespace FaunaDB.Client
         Post,
         Put,
         Patch,
-        Delete
+        Delete,
     }
 
     public static class HttpMethodKindExtensions

@@ -3,23 +3,22 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
 using NUnit.Framework;
-
 using static FaunaDB.Query.Language;
 
 namespace Test
 {
     public class TestCase
     {
+        protected const string TestDbName = "faunadb-csharp-test";
         protected static Field<string> SECRET_FIELD = Field.At("secret").To<string>();
         protected static Field<RefV> REF_FIELD = Field.At("ref").To<RefV>();
-        protected const string testDbName = "faunadb-csharp-test";
 
         protected FaunaClient rootClient;
         protected Expr DbRef;
@@ -27,9 +26,9 @@ namespace Test
         protected FaunaClient adminClient;
         protected Value clientKey;
         protected Value adminKey;
-        protected String faunaEndpoint;
-        protected String faunaSecret;
-        
+        protected string faunaEndpoint;
+        protected string faunaSecret;
+
         protected RefV GetRef(Value v) =>
             v.Get(REF_FIELD);
 
@@ -39,26 +38,30 @@ namespace Test
             SetUpAsync().Wait();
         }
 
-        async Task SetUpAsync()
+        private async Task SetUpAsync()
         {
-            Func<string, string, string> Env = (name, @default) =>
+            Func<string, string, string> env = (name, @default) =>
                 Environment.GetEnvironmentVariable(name) ?? @default;
 
-            var domain = Env("FAUNA_DOMAIN", "localhost");
-            var scheme = Env("FAUNA_SCHEME", "http");
-            var port = Env("FAUNA_PORT", "8443");
+            var domain = env("FAUNA_DOMAIN", "localhost");
+            var scheme = env("FAUNA_SCHEME", "http");
+            var port = env("FAUNA_PORT", "8443");
 
-            faunaSecret = Env("FAUNA_ROOT_KEY", "secret");
+            faunaSecret = env("FAUNA_ROOT_KEY", "secret");
             faunaEndpoint = port != "443" ? $"{scheme}://{domain}:{port}/" : $"{scheme}://{domain}/";
             rootClient = new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint);
 
-            DbRef = Database(testDbName);
+            DbRef = Database(TestDbName);
 
-            try {
+            try
+            {
                 await rootClient.Query(Delete(DbRef));
-            } catch (BadRequest) {}
+            }
+            catch (BadRequest)
+            {
+            }
 
-            await rootClient.Query(CreateDatabase(Obj("name", testDbName)));
+            await rootClient.Query(CreateDatabase(Obj("name", TestDbName)));
 
             clientKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "server")));
             adminKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "admin")));
@@ -72,7 +75,7 @@ namespace Test
             TearDownAsync().Wait();
         }
 
-        async Task TearDownAsync()
+        private async Task TearDownAsync()
         {
             await rootClient.Query(Delete(DbRef));
         }
@@ -82,10 +85,10 @@ namespace Test
 
         protected FaunaClient MockClient(string responseText, HttpStatusCode statusCode = HttpStatusCode.OK)
         {
-            var resp = new RequestResult(HttpMethodKind.Get, "", null, "", responseText, (int)statusCode, null, DateTime.UtcNow, DateTime.UtcNow);
+            var resp = new RequestResult(HttpMethodKind.Get, string.Empty, null, string.Empty, responseText, (int)statusCode, null, DateTime.UtcNow, DateTime.UtcNow);
             return new FaunaClient(clientIO: new MockClientIO(resp));
         }
-        
+
         protected async Task<RefV> RandomCollection()
         {
             Value coll = await client.Query(
@@ -95,12 +98,14 @@ namespace Test
 
             return GetRef(coll);
         }
-        
+
         protected string RandomStartingWith(params string[] strs)
         {
             StringBuilder builder = new StringBuilder();
             foreach (var str in strs)
+            {
                 builder.Append(str);
+            }
 
             builder.Append(new Random().Next(0, int.MaxValue));
 
@@ -108,9 +113,9 @@ namespace Test
         }
     }
 
-    class MockClientIO : IClientIO
+    internal class MockClientIO : IClientIO
     {
-        readonly RequestResult resp;
+        private readonly RequestResult resp;
 
         public MockClientIO(RequestResult resp)
         {
@@ -129,9 +134,8 @@ namespace Test
         }
     }
 
-    class HttpClientWrapper : HttpClient
+    internal class HttpClientWrapper : HttpClient
     {
-
         public HttpRequestMessage LastMessage { get; private set; }
 
         public override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -139,7 +143,5 @@ namespace Test
             LastMessage = request;
             return base.SendAsync(request, cancellationToken);
         }
-
     }
-
 }

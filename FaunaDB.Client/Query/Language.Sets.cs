@@ -46,7 +46,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://fauna.com/documentation/queries#sets">FaunaDB Set Functions</see>
         /// </para>
         /// </summary>
-       public static Expr Intersection(params Expr[] values) =>
+        public static Expr Intersection(params Expr[] values) =>
             UnescapedObject.With("intersection", Varargs(values));
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace FaunaDB.Query
         /// </summary>
         /// <param name="source">A set resulting from one of the Set Functions</param>
         /// <param name="target">Can be either an index reference or a lambda function</param>
-       public static Expr Join(Expr source, Expr target) =>
+        public static Expr Join(Expr source, Expr target) =>
             UnescapedObject.With("join", source, "with", target);
 
         /// <summary>
@@ -92,6 +92,5 @@ namespace FaunaDB.Query
         /// <param name="to">upper bound</param>
         public static Expr Range(Expr set, Expr from, Expr to) =>
             UnescapedObject.With("range", set, "from", from, "to", to);
-
     }
 }

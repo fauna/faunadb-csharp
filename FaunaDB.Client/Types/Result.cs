@@ -33,9 +33,8 @@ namespace FaunaDB.Types
         /// </summary>
         /// <example>
         /// IResult&lt;string&gt; result = ...
-        /// 
         /// int parsed = result.Match(
-        ///   Success: value => int.Parse(value), 
+        ///   Success: value => int.Parse(value),
         ///   Failure: reason => ReturnDefaultValue()
         /// );
         /// </example>
@@ -49,7 +48,7 @@ namespace FaunaDB.Types
         /// </summary>
         /// <example>
         /// IResult&lt;string&gt; result = ...
-        /// 
+        ///
         /// result.Match(
         ///   Success: value => DoSomething(),
         ///   Failure: reason => DoSomethingElse(reason)
@@ -82,9 +81,9 @@ namespace FaunaDB.Types
         bool isFailure { get; }
     }
 
-    class Success<T> : IResult<T>
+    internal class Success<T> : IResult<T>
     {
-        readonly T value;
+        private readonly T value;
 
         internal Success(T value)
         {
@@ -124,9 +123,9 @@ namespace FaunaDB.Types
             value.ToString();
     }
 
-    class Failure<T> : IResult<T>
+    internal class Failure<T> : IResult<T>
     {
-        readonly string reason;
+        private readonly string reason;
 
         internal Failure(string reason)
         {

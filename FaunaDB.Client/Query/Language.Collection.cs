@@ -188,7 +188,6 @@
         public static Expr IsNonEmpty(Expr collection) =>
             UnescapedObject.With("is_nonempty", collection);
 
-
         /// <summary>
         /// Creates a new Reverse expression.
         /// <para>
@@ -205,7 +204,7 @@
         /// </example>
         public static Expr Reverse(Expr expr) =>
             UnescapedObject.With("reverse", expr);
-        
+
         /// <summary>
         /// Evaluates to true if all elements of the collection is true.
         /// <para>
@@ -222,7 +221,7 @@
         /// </example>
         public static Expr All(Expr collection) =>
             UnescapedObject.With("all", collection);
-        
+
         /// <summary>
         /// Evaluates to true if any element of the collection is true.
         /// <para>

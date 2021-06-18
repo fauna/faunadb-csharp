@@ -1,11 +1,11 @@
-﻿using FaunaDB.Query;
-using FaunaDB.Utils;
-using FaunaDB.Errors;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using FaunaDB.Errors;
+using FaunaDB.Query;
+using FaunaDB.Utils;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Types
 {
@@ -61,7 +61,7 @@ namespace FaunaDB.Types
 
         #region IEnumerable
         IEnumerator IEnumerable.GetEnumerator() =>
-            ((IEnumerable) Value).GetEnumerator();
+            ((IEnumerable)Value).GetEnumerator();
 
         IEnumerator<Value> IEnumerable<Value>.GetEnumerator() =>
             Value.GetEnumerator();

@@ -11,18 +11,18 @@ namespace FaunaDB.Client
     {
         private readonly List<IObserver<Value>> observers;
         private StreamReader streamReader;
-        
+
         private static Field<string> CODE = Field.At("event", "code").To<string>();
         private static Field<string> DESCRIPTION = Field.At("event", "description").To<string>();
         private static Field<string> TYPE = Field.At("type").To<string>();
-        
+
         public StreamingEventHandler(Stream dataSource)
         {
             dataSource.AssertNotNull(nameof(dataSource));
             observers = new List<IObserver<Value>>();
             streamReader = new StreamReader(dataSource);
         }
-        
+
         public IDisposable Subscribe(IObserver<Value> observer)
         {
             if (!observers.Contains(observer))
@@ -32,7 +32,7 @@ namespace FaunaDB.Client
 
             return new Unsubscriber<Value>(observers, observer);
         }
-        
+
         public async void RequestData()
         {
             Action<IObserver<Value>> ev;
@@ -75,7 +75,7 @@ namespace FaunaDB.Client
         private FaunaException ConstructStreamingException(Exception ex)
         {
             var queryError = new QueryError(null, "internal exception", ex.Message, null);
-            var response = new QueryErrorResponse(500, new List<QueryError> {queryError});
+            var response = new QueryErrorResponse(500, new List<QueryError> { queryError });
             return new StreamingException(response);
         }
 
@@ -84,7 +84,7 @@ namespace FaunaDB.Client
             var code = value.Get(CODE);
             var description = value.Get(DESCRIPTION);
             var queryError = new QueryError(null, code, description, null);
-            var response = new QueryErrorResponse(500, new List<QueryError> {queryError});
+            var response = new QueryErrorResponse(500, new List<QueryError> { queryError });
             return new StreamingException(response);
         }
     }
@@ -99,7 +99,7 @@ namespace FaunaDB.Client
             this.observers = observers;
             this.observer = observer;
         }
-        
+
         public void Dispose()
         {
             if (observers.Contains(observer))

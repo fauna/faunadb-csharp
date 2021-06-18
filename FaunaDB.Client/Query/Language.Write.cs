@@ -46,7 +46,7 @@ namespace FaunaDB.Query
         public enum ActionType
         {
             Create,
-            Delete
+            Delete,
         }
 
         /// <summary>

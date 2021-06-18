@@ -6,11 +6,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Converter = System.Func<FaunaDB.Types.Value, object>;
 
 namespace FaunaDB.Types
 {
-    using Converter = Func<Value, object>;
-
     /// <summary>
     /// FaunaDB <see cref="Value"/> to object decoder.
     /// </summary>
@@ -61,10 +60,10 @@ namespace FaunaDB.Types
             DecoderImpl.Decode(value, dstType);
     }
 
-    class DecoderImpl
+    internal class DecoderImpl
     {
-        static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Func<Value, object>>();
-        static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
+        private static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Func<Value, object>>();
+        private static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
         private static InvalidCastException invalidCast(object value, Type to)
         {
@@ -75,26 +74,34 @@ namespace FaunaDB.Types
         public static object Decode(Value value, Type dstType, Type forceType = null)
         {
             if (value == NullV.Instance && dstType == typeof(Value))
+            {
                 return value;
+            }
 
             if (value == null || value == NullV.Instance)
+            {
                 return dstType.GetTypeInfo().IsValueType ? Activator.CreateInstance(dstType) : null;
+            }
 
             return DecodeIntern(value, dstType, forceType);
         }
 
-        static object DecodeIntern(Value value, Type dstType, Type forceType = null)
+        private static object DecodeIntern(Value value, Type dstType, Type forceType = null)
         {
             if (typeof(Value).IsAssignableFrom(dstType))
             {
                 if (dstType.IsAssignableFrom(value.GetType()))
+                {
                     return value;
+                }
 
                 throw invalidCast(value, dstType);
             }
 
             if (dstType.GetTypeInfo().IsEnum)
+            {
                 return ToEnum(value, dstType);
+            }
 
             switch (Type.GetTypeCode(dstType))
             {
@@ -134,7 +141,7 @@ namespace FaunaDB.Types
                 case TypeCode.Decimal:
                     return Convert.ToDecimal(ToNumber<decimal>(value));
 
-#if !(NETSTANDARD1_5)
+#if !NETSTANDARD1_5
                 case TypeCode.DBNull:
                     return null;
 #endif
@@ -147,39 +154,60 @@ namespace FaunaDB.Types
                         if (forceType == typeof(StringV) && value.GetType() == typeof(StringV))
                         {
                             if (value != null && value != NullV.Instance)
+                            {
                                 return new DateTimeOffset(Convert.ToDateTime(ToString(value)));
+                            }
                             else if (dstType.Is(typeof(Nullable<>)))
+                            {
                                 return null;
+                            }
+
                             return default(DateTimeOffset);
                         }
+
                         return new DateTimeOffset(ToDateTime(value));
                     }
 
                     if (typeof(byte[]) == dstType && value is BytesV)
+                    {
                         return ToByteArray(value);
+                    }
 
                     if (dstType.IsArray && dstType.HasElementType)
+                    {
                         return FromArray(value, dstType);
+                    }
 
                     if (typeof(IDictionary).IsAssignableFrom(dstType) || (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(IDictionary<,>))))
+                    {
                         return FromDictionary(value, dstType);
+                    }
 
                     if (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(ISet<>)))
+                    {
                         return FromSet(value, dstType);
+                    }
 
                     if (typeof(IList).IsAssignableFrom(dstType) || (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(IEnumerable<>))))
+                    {
                         return FromEnumerable(value, dstType);
+                    }
 
                     // All other objects with forcetype StringV
                     if (forceType == typeof(StringV) && value.GetType() == typeof(StringV))
                     {
                         if (value != null && value != NullV.Instance)
+                        {
                             return Activator.CreateInstance(dstType, ToString(value));
+                        }
+
                         return null;
                     }
 
                     if (dstType.GetTypeInfo().IsGenericType && dstType.Is(typeof(Nullable<>)))
+                    {
                         return DecodeIntern(value, Nullable.GetUnderlyingType(dstType));
+                    }
 
                     return FromObject(value, dstType);
             }
@@ -187,38 +215,44 @@ namespace FaunaDB.Types
             throw invalidCast(value, dstType);
         }
 
-        static IEnumerable FromSet(Value value, Type type)
+        private static IEnumerable FromSet(Value value, Type type)
         {
             if (!(value is ArrayV))
+            {
                 throw invalidCast(value, type);
+            }
 
             var valueType = type.GenericTypeArguments[0];
-            
+
             var createType = type.GetTypeInfo().IsAbstract
                                  ? typeof(HashSet<>).MakeGenericType(valueType)
                                  : type;
 
             var set = (IEnumerable)Activator.CreateInstance(createType);
-            
+
             var adder = createType.GetMethod("Add", new Type[] { valueType });
             var payload = new object[1];
 
             foreach (var v in ((ArrayV)value).Value)
             {
-                payload[0] = Decode(v, valueType); 
+                payload[0] = Decode(v, valueType);
                 adder.Invoke(set, payload);
             }
-            
+
             return set;
         }
 
-        static IList FromEnumerable(Value value, Type type)
+        private static IList FromEnumerable(Value value, Type type)
         {
             if (!(value is ArrayV))
+            {
                 throw invalidCast(value, type);
+            }
 
             if (!type.GetTypeInfo().IsGenericType)
+            {
                 throw new InvalidOperationException($"The type {type} is not generic");
+            }
 
             var valueType = type.GenericTypeArguments[0];
 
@@ -229,18 +263,24 @@ namespace FaunaDB.Types
             var ret = (IList)Activator.CreateInstance(createType);
 
             foreach (var v in ((ArrayV)value).Value)
+            {
                 ret.Add(Decode(v, valueType));
+            }
 
             return ret;
         }
 
-        static IDictionary FromDictionary(Value value, Type type)
+        private static IDictionary FromDictionary(Value value, Type type)
         {
             if (!(value is ObjectV))
+            {
                 throw invalidCast(value, type);
+            }
 
             if (!type.GetTypeInfo().IsGenericType)
+            {
                 throw new InvalidOperationException($"The type {type} is not generic");
+            }
 
             var keyType = type.GenericTypeArguments[0];
             var valueType = type.GenericTypeArguments[1];
@@ -252,68 +292,82 @@ namespace FaunaDB.Types
             var ret = (IDictionary)Activator.CreateInstance(createType);
 
             foreach (var kv in ((ObjectV)value).Value)
+            {
                 ret.Add(kv.Key, Decode(kv.Value, valueType));
+            }
 
             return ret;
         }
 
-        static Array FromArray(Value value, Type type)
+        private static Array FromArray(Value value, Type type)
         {
             var elementType = type.GetElementType();
 
             if (!(value is ArrayV))
+            {
                 throw invalidCast(value, type);
+            }
 
             var array = ((ArrayV)value).Value;
 
             var ret = Array.CreateInstance(elementType, array.Count);
 
             for (var i = 0; i < array.Count; i++)
+            {
                 ret.SetValue(Decode(array[i], elementType), i);
+            }
 
             return ret;
         }
 
-        static object ToNumber<R>(Value value)
+        private static object ToNumber<R>(Value value)
         {
             var ll = value as ScalarValue<long>;
             if (ll != null)
+            {
                 return ll.Value;
+            }
 
             var dd = value as ScalarValue<double>;
             if (dd != null)
+            {
                 return dd.Value;
+            }
 
             var ss = value as ScalarValue<string>;
             if (ss != null)
+            {
                 return ss.Value;
+            }
 
             throw invalidCast(value, typeof(R));
         }
 
-        static string ToString(Value value) =>
+        private static string ToString(Value value) =>
             FromScalar<string>(value, typeof(string));
 
-        static bool ToBoolean(Value value) =>
+        private static bool ToBoolean(Value value) =>
             FromScalar<bool>(value, typeof(bool));
 
-        static DateTime ToDateTime(Value value) =>
+        private static DateTime ToDateTime(Value value) =>
             FromScalar<DateTime>(value, typeof(DateTime));
 
-        static byte[] ToByteArray(Value value) =>
+        private static byte[] ToByteArray(Value value) =>
             FromScalar<byte[]>(value, typeof(byte[]));
 
-        static T FromScalar<T>(Value value, Type type)
+        private static T FromScalar<T>(Value value, Type type)
         {
             var scalar = value as ScalarValue<T>;
 
             if ((object)scalar == null)
+            {
                 throw invalidCast(value, type);
+            }
 
             return scalar.Value;
         }
 
-        static object ToEnum(Value value, Type dstType)
+        private static object ToEnum(Value value, Type dstType)
         {
             Converter converter;
 
@@ -342,7 +396,7 @@ namespace FaunaDB.Types
             return converter.Invoke(value);
         }
 
-        static object FromObject(Value value, Type dstType)
+        private static object FromObject(Value value, Type dstType)
         {
             Converter converter;
 
@@ -371,12 +425,12 @@ namespace FaunaDB.Types
             return converter.Invoke(value);
         }
 
-        static object ThrowError(Value value, Type dstType)
+        private static object ThrowError(Value value, Type dstType)
         {
             throw new InvalidOperationException($"Enumeration value '{((StringV)value).Value}' not found in {dstType}");
         }
 
-        static Converter CreateEnumConverter(Type dstType)
+        private static Converter CreateEnumConverter(Type dstType)
         {
             var objExpr = Expression.Parameter(typeof(Value), "obj");
             var varExpr = Expression.Variable(dstType, "output");
@@ -384,14 +438,12 @@ namespace FaunaDB.Types
 
             var switchValue = Expression.MakeMemberAccess(
                 Expression.Convert(objExpr, typeof(StringV)),
-                typeof(StringV).GetMember("Value")[0]
-            );
+                typeof(StringV).GetMember("Value")[0]);
 
             var defaultValue = Expression.Call(
                 typeof(DecoderImpl).GetMethod("ThrowError", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(Value), typeof(Type) }, null),
                 objExpr,
-                Expression.Constant(dstType, typeof(Type))
-            );
+                Expression.Constant(dstType, typeof(Type)));
 
             var cases = dstType.GetTypeInfo()
                 .GetEnumValues()
@@ -401,11 +453,11 @@ namespace FaunaDB.Types
 
             return Expression.Lambda<Converter>(
                 Expression.Switch(switchValue, defaultValue, cases),
-                objExpr
-            ).Compile();
+                objExpr)
+            .Compile();
         }
 
-        static SwitchCase CreateSwitchCase(Enum enumValue)
+        private static SwitchCase CreateSwitchCase(Enum enumValue)
         {
             var dstType = enumValue.GetType();
             var enumName = Enum.GetName(dstType, enumValue);
@@ -417,60 +469,71 @@ namespace FaunaDB.Types
                 Expression.Constant(enumValue, typeof(object)),
                 Expression.Constant(
                     faunaEnum != null ? faunaEnum.Alias : enumName,
-                    typeof(string)
-                )
-            );
+                    typeof(string)));
         }
 
-        static Converter CreateConverter(Type dstType)
+        private static Converter CreateConverter(Type dstType)
         {
             var creator = GetCreator(dstType);
 
             if (creator != null)
+            {
                 return FromMethodCreator(creator, dstType);
+            }
 
             var constructor = GetConstructor(dstType);
             if (constructor == null)
             {
                 if (dstType.GetTypeInfo().IsValueType)
+                {
                     return FromValueType(dstType);
+                }
 
                 throw new InvalidOperationException($"No default constructor or constructor/static method annotated with attribute [FaunaConstructor] found on type `{dstType}`");
             }
+
             return FromConstructor(constructor, dstType);
         }
 
-        static MethodInfo GetCreator(Type dstType)
+        private static MethodInfo GetCreator(Type dstType)
         {
             var methods = dstType
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
                 .Where(m => m.Has<FaunaConstructorAttribute>());
 
             if (methods.Count() > 1)
+            {
                 throw new InvalidOperationException($"More than one static method creator found on type `{dstType}`");
+            }
 
             if (methods.Count() == 1)
+            {
                 return methods.First();
+            }
 
             return null;
         }
 
-        static ConstructorInfo GetConstructor(Type dstType)
+        private static ConstructorInfo GetConstructor(Type dstType)
         {
             var constructors = dstType
                 .GetConstructors()
                 .Where(c => c.Has<FaunaConstructorAttribute>());
 
             if (constructors.Count() > 1)
+            {
                 throw new InvalidOperationException($"More than one constructor found on type `{dstType}`");
+            }
 
             if (constructors.Count() == 1)
+            {
                 return constructors.First();
+            }
 
             return dstType.GetConstructor(Type.EmptyTypes);
         }
 
-        static Expression AssignProperties(Expression objExpr, Expression varExpr, Type dstType, IEnumerable<string> ignoreProperties)
+        private static Expression AssignProperties(Expression objExpr, Expression varExpr, Type dstType, IEnumerable<string> ignoreProperties)
         {
             var fields = dstType
                 .GetAllFields()
@@ -491,7 +554,7 @@ namespace FaunaDB.Types
                 : (Expression)Expression.Empty();
         }
 
-        static Converter Create(Func<IEnumerable<Expression>, Expression> creatorExpr, ParameterInfo[] parameters, Type dstType)
+        private static Converter Create(Func<IEnumerable<Expression>, Expression> creatorExpr, ParameterInfo[] parameters, Type dstType)
         {
             var objExpr = Expression.Parameter(typeof(Value), "obj");
             var varExpr = Expression.Variable(dstType, "output");
@@ -525,7 +588,7 @@ namespace FaunaDB.Types
          *      return output;
          * }
          */
-        static Converter FromValueType(Type dstType)
+        private static Converter FromValueType(Type dstType)
         {
             return Create(
                 _ => Expression.New(dstType),
@@ -548,7 +611,7 @@ namespace FaunaDB.Types
          *      return output;
          * }
          */
-        static Converter FromConstructor(ConstructorInfo constructor, Type dstType)
+        private static Converter FromConstructor(ConstructorInfo constructor, Type dstType)
         {
             return Create(
                 p => Expression.New(constructor, p),
@@ -571,7 +634,7 @@ namespace FaunaDB.Types
          *      return output;
          * }
          */
-        static Converter FromMethodCreator(MethodInfo creator, Type dstType)
+        private static Converter FromMethodCreator(MethodInfo creator, Type dstType)
         {
             return Create(
                 p => Expression.Call(creator, p),
@@ -583,7 +646,7 @@ namespace FaunaDB.Types
         /*
          * Decode( objExpr, type )
          */
-        static Expression CallDecode(Expression objExpr, Type type, Type overrideType = null)
+        private static Expression CallDecode(Expression objExpr, Type type, Type overrideType = null)
         {
             var decodeMethod = typeof(DecoderImpl).GetMethod(
                 "Decode", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Value), typeof(Type), typeof(Type) }, null
@@ -599,25 +662,31 @@ namespace FaunaDB.Types
                 : Expression.Convert(decodeExpr, type);
         }
 
-        static Expression CallGetValue(Expression objExpr, MemberInfo member, Type memberType)
+        private static Expression CallGetValue(Expression objExpr, MemberInfo member, Type memberType)
         {
             var field = member.GetCustomAttribute<FaunaFieldAttribute>();
             var defaultValue = field != null ? Encoder.Encode(field.DefaultValue) : null;
 
             var hasDefaultValue = field != null && field.DefaultValue != null;
             if (!hasDefaultValue && memberType.GetTypeInfo().IsValueType)
+            {
                 defaultValue = Encoder.Encode(Activator.CreateInstance(memberType));
+            }
 
             if (defaultValue == null)
+            {
                 defaultValue = NullV.Instance;
+            }
 
             if (member.GetCustomAttribute<FaunaIgnoreAttribute>() != null)
+            {
                 return Expression.Constant(defaultValue, typeof(Value));
+            }
 
             return CallGetValue(objExpr, member.GetName(), defaultValue);
         }
 
-        static Expression CallGetValue(Expression objExpr, ParameterInfo parameter)
+        private static Expression CallGetValue(Expression objExpr, ParameterInfo parameter)
         {
             var field = parameter.GetCustomAttribute<FaunaFieldAttribute>();
             var hasDefaultValue = field != null && field.DefaultValue != null;
@@ -627,13 +696,19 @@ namespace FaunaDB.Types
                 : Encoder.Encode(parameter.DefaultValue);
 
             if (!hasDefaultValue && parameter.ParameterType.GetTypeInfo().IsValueType)
+            {
                 defaultValue = Encoder.Encode(Activator.CreateInstance(parameter.ParameterType));
+            }
 
             if (defaultValue == null)
+            {
                 defaultValue = NullV.Instance;
+            }
 
             if (parameter.GetCustomAttribute<FaunaIgnoreAttribute>() != null)
+            {
                 return Expression.Constant(defaultValue, typeof(Value));
+            }
 
             return CallGetValue(objExpr, parameter.GetName(), defaultValue);
         }
@@ -641,7 +716,7 @@ namespace FaunaDB.Types
         /*
          * GetValue( objExpr, property, defaultValue )
          */
-        static Expression CallGetValue(Expression objExpr, string property, Value defaultValue)
+        private static Expression CallGetValue(Expression objExpr, string property, Value defaultValue)
         {
             var getValueMethod = typeof(DecoderImpl).GetMethod(
                 "GetValue", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(ObjectV), typeof(string), typeof(Value) }, null
@@ -655,13 +730,15 @@ namespace FaunaDB.Types
             );
         }
 
-        static Value GetValue(ObjectV obj, string property, Value defaultValue)
+        private static Value GetValue(ObjectV obj, string property, Value defaultValue)
         {
             var values = obj.Value;
 
             Value value;
             if (values.TryGetValue(property, out value))
+            {
                 return value;
+            }
 
             return defaultValue;
         }

@@ -29,29 +29,29 @@ namespace Test
             Assert.AreEqual(new DateV("2001-01-01"), Encode(new DateTimeOffset(2001, 1, 1, 0, 0, 0, TimeSpan.Zero)));
             Assert.AreEqual(new TimeV("2000-01-01T01:10:30.123Z"), Encode(new DateTimeOffset(2000, 1, 1, 1, 10, 30, 123, TimeSpan.Zero)));
 
-            //float point
-            Assert.AreEqual(DoubleV.Of((float)3.14), Encode((float)3.14));
+            // float point
+            Assert.AreEqual(DoubleV.Of(3.14F), Encode(3.14F));
             Assert.AreEqual(DoubleV.Of(3.14), Encode((double)3.14));
-            Assert.AreEqual(DoubleV.Of(3.14), Encode((decimal)3.14));
+            Assert.AreEqual(DoubleV.Of(3.14), Encode(3.14M));
 
-            //signed values
+            // signed values
             Assert.AreEqual(LongV.Of(10), Encode((sbyte)10));
             Assert.AreEqual(LongV.Of(10), Encode((short)10));
             Assert.AreEqual(LongV.Of(10), Encode((int)10));
-            Assert.AreEqual(LongV.Of(10), Encode((long)10));
+            Assert.AreEqual(LongV.Of(10), Encode(10L));
 
-            //unsigned values
+            // unsigned values
             Assert.AreEqual(LongV.Of(10), Encode((char)10));
             Assert.AreEqual(LongV.Of(10), Encode((byte)10));
             Assert.AreEqual(LongV.Of(10), Encode((ushort)10));
-            Assert.AreEqual(LongV.Of(10), Encode((uint)10));
-            Assert.AreEqual(LongV.Of(10), Encode((ulong)10));
+            Assert.AreEqual(LongV.Of(10), Encode(10U));
+            Assert.AreEqual(LongV.Of(10), Encode(10UL));
         }
 
         [Test]
         public void TestIntegerLimits()
         {
-            //signed values
+            // signed values
             Assert.DoesNotThrow(() => Encode(sbyte.MinValue));
             Assert.DoesNotThrow(() => Encode(short.MinValue));
             Assert.DoesNotThrow(() => Encode(int.MinValue));
@@ -62,7 +62,7 @@ namespace Test
             Assert.DoesNotThrow(() => Encode(int.MaxValue));
             Assert.DoesNotThrow(() => Encode(long.MaxValue));
 
-            //unsigned values
+            // unsigned values
             Assert.DoesNotThrow(() => Encode(char.MinValue));
             Assert.DoesNotThrow(() => Encode(byte.MinValue));
             Assert.DoesNotThrow(() => Encode(ushort.MinValue));
@@ -112,7 +112,7 @@ namespace Test
             );
         }
 
-        class Address
+        private class Address
         {
             [FaunaField("street")]
             public string Street { get; set; }
@@ -136,7 +136,7 @@ namespace Test
             }
         }
 
-        class Person
+        private class Person
         {
             public static byte[] DefaultAvatar = { 1, 2, 3, 4 };
 
@@ -174,58 +174,58 @@ namespace Test
             );
 
             // list of person
-
             Assert.AreEqual(
                 ArrayV.Of(
                     ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "birth_date2", new TimeV("1980-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
                     ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "birth_date2", new TimeV("1975-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
                 ),
-                Encode(new List<Person> {
+                Encode(new List<Person>
+                {
                     new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar),
-                    new Person("Mary", new DateTime(1975, 1, 1), new Address("Mission St", 321), Person.DefaultAvatar)
+                    new Person("Mary", new DateTime(1975, 1, 1), new Address("Mission St", 321), Person.DefaultAvatar),
                 })
             );
 
             // dictionary of string => person
-
             Assert.AreEqual(
                 ObjectV.With(
                     "first", ObjectV.With("name", "John", "birth_date", new DateV("1980-01-01"), "birth_date2", new TimeV("1980-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 123, "street", "Market St"), "avatar_image", new BytesV(1, 2, 3, 4)),
                     "second", ObjectV.With("name", "Mary", "birth_date", new DateV("1975-01-01"), "birth_date2", new TimeV("1975-01-01T01:00:00.0Z"), "address", ObjectV.With("number", 321, "street", "Mission St"), "avatar_image", new BytesV(1, 2, 3, 4))
                 ),
-                Encode(new Dictionary<string, Person> {
-                    {"first", new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar)},
-                    {"second", new Person("Mary", new DateTime(1975, 1, 1), new Address("Mission St", 321), Person.DefaultAvatar)}
+                Encode(new Dictionary<string, Person>
+                {
+                    {"first", new Person("John", new DateTime(1980, 1, 1), new Address("Market St", 123), Person.DefaultAvatar) },
+                    {"second", new Person("Mary", new DateTime(1975, 1, 1), new Address("Mission St", 321), Person.DefaultAvatar) },
                 })
             );
         }
 
-        struct Rect
+        private struct Rect
         {
             [FaunaField("x")]
-            public int x1;
+            public int X1;
 
             [FaunaField("y")]
-            public int y1;
+            public int Y1;
 
             [FaunaIgnore]
-            public int x2;
+            public int X2;
 
             [FaunaIgnore]
-            public int y2;
+            public int Y2;
 
             [FaunaField("width")]
-            public int Width { get { return x2 - x1; } }
+            public int Width { get { return X2 - X1; } }
 
             [FaunaField("height")]
-            public int Height { get { return y2 - y1; } }
+            public int Height { get { return Y2 - Y1; } }
 
             public Rect(int x1, int y1, int x2, int y2)
             {
-                this.x1 = x1;
-                this.y1 = y1;
-                this.x2 = x2;
-                this.y2 = y2;
+                this.X1 = x1;
+                this.Y1 = y1;
+                this.X2 = x2;
+                this.Y2 = y2;
             }
         }
 
@@ -238,14 +238,18 @@ namespace Test
             );
         }
 
-        class Node
+        private class Node
         {
             public string Id { get; set; }
+
             public Node Left { get; set; }
+
             public Node Right { get; set; }
 
             public override string ToString() => $"Node({Id})";
+
             public override bool Equals(object obj) => obj is Node && Id == ((Node)obj).Id;
+
             public override int GetHashCode() => Id.GetHashCode();
         }
 
@@ -272,50 +276,53 @@ namespace Test
             Assert.DoesNotThrow(() => Encode(parent));
         }
 
-        class FaunaTypes
+        private class FaunaTypes
         {
-            public StringV stringV = StringV.Of("a string");
-            public LongV longV = LongV.Of(123);
-            public BooleanV booleanV = BooleanV.True;
-            public DoubleV doubleV = DoubleV.Of(3.14);
-            public Value nullV = NullV.Instance;
-            public DateV dateV = new DateV("2001-01-01");
-            public TimeV timeV = new TimeV("2000-01-01T01:10:30.123Z");
-            public RefV refV = new RefV("collections");
-            public SetRefV setRefV = new SetRefV(new Dictionary<string, Value>());
-            public ArrayV arrayV = ArrayV.Of(1, 2, 3);
-            public ObjectV objectV = ObjectV.With("a", "b");
-            public BytesV bytesV = new BytesV(1, 2, 3, 4);
+            public StringV StringV_Value = StringV.Of("a string");
+            public LongV LongV_Value = LongV.Of(123);
+            public BooleanV BooleanV_Value = BooleanV.True;
+            public DoubleV DoubleV_Value = DoubleV.Of(3.14);
+            public Value NullV_Value = NullV.Instance;
+            public DateV DateV_Value = new DateV("2001-01-01");
+            public TimeV TimeV_Value = new TimeV("2000-01-01T01:10:30.123Z");
+            public RefV RefV_Value = new RefV("collections");
+            public SetRefV SetRefV_Value = new SetRefV(new Dictionary<string, Value>());
+            public ArrayV ArrayV_Value = ArrayV.Of(1, 2, 3);
+            public ObjectV ObjectV_Value = ObjectV.With("a", "b");
+            public BytesV BytesV_Value = new BytesV(1, 2, 3, 4);
         }
 
         [Test]
         public void TestFaunaTypes()
         {
             Assert.AreEqual(
-                ObjectV.With(new Dictionary<string, Value> {
-                    {"stringV", "a string"},
-                    {"longV", 123},
-                    {"booleanV", true},
-                    {"doubleV", 3.14},
-                    {"nullV", NullV.Instance},
-                    {"dateV", new DateV("2001-01-01")},
-                    {"timeV", new TimeV("2000-01-01T01:10:30.123Z")},
-                    {"refV", new RefV("collections")},
-                    {"setRefV", new SetRefV(new Dictionary<string, Value>())},
-                    {"arrayV", ArrayV.Of(1, 2, 3)},
-                    {"objectV", ObjectV.With("a", "b")},
-                    {"bytesV", new BytesV(1, 2, 3, 4)}
+                ObjectV.With(new Dictionary<string, Value>
+                {
+                    {"stringV", "a string" },
+                    {"longV", 123 },
+                    {"booleanV", true },
+                    {"doubleV", 3.14 },
+                    {"nullV", NullV.Instance },
+                    {"dateV", new DateV("2001-01-01") },
+                    {"timeV", new TimeV("2000-01-01T01:10:30.123Z") },
+                    {"refV", new RefV("collections") },
+                    {"setRefV", new SetRefV(new Dictionary<string, Value>()) },
+                    {"arrayV", ArrayV.Of(1, 2, 3) },
+                    {"objectV", ObjectV.With("a", "b") },
+                    {"bytesV", new BytesV(1, 2, 3, 4) },
                 }),
                 Encode(new FaunaTypes())
             );
         }
 
-        enum CpuTypes
+        private enum CpuTypes
         {
-            [FaunaEnum("x86_32")] X86,
-            [FaunaEnum("x86_64")] X86_64,
+            [FaunaEnum("x86_32")]
+            X86,
+            [FaunaEnum("x86_64")]
+            X86_64,
             ARM,
-            MIPS
+            MIPS,
         }
 
         [Test]
@@ -327,7 +334,7 @@ namespace Test
             Assert.AreEqual(StringV.Of("MIPS"), Encode(CpuTypes.MIPS));
         }
 
-        class DateTimeOverride
+        private class DateTimeOverride
         {
             [FaunaField("timev")]
             [FaunaTime]
@@ -357,11 +364,10 @@ namespace Test
         [Test]
         public void TestEncodeRawExpressions()
         {
-
             var indexCfg = new Dictionary<string, object>()
             {
                 { "name", "index_name" },
-                { "source",  Collection("class_name") }
+                { "source",  Collection("class_name") },
             };
 
             Assert.AreEqual(
@@ -370,7 +376,7 @@ namespace Test
             );
         }
 
-        class StringOverride
+        private class StringOverride
         {
             [FaunaField("uri")]
             [FaunaString]

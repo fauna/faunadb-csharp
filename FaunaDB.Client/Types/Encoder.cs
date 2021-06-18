@@ -1,17 +1,16 @@
 using System;
-using System.Runtime.CompilerServices;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using FaunaDB.Query;
+using Converter = System.Func<FaunaDB.Types.EncoderImpl, object, FaunaDB.Types.Value>;
 
 namespace FaunaDB.Types
 {
-    using Converter = Func<EncoderImpl, object, Value>;
-
     /// <summary>
     /// FaunaDB object to <see cref="Value"/> encoder.
     /// </summary>
@@ -40,26 +39,34 @@ namespace FaunaDB.Types
             new EncoderImpl().Encode(obj);
     }
 
-    class EncoderImpl
+    internal class EncoderImpl
     {
-        static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Converter>();
-        static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
+        private static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Converter>();
+        private static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
-        Stack<object> stack = new Stack<object>();
+        private Stack<object> stack = new Stack<object>();
 
         public Value Encode(object obj, Type forceType = null)
         {
             if (obj == null)
+            {
                 return NullV.Instance;
+            }
 
             if (typeof(Value).IsInstanceOfType(obj))
+            {
                 return (Value)obj;
+            }
 
             if (typeof(Expr).IsInstanceOfType(obj))
+            {
                 return ExprV.Of((Expr)obj);
+            }
 
             if (stack.Contains(obj, ReferenceComparer.Default))
+            {
                 throw new InvalidOperationException($"Self referencing loop detected for object `{obj}`");
+            }
 
             try
             {
@@ -73,11 +80,11 @@ namespace FaunaDB.Types
             }
         }
 
-        static readonly object dbNullValue = GetDBNullValue();
+        private static readonly object dbNullValue = GetDBNullValue();
 
-        static object GetDBNullValue()
+        private static object GetDBNullValue()
         {
-#if !(NETSTANDARD1_5)
+#if !NETSTANDARD1_5
             return DBNull.Value;
 #else
             var dbNullType = Type.GetType("System.DBNull");
@@ -85,7 +92,7 @@ namespace FaunaDB.Types
 #endif
         }
 
-        Value EncodeIntern(object obj, Type forceType)
+        private Value EncodeIntern(object obj, Type forceType)
         {
             var type = obj.GetType();
 
@@ -95,10 +102,14 @@ namespace FaunaDB.Types
             }
 
             if (dbNullValue.Equals(obj))
+            {
                 return NullV.Instance;
+            }
 
             if (type.GetTypeInfo().IsEnum)
+            {
                 return WrapEnum(obj, type);
+            }
 
             switch (Type.GetTypeCode(type))
             {
@@ -129,7 +140,7 @@ namespace FaunaDB.Types
                 case TypeCode.Decimal:
                     return DoubleV.Of(Convert.ToDouble(obj));
 
-#if !(NETSTANDARD1_5)
+#if !NETSTANDARD1_5
                 case TypeCode.DBNull:
                     return NullV.Instance;
 #endif
@@ -139,16 +150,24 @@ namespace FaunaDB.Types
 
                 case TypeCode.Object:
                     if (typeof(DateTimeOffset).IsInstanceOfType(obj))
+                    {
                         return Value.FromDateTimeOffset((DateTimeOffset)obj, forceType);
+                    }
 
                     if (typeof(byte[]).IsInstanceOfType(obj))
+                    {
                         return new BytesV((byte[])obj);
+                    }
 
                     if (typeof(IDictionary).IsInstanceOfType(obj))
+                    {
                         return WrapDictionary((IDictionary)obj);
+                    }
 
                     if (typeof(IEnumerable).IsInstanceOfType(obj))
+                    {
                         return WrapEnumerable((IEnumerable)obj);
+                    }
 
                     return WrapObj(obj);
             }
@@ -156,27 +175,31 @@ namespace FaunaDB.Types
             throw new InvalidOperationException($"Unsupported type {type} at `{obj}`");
         }
 
-        Value WrapEnumerable(IEnumerable array)
+        private Value WrapEnumerable(IEnumerable array)
         {
             var ret = new List<Value>();
 
             foreach (var value in array)
+            {
                 ret.Add(Encode(value));
+            }
 
             return new ArrayV(ret);
         }
 
-        Value WrapDictionary(IDictionary dic)
+        private Value WrapDictionary(IDictionary dic)
         {
             var ret = new Dictionary<string, Value>();
 
             foreach (DictionaryEntry entry in dic)
+            {
                 ret.Add(entry.Key.ToString(), Encode(entry.Value));
+            }
 
             return new ObjectV(ret);
         }
 
-        Value WrapEnum(object obj, Type type)
+        private Value WrapEnum(object obj, Type type)
         {
             Converter converter;
 
@@ -205,7 +228,7 @@ namespace FaunaDB.Types
             return converter.Invoke(this, obj);
         }
 
-        Value WrapObj(object obj)
+        private Value WrapObj(object obj)
         {
             var type = obj.GetType();
             Converter converter;
@@ -245,7 +268,7 @@ namespace FaunaDB.Types
          *    return new ObjectV(dic);
          * };
          */
-        Converter CreateConverter(Type srcType)
+        private Converter CreateConverter(Type srcType)
         {
             var dictType = typeof(Dictionary<string, Value>);
             var addMethod = dictType.GetMethod("Add", new Type[] { typeof(string), typeof(Value) });
@@ -273,7 +296,7 @@ namespace FaunaDB.Types
             return lambda.Compile();
         }
 
-        Converter CreateEnumConverter(Type srcType)
+        private Converter CreateEnumConverter(Type srcType)
         {
             var encoderExpr = Expression.Parameter(typeof(EncoderImpl), "encoder");
             var objExpr = Expression.Parameter(typeof(object), "obj");
@@ -294,7 +317,7 @@ namespace FaunaDB.Types
             ).Compile();
         }
 
-        SwitchCase CreateSwitchCase(Enum enumValue)
+        private SwitchCase CreateSwitchCase(Enum enumValue)
         {
             var dstType = enumValue.GetType();
             var enumName = Enum.GetName(dstType, enumValue);
@@ -312,7 +335,7 @@ namespace FaunaDB.Types
         /*
          * (object) ((SrcType)objExpr).member
          */
-        Expression AccessMember(Type srcType, MemberInfo member, Expression objExpr)
+        private Expression AccessMember(Type srcType, MemberInfo member, Expression objExpr)
         {
             return Expression.Convert(
                 Expression.MakeMemberAccess(Expression.Convert(objExpr, srcType), member),
@@ -323,7 +346,7 @@ namespace FaunaDB.Types
         /*
          * encodeExpr.Encode( argExpression )
          */
-        Expression CallEncode(Expression encoderExpr, Expression argExpression, Expression typeExpression = null)
+        private Expression CallEncode(Expression encoderExpr, Expression argExpression, Expression typeExpression = null)
         {
             var encodeMethod = typeof(EncoderImpl).GetMethod("Encode", new Type[] { typeof(object), typeof(Type) });
 
@@ -337,7 +360,7 @@ namespace FaunaDB.Types
         /*
          * Add(member.Name, Encode( objExpr.member ))
          */
-        ElementInit AddElementToDic(Expression encoderExpr, Type srcType, MemberInfo member, MethodInfo addMethod, Expression objExpr)
+        private ElementInit AddElementToDic(Expression encoderExpr, Type srcType, MemberInfo member, MethodInfo addMethod, Expression objExpr)
         {
             var keyExpr = Expression.Constant(member.GetName());
             var typeExpr = Expression.Constant(member.GetOverrideType(), typeof(Type));
@@ -348,7 +371,7 @@ namespace FaunaDB.Types
             );
         }
 
-        class ReferenceComparer : IEqualityComparer<object>
+        private class ReferenceComparer : IEqualityComparer<object>
         {
             public static readonly ReferenceComparer Default = new ReferenceComparer();
 

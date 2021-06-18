@@ -1,6 +1,6 @@
 using System;
-using System.Runtime.InteropServices;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace FaunaDB.Client
 {
@@ -13,7 +13,7 @@ namespace FaunaDB.Client
 
         private static RuntimeEnvironmentHeader instance;
 
-        private RuntimeEnvironmentHeader() {}
+        private RuntimeEnvironmentHeader() { }
 
         private void GatherEnvironmentInfo(IEnvironmentEditor environmentEditor)
         {
@@ -25,19 +25,22 @@ namespace FaunaDB.Client
 
         private static string GetOperatingSystemName()
         {
-#if (NETSTANDARD2_1 || NETSTANDARD2_0 || NETSTANDARD1_5)
+#if NETSTANDARD2_1 || NETSTANDARD2_0 || NETSTANDARD1_5
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 return "OSX";
             }
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 return "Linux";
             }
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 return "Windows";
             }
+
             return "Unknown";
 #else
             return Environment.OSVersion.ToString();
@@ -46,14 +49,15 @@ namespace FaunaDB.Client
 
         private static string GetCurrentRuntime()
         {
-#if (NETSTANDARD2_1 || NETSTANDARD2_0 || NETSTANDARD1_5)
+#if NETSTANDARD2_1 || NETSTANDARD2_0 || NETSTANDARD1_5
             return RuntimeInformation.FrameworkDescription;
 #elif NET45
             var versionInfo = typeof(object).Assembly.GetCustomAttribute(typeof(AssemblyInformationalVersionAttribute));
             if (versionInfo != null)
             {
-                return ((AssemblyInformationalVersionAttribute) versionInfo).InformationalVersion;
+                return ((AssemblyInformationalVersionAttribute)versionInfo).InformationalVersion;
             }
+
             return "unknown .net runtime";
 #else
             return "unknown .net runtime";
@@ -129,7 +133,9 @@ namespace FaunaDB.Client
     internal interface IEnvironmentEditor
     {
         string GetVariable(string variableName);
+
         void SetVariable(string variableName, string variableValue);
+
         void RemoveVariable(string variableName);
     }
 
@@ -137,7 +143,7 @@ namespace FaunaDB.Client
     {
         private static EnvironmentEditor instance;
 
-        private EnvironmentEditor() {}
+        private EnvironmentEditor() { }
 
         public static EnvironmentEditor Create()
         {
@@ -148,6 +154,7 @@ namespace FaunaDB.Client
 
             return instance;
         }
+
         public string GetVariable(string variableName)
         {
             return Environment.GetEnvironmentVariable(variableName);

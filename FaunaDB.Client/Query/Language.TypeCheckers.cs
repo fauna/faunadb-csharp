@@ -10,7 +10,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsArray(Expr expr) =>
             UnescapedObject.With("is_array", expr);
-        
+
         /// <summary>
         /// Check if the expression is a boolean.
         /// <para>
@@ -19,7 +19,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsBoolean(Expr expr) =>
             UnescapedObject.With("is_boolean", expr);
-        
+
         /// <summary>
         /// Check if the expression is a byte array.
         /// <para>
@@ -28,7 +28,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsBytes(Expr expr) =>
             UnescapedObject.With("is_bytes", expr);
-        
+
         /// <summary>
         /// Check if the expression is a collection.
         /// <para>
@@ -37,7 +37,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsCollection(Expr expr) =>
             UnescapedObject.With("is_collection", expr);
-        
+
         /// <summary>
         /// Check if the expression is a credentials.
         /// <para>
@@ -46,7 +46,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsCredentials(Expr expr) =>
             UnescapedObject.With("is_credentials", expr);
-        
+
         /// <summary>
         /// Check if the expression is a database.
         /// <para>
@@ -55,7 +55,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsDatabase(Expr expr) =>
             UnescapedObject.With("is_database", expr);
-        
+
         /// <summary>
         /// Check if the expression is a date.
         /// <para>
@@ -64,7 +64,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsDate(Expr expr) =>
             UnescapedObject.With("is_date", expr);
-        
+
         /// <summary>
         /// Check if the expression is a document (either a reference or an instance).
         /// <para>
@@ -73,7 +73,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsDoc(Expr expr) =>
             UnescapedObject.With("is_doc", expr);
-        
+
         /// <summary>
         /// Check if the expression is a double.
         /// <para>
@@ -82,7 +82,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsDouble(Expr expr) =>
             UnescapedObject.With("is_double", expr);
-        
+
         /// <summary>
         /// Check if the expression is a function.
         /// <para>
@@ -91,7 +91,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsFunction(Expr expr) =>
             UnescapedObject.With("is_function", expr);
-        
+
         /// <summary>
         /// Check if the expression is an index.
         /// <para>
@@ -100,7 +100,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsIndex(Expr expr) =>
             UnescapedObject.With("is_index", expr);
-        
+
         /// <summary>
         /// Check if the expression is an integer.
         /// <para>
@@ -109,7 +109,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsInteger(Expr expr) =>
             UnescapedObject.With("is_integer", expr);
-        
+
         /// <summary>
         /// Check if the expression is a key.
         /// <para>
@@ -118,7 +118,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsKey(Expr expr) =>
             UnescapedObject.With("is_key", expr);
-        
+
         /// <summary>
         /// Check if the expression is a lambda.
         /// <para>
@@ -127,7 +127,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsLambda(Expr expr) =>
             UnescapedObject.With("is_lambda", expr);
-        
+
         /// <summary>
         /// Check if the expression is null.
         /// <para>
@@ -136,7 +136,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsNull(Expr expr) =>
             UnescapedObject.With("is_null", expr);
-        
+
         /// <summary>
         /// Check if the expression is a number.
         /// <para>
@@ -145,7 +145,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsNumber(Expr expr) =>
             UnescapedObject.With("is_number", expr);
-        
+
         /// <summary>
         /// Check if the expression is an object.
         /// <para>
@@ -154,7 +154,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsObject(Expr expr) =>
             UnescapedObject.With("is_object", expr);
-        
+
         /// <summary>
         /// Check if the expression is a reference.
         /// <para>
@@ -163,7 +163,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsRef(Expr expr) =>
             UnescapedObject.With("is_ref", expr);
-        
+
         /// <summary>
         /// Check if the expression is a role.
         /// <para>
@@ -172,7 +172,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsRole(Expr expr) =>
             UnescapedObject.With("is_role", expr);
-        
+
         /// <summary>
         /// Check if the expression is a set.
         /// <para>
@@ -181,7 +181,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsSet(Expr expr) =>
             UnescapedObject.With("is_set", expr);
-        
+
         /// <summary>
         /// Check if the expression is a string.
         /// <para>
@@ -190,7 +190,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsString(Expr expr) =>
             UnescapedObject.With("is_string", expr);
-        
+
         /// <summary>
         /// Check if the expression is a timestamp.
         /// <para>
@@ -199,7 +199,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr IsTimestamp(Expr expr) =>
             UnescapedObject.With("is_timestamp", expr);
-        
+
         /// <summary>
         /// Check if the expression is a token.
         /// <para>

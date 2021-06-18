@@ -23,7 +23,7 @@
             NFC,
             NFKD,
             NFKC,
-            NFKCCaseFold
+            NFKCCaseFold,
         }
 
         /// <summary>
@@ -61,6 +61,5 @@
         /// </summary>
         public static Expr Format(Expr format, params Expr[] values) =>
             UnescapedObject.With("format", format, "values", Varargs(values));
-
     }
 }

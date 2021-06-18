@@ -62,9 +62,9 @@ namespace FaunaDB.Types
         void Match(Action<T> Some, Action None);
     }
 
-    class Some<T> : IOption<T>
+    internal class Some<T> : IOption<T>
     {
-        T value;
+        private readonly T value;
 
         public Some(T value)
         {
@@ -98,9 +98,9 @@ namespace FaunaDB.Types
             $"Some({value})";
     }
 
-    interface INone { }
+    internal interface INone { }
 
-    class None<T> : IOption<T>, INone
+    internal class None<T> : IOption<T>, INone
     {
         public T Value { get { throw new InvalidOperationException(); } }
 
@@ -147,7 +147,9 @@ namespace FaunaDB.Types
         public static IOption<T> Of<T>(T value)
         {
             if (value != null)
+            {
                 return Some(value);
+            }
 
             return None<T>();
         }

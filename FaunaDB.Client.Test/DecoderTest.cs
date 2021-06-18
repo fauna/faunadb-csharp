@@ -29,9 +29,9 @@ namespace Test
             Assert.AreEqual(10, Decode<byte>(10));
             Assert.AreEqual(10, Decode<char>(10));
 
-            Assert.AreEqual((float)3.14, Decode<float>(3.14));
-            Assert.AreEqual((double)3.14, Decode<double>(3.14));
-            Assert.AreEqual((decimal)3.14, Decode<decimal>(3.14));
+            Assert.AreEqual(3.14F, Decode<float>(3.14));
+            Assert.AreEqual(3.14M, Decode<double>(3.14));
+            Assert.AreEqual(3.14M, Decode<decimal>(3.14));
 
             Assert.AreEqual(new DateTime(2001, 1, 1), Decode<DateTime>(new DateV("2001-01-01")));
             Assert.AreEqual(new DateTime(2000, 1, 1, 1, 10, 30, 123), Decode<DateTime>(new TimeV("2000-01-01T01:10:30.123Z")));
@@ -42,10 +42,11 @@ namespace Test
             Assert.AreEqual(new byte[] { 1, 2, 3 }, Decode<byte[]>(new BytesV(1, 2, 3)));
         }
 
-        struct Point
+        private struct Point
         {
             public int X;
             public int Y;
+
             public Point(int x, int y)
             {
                 X = x;
@@ -53,10 +54,11 @@ namespace Test
             }
         }
 
-        struct Rect
+        private struct Rect
         {
             public Point UpperLeft;
             public Point BottomRight;
+
             public Rect(Point upperLeft, Point bottomRight)
             {
                 UpperLeft = upperLeft;
@@ -78,9 +80,9 @@ namespace Test
             Assert.AreEqual(0, Decode<byte>(NullV.Instance));
             Assert.AreEqual(0, Decode<char>(NullV.Instance));
 
-            Assert.AreEqual((float)0, Decode<float>(NullV.Instance));
-            Assert.AreEqual((double)0, Decode<double>(NullV.Instance));
-            Assert.AreEqual((decimal)0, Decode<decimal>(NullV.Instance));
+            Assert.AreEqual(0F, Decode<float>(NullV.Instance));
+            Assert.AreEqual(0F, Decode<double>(NullV.Instance));
+            Assert.AreEqual(0M, Decode<decimal>(NullV.Instance));
 
             Assert.AreEqual(default(Point), Decode<Point>(NullV.Instance));
             Assert.AreEqual(default(Point), Decode<Point>(ObjectV.Empty));
@@ -89,8 +91,6 @@ namespace Test
             Assert.AreEqual(default(Rect), Decode<Rect>(NullV.Instance));
             Assert.AreEqual(default(Rect), Decode<Rect>(ObjectV.Empty));
             Assert.AreEqual(default(Rect), Decode<Rect>(ObjectV.With("UpperLeft", NullV.Instance, "BottomRight", NullV.Instance)));
-
-            //
 
             Assert.AreEqual(0, Decode<long>(null));
             Assert.AreEqual(0, Decode<int>(null));
@@ -103,9 +103,9 @@ namespace Test
             Assert.AreEqual(0, Decode<byte>(null));
             Assert.AreEqual(0, Decode<char>(null));
 
-            Assert.AreEqual((float)0, Decode<float>(null));
-            Assert.AreEqual((double)0, Decode<double>(null));
-            Assert.AreEqual((decimal)0, Decode<decimal>(null));
+            Assert.AreEqual(0F, Decode<float>(null));
+            Assert.AreEqual(0D, Decode<double>(null));
+            Assert.AreEqual(0M, Decode<decimal>(null));
 
             Assert.AreEqual(default(Point), Decode<Point>(null));
             Assert.AreEqual(default(Rect), Decode<Rect>(null));
@@ -124,7 +124,7 @@ namespace Test
         [Test]
         public void TestIntegerLimits()
         {
-            //signed values
+            // signed values
             Assert.Throws<OverflowException>(() => Decode<sbyte>((long)sbyte.MinValue - 1));
             Assert.Throws<OverflowException>(() => Decode<short>((long)short.MinValue - 1));
             Assert.Throws<OverflowException>(() => Decode<int>((long)int.MinValue - 1));
@@ -133,7 +133,7 @@ namespace Test
             Assert.Throws<OverflowException>(() => Decode<short>((long)short.MaxValue + 1));
             Assert.Throws<OverflowException>(() => Decode<int>((long)int.MaxValue + 1));
 
-            //unsigned vlaues
+            // unsigned vlaues
             Assert.Throws<OverflowException>(() => Decode<char>((long)char.MaxValue + 1));
             Assert.Throws<OverflowException>(() => Decode<byte>((long)byte.MaxValue + 1));
             Assert.Throws<OverflowException>(() => Decode<ushort>((long)ushort.MaxValue + 1));
@@ -148,8 +148,7 @@ namespace Test
             Assert.AreEqual(new int[] { 1, 2, 3 }, Decode<int[]>(ArrayV.Of(1, 2, 3)));
             Assert.AreEqual(new long[] { 1, 2, 3 }, Decode<long[]>(ArrayV.Of(1, 2, 3)));
 
-            //interfaces
-
+            // interfaces
             Assert.That(
                 Decode<IDictionary<string, Value>>(ObjectV.With("a", "b")),
                 Is.EquivalentTo(new Dictionary<string, Value> { { "a", "b" } })
@@ -170,8 +169,7 @@ namespace Test
                 Is.EquivalentTo(new HashSet<string> { "a", "b" })
             );
 
-            //concrete types
-
+            // concrete types
             Assert.That(
                 Decode<Dictionary<string, Value>>(ObjectV.With("a", "b")),
                 Is.EquivalentTo(new Dictionary<string, Value> { { "a", "b" } })
@@ -186,18 +184,21 @@ namespace Test
                 Decode<HashSet<string>>(ArrayV.Of("a", "b")),
                 Is.EquivalentTo(new HashSet<string> { "a", "b" })
             );
-            
+
             Assert.That(
                 Decode<SortedSet<int>>(ArrayV.Of(1, 2, 3)),
                 Is.EquivalentTo(new SortedSet<int> { 1, 2, 3 })
             );
-        }      
+        }
 
-        class Product
+        private class Product
         {
             public string Description { get; set; }
+
             public double Price { get; set; }
+
             public DateTime Created { get; set; }
+
             public DateTimeOffset LastUpdated { get; set; }
 
             [FaunaConstructor]
@@ -217,7 +218,9 @@ namespace Test
                 var product = obj as Product;
 
                 if (product == null)
+                {
                     return false;
+                }
 
                 return Description == product.Description &&
                     Price == product.Price &&
@@ -241,7 +244,7 @@ namespace Test
             Assert.AreEqual(new DateTimeOffset(2001, 1, 2, 11, 0, 0, 123, TimeSpan.Zero), person.LastUpdated);
         }
 
-        class Order
+        private class Order
         {
             [FaunaField("number")]
             public string Number { get; set; }
@@ -251,9 +254,9 @@ namespace Test
 
             [FaunaField("vouchers")]
             public ISet<int> Vouchers { get; set; }
-            
+
             [FaunaField("addresses")]
-            public SortedSet<String> Addresses { get; set; }
+            public SortedSet<string> Addresses { get; set; }
         }
 
         [Test]
@@ -285,7 +288,7 @@ namespace Test
             Assert.IsTrue(order.Addresses.Contains("744 Montgomery Street Suite 200"));
         }
 
-        class OrderWithCustomer : Order
+        private class OrderWithCustomer : Order
         {
             [FaunaField("customer")]
             public string Customer { get; set; }
@@ -308,7 +311,7 @@ namespace Test
             Assert.AreEqual(999.9, order.Products[0].Price);
         }
 
-        class MethodCreator
+        private class MethodCreator
         {
             public string Field { get; }
 
@@ -329,13 +332,13 @@ namespace Test
             Assert.AreEqual("a string", obj.Field);
         }
 
-        class DefaultValueOnProperty
+        private class DefaultValueOnProperty
         {
             [FaunaField("Field", DefaultValue = "a default value on property")]
             public string Field { get; set; }
         }
 
-        class DefaultValueOnConstructor
+        private class DefaultValueOnConstructor
         {
             public string Field { get; }
 
@@ -346,7 +349,7 @@ namespace Test
             }
         }
 
-        class DefaultValueOnMethodCreator
+        private class DefaultValueOnMethodCreator
         {
             public string Field { get; private set; }
 
@@ -355,7 +358,7 @@ namespace Test
             {
                 return new DefaultValueOnMethodCreator
                 {
-                    Field = field
+                    Field = field,
                 };
             }
         }
@@ -379,12 +382,12 @@ namespace Test
             );
         }
 
-        class MissingPropertiesOnConstructor
+        private class MissingPropertiesOnConstructor
         {
             public string Field1 { get; set; }
 
             [FaunaField("a_missing_field")]
-            string field2 = default(string);
+            private string field2 = default(string);
 
             public string Field2 { get { return field2; } }
 
@@ -409,14 +412,14 @@ namespace Test
             Assert.AreEqual("field3", obj.Field3);
         }
 
-        class MissingPropertiesOnMethodCreator
+        private class MissingPropertiesOnMethodCreator
         {
             public string Field1 { get; set; }
 
             [FaunaField("a_missing_field")]
-            string field2 = default(string);
+            private string Field2Missing = default(string);
 
-            public string Field2 { get { return field2; } }
+            public string Field2 { get { return Field2Missing; } }
 
             [FaunaField("a_missing_property")]
             public string Field3 { get; set; }
@@ -426,7 +429,7 @@ namespace Test
             {
                 return new MissingPropertiesOnMethodCreator
                 {
-                    Field1 = field1
+                    Field1 = field1,
                 };
             }
         }
@@ -442,20 +445,20 @@ namespace Test
             Assert.AreEqual("field3", obj.Field3);
         }
 
-        class FaunaTypes
+        private class FaunaTypes
         {
-            public StringV stringV = StringV.Of("a string");
-            public LongV longV = LongV.Of(123);
-            public BooleanV booleanV = BooleanV.True;
-            public DoubleV doubleV = DoubleV.Of(3.14);
-            public Value nullV = NullV.Instance;
-            public DateV dateV = new DateV("2001-01-01");
-            public TimeV timeV = new TimeV("2000-01-01T01:10:30.123Z");
-            public RefV refV = new RefV("collections");
-            public SetRefV setRefV = new SetRefV(new Dictionary<string, Value>());
-            public ArrayV arrayV = ArrayV.Of(1, 2, 3);
-            public ObjectV objectV = ObjectV.With("a", "b");
-            public BytesV bytesV = new BytesV(1, 2, 3, 4);
+            public StringV StringV_Value = StringV.Of("a string");
+            public LongV LongV_Value = LongV.Of(123);
+            public BooleanV BooleanV_Value = BooleanV.True;
+            public DoubleV DoubleV_Value = DoubleV.Of(3.14);
+            public Value NullV_Value = NullV.Instance;
+            public DateV DateV_Value = new DateV("2001-01-01");
+            public TimeV TimeV_Value = new TimeV("2000-01-01T01:10:30.123Z");
+            public RefV RefV_Value = new RefV("collections");
+            public SetRefV SetRefV_Value = new SetRefV(new Dictionary<string, Value>());
+            public ArrayV ArrayV_Value = ArrayV.Of(1, 2, 3);
+            public ObjectV ObjectV_Value = ObjectV.With("a", "b");
+            public BytesV BytesV_Value = new BytesV(1, 2, 3, 4);
 
             public override int GetHashCode() => 0;
 
@@ -463,18 +466,18 @@ namespace Test
             {
                 FaunaTypes other = obj as FaunaTypes;
                 return other != null &&
-                    stringV == other.stringV &&
-                    longV == other.longV &&
-                    booleanV == other.booleanV &&
-                    doubleV == other.doubleV &&
-                    nullV == other.nullV &&
-                    dateV == other.dateV &&
-                    timeV == other.timeV &&
-                    refV == other.refV &&
-                    setRefV == other.setRefV &&
-                    arrayV == other.arrayV &&
-                    objectV == other.objectV &&
-                    bytesV == other.bytesV;
+                    StringV_Value == other.StringV_Value &&
+                    LongV_Value == other.LongV_Value &&
+                    BooleanV_Value == other.BooleanV_Value &&
+                    DoubleV_Value == other.DoubleV_Value &&
+                    NullV_Value == other.NullV_Value &&
+                    DateV_Value == other.DateV_Value &&
+                    TimeV_Value == other.TimeV_Value &&
+                    RefV_Value == other.RefV_Value &&
+                    RefV_Value == other.RefV_Value &&
+                    ArrayV_Value == other.ArrayV_Value &&
+                    ObjectV_Value == other.ObjectV_Value &&
+                    BytesV_Value == other.BytesV_Value;
             }
         }
 
@@ -483,19 +486,20 @@ namespace Test
         {
             Assert.AreEqual(
                 new FaunaTypes(),
-                Decode<FaunaTypes>(ObjectV.With(new Dictionary<string, Value> {
-                    {"stringV", "a string"},
-                    {"longV", 123},
-                    {"booleanV", true},
-                    {"doubleV", 3.14},
-                    {"nullV", NullV.Instance},
-                    {"dateV", new DateV("2001-01-01")},
-                    {"timeV", new TimeV("2000-01-01T01:10:30.123Z")},
-                    {"refV", new RefV("collections")},
-                    {"setRefV", new SetRefV(new Dictionary<string, Value>())},
-                    {"arrayV", ArrayV.Of(1, 2, 3)},
-                    {"objectV", ObjectV.With("a", "b")},
-                    {"bytesV", new BytesV(1, 2, 3, 4)}
+                Decode<FaunaTypes>(ObjectV.With(new Dictionary<string, Value>
+                {
+                    {"stringV", "a string" },
+                    {"longV", 123 },
+                    {"booleanV", true },
+                    {"doubleV", 3.14 },
+                    {"nullV", NullV.Instance },
+                    {"dateV", new DateV("2001-01-01") },
+                    {"timeV", new TimeV("2000-01-01T01:10:30.123Z") },
+                    {"refV", new RefV("collections") },
+                    {"setRefV", new SetRefV(new Dictionary<string, Value>()) },
+                    {"arrayV", ArrayV.Of(1, 2, 3) },
+                    {"objectV", ObjectV.With("a", "b") },
+                    {"bytesV", new BytesV(1, 2, 3, 4) },
                 }))
             );
         }
@@ -503,25 +507,25 @@ namespace Test
         [Test]
         public void TestCastNumbers()
         {
-            //to long
+            // to long
             Assert.AreEqual(10L, Decode<long>(10L));
             Assert.AreEqual(10L, Decode<long>(10d));
             Assert.AreEqual(10L, Decode<long>(10));
             Assert.AreEqual(10L, Decode<long>("10"));
 
-            //to double
+            // to double
             Assert.AreEqual(10d, Decode<double>(10L));
             Assert.AreEqual(10d, Decode<double>(10d));
             Assert.AreEqual(10d, Decode<double>(10));
             Assert.AreEqual(10d, Decode<double>("10"));
 
-            //to int
+            // to int
             Assert.AreEqual(10, Decode<int>(10L));
             Assert.AreEqual(10, Decode<int>(10d));
             Assert.AreEqual(10, Decode<int>(10));
             Assert.AreEqual(10, Decode<int>("10"));
 
-            //to short
+            // to short
             Assert.AreEqual((short)10, Decode<short>(10L));
             Assert.AreEqual((short)10, Decode<short>(10d));
             Assert.AreEqual((short)10, Decode<short>(10));
@@ -613,12 +617,12 @@ namespace Test
             );
         }
 
-        class NoDefaultConstructor
+        private class NoDefaultConstructor
         {
             public NoDefaultConstructor(string ign) { }
         }
 
-        class MoreThanOneStaticCreator
+        private class MoreThanOneStaticCreator
         {
             [FaunaConstructor]
             public static MoreThanOneStaticCreator Creator1() { return null; }
@@ -627,7 +631,7 @@ namespace Test
             public static MoreThanOneStaticCreator Creator2() { return null; }
         }
 
-        class MoreThanOneConstructor
+        private class MoreThanOneConstructor
         {
             [FaunaConstructor]
             public MoreThanOneConstructor(string ign) { }
@@ -636,9 +640,10 @@ namespace Test
             public MoreThanOneConstructor(int ign) { }
         }
 
-        class IgnoreConstructorParameter
+        private class IgnoreConstructorParameter
         {
             public string Property1 { get; }
+
             public string Property2 { get; }
 
             [FaunaConstructor]
@@ -661,15 +666,17 @@ namespace Test
             Assert.AreEqual("property2", obj.Property2);
         }
 
-        class MissingFields
+        private class MissingFields
         {
             public string NullableField { get; set; }
+
             public int NonNullableField { get; set; }
         }
 
-        class MissingFieldsOnConstructor
+        private class MissingFieldsOnConstructor
         {
             public string NullableField { get; }
+
             public int NonNullableField { get; }
 
             [FaunaConstructor]
@@ -692,12 +699,14 @@ namespace Test
             Assert.AreEqual(default(int), missingFields2.NonNullableField);
         }
 
-        enum CpuTypes
+        private enum CpuTypes
         {
-            [FaunaEnum("x86_32")] X86,
-            [FaunaEnum("x86_64")] X86_64,
+            [FaunaEnum("x86_32")]
+            X86,
+            [FaunaEnum("x86_64")]
+            X86_64,
             ARM,
-            MIPS
+            MIPS,
         }
 
         [Test]
@@ -712,27 +721,29 @@ namespace Test
             Assert.AreEqual("Enumeration value 'AVR' not found in Test.DecoderTest+CpuTypes", ex.Message);
         }
 
-        struct NestedStruct
+        private struct NestedStruct
         {
-            public byte? aByte;
-            public short? aShort;
+            public byte? AByte;
+            public short? AShort;
+
             public NestedStruct(byte? abyte, short? ashort)
             {
-                aByte = abyte;
-                aShort = ashort;
+                AByte = abyte;
+                AShort = ashort;
             }
         }
 
-        struct StructWithNullableFields
+        private struct StructWithNullableFields
         {
-            public int? anInteger;
-            public double? aDouble;
-            public NestedStruct? aStruct;
+            public int? AnInteger;
+            public double? ADouble;
+            public NestedStruct? AStruct;
+
             public StructWithNullableFields(int? intVal, double? doubleVal, NestedStruct? structVal)
             {
-                anInteger = intVal;
-                aDouble = doubleVal;
-                aStruct = structVal;
+                AnInteger = intVal;
+                ADouble = doubleVal;
+                AStruct = structVal;
             }
         }
 
@@ -740,19 +751,19 @@ namespace Test
         public void TestNullableFields()
         {
             var structWithNullableFields = Decode<StructWithNullableFields>(ObjectV.With(
-                "anInteger", LongV.Of(10),
-                "aDouble", DoubleV.Of(3.14),
-                "aStruct", ObjectV.With("aByte", LongV.Of(10))
+                "AnInteger", LongV.Of(10),
+                "ADouble", DoubleV.Of(3.14),
+                "AStruct", ObjectV.With("AByte", LongV.Of(10))
             ));
 
-            Assert.AreEqual(10, structWithNullableFields.anInteger);
-            Assert.AreEqual(3.14, structWithNullableFields.aDouble);
-            Assert.IsNotNull(structWithNullableFields.aStruct);
-            Assert.AreEqual(10, structWithNullableFields.aStruct?.aByte);
-            Assert.IsNull(structWithNullableFields.aStruct?.aShort);
+            Assert.AreEqual(10, structWithNullableFields.AnInteger);
+            Assert.AreEqual(3.14, structWithNullableFields.ADouble);
+            Assert.IsNotNull(structWithNullableFields.AStruct);
+            Assert.AreEqual(10, structWithNullableFields.AStruct?.AByte);
+            Assert.IsNull(structWithNullableFields.AStruct?.AShort);
         }
 
-        class StringOverride
+        private class StringOverride
         {
             [FaunaField("uri")]
             [FaunaString]
@@ -804,7 +815,7 @@ namespace Test
             Assert.AreEqual(obj.Double, @double);
         }
 
-        class StringOverrideOnConstuctorCreator
+        private class StringOverrideOnConstuctorCreator
         {
             [FaunaField("uri")]
             [FaunaString]

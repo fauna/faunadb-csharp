@@ -169,22 +169,35 @@ namespace FaunaDB.Types
 
         internal static Value FromDateTime(DateTime dt, Type forceType = null)
         {
-            if(forceType == typeof(DateV))
-                return new DateV(dt.Date);
+            if (forceType == typeof(DateV))
+            {
+                return NewMethod(dt);
+            }
 
             if (forceType == typeof(TimeV) || dt.Ticks % (24 * 60 * 60 * 10000) > 0)
+            {
                 return new TimeV(dt);
+            }
 
+            return new DateV(dt.Date);
+        }
+
+        private static Value NewMethod(DateTime dt)
+        {
             return new DateV(dt.Date);
         }
 
         internal static Value FromDateTimeOffset(DateTimeOffset dt, Type forceType = null)
         {
             if (forceType == typeof(DateV))
+            {
                 return new DateV(dt.UtcDateTime.Date);
+            }
 
             if (forceType == typeof(TimeV) || dt.UtcTicks % (24 * 60 * 60 * 10000) > 0)
+            {
                 return new TimeV(dt.UtcDateTime);
+            }
 
             return new DateV(dt.UtcDateTime.Date);
         }
@@ -210,5 +223,4 @@ namespace FaunaDB.Types
             Expr.ToDateTimeOffset(v);
         #endregion
     }
-
 }

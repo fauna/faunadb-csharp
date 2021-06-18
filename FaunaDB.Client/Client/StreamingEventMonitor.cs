@@ -1,6 +1,11 @@
+// This file is used by Code Analysis to maintain SuppressMessage
+// attributes that are applied to this project.
+// Project-level suppressions either have no target or are given
+// a specific target and scoped to a namespace, type, member, etc.
+
 using System;
-using FaunaDB.Types;
 using FaunaDB.Errors;
+using FaunaDB.Types;
 
 namespace FaunaDB.Client
 {
@@ -12,8 +17,8 @@ namespace FaunaDB.Client
         private Action<Value> Next;
         private Action<Exception> Error;
         private Action Completed;
-        
-        public StreamingEventMonitor() {}
+
+        public StreamingEventMonitor() { }
 
         public StreamingEventMonitor(Action<Value> onNext, Action<Exception> onError, Action onCompleted)
         {
@@ -21,7 +26,7 @@ namespace FaunaDB.Client
             this.Error = onError;
             this.Completed = onCompleted;
         }
-        
+
         public void Subscribe(StreamingEventHandler provider)
         {
             provider.AssertNotNull(nameof(provider));
@@ -34,7 +39,7 @@ namespace FaunaDB.Client
         {
             cancellation.Dispose();
         }
-        
+
         public virtual void OnNext(Value value)
         {
             Next?.Invoke(value);

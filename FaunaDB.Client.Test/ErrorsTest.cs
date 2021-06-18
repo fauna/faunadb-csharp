@@ -1,45 +1,50 @@
-﻿using FaunaDB.Errors;
-using FaunaDB.Query;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-
-using FaunaDB.Types;
 using FaunaDB.Client;
+using FaunaDB.Errors;
+using FaunaDB.Query;
+using FaunaDB.Types;
+using Newtonsoft.Json;
+using NUnit.Framework;
 using static FaunaDB.Query.Language;
 
 namespace Test
 {
-    [TestFixture] public class ErrorsTest : TestCase
+    [TestFixture]
+    public class ErrorsTest : TestCase
     {
-        [Test] public void TestInvalidResponse()
+        [Test]
+        public void TestInvalidResponse()
         {
-            Assert.ThrowsAsync<UnknowException>(async() => await MockClient("I like fine wine").Query(Get(Collection("any-ref"))));
-            Assert.ThrowsAsync<KeyNotFoundException>(async() => await MockClient("{\"resoars\": 1}").Query(Get(Collection("any-ref"))));
+            Assert.ThrowsAsync<UnknowException>(async () => await MockClient("I like fine wine").Query(Get(Collection("any-ref"))));
+            Assert.ThrowsAsync<KeyNotFoundException>(async () => await MockClient("{\"resoars\": 1}").Query(Get(Collection("any-ref"))));
         }
 
         #region HTTP errors
-        [Test] public void TestHttpBadRequest()
+        [Test]
+        public void TestHttpBadRequest()
         {
-            Assert.ThrowsAsync<BadRequest>(async() => await client.Query(new InvalidExpression()));
+            Assert.ThrowsAsync<BadRequest>(async () => await client.Query(new InvalidExpression()));
         }
 
-        [Test] public void TestHttpUnauthorized()
+        [Test]
+        public void TestHttpUnauthorized()
         {
             var client = GetClient(secret: "bad_key");
-            Assert.ThrowsAsync<Unauthorized>(async() => await client.Query(Get(DbRef)), "unauthorized");
+            Assert.ThrowsAsync<Unauthorized>(async () => await client.Query(Get(DbRef)), "unauthorized");
         }
 
-        [Test] public void TestUnavailableError()
+        [Test]
+        public void TestUnavailableError()
         {
             var client = MockClient("{\"errors\": [{\"code\": \"unavailable\", \"description\": \"on vacation\"}]}", HttpStatusCode.ServiceUnavailable);
-            Assert.ThrowsAsync<UnavailableError>(async() => await client.Query(Get(Collection("any-ref"))), "unavailable");
+            Assert.ThrowsAsync<UnavailableError>(async () => await client.Query(Get(Collection("any-ref"))), "unavailable");
         }
 
-        [Test] public async Task TestPermissionDenied()
+        [Test]
+        public async Task TestPermissionDenied()
         {
             var key = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "client")));
 
@@ -50,22 +55,26 @@ namespace Test
         #endregion
 
         #region ErrorData
-        [Test] public void TestInvalidExpression()
+        [Test]
+        public void TestInvalidExpression()
         {
             AssertQueryException<BadRequest>(new InvalidExpression(), "invalid expression", "No form/function found, or invalid argument keys: { foo }.");
         }
 
-        [Test] public void TestUnboundVariable()
+        [Test]
+        public void TestUnboundVariable()
         {
             AssertQueryException<BadRequest>(Var("x"), "invalid expression", "Variable 'x' is not defined.");
         }
 
-        [Test] public void TestInvalidArgument()
+        [Test]
+        public void TestInvalidArgument()
         {
             AssertQueryException<BadRequest>(Add(Arr(1, "two")), "invalid argument", "Number expected, String provided.", new List<string> { "add", "1" });
         }
 
-        [Test] public void TestNonEmptyArray()
+        [Test]
+        public void TestNonEmptyArray()
         {
             AssertQueryException<BadRequest>(EqualsFn(), "invalid argument", "Non-empty array expected.", new List<string> { "equals" });
             AssertQueryException<BadRequest>(Add(), "invalid argument", "Non-empty array expected.", new List<string> { "add" });
@@ -84,19 +93,22 @@ namespace Test
             AssertQueryException<BadRequest>(Difference(), "invalid argument", "Non-empty array expected.", new List<string> { "difference" });
         }
 
-        [Test] public async Task TestInstanceNotFound()
+        [Test]
+        public async Task TestInstanceNotFound()
         {
             // Must be a reference to a real class or else we get InvalidExpression
             await client.Query(CreateCollection(Obj("name", "foofaws")));
             AssertQueryException<NotFound>(Get(Ref(Collection("foofaws"), "123")), "instance not found", "Document not found.");
         }
 
-        [Test] public void TestValueNotFound()
+        [Test]
+        public void TestValueNotFound()
         {
             AssertQueryException<NotFound>(Select("a", Obj()), "value not found", "Value not found at path [a].");
         }
 
-        [Test] public async Task TestInstanceAlreadyExists()
+        [Test]
+        public async Task TestInstanceAlreadyExists()
         {
             await client.Query(CreateCollection(Obj("name", "duplicates")));
             var @ref = (await client.Query(Create(Collection("duplicates"), Obj()))).At("ref");
@@ -104,7 +116,8 @@ namespace Test
         }
         #endregion
 
-        [Test] public async Task TestDuplicateValue()
+        [Test]
+        public async Task TestDuplicateValue()
         {
             await client.Query(CreateCollection(Obj("name", "gerbils")));
             await client.Query(CreateIndex(Obj(
@@ -117,33 +130,36 @@ namespace Test
             await client.Query(Create(Collection("gerbils"), Obj("data", Obj("x", 1))));
         }
 
-        void AssertException(FaunaException exception, string code, string description, IReadOnlyList<string> position = null)
+        private void AssertException(FaunaException exception, string code, string description, IReadOnlyList<string> position = null)
         {
             Assert.AreEqual(1, exception.Errors.Count());
             var error = exception.Errors.First();
             Assert.AreEqual(code, error.Code);
             Assert.AreEqual(description, error.Description);
             if (position != null)
+            {
                 Assert.True(position.SequenceEqual(error.Position));
+            }
         }
 
-        void AssertQueryException<TException>(Expr query, string code, string description, IReadOnlyList<string> position = null)
+        private void AssertQueryException<TException>(Expr query, string code, string description, IReadOnlyList<string> position = null)
             where TException : FaunaException
         {
             AssertQueryException<TException>(client, query, code, description, position);
         }
 
-        void AssertQueryException<TException>(FaunaClient client, Expr query, string code, string description, IReadOnlyList<string> position = null)
-            where TException  : FaunaException
+        private void AssertQueryException<TException>(FaunaClient client, Expr query, string code, string description, IReadOnlyList<string> position = null)
+            where TException : FaunaException
         {
-            var exception = Assert.ThrowsAsync<TException>(async() => await client.Query(query));
+            var exception = Assert.ThrowsAsync<TException>(async () => await client.Query(query));
             AssertException(exception, code, description, position);
         }
     }
 
-    class InvalidExpression : Expr
+    internal class InvalidExpression : Expr
     {
         public override bool Equals(Expr v) => false;
+
         protected override int HashCode() => 0;
 
         protected internal override void WriteJson(JsonWriter writer)

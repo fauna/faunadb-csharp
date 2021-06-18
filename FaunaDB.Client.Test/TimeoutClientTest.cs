@@ -1,18 +1,16 @@
-﻿using FaunaDB.Client;
+﻿using System;
 using System.Diagnostics;
-using FaunaDB.Types;
-using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
 using System.Net;
 using System.Net.Sockets;
-
+using System.Threading.Tasks;
+using FaunaDB.Client;
+using FaunaDB.Types;
+using NUnit.Framework;
 using static FaunaDB.Query.Language;
 
 namespace Test
 {
-#if (NETFRAMEWORK || NETCOREAPP2_0 || NETCOREAPP3_0)
-
+#if NETFRAMEWORK || NETCOREAPP2_0 || NETCOREAPP3_0
     [TestFixture]
     public class TimeoutClientTest
     {
@@ -68,7 +66,7 @@ namespace Test
         }
     }
 
-    class DummyServer
+    internal class DummyServer
     {
         private TcpListener tcpListener;
 
@@ -81,8 +79,7 @@ namespace Test
 
         public void AcceptResponses()
         {
-
-            String response = @"HTTP/1.1 200 OK
+            string response = @"HTTP/1.1 200 OK
 X-Txn-Time: 1588276396485000
 X-Read-Ops: 0
 X-Write-Ops: 0
@@ -109,8 +106,6 @@ content-type: application/json;charset=utf-8
 
         public void Stop() =>
             tcpListener.Stop();
-
     }
-
 #endif
 }

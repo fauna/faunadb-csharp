@@ -13,25 +13,29 @@ namespace Test
     [TestFixture]
     public class PageTest : TestCase
     {
-        Expr classRef, indexRef;
-        Dictionary<long, Value> instanceRefs = new Dictionary<long, Value>();
-        Dictionary<Value, long> refsToIndex = new Dictionary<Value, long>();
+        private Expr classRef;
+        private Expr indexRef;
+        private Dictionary<long, Value> instanceRefs = new Dictionary<long, Value>();
+        private Dictionary<Value, long> refsToIndex = new Dictionary<Value, long>();
 
-        Expr tsClassRef, tsIndexRef, tsInstance1Ref, tsInstance1Ts;
+        private Expr tsClassRef;
+        private Expr tsIndexRef;
+        private Expr tsInstance1Ref;
+        private Expr tsInstance1Ts;
 
         [OneTimeSetUp]
-        new public void SetUp()
+        public new void SetUp()
         {
             SetUpAsync().Wait();
         }
 
-        async Task SetUpAsync()
+        private async Task SetUpAsync()
         {
             await SetupTimestampedThings();
             await SetupPagedThings();
         }
 
-        async Task SetupTimestampedThings()
+        private async Task SetupTimestampedThings()
         {
             var task = await client.Query(CreateCollection(Obj("name", "timestamped_things")));
             tsClassRef = task.At("ref");
@@ -50,7 +54,7 @@ namespace Test
             await client.Query(Create(tsClassRef, Obj()));
         }
 
-        async Task SetupPagedThings()
+        private async Task SetupPagedThings()
         {
             var task = await client.Query(CreateCollection(Obj("name", "paged_things")));
             classRef = task.At("ref");
@@ -123,7 +127,8 @@ namespace Test
             var pageMapped = page.Map(Lambda(obj => Select(Path(1), obj)));
 
             var item = 0;
-            await pageMapped.Each(p => {
+            await pageMapped.Each(p =>
+            {
                 var array = p as ArrayV;
 
                 foreach (var value in array)
@@ -142,7 +147,8 @@ namespace Test
         {
             var page = new PageHelper(client, Match(indexRef));
 
-            var pageFiltered = page.Filter(Lambda(obj => {
+            var pageFiltered = page.Filter(Lambda(obj =>
+            {
                 return EqualsFn(Modulo(Select(Path(0), obj), 2), 0);
             }));
 
@@ -168,7 +174,8 @@ namespace Test
             var page = new PageHelper(client, Match(indexRef), after: 50);
 
             var item = 50;
-            await page.Each(p => {
+            await page.Each(p =>
+            {
                 var array = p as ArrayV;
 
                 foreach (var value in array)
@@ -188,7 +195,8 @@ namespace Test
             var page = new PageHelper(client, Match(indexRef), before: 51);
 
             var item = 51;
-            await page.EachReverse(p => {
+            await page.EachReverse(p =>
+            {
                 var array = (p as ArrayV).Reverse();
 
                 foreach (var value in array)
@@ -211,7 +219,8 @@ namespace Test
             var page = new PageHelper(client, Match(indexRef), size: pageSize);
 
             var item = 0;
-            await page.Each(p => {
+            await page.Each(p =>
+            {
                 var array = p as ArrayV;
 
                 Assert.AreEqual(array.Length, pageSize);
@@ -227,12 +236,14 @@ namespace Test
         {
             var page = new PageHelper(client, Match(tsIndexRef));
 
-            await page.Each(item => {
+            await page.Each(item =>
+            {
                 Assert.That(item, Has.Length.EqualTo(2));
             });
 
             var page2 = new PageHelper(client, Match(tsIndexRef), ts: tsInstance1Ts);
-            await page2.Each(item => {
+            await page2.Each(item =>
+            {
                 var array = item as ArrayV;
 
                 Assert.That(array, Has.Length.EqualTo(1));
@@ -245,7 +256,8 @@ namespace Test
         {
             var page = new PageHelper(client, Match(indexRef), events: true);
 
-            await page.Each(item => {
+            await page.Each(item =>
+            {
                 var array = item as ArrayV;
 
                 foreach (var value in array)
@@ -263,7 +275,8 @@ namespace Test
         {
             var page = new PageHelper(client, Match(indexRef), sources: true);
 
-            await page.Each(item => {
+            await page.Each(item =>
+            {
                 var array = item as ArrayV;
 
                 foreach (var value in array)
@@ -278,7 +291,8 @@ namespace Test
         {
             var page = new PageHelper(client, Match(indexRef), before: NullV.Instance, events: true, sources: true);
 
-            await page.Each(item => {
+            await page.Each(item =>
+            {
                 var array = item as ArrayV;
 
                 foreach (var value in array)
@@ -290,7 +304,6 @@ namespace Test
                     Assert.AreNotSame(value.At("value", "action"), NullV.Instance);
                     Assert.AreNotSame(value.At("value", "document"), NullV.Instance);
                     Assert.AreNotSame(value.At("value", "data"), NullV.Instance);
-
                 }
             });
         }
@@ -332,4 +345,3 @@ namespace Test
         }
     }
 }
-

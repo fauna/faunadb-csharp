@@ -4,7 +4,7 @@ using static FaunaDB.Types.Result;
 
 namespace FaunaDB.Types
 {
-    sealed class Path
+    internal sealed class Path
     {
         public static readonly Path Empty = new Path(new List<ISegment>());
 
@@ -12,7 +12,10 @@ namespace FaunaDB.Types
         {
             var segments = new List<ISegment>();
             foreach (var field in values)
+            {
                 segments.Add(new ObjectKey(field));
+            }
+
             return new Path(segments);
         }
 
@@ -20,13 +23,16 @@ namespace FaunaDB.Types
         {
             var segments = new List<ISegment>();
             foreach (var index in values)
+            {
                 segments.Add(new ArrayIndex(index));
+            }
+
             return new Path(segments);
         }
 
-        readonly IReadOnlyList<ISegment> segments;
+        private readonly IReadOnlyList<ISegment> segments;
 
-        Path(IReadOnlyList<ISegment> segments)
+        private Path(IReadOnlyList<ISegment> segments)
         {
             this.segments = segments;
         }
@@ -34,8 +40,16 @@ namespace FaunaDB.Types
         internal Path SubPath(Path other)
         {
             var list = new List<ISegment>();
-            foreach (var s in segments) list.Add(s);
-            foreach (var s in other.segments) list.Add(s);
+            foreach (var s in segments)
+            {
+                list.Add(s);
+            }
+
+            foreach (var s in other.segments)
+            {
+                list.Add(s);
+            }
+
             return new Path(list);
         }
 
@@ -48,7 +62,9 @@ namespace FaunaDB.Types
                 result = result.FlatMap(value => s.Get(value));
 
                 if (result.isFailure)
+                {
                     break;
+                }
             }
 
             return result.Match(
@@ -68,14 +84,14 @@ namespace FaunaDB.Types
         public override string ToString() =>
             string.Join("/", segments);
 
-        interface ISegment
+        private interface ISegment
         {
             IResult<Value> Get(Value root);
         }
 
-        class ObjectKey : ISegment
+        private class ObjectKey : ISegment
         {
-            readonly string field;
+            private readonly string field;
 
             public ObjectKey(string field)
             {
@@ -84,11 +100,14 @@ namespace FaunaDB.Types
 
             public IResult<Value> Get(Value root)
             {
-                return root.To<ObjectV>().FlatMap(obj => {
+                return root.To<ObjectV>().FlatMap(obj =>
+                {
                     Value value;
 
                     if (obj.Value.TryGetValue(field, out value))
+                    {
                         return Success(value);
+                    }
 
                     return Fail<Value>($"Object key \"{field}\" not found");
                 });
@@ -107,9 +126,9 @@ namespace FaunaDB.Types
                 field;
         }
 
-        class ArrayIndex : ISegment
+        private class ArrayIndex : ISegment
         {
-            readonly int index;
+            private readonly int index;
 
             public ArrayIndex(int index)
             {
@@ -118,10 +137,13 @@ namespace FaunaDB.Types
 
             public IResult<Value> Get(Value root)
             {
-                return root.To<ArrayV>().FlatMap(array => {
+                return root.To<ArrayV>().FlatMap(array =>
+                {
                     if (index >= 0 && index < array.Length)
+                    {
                         return Success(array[index]);
-                    
+                    }
+
                     return Fail<Value>($"Array index \"{index}\" not found");
                 });
             }
