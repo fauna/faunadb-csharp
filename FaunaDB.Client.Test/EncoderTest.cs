@@ -298,18 +298,18 @@ namespace Test
             Assert.AreEqual(
                 ObjectV.With(new Dictionary<string, Value>
                 {
-                    {"stringV", "a string" },
-                    {"longV", 123 },
-                    {"booleanV", true },
-                    {"doubleV", 3.14 },
-                    {"nullV", NullV.Instance },
-                    {"dateV", new DateV("2001-01-01") },
-                    {"timeV", new TimeV("2000-01-01T01:10:30.123Z") },
-                    {"refV", new RefV("collections") },
-                    {"setRefV", new SetRefV(new Dictionary<string, Value>()) },
-                    {"arrayV", ArrayV.Of(1, 2, 3) },
-                    {"objectV", ObjectV.With("a", "b") },
-                    {"bytesV", new BytesV(1, 2, 3, 4) },
+                    {"StringV_Value", "a string" },
+                    {"LongV_Value", 123 },
+                    {"BooleanV_Value", true },
+                    {"DoubleV_Value", 3.14 },
+                    {"NullV_Value", NullV.Instance },
+                    {"DateV_Value", new DateV("2001-01-01") },
+                    {"TimeV_Value", new TimeV("2000-01-01T01:10:30.123Z") },
+                    {"RefV_Value", new RefV("collections") },
+                    {"SetRefV_Value", new SetRefV(new Dictionary<string, Value>()) },
+                    {"ArrayV_Value", ArrayV.Of(1, 2, 3) },
+                    {"ObjectV_Value", ObjectV.With("a", "b") },
+                    {"BytesV_Value", new BytesV(1, 2, 3, 4) },
                 }),
                 Encode(new FaunaTypes())
             );
