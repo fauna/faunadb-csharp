@@ -56,25 +56,18 @@ namespace FaunaDB.Query
             {
                 case TimeUnit.Microsecond:
                     return "microsecond";
-
                 case TimeUnit.Millisecond:
                     return "millisecond";
-
                 case TimeUnit.Nanosecond:
                     return "nanosecond";
-
                 case TimeUnit.Second:
                     return "second";
-                
                 case TimeUnit.Minute:
                     return "minute";
-                
                 case TimeUnit.Hour:
                     return "hour";
-                
                 case TimeUnit.HalfDay:
                     return "half day";
-                
                 case TimeUnit.Day:
                     return "day";
             }
@@ -130,11 +123,15 @@ namespace FaunaDB.Query
         {
             var date = v as DateV;
             if (date != null)
+            {
                 return date.Value;
+            }
 
             var time = v as TimeV;
             if (time != null)
+            {
                 return time.Value;
+            }
 
             throw new ArgumentException($"Cannot convert {v} to DateTime");
         }
@@ -143,11 +140,15 @@ namespace FaunaDB.Query
         {
             var date = v as DateV;
             if (date != null)
+            {
                 return date.DateTimeOffset;
+            }
 
             var time = v as TimeV;
             if (time != null)
+            {
                 return time.DateTimeOffset;
+            }
 
             throw new ArgumentException($"Cannot convert {v} to DateTimeOffset");
         }
@@ -181,16 +182,16 @@ namespace FaunaDB.Query
 
                 case "second":
                     return TimeUnit.Second;
-                
+
                 case "minute":
                     return TimeUnit.Minute;
-                
+
                 case "hour":
                     return TimeUnit.Hour;
-                
+
                 case "half day":
                     return TimeUnit.HalfDay;
-                
+
                 case "day":
                     return TimeUnit.Day;
             }

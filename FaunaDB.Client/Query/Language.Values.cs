@@ -1,7 +1,7 @@
-﻿using FaunaDB.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FaunaDB.Types;
 
 namespace FaunaDB.Query
 {
@@ -15,7 +15,7 @@ namespace FaunaDB.Query
         /// </summary>
         public struct PathSelector
         {
-            IReadOnlyList<Expr> segments;
+            private IReadOnlyList<Expr> segments;
 
             internal Expr Segments { get { return Arr(segments); } }
 
@@ -28,7 +28,10 @@ namespace FaunaDB.Query
             {
                 var segs = new List<Expr>();
                 foreach (var s in segments)
+                {
                     segs.Add(s);
+                }
+
                 this.segments = segs;
             }
 
@@ -36,7 +39,10 @@ namespace FaunaDB.Query
             {
                 var segs = new List<Expr>();
                 foreach (var s in segments)
+                {
                     segs.Add(s);
+                }
+
                 this.segments = segs;
             }
 
@@ -49,7 +55,10 @@ namespace FaunaDB.Query
             {
                 var all = new List<Expr>(segments);
                 foreach (var s in others)
+                {
                     all.Add(s);
+                }
+
                 return new PathSelector(all);
             }
 
@@ -62,10 +71,12 @@ namespace FaunaDB.Query
             {
                 var all = new List<Expr>(segments);
                 foreach (var s in others)
+                {
                     all.Add(s);
+                }
+
                 return new PathSelector(all);
             }
-
         }
 
         /// <summary>
@@ -110,7 +121,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#simple-type">FaunaDB Values</see>
         /// </para>
         /// </summary>
-        public static Expr Ref(String @ref) =>
+        public static Expr Ref(string @ref) =>
             UnescapedObject.With("@ref", @ref);
 
         /// <summary>
@@ -191,9 +202,12 @@ namespace FaunaDB.Query
         public static Expr Bytes(params byte[] bytes) =>
             BytesV.Of(bytes);
 
-        static Expr Varargs(Expr[] values)
+        private static Expr Varargs(Expr[] values)
         {
-            if (values == null) return Null();
+            if (values == null)
+            {
+                return Null();
+            }
 
             return values.Length == 1 ? values[0] : new UnescapedArray(values);
         }

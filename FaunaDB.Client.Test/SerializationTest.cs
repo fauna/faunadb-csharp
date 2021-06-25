@@ -11,14 +11,16 @@ using static FaunaDB.Types.Encoder;
 
 namespace Test
 {
-    [TestFixture] public class SerializationTest
+    [TestFixture]
+    public class SerializationTest
     {
-        static void AssertJsonEqual(Expr expr, string value)
+        private static void AssertJsonEqual(Expr expr, string value)
         {
             Assert.AreEqual(value, JsonConvert.SerializeObject(expr, Formatting.None));
         }
 
-        [Test] public void TestLiteralValues()
+        [Test]
+        public void TestLiteralValues()
         {
             AssertJsonEqual(10L, "10");
             AssertJsonEqual(10, "10");
@@ -30,12 +32,14 @@ namespace Test
             AssertJsonEqual(NullV.Instance, "null");
         }
 
-        [Test] public void TestArrayValues()
+        [Test]
+        public void TestArrayValues()
         {
             AssertJsonEqual(Arr(10, 3.14, "a string", true, false, NullV.Instance), "[10,3.14,\"a string\",true,false,null]");
         }
 
-        [Test] public void TestObjectValues()
+        [Test]
+        public void TestObjectValues()
         {
             AssertJsonEqual(Obj(), "{\"object\":{}}");
 
@@ -46,7 +50,8 @@ namespace Test
             AssertJsonEqual(Obj("long", 10, "double", 2.78), "{\"object\":{\"long\":10,\"double\":2.78}}");
         }
 
-        [Test] public void TestObjectAndArrays()
+        [Test]
+        public void TestObjectAndArrays()
         {
             AssertJsonEqual(Obj("foo", Arr("bar")), "{\"object\":{\"foo\":[\"bar\"]}}");
 
@@ -55,36 +60,42 @@ namespace Test
                 "{\"object\":{\"foo\":[\"bar\",{\"object\":{\"foo\":\"bar\"}}]}}");
         }
 
-        [Test] public void TestComplexObjects()
+        [Test]
+        public void TestComplexObjects()
         {
             AssertJsonEqual(Obj("a", Obj("b", Obj("c", "d"))), "{\"object\":{\"a\":{\"object\":{\"b\":{\"object\":{\"c\":\"d\"}}}}}}");
         }
 
-        [Test] public void TestRef()
+        [Test]
+        public void TestRef()
         {
             AssertJsonEqual(Ref(Collection("people"), "id1"), "{\"ref\":{\"collection\":\"people\"},\"id\":\"id1\"}");
         }
 
-        [Test] public void TestTimestamp()
+        [Test]
+        public void TestTimestamp()
         {
             AssertJsonEqual(new TimeV("1970-01-01T00:00:00Z"), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
 
             AssertJsonEqual(new TimeV(new DateTime(1970, 1, 1, 0, 0, 0, 0)), "{\"@ts\":\"1970-01-01T00:00:00Z\"}");
         }
 
-        [Test] public void TestDate()
+        [Test]
+        public void TestDate()
         {
             AssertJsonEqual(new DateV("2000-01-01"), "{\"@date\":\"2000-01-01\"}");
 
             AssertJsonEqual(new DateV(new DateTime(2000, 1, 1)), "{\"@date\":\"2000-01-01\"}");
         }
 
-        [Test] public void TestBytes()
+        [Test]
+        public void TestBytes()
         {
             AssertJsonEqual(new BytesV(0x1, 0x2, 0x3, 0x4), "{\"@bytes\":\"AQIDBA==\"}");
         }
 
-        [Test] public void TestBytesUrlSafe()
+        [Test]
+        public void TestBytesUrlSafe()
         {
             AssertJsonEqual(new BytesV(0xf8), "{\"@bytes\":\"-A==\"}");
             AssertJsonEqual(new BytesV(0xf9), "{\"@bytes\":\"-Q==\"}");
@@ -96,13 +107,15 @@ namespace Test
             AssertJsonEqual(new BytesV(0xff), "{\"@bytes\":\"_w==\"}");
         }
 
-        [Test] public void TestAbort()
+        [Test]
+        public void TestAbort()
         {
             AssertJsonEqual(Abort("message"),
                 "{\"abort\":\"message\"}");
         }
 
-        [Test] public void TestAt()
+        [Test]
+        public void TestAt()
         {
             AssertJsonEqual(At(1, Paginate(Collections())),
                 "{\"at\":1,\"expr\":{\"paginate\":{\"collections\":null}}}");
@@ -111,10 +124,12 @@ namespace Test
                 "{\"at\":{\"time\":\"1970-01-01T00:00:00Z\"},\"expr\":{\"paginate\":{\"collections\":null}}}");
         }
 
-        [Test] public void TestLet()
+        [Test]
+        public void TestLet()
         {
-            var variables = new Dictionary<string, Expr> {
-                { "x", 10 }
+            var variables = new Dictionary<string, Expr>
+            {
+                { "x", 10 },
             };
 
             AssertJsonEqual(Let(variables, Var("x")),
@@ -131,22 +146,26 @@ namespace Test
                 "{\"let\":[{\"x\":10},{\"y\":20}],\"in\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
         }
 
-        [Test] public void TestVar()
+        [Test]
+        public void TestVar()
         {
             AssertJsonEqual(Var("x"), "{\"var\":\"x\"}");
         }
 
-        [Test] public void TestIf()
+        [Test]
+        public void TestIf()
         {
             AssertJsonEqual(If(true, 1, 0), "{\"if\":true,\"then\":1,\"else\":0}");
         }
 
-        [Test] public void TestDo()
+        [Test]
+        public void TestDo()
         {
             AssertJsonEqual(Do(If(true, 1, 0), "a string"), "{\"do\":[{\"if\":true,\"then\":1,\"else\":0},\"a string\"]}");
         }
 
-        [Test] public void TestLamda()
+        [Test]
+        public void TestLamda()
         {
             AssertJsonEqual(Lambda("x", Var("x")),
                 "{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}}");
@@ -163,7 +182,8 @@ namespace Test
                 "{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}}");
         }
 
-        [Test] public void TestMap()
+        [Test]
+        public void TestMap()
         {
             AssertJsonEqual(Map(Arr(1, 2, 3), Lambda("x", Var("x"))),
                 "{\"map\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
@@ -184,7 +204,8 @@ namespace Test
                 "{\"map\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
         }
 
-        [Test] public void TestForeach()
+        [Test]
+        public void TestForeach()
         {
             AssertJsonEqual(Foreach(Arr(1, 2, 3), Lambda("x", Var("x"))),
                 "{\"foreach\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
@@ -205,7 +226,8 @@ namespace Test
                 "{\"foreach\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
         }
 
-        [Test] public void TestFilter()
+        [Test]
+        public void TestFilter()
         {
             AssertJsonEqual(Filter(Arr(1, 2, 3), Lambda("x", Var("x"))),
                 "{\"filter\":{\"lambda\":\"x\",\"expr\":{\"var\":\"x\"}},\"collection\":[1,2,3]}");
@@ -226,55 +248,64 @@ namespace Test
                 "{\"filter\":{\"lambda\":[\"x\",\"y\"],\"expr\":{\"add\":[{\"var\":\"x\"},{\"var\":\"y\"}]}},\"collection\":[[1,2],[3,4]]}");
         }
 
-        [Test] public void TestTake()
+        [Test]
+        public void TestTake()
         {
             AssertJsonEqual(Take(2, Arr(1, 2, 3)),
                 "{\"take\":2,\"collection\":[1,2,3]}");
         }
 
-        [Test] public void TestDrop()
+        [Test]
+        public void TestDrop()
         {
             AssertJsonEqual(Drop(1, Arr(1, 2, 3)),
                 "{\"drop\":1,\"collection\":[1,2,3]}");
         }
 
-        [Test] public void TestPrepend()
+        [Test]
+        public void TestPrepend()
         {
             AssertJsonEqual(Prepend(Arr(1, 2, 3), Arr(4, 5, 6)),
                 "{\"prepend\":[1,2,3],\"collection\":[4,5,6]}");
         }
 
-        [Test] public void TestAppend()
+        [Test]
+        public void TestAppend()
         {
             AssertJsonEqual(Append(Arr(1, 2, 3), Arr(4, 5, 6)),
                 "{\"append\":[1,2,3],\"collection\":[4,5,6]}");
         }
 
-        [Test] public void TestIsEmpty()
+        [Test]
+        public void TestIsEmpty()
         {
             AssertJsonEqual(IsEmpty(Arr(1, 2, 3)),
                 "{\"is_empty\":[1,2,3]}");
         }
 
-        [Test] public void TestIsNonEmpty()
+        [Test]
+        public void TestIsNonEmpty()
         {
             AssertJsonEqual(IsNonEmpty(Arr(1, 2, 3)),
                 "{\"is_nonempty\":[1,2,3]}");
         }
 
-        [Test] public void TestGet()
+        [Test]
+        public void TestGet()
         {
             AssertJsonEqual(Get(Ref(Collection("thing"), "123456789")),
                 "{\"get\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"}}");
         }
 
-        [Test] public void TestKeyFromSecret()
+        [Test]
+        public void TestKeyFromSecret()
         {
             AssertJsonEqual(KeyFromSecret("s3cr3t"),
                 "{\"key_from_secret\":\"s3cr3t\"}");
         }
 
-        [Test] public void TestPaginate()
+        [Test]
+        public void TestPaginate()
         {
             AssertJsonEqual(
                 Paginate(Databases()),
@@ -320,7 +351,8 @@ namespace Test
             );
         }
 
-        [Test] public void TestExists()
+        [Test]
+        public void TestExists()
         {
             AssertJsonEqual(Exists(Ref(Collection("thing"), "123456789")),
                 "{\"exists\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"}}");
@@ -329,35 +361,40 @@ namespace Test
                 "{\"exists\":{\"ref\":{\"collection\":\"thing\"},\"id\":\"123456789\"},\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}}");
         }
 
-        [Test] public void TestCreate()
+        [Test]
+        public void TestCreate()
         {
             AssertJsonEqual(
                 Create(Collection("widgets"), Obj("data", "some-data")),
                 "{\"create\":{\"collection\":\"widgets\"},\"params\":{\"object\":{\"data\":\"some-data\"}}}");
         }
 
-        [Test] public void TestUpdate()
+        [Test]
+        public void TestUpdate()
         {
             AssertJsonEqual(
                 Update(Ref(Collection("widgets"), "123456789"), Obj("name", "things")),
                 "{\"update\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"name\":\"things\"}}}");
         }
 
-        [Test] public void TestReplace()
+        [Test]
+        public void TestReplace()
         {
             AssertJsonEqual(
                 Replace(Ref(Collection("widgets"), "123456789"), Obj("data", Obj("name", "Computer"))),
                 "{\"replace\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
         }
 
-        [Test] public void TestDelete()
+        [Test]
+        public void TestDelete()
         {
             AssertJsonEqual(
                 Delete(Ref(Collection("widgets"), "123456789")),
                 "{\"delete\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"}}");
         }
 
-        [Test] public void TestInsert()
+        [Test]
+        public void TestInsert()
         {
             AssertJsonEqual(
                 Insert(
@@ -376,20 +413,21 @@ namespace Test
                     Time("1970-01-01T00:00:00.123Z"),
                     ActionType.Create,
                     Obj("data", Obj("name", "Computer"))),
-                "{\"insert\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},"+
-                "\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"},"+
-                "\"action\":\"create\","+
+                "{\"insert\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"}," +
+                "\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}," +
+                "\"action\":\"create\"," +
                 "\"params\":{\"object\":{\"data\":{\"object\":{\"name\":\"Computer\"}}}}}");
         }
 
-        [Test] public void TestRemove()
+        [Test]
+        public void TestRemove()
         {
             AssertJsonEqual(
                 Remove(
                     Ref(Collection("widgets"), "123456789"),
                     Time("1970-01-01T00:00:00.123Z"),
                     "create"),
-                "{\"remove\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},"+
+                "{\"remove\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"}," +
                 "\"ts\":{\"time\":\"1970-01-01T00:00:00.123Z\"}," +
                 "\"action\":\"create\"}");
 
@@ -403,33 +441,38 @@ namespace Test
                 "\"action\":\"create\"}");
         }
 
-        [Test] public void TestCreateClass()
+        [Test]
+        public void TestCreateClass()
         {
             AssertJsonEqual(CreateCollection(Obj("name", "class_name")),
                 "{\"create_collection\":{\"object\":{\"name\":\"class_name\"}}}");
         }
 
-        [Test] public void TestCreateDatabase()
+        [Test]
+        public void TestCreateDatabase()
         {
             AssertJsonEqual(CreateDatabase(Obj("name", "db_name")),
                 "{\"create_database\":{\"object\":{\"name\":\"db_name\"}}}");
         }
 
-        [Test] public void TestCreateIndex()
+        [Test]
+        public void TestCreateIndex()
         {
             AssertJsonEqual(
                 CreateIndex(Obj("name", "index_name", "source", Collection("class_name"))),
                 "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}}");
         }
 
-        [Test] public void TestCreateKey()
+        [Test]
+        public void TestCreateKey()
         {
             AssertJsonEqual(
                 CreateKey(Obj("database", Database("db_name"), "role", "client")),
                 "{\"create_key\":{\"object\":{\"database\":{\"database\":\"db_name\"},\"role\":\"client\"}}}");
         }
 
-        [Test] public void TestCreateRole()
+        [Test]
+        public void TestCreateRole()
         {
             AssertJsonEqual(
                 CreateRole(Obj(
@@ -454,21 +497,24 @@ namespace Test
                 "\"resource\":{\"databases\":null},\"actions\":{\"object\":{\"read\":true}}}}}}}");
         }
 
-        [Test] public void TestSingleton()
+        [Test]
+        public void TestSingleton()
         {
             AssertJsonEqual(
                 Singleton(Ref(Collection("widget"), "123")),
                 "{\"singleton\":{\"ref\":{\"collection\":\"widget\"},\"id\":\"123\"}}");
         }
 
-        [Test] public void TestEvents()
+        [Test]
+        public void TestEvents()
         {
             AssertJsonEqual(
                 Events(Ref(Collection("widget"), "123")),
                 "{\"events\":{\"ref\":{\"collection\":\"widget\"},\"id\":\"123\"}}");
         }
 
-        [Test] public void TestMatch()
+        [Test]
+        public void TestMatch()
         {
             AssertJsonEqual(
                 Match(Index("all_the_things")),
@@ -483,7 +529,8 @@ namespace Test
                 "{\"match\":{\"index\":\"widgets_by_name\"},\"terms\":[\"Computer\",\"Monitor\"]}");
         }
 
-        [Test] public void TestUnion()
+        [Test]
+        public void TestUnion()
         {
             AssertJsonEqual(
                 Union(Native.DATABASES),
@@ -494,7 +541,8 @@ namespace Test
                 "{\"union\":[{\"@ref\":{\"id\":\"databases\"}},{\"collection\":\"widgets\"}]}");
         }
 
-        [Test] public void TestIntersection()
+        [Test]
+        public void TestIntersection()
         {
             AssertJsonEqual(
                 Intersection(Native.DATABASES),
@@ -505,7 +553,8 @@ namespace Test
                 "{\"intersection\":[{\"@ref\":{\"id\":\"databases\"}},{\"collection\":\"widgets\"}]}");
         }
 
-        [Test] public void TestDifference()
+        [Test]
+        public void TestDifference()
         {
             AssertJsonEqual(
                 Difference(Native.DATABASES),
@@ -516,13 +565,15 @@ namespace Test
                 "{\"difference\":[{\"@ref\":{\"id\":\"databases\"}},{\"collection\":\"widgets\"}]}");
         }
 
-        [Test] public void TestDistinct()
+        [Test]
+        public void TestDistinct()
         {
             AssertJsonEqual(Distinct(Match(Index("widgets"))),
                 "{\"distinct\":{\"match\":{\"index\":\"widgets\"}}}");
         }
 
-        [Test] public void TestJoin()
+        [Test]
+        public void TestJoin()
         {
             AssertJsonEqual(Join(Match(Index("widgets")), Index("other_widgets")),
                 "{\"join\":{\"match\":{\"index\":\"widgets\"}}," +
@@ -533,61 +584,71 @@ namespace Test
                 "\"with\":{\"lambda\":\"widget\",\"expr\":{\"match\":{\"index\":\"widgets\"},\"terms\":{\"var\":\"widget\"}}}}");
         }
 
-        [Test] public void TestLogin()
+        [Test]
+        public void TestLogin()
         {
             AssertJsonEqual(Login(Ref(Collection("widgets"), "123456789"), Obj("password", "P455w0rd")),
                  "{\"login\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"params\":{\"object\":{\"password\":\"P455w0rd\"}}}");
         }
 
-        [Test] public void TestLogout()
+        [Test]
+        public void TestLogout()
         {
             AssertJsonEqual(Logout(true), "{\"logout\":true}");
             AssertJsonEqual(Logout(false), "{\"logout\":false}");
         }
 
-        [Test] public void TestIdentify()
+        [Test]
+        public void TestIdentify()
         {
             AssertJsonEqual(Identify(Ref(Collection("widgets"), "123456789"), "P455w0rd"),
                 "{\"identify\":{\"ref\":{\"collection\":\"widgets\"},\"id\":\"123456789\"},\"password\":\"P455w0rd\"}");
         }
 
-        [Test] public void TestIdentity()
+        [Test]
+        public void TestIdentity()
         {
             AssertJsonEqual(Identity(),
                 "{\"identity\":null}");
         }
-        
-        [Test] public void TestCurrentIdentity()
+
+        [Test]
+        public void TestCurrentIdentity()
         {
             AssertJsonEqual(CurrentIdentity(),
                 "{\"current_identity\":null}");
         }
 
-        [Test] public void TestHasIdentity()
+        [Test]
+        public void TestHasIdentity()
         {
             AssertJsonEqual(HasIdentity(),
                 "{\"has_identity\":null}");
         }
-        
-        [Test] public void TestHasCurrentIdentity()
+
+        [Test]
+        public void TestHasCurrentIdentity()
         {
             AssertJsonEqual(HasCurrentIdentity(),
                 "{\"has_current_identity\":null}");
         }
-        
-        [Test] public void TestCurrentToken()
+
+        [Test]
+        public void TestCurrentToken()
         {
             AssertJsonEqual(CurrentToken(),
                 "{\"current_token\":null}");
         }
-        
-        [Test] public void TestHasCurrentToken()
+
+        [Test]
+        public void TestHasCurrentToken()
         {
             AssertJsonEqual(HasCurrentToken(),
                 "{\"has_current_token\":null}");
         }
-        
-        [Test] public void TestCreateAccessProvider()
+
+        [Test]
+        public void TestCreateAccessProvider()
         {
             AssertJsonEqual(CreateAccessProvider(
                 Obj(
@@ -606,7 +667,8 @@ namespace Test
                 "{\"access_provider\":\"access-provider\"}");
         }
 
-        [Test] public void TestConcat()
+        [Test]
+        public void TestConcat()
         {
             AssertJsonEqual(Concat("str"),
                 "{\"concat\":\"str\"}");
@@ -621,7 +683,8 @@ namespace Test
                 "{\"concat\":[\"str0\",\"str1\"],\"separator\":\"/\"}");
         }
 
-        [Test] public void TestCasefold()
+        [Test]
+        public void TestCasefold()
         {
             AssertJsonEqual(Casefold("a string"),
                 "{\"casefold\":\"a string\"}");
@@ -633,7 +696,8 @@ namespace Test
                 "{\"casefold\":\"a string\",\"normalizer\":\"NFD\"}");
         }
 
-        [Test] public void TestNGram()
+        [Test]
+        public void TestNGram()
         {
             AssertJsonEqual(NGram("str"),
                 "{\"ngram\":\"str\"}");
@@ -645,7 +709,8 @@ namespace Test
                 "{\"ngram\":\"str\",\"min\":1,\"max\":2}");
         }
 
-        [Test] public void TestTime()
+        [Test]
+        public void TestTime()
         {
             AssertJsonEqual(Time("1970-01-01T00:00:00+00:00"),
                 "{\"time\":\"1970-01-01T00:00:00+00:00\"}");
@@ -654,7 +719,8 @@ namespace Test
                 "{\"time\":\"now\"}");
         }
 
-        [Test] public void TestEpoch()
+        [Test]
+        public void TestEpoch()
         {
             AssertJsonEqual(Epoch(1, "second"),
                 "{\"epoch\":1,\"unit\":\"second\"}");
@@ -681,49 +747,57 @@ namespace Test
                 "{\"epoch\":1,\"unit\":\"nanosecond\"}");
         }
 
-        [Test] public void TestDateFn()
+        [Test]
+        public void TestDateFn()
         {
             AssertJsonEqual(Date("1970-01-01"),
                 "{\"date\":\"1970-01-01\"}");
         }
 
-        [Test] public void TestNewId()
+        [Test]
+        public void TestNewId()
         {
             AssertJsonEqual(NewId(),
                 "{\"new_id\":null}");
         }
 
-        [Test] public void TestDatabase()
+        [Test]
+        public void TestDatabase()
         {
             AssertJsonEqual(Database("db_name"), "{\"database\":\"db_name\"}");
             AssertJsonEqual(Database("db_name", Database("scope")), "{\"database\":\"db_name\",\"scope\":{\"database\":\"scope\"}}");
         }
 
-        [Test] public void TestIndex()
+        [Test]
+        public void TestIndex()
         {
             AssertJsonEqual(Index("index_name"), "{\"index\":\"index_name\"}");
             AssertJsonEqual(Index("index_name", Database("scope")), "{\"index\":\"index_name\",\"scope\":{\"database\":\"scope\"}}");
         }
 
-        [Test] public void TestClass()
+        [Test]
+        public void TestClass()
         {
             AssertJsonEqual(Collection("class_name"), "{\"collection\":\"class_name\"}");
             AssertJsonEqual(Collection("class_name", Database("scope")), "{\"collection\":\"class_name\",\"scope\":{\"database\":\"scope\"}}");
         }
 
-        [Test] public void TestFunction()
+        [Test]
+        public void TestFunction()
         {
             AssertJsonEqual(Function("function_name"), "{\"function\":\"function_name\"}");
             AssertJsonEqual(Function("function_name", Database("scope")), "{\"function\":\"function_name\",\"scope\":{\"database\":\"scope\"}}");
         }
 
-        [Test] public void TestRole()
+        [Test]
+        public void TestRole()
         {
             AssertJsonEqual(Role("role_name"), "{\"role\":\"role_name\"}");
             AssertJsonEqual(Role("role_name", Database("scope")), "{\"role\":\"role_name\",\"scope\":{\"database\":\"scope\"}}");
         }
 
-        [Test] public void TestNativeRefs()
+        [Test]
+        public void TestNativeRefs()
         {
             AssertJsonEqual(Collections(), "{\"collections\":null}");
             AssertJsonEqual(Databases(), "{\"databases\":null}");
@@ -744,7 +818,8 @@ namespace Test
             AssertJsonEqual(Roles(Database("scope")), "{\"roles\":{\"database\":\"scope\"}}");
         }
 
-        [Test] public void TestEquals()
+        [Test]
+        public void TestEquals()
         {
             AssertJsonEqual(EqualsFn("value"),
                 "{\"equals\":\"value\"}");
@@ -753,7 +828,8 @@ namespace Test
                 "{\"equals\":[\"value\",10]}");
         }
 
-        [Test] public void TestContains()
+        [Test]
+        public void TestContains()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             AssertJsonEqual(Contains(Arr("favorites", "foods"), Obj("favorites", Obj("foods", Arr("crunchings", "munchings", "lunchings")))),
@@ -768,7 +844,8 @@ namespace Test
                 "{\"contains_path\":[\"favorites\",\"foods\"],\"in\":{\"object\":{\"favorites\":{\"object\":{\"foods\":[\"crunchings\",\"munchings\",\"lunchings\"]}}}}}");
         }
 
-        [Test] public void TestSelect()
+        [Test]
+        public void TestSelect()
         {
             AssertJsonEqual(Select(Arr("favorites", "foods", 1), Obj("favorites", Obj("foods", Arr("crunchings", "munchings", "lunchings")))),
                 "{\"select\":[\"favorites\",\"foods\",1]," +
@@ -780,101 +857,118 @@ namespace Test
                 "\"default\":\"defaultValue\"}");
         }
 
-        [Test] public void TestSelectAll()
+        [Test]
+        public void TestSelectAll()
         {
             AssertJsonEqual(SelectAll("foo", Obj("foo", "bar")),
                 "{\"select_all\":\"foo\",\"from\":{\"object\":{\"foo\":\"bar\"}}}");
         }
 
-        [Test] public void TestAdd()
+        [Test]
+        public void TestAdd()
         {
             AssertJsonEqual(Add(1), "{\"add\":1}");
             AssertJsonEqual(Add(1, 2), "{\"add\":[1,2]}");
         }
 
-        [Test] public void TestMultiply()
+        [Test]
+        public void TestMultiply()
         {
             AssertJsonEqual(Multiply(1), "{\"multiply\":1}");
             AssertJsonEqual(Multiply(1, 2), "{\"multiply\":[1,2]}");
         }
 
-        [Test] public void TestSubtract()
+        [Test]
+        public void TestSubtract()
         {
             AssertJsonEqual(Subtract(1), "{\"subtract\":1}");
             AssertJsonEqual(Subtract(1, 2), "{\"subtract\":[1,2]}");
         }
 
-        [Test] public void TestDivide()
+        [Test]
+        public void TestDivide()
         {
             AssertJsonEqual(Divide(1), "{\"divide\":1}");
             AssertJsonEqual(Divide(1, 2), "{\"divide\":[1,2]}");
         }
 
-        [Test] public void TestModulo()
+        [Test]
+        public void TestModulo()
         {
             AssertJsonEqual(Modulo(1), "{\"modulo\":1}");
             AssertJsonEqual(Modulo(1, 2), "{\"modulo\":[1,2]}");
         }
 
-        [Test] public void TestLT()
+        [Test]
+        public void TestLT()
         {
             AssertJsonEqual(LT(1), "{\"lt\":1}");
             AssertJsonEqual(LT(1, 2), "{\"lt\":[1,2]}");
         }
 
-        [Test] public void TestLTE()
+        [Test]
+        public void TestLTE()
         {
             AssertJsonEqual(LTE(1), "{\"lte\":1}");
             AssertJsonEqual(LTE(1, 2), "{\"lte\":[1,2]}");
         }
 
-        [Test] public void TestGT()
+        [Test]
+        public void TestGT()
         {
             AssertJsonEqual(GT(1), "{\"gt\":1}");
             AssertJsonEqual(GT(1, 2), "{\"gt\":[1,2]}");
         }
 
-        [Test] public void TestGTE()
+        [Test]
+        public void TestGTE()
         {
             AssertJsonEqual(GTE(1), "{\"gte\":1}");
             AssertJsonEqual(GTE(1, 2), "{\"gte\":[1,2]}");
         }
 
-        [Test] public void TestAnd()
+        [Test]
+        public void TestAnd()
         {
             AssertJsonEqual(And(false), "{\"and\":false}");
             AssertJsonEqual(And(true, false), "{\"and\":[true,false]}");
         }
 
-        [Test] public void TestOr()
+        [Test]
+        public void TestOr()
         {
             AssertJsonEqual(Or(true), "{\"or\":true}");
             AssertJsonEqual(Or(true, false), "{\"or\":[true,false]}");
         }
 
-        [Test] public void TestNot()
+        [Test]
+        public void TestNot()
         {
             AssertJsonEqual(Not(true), "{\"not\":true}");
             AssertJsonEqual(Not(false), "{\"not\":false}");
         }
 
-        [Test] public void TestToStringExpr()
+        [Test]
+        public void TestToStringExpr()
         {
             AssertJsonEqual(ToStringExpr(42), "{\"to_string\":42}");
         }
 
-        [Test] public void TestToNumber()
+        [Test]
+        public void TestToNumber()
         {
             AssertJsonEqual(ToNumber("42"), "{\"to_number\":\"42\"}");
         }
 
-        [Test] public void TestToTime()
+        [Test]
+        public void TestToTime()
         {
             AssertJsonEqual(ToTime("1970-01-01T00:00:00Z"),
                             "{\"to_time\":\"1970-01-01T00:00:00Z\"}");
         }
 
-        [Test] public void TestToDate()
+        [Test]
+        public void TestToDate()
         {
             AssertJsonEqual(ToDate("1970-01-01"), "{\"to_date\":\"1970-01-01\"}");
         }
@@ -996,10 +1090,11 @@ namespace Test
             );
 
             AssertJsonEqual(
-                new QueryV(new Dictionary<string, Expr> {
+                new QueryV(new Dictionary<string, Expr>
+                {
                     { "lambda", "x" },
                     { "expr", Add(Var("x"), 1) },
-                    { "api_version", "3" }
+                    { "api_version", "3" },
                 }),
                 "{\"@query\":{\"lambda\":\"x\",\"expr\":{\"add\":[{\"var\":\"x\"},1]},\"api_version\":\"3\"}}"
             );
@@ -1022,7 +1117,7 @@ namespace Test
         public void TestMergeFunction()
         {
             AssertJsonEqual(
-                Merge(Obj("x",10), Obj("y", 20)),
+                Merge(Obj("x", 10), Obj("y", 20)),
                 "{\"merge\":{\"object\":{\"x\":10}},\"with\":{\"object\":{\"y\":20}}}"
             );
 
@@ -1040,7 +1135,7 @@ namespace Test
                 "{\"format\":\"%f %d\",\"values\":[3.14,10]}"
             );
         }
-        
+
         [Test]
         public void TestRangeFunction()
         {
@@ -1175,7 +1270,7 @@ namespace Test
             var indexCfg = new Dictionary<string, Expr>()
             {
                 { "name", "index_name" },
-                { "source", Collection("class_name") }
+                { "source", Collection("class_name") },
             };
 
             AssertJsonEqual(
@@ -1185,9 +1280,8 @@ namespace Test
 
             AssertJsonEqual(
                 CreateIndex(indexCfg),
-                 "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}}"
+                "{\"create_index\":{\"object\":{\"name\":\"index_name\",\"source\":{\"collection\":\"class_name\"}}}}"
             );
         }
-
     }
 }

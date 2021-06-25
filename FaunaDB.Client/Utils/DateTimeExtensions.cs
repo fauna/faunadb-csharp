@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace FaunaDB.Client.Utils
 {
     public static class DateTimeExtensions

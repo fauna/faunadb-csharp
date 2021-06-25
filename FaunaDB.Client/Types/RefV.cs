@@ -6,7 +6,9 @@ namespace FaunaDB.Types
     public struct RefID
     {
         public string Id { get; }
+
         public RefV Collection { get; }
+
         public RefV Database { get; }
 
         public RefID(string id, RefV collection, RefV database)
@@ -26,7 +28,9 @@ namespace FaunaDB.Types
     public class RefV : ScalarValue<RefID>
     {
         public string Id { get { return Value.Id; } }
+
         public RefV Collection { get { return Value.Collection; } }
+
         public RefV Database { get { return Value.Database; } }
 
         public RefV(string id, RefV collection = null, RefV database = null)
@@ -41,8 +45,7 @@ namespace FaunaDB.Types
             var props = UnescapedObject.With(
                 "id", Id,
                 "collection", Collection,
-                "database", Database
-            );
+                "database", Database);
 
             writer.WriteObject("@ref", props);
         }

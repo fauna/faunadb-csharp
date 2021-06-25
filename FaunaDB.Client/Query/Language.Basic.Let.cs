@@ -6,7 +6,7 @@ namespace FaunaDB.Query
     {
         public struct LetBinding
         {
-            UnescapedArray vars;
+            private UnescapedArray vars;
 
             internal LetBinding(UnescapedArray vars)
             {

@@ -10,7 +10,7 @@ namespace FaunaDB.Types
     {
         public static readonly Value Instance = new NullV();
 
-        internal NullV() {}
+        internal NullV() { }
 
         protected internal override void WriteJson(JsonWriter writer)
         {

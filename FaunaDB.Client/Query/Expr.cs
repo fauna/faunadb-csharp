@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Query
 {
@@ -12,6 +12,19 @@ namespace FaunaDB.Query
     {
         protected internal abstract void WriteJson(JsonWriter writer);
 
+        public static bool operator ==(Expr a, Expr b)
+        {
+            if (ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            return !ReferenceEquals(a, null) && a.Equals(b);
+        }
+
+        public static bool operator !=(Expr a, Expr b) =>
+            !(a == b);
+
         #region boilerplate
         public override bool Equals(object obj)
         {
@@ -21,17 +34,6 @@ namespace FaunaDB.Query
 
         public abstract bool Equals(Expr v);
 
-        public static bool operator ==(Expr a, Expr b)
-        {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            return !ReferenceEquals(a, null) && a.Equals(b);
-        }
-
-        public static bool operator !=(Expr a, Expr b) =>
-            !(a == b);
-
         public override int GetHashCode() =>
             HashCode();
 
@@ -40,7 +42,7 @@ namespace FaunaDB.Query
         #endregion
     }
 
-    class ExprJsonConverter : JsonConverter
+    internal class ExprJsonConverter : JsonConverter
     {
         public override bool CanConvert(Type objectType) =>
             typeof(Expr).IsAssignableFrom(objectType);

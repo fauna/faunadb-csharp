@@ -1,10 +1,10 @@
-﻿using FaunaDB.Query;
-using FaunaDB.Errors;
-using Newtonsoft.Json;
-using System;
-using System.Globalization;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using FaunaDB.Collections;
+using FaunaDB.Errors;
+using FaunaDB.Query;
+using Newtonsoft.Json;
 
 namespace FaunaDB.Types
 {
@@ -45,7 +45,7 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class BooleanV : ScalarValue<bool>
     {
-        internal BooleanV(bool value) : base(value) {}
+        internal BooleanV(bool value) : base(value) { }
 
         public static BooleanV Of(bool b) =>
             b ? True : False;
@@ -59,7 +59,7 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class DoubleV : ScalarValue<double>
     {
-        internal DoubleV(double value) : base(value) {}
+        internal DoubleV(double value) : base(value) { }
 
         public static DoubleV Of(double v) =>
             new DoubleV(v);
@@ -70,7 +70,7 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class LongV : ScalarValue<long>
     {
-        internal LongV(long value) : base(value) {}
+        internal LongV(long value) : base(value) { }
 
         public static LongV Of(long v) =>
             new LongV(v);
@@ -137,9 +137,8 @@ namespace FaunaDB.Types
 
         internal static ExprV Of(Expr e) =>
             new ExprV(e);
-        
     }
-       
+
     /// <summary>
     /// Represents a Timestamp value in the FaunaDB query language.
     /// <para>
@@ -186,7 +185,7 @@ namespace FaunaDB.Types
         public static implicit operator DateTime(TimeV ft) =>
             ft.Value;
 
-        const string TimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFZ";
+        private const string TimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'FFFFFFFZ";
 
         protected internal override void WriteJson(JsonWriter writer)
         {
@@ -203,7 +202,7 @@ namespace FaunaDB.Types
         protected override int HashCode() =>
             Value.GetHashCode();
 
-        override public string ToString() =>
+        public override string ToString() =>
             $"FaunaTime({Value.ToIso(TimeFormat)})";
         #endregion
     }
@@ -250,7 +249,7 @@ namespace FaunaDB.Types
         public static implicit operator DateTime(DateV ft) =>
             ft.Value;
 
-        const string DateFormat = "yyyy-MM-dd";
+        private const string DateFormat = "yyyy-MM-dd";
 
         protected internal override void WriteJson(JsonWriter writer)
         {
@@ -267,12 +266,12 @@ namespace FaunaDB.Types
         protected override int HashCode() =>
             Value.GetHashCode();
 
-        override public string ToString() =>
+        public override string ToString() =>
             $"FaunaDate({Value})";
         #endregion
     }
 
-    static class DateTimeUtil
+    internal static class DateTimeUtil
     {
         public static string ToIso(this DateTime dt, string format) =>
             dt.ToString(format, CultureInfo.InvariantCulture);
@@ -288,7 +287,7 @@ namespace FaunaDB.Types
         /// timestamps with resolution of 1ns, like for example: 1970-01-01T00:00:00.000000001Z.
         /// However C# has a resolution of 100ns, so it cannot handle the last two digits of response.
         /// </summary>
-        static string TruncateLastTwoDigits(string iso)
+        private static string TruncateLastTwoDigits(string iso)
         {
             var index = iso.LastIndexOf(".", StringComparison.CurrentCulture);
 
@@ -297,12 +296,16 @@ namespace FaunaDB.Types
                 iso = iso.Substring(0, Math.Min(iso.Length, index + 8));
 
                 if (!iso.EndsWith("Z", StringComparison.CurrentCulture))
+                {
                     iso += "Z";
+                }
             }
             else
             {
                 if (iso.EndsWith("Z", StringComparison.CurrentCulture))
+                {
                     iso = iso.Substring(0, iso.Length - 1);
+                }
 
                 iso += ".0000000Z";
             }
@@ -314,6 +317,5 @@ namespace FaunaDB.Types
         {
             return DateTime.ParseExact(iso, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
         }
-
     }
 }

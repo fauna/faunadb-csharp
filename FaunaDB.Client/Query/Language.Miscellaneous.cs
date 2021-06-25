@@ -167,7 +167,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-       public static Expr EqualsFn(params Expr[] values) =>
+        public static Expr EqualsFn(params Expr[] values) =>
             UnescapedObject.With("equals", Varargs(values));
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace FaunaDB.Query
         /// </para>
         /// </summary>
         public static Expr ContainsValue(Expr value, Expr @in) =>
-            UnescapedObject.With("contains_value", value, "in", @in); 
+            UnescapedObject.With("contains_value", value, "in", @in);
 
         /// <summary>
         /// Creates a new Contains expression.
@@ -331,7 +331,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-       public static Expr GT(params Expr[] values) =>
+        public static Expr GT(params Expr[] values) =>
             UnescapedObject.With("gt", Varargs(values));
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace FaunaDB.Query
         /// See the <see href="https://app.fauna.com/documentation/reference/queryapi#miscellaneous-functions">FaunaDB Miscellaneous Functions</see>
         /// </para>
         /// </summary>
-       public static Expr GTE(params Expr[] values) =>
+        public static Expr GTE(params Expr[] values) =>
             UnescapedObject.With("gte", Varargs(values));
 
         /// <summary>
@@ -739,7 +739,6 @@ namespace FaunaDB.Query
         public static Expr Trunc(Expr expr, Expr precision = null) =>
           UnescapedObject.With("trunc", expr, "precision", precision);
 
-
         /// <summary>
         ///   Returns the offset position of a string in another string.
         /// <para>
@@ -839,7 +838,6 @@ namespace FaunaDB.Query
         public static Expr Space(Expr count) =>
             UnescapedObject.With("space", count);
 
-
         /// <summary>
         ///   Returns a portion of the string.
         /// <para>
@@ -912,7 +910,6 @@ namespace FaunaDB.Query
         public static Expr RegexEscape(Expr value) =>
             UnescapedObject.With("regexescape", value);
 
-
         /// <summary>
         /// <para>
         /// See the <see href="https://docs.fauna.com/fauna/current/api/fql/functions/documents">FaunaDB Documents Function</see>
@@ -920,7 +917,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr Documents(Expr collection) =>
             UnescapedObject.With("documents", collection);
-        
+
         /// <summary>
         /// Try to convert an object into an array of (field, value).
         /// <para>
@@ -929,7 +926,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr ToArray(Expr expr) =>
             UnescapedObject.With("to_array", expr);
-        
+
         /// <summary>
         /// Try to convert an array of (field, value) into an object.
         /// <para>
@@ -938,7 +935,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr ToObject(Expr fields) =>
             UnescapedObject.With("to_object", fields);
-        
+
         /// <summary>
         /// Casts an expression to a double value, if possible.
         /// <para>
@@ -947,7 +944,7 @@ namespace FaunaDB.Query
         /// </summary>
         public static Expr ToDouble(Expr value) =>
             UnescapedObject.With("to_double", value);
-        
+
         /// <summary>
         /// Casts an expression to an integer value, if possible.
         /// <para>

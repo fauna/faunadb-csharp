@@ -13,10 +13,13 @@
                       .net frameworks net45 till net48, FaunaDB.Client net45 build will be used
      -->
     <TargetFrameworks>net45;netcoreapp2.1;netcoreapp3.1;net5.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
     <WarningsAsErrors>;NU1605</WarningsAsErrors>
-    <NoWarn>1701;1702;</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1701;1702;$(NoWarn);1573;1591;1712</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +27,10 @@
     <PackageReference Include="NUnit" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

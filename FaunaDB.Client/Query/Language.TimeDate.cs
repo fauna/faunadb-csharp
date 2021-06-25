@@ -26,7 +26,7 @@
             Second,
             Millisecond,
             Microsecond,
-            Nanosecond
+            Nanosecond,
         }
 
         /// <summary>
@@ -64,7 +64,7 @@
         /// </summary>
         public static Expr Now() =>
             UnescapedObject.With("now", Null());
-        
+
         /// <summary>
         /// Returns a new time or date with the offset in terms of the unit added.
         /// <para>

@@ -2,7 +2,7 @@
 
 namespace FaunaDB.Errors
 {
-    static class NotNullValidator
+    internal static class NotNullValidator
     {
         public static void AssertNotNull(this object value, string valueName)
         {

@@ -6,8 +6,11 @@ namespace FaunaDB.Errors
     public class QueryError
     {
         public IReadOnlyList<string> Position { get; private set; }
+
         public string Code { get; private set; }
+
         public string Description { get; private set; }
+
         public IReadOnlyList<ValidationFailure> Failures { get; private set; }
 
         [JsonConstructor]
@@ -20,4 +23,3 @@ namespace FaunaDB.Errors
         }
     }
 }
-

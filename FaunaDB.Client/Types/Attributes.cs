@@ -49,7 +49,7 @@ namespace FaunaDB.Types
         /// The default value used for a missing property when decoding an object.
         /// </summary>
         public object DefaultValue { get; set; }
-        
+
         public FaunaFieldAttribute(string name)
         {
             Name = name;
@@ -72,8 +72,7 @@ namespace FaunaDB.Types
     /// var encoded = Encoder.Encode(user);
     /// </example>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter)]
-    public class FaunaDate : Attribute
-    {}
+    public class FaunaDate : Attribute { }
 
     /// <summary>
     /// Instruct the encoder that this <see cref="DateTime"/> property should always be

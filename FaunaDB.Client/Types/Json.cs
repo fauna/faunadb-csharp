@@ -9,7 +9,7 @@ using static System.Linq.Enumerable;
 
 namespace FaunaDB.Types
 {
-    class ValueJsonConverter : JsonConverter
+    internal class ValueJsonConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) =>
             ((Value)value).WriteJson(writer);
@@ -21,19 +21,19 @@ namespace FaunaDB.Types
             typeof(Value).IsAssignableFrom(objectType);
     }
 
-    class ValueReader
+    internal class ValueReader
     {
-        readonly JsonReader reader;
+        private readonly JsonReader reader;
 
         public static Value ReadValue(JsonReader reader) =>
             new ValueReader(reader).ReadValue();
 
-        ValueReader(JsonReader reader)
+        private ValueReader(JsonReader reader)
         {
             this.reader = reader;
         }
 
-        Value ReadValue()
+        private Value ReadValue()
         {
             try
             {
@@ -45,7 +45,7 @@ namespace FaunaDB.Types
             }
         }
 
-        Value HandleValue()
+        private Value HandleValue()
         {
             switch (reader.TokenType)
             {
@@ -54,13 +54,13 @@ namespace FaunaDB.Types
                 case JsonToken.StartArray:
                     return ReadArray();
                 case JsonToken.Integer:
-                    return LongV.Of((long) reader.Value);
+                    return LongV.Of((long)reader.Value);
                 case JsonToken.Float:
-                    return DoubleV.Of((double) reader.Value);
+                    return DoubleV.Of((double)reader.Value);
                 case JsonToken.String:
-                    return StringV.Of((string) reader.Value);
+                    return StringV.Of((string)reader.Value);
                 case JsonToken.Boolean:
-                    return BooleanV.Of((bool) reader.Value);
+                    return BooleanV.Of((bool)reader.Value);
                 case JsonToken.Null:
                     return NullV.Instance;
                 default:
@@ -68,17 +68,19 @@ namespace FaunaDB.Types
             }
         }
 
-        JsonToken Next(JsonToken expect = JsonToken.None)
+        private JsonToken Next(JsonToken expect = JsonToken.None)
         {
             reader.Read();
 
             if (expect != JsonToken.None && expect != reader.TokenType)
+            {
                 Unexpected(expect);
+            }
 
             return reader.TokenType;
         }
 
-        Value ReadObject()
+        private Value ReadObject()
         {
             switch (Next())
             {
@@ -102,6 +104,7 @@ namespace FaunaDB.Types
                         default:
                             return ReadObjectBody();
                     }
+
                 case JsonToken.EndObject:
                     return ObjectV.Empty;
                 default:
@@ -109,36 +112,46 @@ namespace FaunaDB.Types
             }
         }
 
-        ObjectV ReadObjectBody()
+        private ObjectV ReadObjectBody()
         {
             if (reader.TokenType == JsonToken.EndObject)
+            {
                 return ObjectV.Empty;
+            }
 
             return new ObjectV(Add =>
             {
                 while (reader.TokenType != JsonToken.EndObject)
+                {
                     Add(ReadPropertyName(), ReadValue());
+                }
             });
         }
 
-        ArrayV ReadArray()
+        private ArrayV ReadArray()
         {
             if (Next() == JsonToken.EndArray)
+            {
                 return ArrayV.Empty;
+            }
 
             return new ArrayV(Add =>
             {
                 while (reader.TokenType != JsonToken.EndArray)
+                {
                     Add(ReadValue());
+                }
             });
         }
 
-        string ReadPropertyName()
+        private string ReadPropertyName()
         {
             try
             {
                 if (reader.TokenType != JsonToken.PropertyName)
+                {
                     Unexpected(JsonToken.PropertyName);
+                }
 
                 return (string)reader.Value;
             }
@@ -148,12 +161,12 @@ namespace FaunaDB.Types
             }
         }
 
-        string ReadEnclosedString()
+        private string ReadEnclosedString()
         {
             try
             {
                 Next(expect: JsonToken.String);
-                return (string) reader.Value;
+                return (string)reader.Value;
             }
             finally
             {
@@ -161,7 +174,7 @@ namespace FaunaDB.Types
             }
         }
 
-        ObjectV ReadEnclosedObject()
+        private ObjectV ReadEnclosedObject()
         {
             try
             {
@@ -174,7 +187,7 @@ namespace FaunaDB.Types
             }
         }
 
-        IReadOnlyDictionary<string, Expr> ReadEnclosedLambda()
+        private IReadOnlyDictionary<string, Expr> ReadEnclosedLambda()
         {
             return ReadEnclosedObject().Value.ToDictionary(
                 key => key.Key,
@@ -182,7 +195,7 @@ namespace FaunaDB.Types
             );
         }
 
-        static Expr Unwrap(Expr expr)
+        private static Expr Unwrap(Expr expr)
         {
             var obj = expr as ObjectV;
             if (obj != null)
@@ -190,7 +203,9 @@ namespace FaunaDB.Types
                 var values = new Dictionary<string, Expr>();
 
                 foreach (var kv in obj.Value)
+                {
                     values.Add(kv.Key, Unwrap(kv.Value));
+                }
 
                 return new UnescapedObject(values);
             }
@@ -201,7 +216,9 @@ namespace FaunaDB.Types
                 var values = new List<Expr>();
 
                 foreach (var value in arr.Value)
+                {
                     values.Add(Unwrap(value));
+                }
 
                 return new UnescapedArray(values);
             }
@@ -209,16 +226,18 @@ namespace FaunaDB.Types
             return expr;
         }
 
-        Value Unexpected(JsonToken expected = JsonToken.None)
+        private Value Unexpected(JsonToken expected = JsonToken.None)
         {
             if (expected == JsonToken.None)
+            {
                 throw new UnknowException($"Unexpected token {reader.TokenType.ToString()}");
+            }
 
             throw new UnknowException($"Expected {expected.ToString()} but received {reader.TokenType.ToString()}");
         }
     }
 
-    static class JsonWriterExtensions
+    internal static class JsonWriterExtensions
     {
         public static void WriteArray(this JsonWriter writer, IEnumerable<Expr> values)
         {
@@ -226,10 +245,15 @@ namespace FaunaDB.Types
             foreach (var value in values)
             {
                 if (value == null)
+                {
                     writer.WriteNull();
+                }
                 else
+                {
                     value.WriteJson(writer);
+                }
             }
+
             writer.WriteEndArray();
         }
 
@@ -241,17 +265,23 @@ namespace FaunaDB.Types
             writer.WriteEndObject();
         }
 
-        public static void WriteObject<TValue>(this JsonWriter writer, IEnumerable<KeyValuePair<string, TValue>> props) where TValue : Expr
+        public static void WriteObject<TValue>(this JsonWriter writer, IEnumerable<KeyValuePair<string, TValue>> props)
+            where TValue : Expr
         {
             writer.WriteStartObject();
             foreach (var kv in props)
             {
                 writer.WritePropertyName(kv.Key);
                 if (kv.Value == null)
+                {
                     writer.WriteNull();
+                }
                 else
+                {
                     kv.Value.WriteJson(writer);
+                }
             }
+
             writer.WriteEndObject();
         }
     }

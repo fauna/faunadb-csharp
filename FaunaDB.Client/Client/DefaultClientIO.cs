@@ -16,13 +16,13 @@ namespace FaunaDB.Client
     /// <summary>
     /// Default client that handles all http connections using <see cref="HttpClient"/>.
     /// </summary>
-    class DefaultClientIO : IClientIO
+    internal class DefaultClientIO : IClientIO
     {
-        readonly Uri endpoint;
-        readonly TimeSpan? clientTimeout;
+        private readonly Uri endpoint;
+        private readonly TimeSpan? clientTimeout;
 
-        readonly HttpClient client;
-        readonly AuthenticationHeaderValue authHeader;
+        private readonly HttpClient client;
+        private readonly AuthenticationHeaderValue authHeader;
 
         private LastSeen lastSeen;
         private Version httpVersion;
@@ -62,12 +62,14 @@ namespace FaunaDB.Client
         public Task<StreamingRequestResult> DoStreamingRequest(string data, IReadOnlyDictionary<string, string> query = null) =>
             DoStreamingRequestAsync(data, query);
 
-        async Task<RequestResult> DoRequestAsync(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null)
+        private async Task<RequestResult> DoRequestAsync(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null)
         {
-            var dataString = data == null ?  null : new StringContent(data);
+            var dataString = data == null ? null : new StringContent(data);
             var queryString = query == null ? null : QueryString(query);
             if (queryString != null)
+            {
                 path = $"{path}?{queryString}";
+            }
 
             var startTime = DateTime.UtcNow;
 
@@ -98,13 +100,18 @@ namespace FaunaDB.Client
             string response;
 
             if (httpResponse.Content.Headers.ContentEncoding.Any(encoding => encoding == "gzip"))
+            {
                 response = await DecompressGZip(httpResponse.Content).ConfigureAwait(false);
+            }
             else
+            {
                 response = await httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
+            }
 
             var endTime = DateTime.UtcNow;
 
-            if (httpResponse.Headers.Contains("X-Txn-Time")) {
+            if (httpResponse.Headers.Contains("X-Txn-Time"))
+            {
                 // there shouldn't ever be more than one...
                 var time = httpResponse.Headers.GetValues("X-Txn-Time").First();
 
@@ -114,14 +121,16 @@ namespace FaunaDB.Client
             return new RequestResult(method, path, query, data, response, (int)httpResponse.StatusCode, ToDictionary(httpResponse.Headers), startTime, endTime);
         }
 
-        async Task<StreamingRequestResult> DoStreamingRequestAsync(string data, IReadOnlyDictionary<string, string> query = null)
+        private async Task<StreamingRequestResult> DoStreamingRequestAsync(string data, IReadOnlyDictionary<string, string> query = null)
         {
             var path = StreamingPath;
-            var dataString = data == null ?  null : new StringContent(data, Encoding.UTF8, "application/json");
+            var dataString = data == null ? null : new StringContent(data, Encoding.UTF8, "application/json");
             var queryString = query == null ? null : QueryString(query);
             if (queryString != null)
+            {
                 path = $"{path}?{queryString}";
-            
+            }
+
             var startTime = DateTime.UtcNow;
 
             var message = new HttpRequestMessage(new HttpMethod(StreamingHttpMethod.Name()), $"{endpoint}{path}");
@@ -131,7 +140,7 @@ namespace FaunaDB.Client
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
             message.Version = httpVersion;
             message.SetTimeout(Timeout.InfiniteTimeSpan);
-            
+
             var last = lastSeen.Txn;
             if (last.HasValue)
             {
@@ -139,19 +148,20 @@ namespace FaunaDB.Client
             }
 
             var httpResponse = await client.SendAsync(message, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None).ConfigureAwait(false);
-            
+
             Stream response = await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
 
             var endTime = DateTime.UtcNow;
 
-            if (httpResponse.Headers.Contains("X-Txn-Time")) {
+            if (httpResponse.Headers.Contains("X-Txn-Time"))
+            {
                 // there shouldn't ever be more than one...
                 var time = httpResponse.Headers.GetValues("X-Txn-Time").First();
 
                 lastSeen.SetTxn(Convert.ToInt64(time));
             }
 
-            var errorContent = String.Empty;
+            var errorContent = string.Empty;
             if (!httpResponse.IsSuccessStatusCode)
             {
                 StreamReader streamReader = new StreamReader(response);
@@ -161,25 +171,27 @@ namespace FaunaDB.Client
             return new StreamingRequestResult(query, data, response, (int)httpResponse.StatusCode, errorContent, ToDictionary(httpResponse.Headers), startTime, endTime);
         }
 
-        static async Task<string> DecompressGZip(HttpContent content)
+        private static async Task<string> DecompressGZip(HttpContent content)
         {
             using (var stream = await content.ReadAsStreamAsync().ConfigureAwait(false))
             {
                 using (var gzip = new GZipStream(stream, CompressionMode.Decompress))
                 {
                     using (var reader = new StreamReader(gzip))
+                    {
                         return await reader.ReadToEndAsync().ConfigureAwait(false);
+                    }
                 }
             }
         }
 
-        static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers) =>
+        private static IReadOnlyDictionary<string, IEnumerable<string>> ToDictionary(HttpResponseHeaders headers) =>
             headers.ToDictionary(k => k.Key, v => v.Value);
 
         /// <summary>
         /// Adds a header with Bearer Auth Token.
         /// </summary>
-        static AuthenticationHeaderValue AuthHeader(string authToken)
+        private static AuthenticationHeaderValue AuthHeader(string authToken)
         {
             return new AuthenticationHeaderValue("Bearer", authToken);
         }
@@ -187,7 +199,7 @@ namespace FaunaDB.Client
         /// <summary>
         /// Convert query parameters to a URL string.
         /// </summary>
-        static string QueryString(IReadOnlyDictionary<string, string> query)
+        private static string QueryString(IReadOnlyDictionary<string, string> query)
         {
             var keyValues = query.Select((keyValue) =>
             {
@@ -199,15 +211,14 @@ namespace FaunaDB.Client
             return string.Join("&", keyValues);
         }
 
-        static HttpClient CreateClient() =>
-            new HttpClient(new TimeoutHandler());        
+        private static HttpClient CreateClient() =>
+            new HttpClient(new TimeoutHandler());
     }
 
     /// <summary>
     /// Http Client proper timing out
     /// </summary>
-
-    static class HttpRequestExtensions
+    internal static class HttpRequestExtensions
     {
         private static string TimeoutPropertyKey = "RequestTimeout";
 
@@ -222,13 +233,15 @@ namespace FaunaDB.Client
             request.AssertNotNull(nameof(request));
 
             if (request.Properties.TryGetValue(TimeoutPropertyKey, out var value) && value is TimeSpan timeout)
+            {
                 return timeout;
+            }
 
             return null;
         }
     }
 
-    class TimeoutHandler : DelegatingHandler
+    internal class TimeoutHandler : DelegatingHandler
     {
         public TimeoutHandler()
         {
@@ -243,8 +256,8 @@ namespace FaunaDB.Client
             {
                 return await base.SendAsync(request, cancellationToken);
             }
-                
-            using(var source = NewCancellationTokenSource(timeout.Value, cancellationToken))
+
+            using (var source = NewCancellationTokenSource(timeout.Value, cancellationToken))
             {
                 try
                 {
@@ -255,7 +268,6 @@ namespace FaunaDB.Client
                     throw new TimeoutException();
                 }
             }
-            
         }
 
         private CancellationTokenSource NewCancellationTokenSource(TimeSpan timeout, CancellationToken token)

@@ -8,9 +8,11 @@ using static FaunaDB.Query.Language;
 
 namespace Test
 {
-    [TestFixture] public class OperatorTest
+    [TestFixture]
+    public class OperatorTest
     {
-        [Test] public void TestImplicitExpr()
+        [Test]
+        public void TestImplicitExpr()
         {
             Assert.AreEqual(LongV.Of(10), (Expr)10);
             Assert.AreEqual(LongV.Of(10), (Expr)10L);
@@ -24,14 +26,14 @@ namespace Test
             Assert.AreEqual(StringV.Of("millisecond"), (Expr)TimeUnit.Millisecond);
             Assert.AreEqual(StringV.Of("microsecond"), (Expr)TimeUnit.Microsecond);
             Assert.AreEqual(StringV.Of("nanosecond"), (Expr)TimeUnit.Nanosecond);
-            Assert.AreEqual(DateV.Of("2000-01-01"), (Expr)new DateTime(2000,1, 1, 0, 0, 0, DateTimeKind.Utc));
+            Assert.AreEqual(DateV.Of("2000-01-01"), (Expr)new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc));
             Assert.AreEqual(DateV.Of("2000-01-01"), (Expr)new DateTimeOffset(2000, 1, 1, 0, 0, 0, TimeSpan.Zero));
             Assert.AreEqual(TimeV.Of("2000-01-01T01:01:01.123Z"), (Expr)new DateTime(2000, 1, 1, 1, 1, 1, 123, DateTimeKind.Utc));
             Assert.AreEqual(TimeV.Of("2000-01-01T01:01:01.123Z"), (Expr)new DateTimeOffset(2000, 1, 1, 1, 1, 1, 123, TimeSpan.Zero));
             Assert.AreEqual(NullV.Instance, (Expr)(string)null);
             Assert.AreEqual(
                 ObjectV.With("name", "foo", "count", 42),
-                (Expr)new Dictionary<string, Expr>() {{ "name", "foo" }, { "count", 42 }});
+                (Expr)new Dictionary<string, Expr>() { { "name", "foo" }, { "count", 42 } });
             Assert.AreEqual(BytesV.Of(1, 2, 3), (Expr)new byte[] { 1, 2, 3 });
         }
 
@@ -58,7 +60,6 @@ namespace Test
             Assert.AreEqual(BytesV.Of(1, 2, 3), (Value)new byte[] { 1, 2, 3 });
         }
 
-
         [Test]
         public void TestExplicitExpr()
         {
@@ -81,7 +82,8 @@ namespace Test
             Assert.AreEqual(null, (string)(Expr)NullV.Instance);
         }
 
-        [Test] public void TestExplicitValue()
+        [Test]
+        public void TestExplicitValue()
         {
             Assert.AreEqual(10, (int)LongV.Of(10));
             Assert.AreEqual(10L, (long)LongV.Of(10));

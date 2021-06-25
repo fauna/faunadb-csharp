@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FaunaDB.Types
 {
@@ -11,13 +11,13 @@ namespace FaunaDB.Types
     /// </summary>
     public sealed class Field<T>
     {
-        internal readonly Path path;
-        internal readonly Func<Value, IResult<T>> codec;
+        internal readonly Path Path;
+        internal readonly Func<Value, IResult<T>> Codec;
 
         internal Field(Path path, Func<Value, IResult<T>> codec)
         {
-            this.path = path;
-            this.codec = codec;
+            this.Path = path;
+            this.Codec = codec;
         }
 
         /// <summary>
@@ -26,14 +26,14 @@ namespace FaunaDB.Types
         /// <param name="other">nested field to compose with</param>
         /// <returns>a new field extractor with the nested field</returns>
         public Field<U> At<U>(Field<U> other) =>
-            new Field<U>(path.SubPath(other.path), other.codec);
+            new Field<U>(Path.SubPath(other.Path), other.Codec);
 
         /// <summary>
         /// Creates a field extractor that coerces its value using the type specified
         /// </summary>
         /// <returns>a new field that coerces its value using the type specified</returns>
         public Field<U> To<U>() =>
-            new Field<U>(path, Field.Decode<U>);
+            new Field<U>(Path, Field.Decode<U>);
 
         /// <summary>
         /// Creates a field extractor that collects each inner value of an array using the nested field passed,
@@ -42,22 +42,22 @@ namespace FaunaDB.Types
         /// <param name="field">field to be extracted from each array's element</param>
         /// <returns>a new field that collects each inner value using the field passed</returns>
         public Field<IReadOnlyList<U>> Collect<U>(Field<U> field) =>
-            new Field<IReadOnlyList<U>>(path, Field.ToCollection(path, field));
+            new Field<IReadOnlyList<U>>(Path, Field.ToCollection(Path, field));
 
         internal IResult<T> Get(Value root) =>
-            path.Get(root).FlatMap(codec);
+            Path.Get(root).FlatMap(Codec);
 
         public override bool Equals(object obj)
         {
             var other = obj as Field<T>;
-            return other != null && path.Equals(other.path);
+            return other != null && Path.Equals(other.Path);
         }
 
         public override int GetHashCode() =>
-            path.GetHashCode();
+            Path.GetHashCode();
 
         public override string ToString() =>
-            path.ToString();
+            Path.ToString();
     }
 
     /// <summary>
@@ -81,14 +81,17 @@ namespace FaunaDB.Types
 
                     result.Match(
                         Success: x => success.Add(x),
-                        Failure: reason => {
-                            Path subPath = path.SubPath(Path.From(i)).SubPath(field.path);
+                        Failure: reason =>
+                        {
+                            Path subPath = path.SubPath(Path.From(i)).SubPath(field.Path);
                             failures.Add($"\"{subPath}\" {reason}");
                         });
                 }
 
                 if (failures.Count > 0)
+                {
                     return Result.Fail<IReadOnlyList<V>>($"Failed to collect values: {string.Join(", ", failures)}");
+                }
 
                 return Result.Success<IReadOnlyList<V>>(success);
             });
@@ -99,7 +102,9 @@ namespace FaunaDB.Types
             try
             {
                 if (value == NullV.Instance)
+                {
                     return Result.Fail<T>("Value is null");
+                }
 
                 return Result.Success(Decoder.Decode<T>(value));
             }

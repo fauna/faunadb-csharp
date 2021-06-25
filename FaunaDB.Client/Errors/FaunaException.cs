@@ -10,7 +10,7 @@ namespace FaunaDB.Errors
     /// </summary>
     public class FaunaException : Exception
     {
-        QueryErrorResponse queryErrorResponse;
+        private QueryErrorResponse queryErrorResponse;
 
         /// <summary>
         /// List of all errors sent by the server.
@@ -28,7 +28,7 @@ namespace FaunaDB.Errors
 
         protected FaunaException(string message) : base(message) { }
 
-        static string CreateMessage(IReadOnlyList<QueryError> errors) =>
+        private static string CreateMessage(IReadOnlyList<QueryError> errors) =>
             string.Join(", ", from error in errors select $"{error.Code}: {error.Description}");
    }
 
@@ -39,7 +39,8 @@ namespace FaunaDB.Errors
     /// </summary>
     public class BadRequest : FaunaException
     {
-        internal BadRequest(QueryErrorResponse response) : base(response) {}
+        internal BadRequest(QueryErrorResponse response)
+            : base(response) { }
     }
 
     /// <summary>
@@ -49,7 +50,8 @@ namespace FaunaDB.Errors
     /// </summary>
     public class Unauthorized : FaunaException
     {
-        internal Unauthorized(QueryErrorResponse response) : base(response) {}
+        internal Unauthorized(QueryErrorResponse response)
+            : base(response) { }
     }
 
     /// <summary>
@@ -59,7 +61,8 @@ namespace FaunaDB.Errors
     /// </summary>
     public class PermissionDenied : FaunaException
     {
-        internal PermissionDenied(QueryErrorResponse response) : base(response) {}
+        internal PermissionDenied(QueryErrorResponse response)
+            : base(response) { }
     }
 
     /// <summary>
@@ -69,7 +72,8 @@ namespace FaunaDB.Errors
     /// </summary>
     public class NotFound : FaunaException
     {
-        public NotFound(QueryErrorResponse response) : base(response) {}
+        public NotFound(QueryErrorResponse response)
+            : base(response) { }
     }
 
     /// <summary>
@@ -80,7 +84,8 @@ namespace FaunaDB.Errors
     /// </summary>
     public class InternalError : FaunaException
     {
-        internal InternalError(QueryErrorResponse response) : base(response) {}
+        internal InternalError(QueryErrorResponse response)
+            : base(response) { }
     }
 
     /// <summary>
@@ -91,7 +96,8 @@ namespace FaunaDB.Errors
     /// </summary>
     public class UnavailableError : FaunaException
     {
-        internal UnavailableError(QueryErrorResponse response) : base(response) {}
+        internal UnavailableError(QueryErrorResponse response)
+            : base(response) { }
     }
 
     /// <summary>
@@ -99,7 +105,8 @@ namespace FaunaDB.Errors
     /// </summary>
     public class StreamingException : FaunaException
     {
-        internal StreamingException(QueryErrorResponse response) : base(response) {}
+        internal StreamingException(QueryErrorResponse response)
+            : base(response) { }
     }
 
     /// <summary>
@@ -107,8 +114,10 @@ namespace FaunaDB.Errors
     /// </summary>
     public class UnknowException : FaunaException
     {
-        internal UnknowException(QueryErrorResponse response) : base(response) {}
-        internal UnknowException(string message) : base(message) { }
+        internal UnknowException(QueryErrorResponse response)
+            : base(response) { }
+
+        internal UnknowException(string message)
+            : base(message) { }
     }
 }
-

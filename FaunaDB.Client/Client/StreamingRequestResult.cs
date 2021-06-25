@@ -35,7 +35,7 @@ namespace FaunaDB.Client
         /// Http status code result of the request.
         /// </summary>
         public int StatusCode { get; }
-        
+
         /// <summary>
         /// Http content message in case request results in an error response.
         /// </summary>

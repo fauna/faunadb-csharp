@@ -8,7 +8,7 @@ namespace Test
     public class EnvironmentHeaderTest
     {
         private IEnvironmentEditor environmentEditor;
-        
+
         [OneTimeSetUp]
         public void SetUp()
         {
@@ -20,7 +20,7 @@ namespace Test
         {
             RuntimeEnvironmentHeader.Destroy();
         }
-        
+
         [Test]
         public void TestRuntimeEnvironmentHeaderFormat()
         {
@@ -43,7 +43,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("Vercel"));
         }
-        
+
         [Test]
         public void TestHerokuEnvironment()
         {
@@ -51,7 +51,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("Heroku"));
         }
-        
+
         [Test]
         public void TestUnknownEnvironmentWithPathVariable()
         {
@@ -59,7 +59,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("Unknown"));
         }
-        
+
         [Test]
         public void TestAwsLambdaEnvironment()
         {
@@ -67,7 +67,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("AWS Lambda"));
         }
-        
+
         [Test]
         public void TestGoogleFunctionsEnvironment()
         {
@@ -76,7 +76,7 @@ namespace Test
             Assert.That(actual, Does.Contain("GCP Cloud Functions"));
             RuntimeEnvironmentHeader.Destroy();
         }
-        
+
         [Test]
         public void TestUnknownEnvironmentWithUnderscoreVariable()
         {
@@ -84,7 +84,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("Unknown"));
         }
-        
+
         [Test]
         public void TestGoogleCloudEnvironment()
         {
@@ -92,7 +92,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("GCP Compute Instances"));
         }
-        
+
         [Test]
         public void TestAzureEnvironment()
         {
@@ -101,7 +101,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("Azure Compute"));
         }
-        
+
         [Test]
         public void TestUnknownEnvironmentWithOryx()
         {
@@ -110,7 +110,7 @@ namespace Test
             var actual = RuntimeEnvironmentHeader.Construct(environmentEditor);
             Assert.That(actual, Does.Contain("Unknown"));
         }
-        
+
         [Test]
         public void TestUnknownEnvironmentWithOryxWithoutWebsiteInstanceId()
         {
@@ -133,7 +133,7 @@ namespace Test
         }
     }
 
-    class EnvironmentEditorMock : IEnvironmentEditor
+    internal class EnvironmentEditorMock : IEnvironmentEditor
     {
         private Dictionary<string, string> mockEnvironment;
 
@@ -141,10 +141,14 @@ namespace Test
         {
             mockEnvironment = new Dictionary<string, string>();
         }
-        
+
         public string GetVariable(string variableName)
         {
-            if (!mockEnvironment.ContainsKey(variableName)) return null;
+            if (!mockEnvironment.ContainsKey(variableName))
+            {
+                return null;
+            }
+
             return mockEnvironment[variableName];
         }
 

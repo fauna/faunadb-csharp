@@ -1,16 +1,17 @@
-﻿using FaunaDB.Collections;
+﻿using System;
+using System.Collections.Generic;
+using FaunaDB.Collections;
 using FaunaDB.Types;
 using NUnit.Framework;
-using System;
-
 using static FaunaDB.Types.Option;
-using System.Collections.Generic;
 
 namespace Test
 {
-    [TestFixture] public class FieldTest
+    [TestFixture]
+    public class FieldTest
     {
-        [Test] public void TestObjectKey()
+        [Test]
+        public void TestObjectKey()
         {
             var obj = ObjectV.With("foo", "bar");
 
@@ -25,7 +26,8 @@ namespace Test
                 "Cannot find path \"nonexistent\". Object key \"nonexistent\" not found");
         }
 
-        [Test] public void TestArrayIndex()
+        [Test]
+        public void TestArrayIndex()
         {
             var array = ArrayV.Of("a string", 10);
 
@@ -43,7 +45,8 @@ namespace Test
                 "Cannot find path \"1234\". Array index \"1234\" not found");
         }
 
-        [Test] public void TestNestedObject()
+        [Test]
+        public void TestNestedObject()
         {
             var nested = ObjectV.With("foo", ObjectV.With("bar", "a string"));
 
@@ -55,7 +58,8 @@ namespace Test
                 "Cannot find path \"foo/nonexistent\". Object key \"nonexistent\" not found");
         }
 
-        [Test] public void TestNestedArray()
+        [Test]
+        public void TestNestedArray()
         {
             var nested = ArrayV.Of(10, ArrayV.Of(1234, ArrayV.Of(4321)));
 
@@ -73,10 +77,12 @@ namespace Test
                 "Cannot find path \"1/1/1\". Array index \"1\" not found");
         }
 
-        [Test] public void TestFieldConvertion()
+        [Test]
+        public void TestFieldConvertion()
         {
-            var setRef = new Dictionary<string, Value> {
-                {"@ref", "databases"}
+            var setRef = new Dictionary<string, Value>
+            {
+                {"@ref", "databases" },
             };
 
             var obj = ObjectV.With(
@@ -106,7 +112,8 @@ namespace Test
                 obj.Get(Field.At("setref").To<SetRefV>()));
         }
 
-        [Test] public void TestComplex()
+        [Test]
+        public void TestComplex()
         {
             var obj = ObjectV.With("foo", ArrayV.Of(1, 2, ObjectV.With("bar", "a string")));
 
@@ -114,7 +121,8 @@ namespace Test
                 obj.Get(Field.At("foo").At(Field.At(2)).At(Field.At("bar").To<string>())));
         }
 
-        [Test] public void TestCollect()
+        [Test]
+        public void TestCollect()
         {
             var array = ArrayV.Of("John", "Bill");
 
@@ -131,7 +139,8 @@ namespace Test
                 "Cannot convert ObjectV to ArrayV");
         }
 
-        [Test] public void TestCollectComplex()
+        [Test]
+        public void TestCollectComplex()
         {
             var array = ArrayV.Of(
                     ObjectV.With("name", ArrayV.Of("John")),

@@ -1,17 +1,16 @@
-using FaunaDB.Client;
-using FaunaDB.Errors;
-using FaunaDB.Types;
-using FaunaDB.Query;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using FaunaDB.Client;
+using FaunaDB.Errors;
+using FaunaDB.Query;
+using FaunaDB.Types;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
-
 using static FaunaDB.Query.Language;
-using static FaunaDB.Types.Option;
 using static FaunaDB.Types.Encoder;
+using static FaunaDB.Types.Option;
 
 namespace Test
 {
@@ -43,12 +42,12 @@ namespace Test
         private static RefV thorSpell2;
 
         [OneTimeSetUp]
-        new public void SetUp()
+        public new void SetUp()
         {
             SetUpAsync().Wait();
         }
 
-        async Task SetUpAsync()
+        private async Task SetUpAsync()
         {
             await client.Query(CreateCollection(Obj("name", "spells")));
             await client.Query(CreateCollection(Obj("name", "characters")));
@@ -225,13 +224,15 @@ namespace Test
             Assert.AreEqual(None(), array.At(4).To<Value>().ToOption);
         }
 
-        [Test] public async Task TestGetAnInstance()
+        [Test]
+        public async Task TestGetAnInstance()
         {
             Value document = await client.Query(Get(magicMissile));
             Assert.AreEqual("Magic Missile", document.Get(NAME_FIELD));
         }
 
-        [Test] public async Task TestIssueABatchedQueryWithVarargs()
+        [Test]
+        public async Task TestIssueABatchedQueryWithVarargs()
         {
             var result0 = await client.Query(
                 Get(thorSpell1),
@@ -246,25 +247,29 @@ namespace Test
             Assert.That(result1, Is.EquivalentTo(new List<Value> { 3, -1 }));
         }
 
-        [Test] public async Task TestIssueABatchedQueryWithEnumerable()
+        [Test]
+        public async Task TestIssueABatchedQueryWithEnumerable()
         {
-            var result0 = await client.Query(new List<Expr> {
+            var result0 = await client.Query(new List<Expr>
+            {
                 Get(thorSpell1),
-                Get(thorSpell2)
+                Get(thorSpell2),
             });
 
             Assert.That(ArrayV.Of(result0).Collect(REF_FIELD),
                         Is.EquivalentTo(new List<RefV> { thorSpell1, thorSpell2 }));
 
-            var result1 = await client.Query(new List<Expr> {
+            var result1 = await client.Query(new List<Expr>
+            {
                 Add(1, 2),
-                Subtract(1, 2)
+                Subtract(1, 2),
             });
 
             Assert.That(result1, Is.EquivalentTo(new List<Value> { 3, -1 }));
         }
 
-        [Test] public async Task TestUpdateInstanceData()
+        [Test]
+        public async Task TestUpdateInstanceData()
         {
             Value createdInstance = await client.Query(
                 Create(await RandomCollection(),
@@ -287,7 +292,8 @@ namespace Test
             Assert.AreEqual(None(), updatedInstance.GetOption(COST_FIELD));
         }
 
-        [Test] public async Task TestReplaceAnInstancesData()
+        [Test]
+        public async Task TestReplaceAnInstancesData()
         {
             Value createdInstance = await client.Query(
                 Create(await RandomCollection(),
@@ -313,7 +319,8 @@ namespace Test
                         Is.EquivalentTo(new List<string> { "fire", "earth" }));
         }
 
-        [Test] public async Task TestDeleteAnInstance()
+        [Test]
+        public async Task TestDeleteAnInstance()
         {
             Value createdInstance = await client.Query(
                 Create(await RandomCollection(),
@@ -325,7 +332,7 @@ namespace Test
             Value exists = await client.Query(Exists(@ref));
             Assert.AreEqual(false, exists.To<bool>().Value);
 
-            var ex = Assert.ThrowsAsync<NotFound>(async() => await client.Query(Get(@ref)));
+            var ex = Assert.ThrowsAsync<NotFound>(async () => await client.Query(Get(@ref)));
 
             AssertErrors(ex, code: "instance not found", description: "Document not found.");
 
@@ -334,7 +341,8 @@ namespace Test
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
 
-        [Test] public async Task TestInsertAndRemoveEvents()
+        [Test]
+        public async Task TestInsertAndRemoveEvents()
         {
             Value createdInstance = await client.Query(
                 Create(await RandomCollection(),
@@ -353,10 +361,10 @@ namespace Test
             Assert.AreEqual(Null(), removedEvent);
         }
 
-        class Event
+        private class Event
         {
-            string action;
-            RefV document;
+            private string action;
+            private RefV document;
 
             [FaunaConstructor]
             public Event(string action, RefV document)
@@ -366,6 +374,7 @@ namespace Test
             }
 
             public override string ToString() => $"Event({action}, {document})";
+
             public override int GetHashCode() => 0;
 
             public override bool Equals(object obj)
@@ -375,7 +384,8 @@ namespace Test
             }
         }
 
-        [Test] public async Task TestEvents()
+        [Test]
+        public async Task TestEvents()
         {
             var createdInstance = (await client.Query(
                 Create(await RandomCollection(), Obj("data", Obj("x", 1)))
@@ -390,14 +400,16 @@ namespace Test
 
             Assert.AreEqual(3, events.Count);
 
-            Assert.That(events, Is.EquivalentTo(new List<Event> {
+            Assert.That(events, Is.EquivalentTo(new List<Event>
+            {
                 new Event("create", createdInstance),
                 new Event("update", createdInstance),
-                new Event("delete", createdInstance)
+                new Event("delete", createdInstance),
             }));
         }
 
-        [Test] public async Task TestSingleton()
+        [Test]
+        public async Task TestSingleton()
         {
             var createdInstance = (await client.Query(
                 Create(await RandomCollection(), Obj("data", Obj("x", 1)))
@@ -412,13 +424,15 @@ namespace Test
 
             Assert.AreEqual(2, events.Count);
 
-            Assert.That(events, Is.EquivalentTo(new List<Event> {
+            Assert.That(events, Is.EquivalentTo(new List<Event>
+            {
                 new Event("add", createdInstance),
                 new Event("remove", createdInstance),
             }));
         }
 
-        [Test] public async Task TestHandleConstraintViolations()
+        [Test]
+        public async Task TestHandleConstraintViolations()
         {
             RefV classRef = await RandomCollection();
 
@@ -448,7 +462,8 @@ namespace Test
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { "create" }));
         }
 
-        [Test] public async Task TestFindASingleInstanceFromIndex()
+        [Test]
+        public async Task TestFindASingleInstanceFromIndex()
         {
             Value singleMatch = await client.Query(
                 Paginate(Match(Index("spells_by_element"), "fire")));
@@ -456,7 +471,8 @@ namespace Test
             Assert.That(singleMatch.Get(REF_LIST), Is.EquivalentTo(new List<RefV> { fireball }));
         }
 
-        [Test] public async Task TestListAllItensOnAClassIndex()
+        [Test]
+        public async Task TestListAllItensOnAClassIndex()
         {
             Value allInstances = await client.Query(
                 Paginate(Match(Index("all_spells"))));
@@ -465,7 +481,8 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { magicMissile, fireball, faerieFire, summon, thorSpell1, thorSpell2 }));
         }
 
-        [Test] public async Task TestPaginateOverAnIndex()
+        [Test]
+        public async Task TestPaginateOverAnIndex()
         {
             Value page1 = await client.Query(
                 Paginate(Match(Index("all_spells")), size: 3));
@@ -480,16 +497,17 @@ namespace Test
             Assert.AreEqual(3, page2.Get(DATA).To<Value[]>().Value.Length);
             Assert.AreNotEqual(page1.At("data"), page2.Get(DATA));
             Assert.NotNull(page2.At("before"));
-            Assert.AreEqual(None(), page2.At("after").To<Value>().ToOption);           
+            Assert.AreEqual(None(), page2.At("after").To<Value>().ToOption);
         }
 
-        [Test] public async Task TestPaginateWithCursor()
+        [Test]
+        public async Task TestPaginateWithCursor()
         {
             string idxName = RandomStartingWith("foo_idx_");
             string collName = RandomStartingWith("foo_coll_");
 
             await NewCollectionWithValues(collName, idxName, indexWithAllValues: true);
-            
+
             Expr matcher = Match(Index(idxName));
 
             Func<Value, Value[]> getData = value => value.Get(DATA).To<Value[]>().Value;
@@ -506,7 +524,7 @@ namespace Test
             Assert.AreEqual(
                 ArrayV.Of(8, 9, 10),
                 await paginateCursor(After(firstPage.At("after"))));
-            
+
             Assert.AreEqual(
                 ArrayV.Of(1, 2),
                 await paginateCursor(Before(3)));
@@ -520,7 +538,6 @@ namespace Test
                 await paginateCursor(RawCursor(Obj("after", 8))));
 
             // complex RawCursor
-
             Expr matcherValues = Match(Index($"{idxName}_values"));
             Value afterValue = (await client.Query(Paginate(matcherValues, size: 7))).At("after");
             Value[] afterValueArr = afterValue.To<Value[]>().Value;
@@ -536,7 +553,8 @@ namespace Test
             Assert.AreEqual(lastPageValues1, lastPageValues2);
         }
 
-        [Test] public async Task TestDealWithSetRef()
+        [Test]
+        public async Task TestDealWithSetRef()
         {
             Value res = await client.Query(
                 Match(Index("spells_by_element"), "arcane"));
@@ -546,7 +564,8 @@ namespace Test
             Assert.AreEqual(new RefV(id: "spells_by_element", collection: Native.INDEXES), set["match"].To<RefV>().Value);
         }
 
-        [Test] public async Task TestEvalAtExpression()
+        [Test]
+        public async Task TestEvalAtExpression()
         {
             var summonData = await client.Query(Get(summon));
 
@@ -559,7 +578,8 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { magicMissile, fireball, faerieFire }));
         }
 
-        [Test] public async Task TestEvalLetExpression()
+        [Test]
+        public async Task TestEvalLetExpression()
         {
             Value res = await client.Query(
                 Let("x", 1, "y", 2).In(Arr(Var("y"), Var("x")))
@@ -568,7 +588,8 @@ namespace Test
             Assert.That(res.Collect(Field.To<long>()), Is.EquivalentTo(new List<long> { 2L, 1L }));
         }
 
-        [Test] public async Task TestEvalIfExpression()
+        [Test]
+        public async Task TestEvalIfExpression()
         {
             Value res = await client.Query(
                 If(true, "was true", "was false")
@@ -577,7 +598,8 @@ namespace Test
             Assert.AreEqual("was true", res.To<string>().Value);
         }
 
-        [Test] public async Task TestEvalDoExpression()
+        [Test]
+        public async Task TestEvalDoExpression()
         {
             RefV @ref = await RandomCollection();
 
@@ -589,7 +611,8 @@ namespace Test
             Assert.AreEqual(@ref, res.Get(REF_FIELD));
         }
 
-        [Test] public async Task TestEchoAnObjectBack()
+        [Test]
+        public async Task TestEchoAnObjectBack()
         {
             Value res = await client.Query(Obj("name", "Hen Wen", "age", 123));
             Assert.AreEqual("Hen Wen", res.At("name").To<string>().Value);
@@ -600,7 +623,8 @@ namespace Test
             Assert.AreEqual(123L, res.At("age").To<long>().Value);
         }
 
-        [Test] public async Task TestMapOverCollections()
+        [Test]
+        public async Task TestMapOverCollections()
         {
             Value res = await client.Query(
                 Map(Arr(1, 2, 3),
@@ -631,7 +655,8 @@ namespace Test
                         Is.EquivalentTo(new List<long> { 2L, 3L, 4L }));
         }
 
-        [Test] public async Task TestExecuteForeachExpression()
+        [Test]
+        public async Task TestExecuteForeachExpression()
         {
             var clazz = await RandomCollection();
 
@@ -664,7 +689,8 @@ namespace Test
                         Is.EquivalentTo(new List<string> { "Fireball Level 1", "Fireball Level 2" }));
         }
 
-        [Test] public async Task TestFilterACollection()
+        [Test]
+        public async Task TestFilterACollection()
         {
             Value filtered = await client.Query(
                 Filter(Arr(1, 2, 3),
@@ -693,24 +719,26 @@ namespace Test
 
             Assert.That(filtered.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 2L }));
-
         }
 
-        [Test] public async Task TestTakeElementsFromCollection()
+        [Test]
+        public async Task TestTakeElementsFromCollection()
         {
             Value taken = await client.Query(Take(2, Arr(1, 2, 3)));
             Assert.That(taken.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 1L, 2L }));
         }
 
-        [Test] public async Task TestDropElementsFromCollection()
+        [Test]
+        public async Task TestDropElementsFromCollection()
         {
             Value dropped = await client.Query(Drop(2, Arr(1, 2, 3)));
             Assert.That(dropped.Collect(Field.To<long>()),
                         Is.EquivalentTo(new List<long> { 3L }));
         }
 
-        [Test] public async Task TestPrependElementsInACollection()
+        [Test]
+        public async Task TestPrependElementsInACollection()
         {
             Value prepended = await client.Query(
                 Prepend(Arr(1, 2), Arr(3, 4))
@@ -720,7 +748,8 @@ namespace Test
                         Is.EquivalentTo(new List<long> { 1L, 2L, 3L, 4L }));
         }
 
-        [Test] public async Task TestAppendElementsInACollection()
+        [Test]
+        public async Task TestAppendElementsInACollection()
         {
             Value appended = await client.Query(
                 Append(Arr(3, 4), Arr(1, 2))
@@ -730,7 +759,8 @@ namespace Test
                         Is.EquivalentTo(new List<long> { 1L, 2L, 3L, 4L }));
         }
 
-        [Test] public async Task TestIsEmpty()
+        [Test]
+        public async Task TestIsEmpty()
         {
             Assert.True((await client.Query(IsEmpty(Arr()))).To<bool>().Value);
             Assert.False((await client.Query(IsEmpty(Arr(1, 2, 3)))).To<bool>().Value);
@@ -739,7 +769,8 @@ namespace Test
             Assert.False((await client.Query(IsEmpty(Paginate(Match(Index("spells_by_element"), "fire"))))).To<bool>().Value);
         }
 
-        [Test] public async Task TestIsNonEmpty()
+        [Test]
+        public async Task TestIsNonEmpty()
         {
             Assert.False((await client.Query(IsNonEmpty(Arr()))).To<bool>().Value);
             Assert.True((await client.Query(IsNonEmpty(Arr(1, 2, 3)))).To<bool>().Value);
@@ -748,7 +779,8 @@ namespace Test
             Assert.True((await client.Query(IsNonEmpty(Paginate(Match(Index("spells_by_element"), "fire"))))).To<bool>().Value);
         }
 
-        [Test] public async Task TestReadEventsFromIndex()
+        [Test]
+        public async Task TestReadEventsFromIndex()
         {
             Value events = await client.Query(
                 Paginate(Match(Index("spells_by_element"), "arcane"), events: true)
@@ -758,7 +790,8 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { magicMissile, faerieFire }));
         }
 
-        [Test] public async Task TestPaginateUnion()
+        [Test]
+        public async Task TestPaginateUnion()
         {
             Value union = await client.Query(
                 Paginate(
@@ -772,7 +805,8 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { magicMissile, fireball, faerieFire }));
         }
 
-        [Test] public async Task TestPaginateIntersection()
+        [Test]
+        public async Task TestPaginateIntersection()
         {
             Value intersection = await client.Query(
                 Paginate(
@@ -787,7 +821,8 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { faerieFire }));
         }
 
-        [Test] public async Task TestPaginateDifference()
+        [Test]
+        public async Task TestPaginateDifference()
         {
             Value difference = await client.Query(
                 Paginate(
@@ -802,7 +837,8 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { summon }));
         }
 
-        [Test] public async Task TestPaginateDistinctSets()
+        [Test]
+        public async Task TestPaginateDistinctSets()
         {
             Value distinct = await client.Query(
                 Paginate(Distinct(Match(Index("elements_of_spells"))))
@@ -812,7 +848,8 @@ namespace Test
                         Is.EquivalentTo(new List<string> { "arcane", "fire", "nature" }));
         }
 
-        [Test] public async Task TestPaginateJoin()
+        [Test]
+        public async Task TestPaginateJoin()
         {
             Value join = await client.Query(
                 Paginate(
@@ -827,13 +864,15 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { thorSpell1, thorSpell2 }));
         }
 
-        [Test] public async Task TestEvalEqualsExpression()
+        [Test]
+        public async Task TestEvalEqualsExpression()
         {
             Value equals = await client.Query(EqualsFn("fire", "fire"));
             Assert.AreEqual(true, equals.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalConcatExpression()
+        [Test]
+        public async Task TestEvalConcatExpression()
         {
             Value simpleConcat = await client.Query(Concat(Arr("Magic", "Missile")));
             Assert.AreEqual("MagicMissile", simpleConcat.To<string>().Value);
@@ -845,7 +884,8 @@ namespace Test
             Assert.AreEqual("Magic Missile", concatWithSeparator.To<string>().Value);
         }
 
-        [Test] public async Task TestEvalCasefoldExpression()
+        [Test]
+        public async Task TestEvalCasefoldExpression()
         {
             Assert.AreEqual("hen wen", (await client.Query(Casefold("Hen Wen"))).To<string>().Value);
 
@@ -858,7 +898,8 @@ namespace Test
             Assert.AreEqual("\u00E5", (await client.Query(Casefold("\u212B", Normalizer.NFKCCaseFold))).To<string>().Value);
         }
 
-        [Test] public async Task TestEvalNGramExpression()
+        [Test]
+        public async Task TestEvalNGramExpression()
         {
             Assert.AreEqual(
                 new string[] { "w", "wh", "h", "ha", "a", "at", "t" },
@@ -881,7 +922,8 @@ namespace Test
             );
         }
 
-        [Test] public async Task TestEvalContainsExpressions()
+        [Test]
+        public async Task TestEvalContainsExpressions()
         {
             var foodsObj = Obj("foods",
                 Arr(
@@ -901,17 +943,15 @@ namespace Test
                 await client.Query(ContainsPath(Path("favorites", "foods"), favoritesObj)));
 
             // Field
-
             Assert.AreEqual(
                 BooleanV.True,
                 await client.Query(ContainsField(StringV.Of("favorites"), favoritesObj)));
-                        
+
             Assert.AreEqual(
                 BooleanV.False,
                 await client.Query(ContainsField(StringV.Of("foods"), favoritesObj)));
 
             // Path
-
             Assert.AreEqual(
                 BooleanV.True,
                 await client.Query(ContainsPath(Path("favorites"), favoritesObj)));
@@ -951,7 +991,6 @@ namespace Test
                     Obj("wrapped", favoritesObj))));
 
             // Values
-
             Assert.AreEqual(
                 BooleanV.False,
                 await client.Query(ContainsValue("foo", Obj("foo", "bar"))));
@@ -965,7 +1004,6 @@ namespace Test
                 await client.Query(ContainsValue("bar", Arr("foo", "bar"))));
 
             // refs and sets
-
             RefV aCollection = await RandomCollection();
 
             var indexName = RandomStartingWith("foo_index_");
@@ -994,7 +1032,8 @@ namespace Test
                     Match(Index(indexName), "apple"))));
         }
 
-        [Test] public async Task TestEvalSelectExpression()
+        [Test]
+        public async Task TestEvalSelectExpression()
         {
             Value selected = await client.Query(
                 Select(
@@ -1007,7 +1046,8 @@ namespace Test
             Assert.AreEqual("munchings", selected.To<string>().Value);
         }
 
-        [Test] public async Task TestEvalSelectAllExpression()
+        [Test]
+        public async Task TestEvalSelectAllExpression()
         {
             var bar = await client.Query(
                 SelectAll("foo", Arr(Obj("foo", "bar"), Obj("foo", "baz")))
@@ -1022,58 +1062,67 @@ namespace Test
             Assert.AreEqual(new int[] { 0, 2 }, numbers.To<int[]>().Value);
         }
 
-        [Test] public async Task TestEvalLTExpression()
+        [Test]
+        public async Task TestEvalLTExpression()
         {
             Value res = await client.Query(LT(Arr(1, 2, 3)));
             Assert.AreEqual(true, res.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalLTEExpression()
+        [Test]
+        public async Task TestEvalLTEExpression()
         {
             Value res = await client.Query(LTE(Arr(1, 2, 2)));
             Assert.AreEqual(true, res.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalGTxpression()
+        [Test]
+        public async Task TestEvalGTxpression()
         {
             Value res = await client.Query(GT(Arr(3, 2, 1)));
             Assert.AreEqual(true, res.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalGTExpression()
+        [Test]
+        public async Task TestEvalGTExpression()
         {
             Value res = await client.Query(GTE(Arr(3, 2, 2)));
             Assert.AreEqual(true, res.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalAddExpression()
+        [Test]
+        public async Task TestEvalAddExpression()
         {
             Value res = await client.Query(Add(100, 10));
             Assert.AreEqual(110L, res.To<long>().Value);
         }
 
-        [Test] public async Task TestEvalMultiplyExpression()
+        [Test]
+        public async Task TestEvalMultiplyExpression()
         {
             Value res = await client.Query(Multiply(100, 10));
             Assert.AreEqual(1000L, res.To<long>().Value);
         }
 
-        [Test] public async Task TestEvalSubtractExpression()
+        [Test]
+        public async Task TestEvalSubtractExpression()
         {
             Value res = await client.Query(Subtract(100, 10));
             Assert.AreEqual(90L, res.To<long>().Value);
         }
 
-        [Test] public async Task TestEvalDivideExpression()
+        [Test]
+        public async Task TestEvalDivideExpression()
         {
             Value res = await client.Query(Divide(100, 10));
             Assert.AreEqual(10L, res.To<long>().Value);
         }
-        
-        [Test] public void TestEvalDivideExpressionWrongArgument()
+
+        [Test]
+        public void TestEvalDivideExpressionWrongArgument()
         {
             var ex = Assert.ThrowsAsync<BadRequest>(
-                    async() => await client.Query(Divide(Null(), 10))
+                    async () => await client.Query(Divide(Null(), 10))
             );
 
             AssertErrors(ex, code: "invalid argument", description: "Number expected, Null provided.");
@@ -1081,71 +1130,81 @@ namespace Test
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { "divide", "0" }));
         }
 
-        [Test] public async Task TestEvalModuloExpression()
+        [Test]
+        public async Task TestEvalModuloExpression()
         {
             Value res = await client.Query(Modulo(101, 10));
             Assert.AreEqual(1L, res.To<long>().Value);
         }
 
-        [Test] public async Task TestEvalAndExpression()
+        [Test]
+        public async Task TestEvalAndExpression()
         {
             Value res = await client.Query(And(true, false));
             Assert.AreEqual(false, res.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalOrExpression()
+        [Test]
+        public async Task TestEvalOrExpression()
         {
             Value res = await client.Query(Or(true, false));
             Assert.AreEqual(true, res.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalNotExpression()
+        [Test]
+        public async Task TestEvalNotExpression()
         {
             Value notR = await client.Query(Not(false));
             Assert.AreEqual(true, notR.To<bool>().Value);
         }
 
-        [Test] public async Task TestEvalToStringExpression()
+        [Test]
+        public async Task TestEvalToStringExpression()
         {
             Value str = await client.Query(ToStringExpr(42));
             Assert.AreEqual("42", str.To<string>().Value);
         }
 
-        [Test] public async Task TestEvalToNumberExpression()
+        [Test]
+        public async Task TestEvalToNumberExpression()
         {
             Value num = await client.Query(ToNumber("42"));
             Assert.AreEqual(42, num.To<long>().Value);
         }
 
-        [Test] public async Task TestEvalToTimeExpression()
+        [Test]
+        public async Task TestEvalToTimeExpression()
         {
             Value time = await client.Query(ToTime("1970-01-01T00:00:00Z"));
             Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 0), time.To<DateTime>().Value);
         }
 
-        [Test] public async Task TestEvalToDateExpression()
+        [Test]
+        public async Task TestEvalToDateExpression()
         {
             Value date = await client.Query(ToDate("1970-01-01"));
             Assert.AreEqual(new DateTime(1970, 1, 1), date.To<DateTime>().Value);
         }
 
-        [Test] public async Task TestEvalTimeExpression()
+        [Test]
+        public async Task TestEvalTimeExpression()
         {
             Value res = await client.Query(Time("1970-01-01T00:00:00-04:00"));
             Assert.AreEqual(new DateTime(1970, 1, 1, 4, 0, 0), res.To<DateTime>().Value);
             Assert.AreEqual(new DateTimeOffset(1970, 1, 1, 4, 0, 0, 0, TimeSpan.Zero), res.To<DateTimeOffset>().Value);
         }
 
-        [Test] public async Task TestEvalEpochExpression()
+        [Test]
+        public async Task TestEvalEpochExpression()
         {
-            Func<long, long> TicksToMicro = ticks => ticks / 10;
-            Func<long, long> TicksToNano = ticks => ticks * 100;
+            Func<long, long> ticksToMicro = ticks => ticks / 10;
+            Func<long, long> ticksToNano = ticks => ticks * 100;
 
             IReadOnlyList<Value> res = await client.Query(
                 Epoch(30, "second"),
                 Epoch(500, TimeUnit.Millisecond),
-                Epoch(TicksToMicro(1000), TimeUnit.Microsecond),
-                Epoch(TicksToNano(2), TimeUnit.Nanosecond)
+                Epoch(ticksToMicro(1000), TimeUnit.Microsecond),
+                Epoch(ticksToNano(2), TimeUnit.Nanosecond)
             );
 
             Assert.AreEqual(new DateTime(1970, 1, 1, 0, 0, 30), res[0].To<DateTime>().Value);
@@ -1159,41 +1218,47 @@ namespace Test
             Assert.AreEqual(new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, TimeSpan.Zero).AddTicks(2), res[3].To<DateTimeOffset>().Value);
         }
 
-        [Test] public async Task TestEvalDateExpression()
+        [Test]
+        public async Task TestEvalDateExpression()
         {
             Value res = await client.Query(Date("1970-01-02"));
             Assert.AreEqual(new DateTime(1970, 1, 2), res.To<DateTime>().Value);
             Assert.AreEqual(new DateTimeOffset(1970, 1, 2, 0, 0, 0, TimeSpan.Zero), res.To<DateTimeOffset>().Value);
         }
 
-        [Test] public async Task TestGetNewId()
+        [Test]
+        public async Task TestGetNewId()
         {
             Value res = await client.Query(NewId());
             Assert.IsNotNull(res.To<string>().Value);
         }
 
-        [Test] public async Task TestCreateClass()
+        [Test]
+        public async Task TestCreateClass()
         {
             await client.Query(CreateCollection(Obj("name", "class_for_test")));
 
             Assert.AreEqual(BooleanV.True, await client.Query(Exists(Collection("class_for_test"))));
         }
 
-        [Test] public async Task TestCreateDatabase()
+        [Test]
+        public async Task TestCreateDatabase()
         {
             await adminClient.Query(CreateDatabase(Obj("name", "database_for_test")));
 
             Assert.AreEqual(BooleanV.True, await adminClient.Query(Exists(Database("database_for_test"))));
         }
 
-        [Test] public async Task TestCreateIndex()
+        [Test]
+        public async Task TestCreateIndex()
         {
             await client.Query(CreateIndex(Obj("name", "index_for_test", "active", true, "source", Collection("characters"))));
 
             Assert.AreEqual(BooleanV.True, await client.Query(Exists(Index("index_for_test"))));
         }
 
-        [Test] public async Task TestCreateKey()
+        [Test]
+        public async Task TestCreateKey()
         {
             await adminClient.Query(CreateDatabase(Obj("name", "database_for_key_test")));
 
@@ -1206,7 +1271,8 @@ namespace Test
             Assert.AreEqual(BooleanV.True, await newClient.Query(Exists(Collection("class_for_key_test"))));
         }
 
-        [Test] public async Task TestAuthenticateSession()
+        [Test]
+        public async Task TestAuthenticateSession()
         {
             Value createdInstance = await client.Query(
                 Create(await RandomCollection(),
@@ -1232,7 +1298,8 @@ namespace Test
             Assert.AreEqual(false, identified.To<bool>().Value);
         }
 
-        [Test] public async Task TestHasIdentity()
+        [Test]
+        public async Task TestHasIdentity()
         {
             Value createdInstance = await client.Query(
                 Create(await RandomCollection(),
@@ -1254,7 +1321,8 @@ namespace Test
             );
         }
 
-        [Test] public async Task TestIdentity()
+        [Test]
+        public async Task TestIdentity()
         {
             Value createdInstance = await client.Query(
                 Create(await RandomCollection(),
@@ -1276,7 +1344,8 @@ namespace Test
             );
         }
 
-        [Test] public async Task TestKeyFromSecret()
+        [Test]
+        public async Task TestKeyFromSecret()
         {
             var key = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "server")));
 
@@ -1286,29 +1355,30 @@ namespace Test
                             await rootClient.Query(KeyFromSecret(secret)));
         }
 
-        [Test] public async Task TestBytes()
+        [Test]
+        public async Task TestBytes()
         {
             BytesV expected = BytesV.Of(0x1, 0x2, 0x3);
 
-            //type
+            // type
             Assert.AreEqual(
                 expected,
                 await client.Query(expected)
             );
 
-            //implicit conversion
+            // implicit conversion
             Assert.AreEqual(
                 expected,
                 await client.Query(new byte[] { 0x1, 0x2, 0x3 })
             );
 
-            //function call
+            // function call
             Assert.AreEqual(
                 expected,
                 await client.Query(Bytes(0x1, 0x2, 0x3))
             );
 
-            //nested object
+            // nested object
             Value obj = await client.Query(Obj(
                 "x", new byte[] { 0x1, 0x2, 0x3 },
                 "y", Bytes(0x1, 0x2, 0x3),
@@ -1321,7 +1391,7 @@ namespace Test
             ), obj);
         }
 
-        class Spell
+        private class Spell
         {
             [FaunaField("name")]
             public string Name { get; }
@@ -1367,7 +1437,8 @@ namespace Test
             );
         }
 
-        [Test] public async Task TestPing()
+        [Test]
+        public async Task TestPing()
         {
             Assert.AreEqual("Scope node is OK", await client.Ping("node"));
         }
@@ -1411,7 +1482,8 @@ namespace Test
             );
         }
 
-        [Test] public async Task TestNestedClassRef()
+        [Test]
+        public async Task TestNestedClassRef()
         {
             var parentDb = RandomStartingWith("parent-database-");
             var childDb = RandomStartingWith("child-database-");
@@ -1446,7 +1518,8 @@ namespace Test
                         Is.EquivalentTo(new List<RefV> { nestedClassRef }));
         }
 
-        [Test] public async Task TestNestedKeyRef()
+        [Test]
+        public async Task TestNestedKeyRef()
         {
             var parentDb = RandomStartingWith("db-for-keys");
             var childDb = RandomStartingWith("db-test");
@@ -1474,9 +1547,10 @@ namespace Test
             RefV nestedKeyRef = new RefV(id: "keys", database: parentDbRef);
 
             Assert.That((await adminClient.Query(Paginate(Keys(Database(parentDb))))).Get(DATA),
-                        Is.EquivalentTo(new List<RefV> {
+                        Is.EquivalentTo(new List<RefV>
+                        {
                             new RefV(id: serverKeyRef.Id, collection: nestedKeyRef),
-                            new RefV(id: adminKeyRef.Id, collection: nestedKeyRef)
+                            new RefV(id: adminKeyRef.Id, collection: nestedKeyRef),
                         }));
         }
 
@@ -1531,10 +1605,9 @@ namespace Test
 
             Assert.AreEqual(DoubleV.Of(3.1415), await client.Query(Trunc(3.14159265359, 4)));
             Assert.AreEqual(DoubleV.Of(3.14), await client.Query(Trunc(3.14159265359)));
-
         }
 
-        static async Task<FaunaClient> CreateNewDatabase(FaunaClient client, string name)
+        private static async Task<FaunaClient> CreateNewDatabase(FaunaClient client, string name)
         {
             await client.Query(CreateDatabase(Obj("name", name)));
             var key = await client.Query(CreateKey(Obj("database", Database(name), "role", "admin")));
@@ -1552,9 +1625,9 @@ namespace Test
 
             Assert.That(((QueryV)result).Value, Is.EquivalentTo(new Dictionary<string, Expr>
             {
-                {"lambda", Arr("x", "y")},
-                {"expr", Concat(Arr(Var("x"), "/", Var("y")))},
-                { "api_version", "4" }
+                {"lambda", Arr("x", "y") },
+                {"expr", Concat(Arr(Var("x"), "/", Var("y"))) },
+                { "api_version", "4" },
             }));
         }
 
@@ -1563,8 +1636,8 @@ namespace Test
         {
             var query = new QueryV(new Dictionary<string, Expr>
             {
-                {"lambda", Arr("x")},
-                {"expr", Add(Var("x"), 1)}
+                {"lambda", Arr("x") },
+                {"expr", Add(Var("x"), 1) },
             });
 
             var result = await client.Query(query);
@@ -1573,9 +1646,9 @@ namespace Test
 
             Assert.That(((QueryV)result).Value, Is.EquivalentTo(new Dictionary<string, Expr>
             {
-                {"lambda", Arr("x")},
-                {"expr", Add(Var("x"), 1)},
-                { "api_version", "2.12" }
+                {"lambda", Arr("x") },
+                {"expr", Add(Var("x"), 1) },
+                { "api_version", "2.12" },
             }));
         }
 
@@ -1627,7 +1700,7 @@ namespace Test
                     Merge(Obj("x", 10, "y", 20), Obj("z", 30))
                 )
             );
-    
+
             // replace field
             Assert.AreEqual(
                 ObjectV.With("x", 10, "y", 20, "z", 30),
@@ -1635,13 +1708,13 @@ namespace Test
                     Merge(Obj("x", 10, "y", 20, "z", -1), Obj("z", 30))
                 )
             );
-    
+
             // empty obj
             Assert.AreEqual(
                 ObjectV.With("foo", 4.2),
                 await client.Query(Merge(Obj(), Obj("foo", 4.2)))
             );
-    
+
             // remove field
             Assert.AreEqual(
                 ObjectV.With("x", 10, "y", 20),
@@ -1649,7 +1722,7 @@ namespace Test
                     Merge(Obj("x", 10, "y", 20, "z", 1), Obj("z", Null()))
                 )
             );
-    
+
             // with expr lambda, replace with the 'left' value
             Assert.AreEqual(
                 ObjectV.With("x", 10, "y", 20, "z", -1),
@@ -1661,7 +1734,7 @@ namespace Test
                     )
                 )
             );
-    
+
             // with native lambda, replace with the 'right' value
             Assert.AreEqual(
                 ObjectV.With("x", 10, "y", 20, "z", 30),
@@ -1673,7 +1746,6 @@ namespace Test
                     )
                 )
             );
-    
         }
 
         [Test]
@@ -1739,7 +1811,6 @@ namespace Test
         public async Task TestReverseFunction()
         {
             // array
-
             Assert.AreEqual(
                 new int[] { 3, 2, 1, 0 },
                 (await client.Query(Reverse(Arr(0, 1, 2, 3)))).To<int[]>().Value);
@@ -1753,7 +1824,6 @@ namespace Test
                 await client.Query(Reverse(Arr())));
 
             // set/page
-
             var colName = RandomStartingWith("foo_coll");
             var idxName = RandomStartingWith("foo_idx");
             await NewCollectionWithValues(colName, idxName, size: 5);
@@ -1799,7 +1869,7 @@ namespace Test
             Assert.AreEqual(
                 ArrayV.Of("any_collection"),
                 await db1Client.Query(selectNames(Collections(Database("child")))));
-            
+
             await adminClient.Query(MoveDatabase(Database("child", Database(db1Name)), Database(db2Name)));
 
             Assert.AreEqual(
@@ -1857,7 +1927,7 @@ namespace Test
             // set
             Assert.AreEqual(
                 LongV.Of(5060),
-                 await adminClient.Query(
+                await adminClient.Query(
                     Reduce(
                         (acc, i) => Add(acc, Select(0, i)),
                         10,
@@ -1969,12 +2039,12 @@ namespace Test
         [Test]
         public async Task TestNowFunction()
         {
-            Assert.IsTrue((await client.Query(EqualsFn(Now(), Time("now")))).To<Boolean>().Value);
+            Assert.IsTrue((await client.Query(EqualsFn(Now(), Time("now")))).To<bool>().Value);
 
             Value t1 = await client.Query(Now());
             Value t2 = await client.Query(Now());
 
-            Assert.IsTrue((await client.Query(LTE(t1, t2, Now()))).To<Boolean>().Value);
+            Assert.IsTrue((await client.Query(LTE(t1, t2, Now()))).To<bool>().Value);
         }
 
         [Test]
@@ -2033,7 +2103,7 @@ namespace Test
 
             // array
             Assert.AreEqual(DoubleV.Of(1.6875), await client.Query(Mean(Arr(1, 2, 3.5, 0.25))));
-            
+
             Expr[] values = Enumerable.Range(1, 10).Select(i => LongV.Of(i)).ToArray();
             Assert.AreEqual(DoubleV.Of(5.5), await client.Query(Mean(Arr(values))));
 
@@ -2071,11 +2141,11 @@ namespace Test
             var collectionConfig = new Dictionary<string, Expr>()
             {
                 { "name",  RandomStartingWith("coll_") },
-                { "history_days",  2 }
+                { "history_days",  2 },
             };
 
             Value collValue = await client.Query(CreateCollection(collectionConfig));
-            
+
             Assert.AreEqual(2, collValue.Get(Field.At("history_days")).To<long>().Value);
 
             RefV collRef = GetRef(collValue);
@@ -2085,7 +2155,7 @@ namespace Test
                 { "name", RandomStartingWith("idx_") },
                 { "source", collRef },
                 { "active", true },
-                { "values", Arr(Obj("field", Arr("data", "foo"))) }
+                { "values", Arr(Obj("field", Arr("data", "foo"))) },
             };
 
             Value idxValue = await client.Query(CreateIndex((Expr)indexCfg));
@@ -2154,10 +2224,9 @@ namespace Test
             Assert.AreEqual("42000", customHttp.LastMessage.Headers.GetValues("X-Query-Timeout").First());
 
             // set timeout on HttpClient
-
             var customHttp2 = new HttpClientWrapper
             {
-                Timeout = TimeSpan.FromSeconds(33)
+                Timeout = TimeSpan.FromSeconds(33),
             };
 
             var faunaClient2 = new FaunaClient(
@@ -2180,7 +2249,7 @@ namespace Test
             var client = new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint, httpClient: myHttpClient);
 
             Assert.IsTrue(
-                (await client.Query(Count(Collections(Database(testDbName))))).To<long>().Value >= 1
+                (await client.Query(Count(Collections(Database(TestDbName))))).To<long>().Value >= 1
             );
 
             Assert.AreEqual("POST", myHttpClient.LastMessage.Method.ToString());
@@ -2201,8 +2270,7 @@ namespace Test
                     "name", roleName,
                     "privileges", Arr(Obj(
                         "resource", collection,
-                        "actions", Obj("read", true)
-                    ))
+                        "actions", Obj("read", true)))
             ))));
 
             Value accessProvider = await adminClient.Query(CreateAccessProvider(
@@ -2231,7 +2299,6 @@ namespace Test
             Assert.IsNotEmpty(accessProvider.Get(AUDIENCE_FIELD));
 
             // Retrieving
-
             var accessProviderFromDb =
                 await adminClient.Query(Get(AccessProvider(accessProviderName)));
 
@@ -2241,7 +2308,6 @@ namespace Test
                 accessProviderFromDb.Get(JWKS_URI_FIELD));
 
             // Retrieving: Denied
-
             var ex = Assert.ThrowsAsync<PermissionDenied>(
               async () => await client.Query(Get(AccessProvider(accessProviderName)))
             );
@@ -2251,7 +2317,6 @@ namespace Test
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
 
             // Paginating
-
             var otherName = RandomStartingWith("ap_");
 
             await adminClient.Query(CreateAccessProvider(
@@ -2296,7 +2361,7 @@ namespace Test
                 Create(await RandomCollection(),
                     Obj("credentials",
                         Obj("password", "sekret"))));
-            
+
             Value auth = await adminClient.Query(
                 Login(createdInstance.Get(REF_FIELD),
                     Obj("password", "sekret")
@@ -2304,7 +2369,7 @@ namespace Test
             );
 
             string secret = auth.Get(SECRET_FIELD);
-            
+
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.IsTrue((await sessionClient.Query(HasCurrentIdentity())).To<bool>().Value);
         }
@@ -2316,7 +2381,7 @@ namespace Test
                 Create(await RandomCollection(),
                     Obj("credentials",
                         Obj("password", "sekret"))));
-            
+
             Value auth = await adminClient.Query(
                 Login(createdInstance.At("ref"),
                     Obj("password", "sekret")
@@ -2325,7 +2390,7 @@ namespace Test
 
             string secret = auth.Get(SECRET_FIELD);
             Value tokenRef = auth.Get(REF_FIELD);
-            
+
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.AreEqual(tokenRef, await sessionClient.Query(CurrentToken()));
         }
@@ -2339,7 +2404,7 @@ namespace Test
 
             string secret = clientKey.Get(SECRET_FIELD);
             Value keyRef = clientKey.Get(REF_FIELD);
-            
+
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.AreEqual(keyRef, await sessionClient.Query(CurrentToken()));
         }
@@ -2351,7 +2416,7 @@ namespace Test
                 Create(await RandomCollection(),
                     Obj("credentials",
                         Obj("password", "sekret"))));
-            
+
             Value auth = await adminClient.Query(
                 Login(createdInstance.At("ref"),
                     Obj("password", "sekret")
@@ -2359,7 +2424,7 @@ namespace Test
             );
 
             string secret = auth.Get(SECRET_FIELD);
-            
+
             FaunaClient sessionClient = adminClient.NewSessionClient(secret);
             Assert.IsTrue((await sessionClient.Query(HasCurrentToken())).To<bool>().Value);
         }
@@ -2381,7 +2446,7 @@ namespace Test
             var key = (await adminClient.Query(CreateKey(Obj("database", db, "role", "admin")))).Get(REF_FIELD);
             var tok = await adminClient.Query(Login(doc, Obj("password", "sekret")));
             var role = (await adminClient.Query(CreateRole(Obj("name", RandomStartingWith(), "membership", Arr(), "privileges", Arr())))).Get(REF_FIELD);
-            
+
             var cli = adminClient.NewSessionClient(tok.Get(SECRET_FIELD));
             var cred = (await cli.Query(Get(Ref("credentials/self")))).Get(REF_FIELD);
             var token = tok.Get(REF_FIELD);
@@ -2395,7 +2460,7 @@ namespace Test
                 IsBoolean(true),
                 IsBoolean(false),
                 IsNull(Null()),
-                IsBytes(new byte[] {0x1, 0x2, 0x3, 0x4}),
+                IsBytes(new byte[] { 0x1, 0x2, 0x3, 0x4 }),
                 IsTimestamp(Now()),
                 IsTimestamp(Epoch(1, TimeUnit.Second)),
                 IsTimestamp(Time("1970-01-01T00:00:00Z")),
@@ -2428,7 +2493,7 @@ namespace Test
                 IsCredentials(cred),
                 IsCredentials(Get(cred)),
                 IsRole(role),
-                IsRole(Get(role))
+                IsRole(Get(role)),
             };
 
             var falseExprs = new List<Expr>
@@ -2469,7 +2534,7 @@ namespace Test
                 IsCredentials(token),
                 IsCredentials(Get(role)),
                 IsRole(coll),
-                IsRole(Get(index))
+                IsRole(Get(index)),
             };
 
             var trueResults = await adminClient.Query(trueExprs);
@@ -2501,22 +2566,20 @@ namespace Test
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "true", "value", true))),
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "true", "value", true))),
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "true", "value", true))),
-
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "false", "value", false))),
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "false", "value", false))),
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "false", "value", false))),
-
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", true))),
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", false))),
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", true))),
                 Create(coll.Get(REF_FIELD), Obj("data", Obj("foo", "mixed", "value", false)))
             ));
 
-            //all: array
+            // all: array
             Assert.IsTrue((await adminClient.Query(All(Arr(true, true, true)))).To<bool>().Value);
             Assert.IsFalse((await adminClient.Query(All(Arr(true, false, true)))).To<bool>().Value);
 
-            //all: page
+            // all: page
             Assert.IsTrue(
                 (await adminClient.Query(Select(Path("data").At(0), All(Paginate(Match(index.Get(REF_FIELD), "true")))))).To<bool>().Value
             );
@@ -2527,16 +2590,16 @@ namespace Test
                 (await adminClient.Query(Select(Path("data").At(0), All(Paginate(Match(index.Get(REF_FIELD), "mixed")))))).To<bool>().Value
             );
 
-            //all: set
+            // all: set
             Assert.IsTrue((await adminClient.Query(All(Match(index.Get(REF_FIELD), "true")))).To<bool>().Value);
             Assert.IsFalse((await adminClient.Query(All(Match(index.Get(REF_FIELD), "false")))).To<bool>().Value);
             Assert.IsFalse((await adminClient.Query(All(Match(index.Get(REF_FIELD), "mixed")))).To<bool>().Value);
 
-            //any: array
+            // any: array
             Assert.IsFalse((await adminClient.Query(Any(Arr(false, false, false)))).To<bool>().Value);
             Assert.IsTrue((await adminClient.Query(Any(Arr(true, false, true)))).To<bool>().Value);
 
-            //any: page
+            // any: page
             Assert.IsTrue(
               (await adminClient.Query(Select(Path("data").At(0), Any(Paginate(Match(index.Get(REF_FIELD), "true")))))).To<bool>().Value
             );
@@ -2547,7 +2610,7 @@ namespace Test
                 (await adminClient.Query(Select(Path("data").At(0), Any(Paginate(Match(index.Get(REF_FIELD), "mixed")))))).To<bool>().Value
             );
 
-            //any: set
+            // any: set
             Assert.IsTrue((await adminClient.Query(Any(Match(index.Get(REF_FIELD), "true")))).To<bool>().Value);
             Assert.IsFalse((await adminClient.Query(Any(Match(index.Get(REF_FIELD), "false")))).To<bool>().Value);
             Assert.IsTrue((await adminClient.Query(Any(Match(index.Get(REF_FIELD), "mixed")))).To<bool>().Value);
@@ -2557,18 +2620,19 @@ namespace Test
         public async Task TestToArray()
         {
             Assert.AreEqual(
-                new ArrayV(new List<Value>() {
-                    new ArrayV(new List<Value>() {new StringV("k0"), new LongV(10)}),
-                    new ArrayV(new List<Value>() {new StringV("k1"), new LongV(20)})
+                new ArrayV(new List<Value>()
+                {
+                    new ArrayV(new List<Value>() {new StringV("k0"), new LongV(10) }),
+                    new ArrayV(new List<Value>() {new StringV("k1"), new LongV(20) }),
                 }),
                 await adminClient.Query(ToArray(Obj("k0", 10, "k1", 20)))
             );
         }
-        
+
         [Test]
         public async Task TestToArrayAndToObject()
         {
-            var keys = new Dictionary<string, Value> {["k0"] = new LongV(10), ["k1"] = new LongV(20)};
+            var keys = new Dictionary<string, Value> {["k0"] = new LongV(10), ["k1"] = new LongV(20) };
             var obj = new ObjectV(keys);
 
             Assert.AreEqual(
@@ -2582,10 +2646,10 @@ namespace Test
         {
             var res1 = await adminClient.Query(ToDouble(10L));
             Assert.AreEqual(res1.To<double>().Value, 10.0);
-            
+
             var res2 = await adminClient.Query(ToDouble(3.14));
             Assert.AreEqual(res2.To<double>().Value, 3.14);
-            
+
             var res3 = await adminClient.Query(ToDouble("3.14"));
             Assert.AreEqual(res3.To<double>().Value, 3.14);
         }
@@ -2598,16 +2662,16 @@ namespace Test
             );
             Assert.AreEqual("invalid argument: Cannot cast Time to Double.", ex.Message);
         }
-        
+
         [Test]
         public async Task TestToInteger()
         {
             var res1 = await adminClient.Query(ToInteger(10L));
             Assert.AreEqual(res1.To<long>().Value, 10L);
-            
+
             var res2 = await adminClient.Query(ToInteger(10.0));
             Assert.AreEqual(res2.To<long>().Value, 10L);
-            
+
             var res3 = await adminClient.Query(ToInteger("10"));
             Assert.AreEqual(res3.To<long>().Value, 10L);
         }
@@ -2627,31 +2691,31 @@ namespace Test
             var res1 = await adminClient.Query(TimeAdd(Epoch(0, TimeUnit.Second), 1, TimeUnit.Hour));
             var res2 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 1, TimeUnit.Day));
             var res3 = await adminClient.Query(TimeAdd(Date("1970-01-01"), 2, "days"));
-            
+
             Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(1), res1.To<DateTime>().Value);
             Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(1), res2.To<DateTime>().Value);
             Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(2), res3.To<DateTime>().Value);
         }
-        
+
         [Test]
         public async Task TestTimeSubtract()
         {
             var res1 = await adminClient.Query(TimeSubtract(Epoch(0, TimeUnit.Second), 1, TimeUnit.Hour));
             var res2 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 1, TimeUnit.Day));
             var res3 = await adminClient.Query(TimeSubtract(Date("1970-01-01"), 2, "days"));
-            
+
             Assert.AreEqual(new DateTime(1970, 1, 1).AddHours(-1), res1.To<DateTime>().Value);
             Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(-1), res2.To<DateTime>().Value);
             Assert.AreEqual(new DateTime(1970, 1, 1).AddDays(-2), res3.To<DateTime>().Value);
         }
-        
+
         [Test]
         public async Task TestTimeDiff()
         {
             var res1 = await adminClient.Query(TimeDiff(Epoch(0, TimeUnit.Second), Epoch(1, TimeUnit.Second), TimeUnit.Second));
             var res2 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-02"), TimeUnit.Day));
             var res3 = await adminClient.Query(TimeDiff(Date("1970-01-01"), Date("1970-01-03"), "days"));
-            
+
             Assert.AreEqual(1L, res1.To<long>().Value);
             Assert.AreEqual(1L, res2.To<long>().Value);
             Assert.AreEqual(2L, res3.To<long>().Value);
@@ -2702,7 +2766,7 @@ namespace Test
                         Obj("field", "ts")
                 ))));
             }
-                
+
             return await client.Query(
                 Foreach(
                     Arr(values),
@@ -2718,7 +2782,7 @@ namespace Test
             Assert.AreEqual(description, ex.Errors[0].Description);
         }
 
-        static void AssertFailures(FaunaException ex, string code, string description, IResolveConstraint fields)
+        private static void AssertFailures(FaunaException ex, string code, string description, IResolveConstraint fields)
         {
             Assert.That(ex.Errors[0].Failures, Has.Count.EqualTo(1));
             Assert.AreEqual(code, ex.Errors[0].Failures[0].Code);
@@ -2727,15 +2791,14 @@ namespace Test
             Assert.That(ex.Errors[0].Failures[0].Field, fields);
         }
 
-        static void AssertEmptyFailures(FaunaException ex)
+        private static void AssertEmptyFailures(FaunaException ex)
         {
             Assert.That(ex.Errors[0].Failures, Is.Empty);
         }
 
-        static void AssertPosition(FaunaException ex, IResolveConstraint positions)
+        private static void AssertPosition(FaunaException ex, IResolveConstraint positions)
         {
             Assert.That(ex.Errors[0].Position, positions);
         }
     }
 }
-

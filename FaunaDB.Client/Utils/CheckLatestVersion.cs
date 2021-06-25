@@ -11,13 +11,19 @@ namespace FaunaDB.Client.Utils
 {
     public class CheckLatestVersion
     {
-        private const string packageName = "FaunaDB.Client";
+        private const string PackageName = "FaunaDB.Client";
+
         public static bool AlreadyChecked { get; set; } = false;
+
         public static async Task GetVersionAsync()
         {
-            if (AlreadyChecked) return;
+            if (AlreadyChecked)
+            {
+                return;
+            }
+
             var latestNuGetVesrionString = string.Empty;
-            var url = $"https://api.nuget.org/v3-flatcontainer/{packageName}/index.json";
+            var url = $"https://api.nuget.org/v3-flatcontainer/{PackageName}/index.json";
             try
             {
                 var httpClient = new HttpClient();
@@ -31,7 +37,7 @@ namespace FaunaDB.Client.Utils
                 latestNuGetVesrionString = latestNuGetVesrion.ToString();
                 AlreadyChecked = true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 AlreadyChecked = true;
                 var message = $"Enable to check new Fauna driver version. Exception: {ex.Message}";
@@ -39,11 +45,11 @@ namespace FaunaDB.Client.Utils
             }
 
             Assembly asm = typeof(CheckLatestVersion).GetTypeInfo().Assembly;
-            var currentVersion =  asm.GetName().Version;
+            var currentVersion = asm.GetName().Version;
             var currentVersionString = $"{currentVersion.Major}.{currentVersion.Minor}.{currentVersion.Build}";
             if (!latestNuGetVesrionString.Equals(currentVersionString))
             {
-                var message =  GetMessage(latestNuGetVesrionString, currentVersionString);
+                var message = GetMessage(latestNuGetVesrionString, currentVersionString);
                 Debug.WriteLine(message);
                 System.Console.WriteLine(message);
             }
@@ -52,7 +58,7 @@ namespace FaunaDB.Client.Utils
         private static string GetMessage(string latestNuGetVesrion, string currentVersion)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("".PadLeft(80, '='));
+            sb.Append(string.Empty.PadLeft(80, '='));
             sb.Append(System.Environment.NewLine);
             sb.Append(System.Environment.NewLine);
             sb.Append(System.Environment.NewLine);
@@ -63,7 +69,7 @@ namespace FaunaDB.Client.Utils
             sb.Append(System.Environment.NewLine);
             sb.Append(System.Environment.NewLine);
             sb.Append(System.Environment.NewLine);
-            sb.Append("".PadLeft(80, '='));
+            sb.Append(string.Empty.PadLeft(80, '='));
             return sb.ToString();
         }
     }

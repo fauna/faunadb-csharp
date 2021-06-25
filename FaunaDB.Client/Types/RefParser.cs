@@ -13,23 +13,25 @@
                     var db = value.GetOption(Field.At("database"));
 
                     return Mk(id, coll, db);
-                }
-            );
+                });
         }
 
-        static RefV Mk(IOption<string> id, IOption<Value> cls, IOption<Value> db)
+        private static RefV Mk(IOption<string> id, IOption<Value> cls, IOption<Value> db)
         {
             var idE = id.Value;
             var classE = Cast<RefV>(cls);
             var databaseE = Cast<RefV>(db);
 
             if (classE == null && databaseE == null)
+            {
                 return Native.FromName(idE);
+            }
 
             return new RefV(id: idE, collection: classE, database: databaseE);
         }
 
-        static T Cast<T>(IOption<Value> opt) where T : RefV =>
+        private static T Cast<T>(IOption<Value> opt)
+            where T : RefV =>
             opt.Match(arg => arg as T, () => default(T));
     }
 }

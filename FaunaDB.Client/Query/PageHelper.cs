@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using FaunaDB.Client;
-using FaunaDB.Types;
 using FaunaDB.Errors;
+using FaunaDB.Types;
 
 namespace FaunaDB.Query
 {
     public class PageHelper
     {
-        readonly FaunaClient client;
-        readonly Expr set;
-        readonly Expr ts;
-        Expr after;
-        Expr before;
-        readonly Expr size;
-        readonly Expr events;
-        readonly Expr sources;
-        readonly List<Func<Expr, Expr>> faunaFunctions;
+        private readonly FaunaClient client;
+        private readonly Expr set;
+        private readonly Expr ts;
+        private readonly Expr size;
+        private readonly Expr events;
+        private readonly Expr sources;
+        private readonly List<Func<Expr, Expr>> faunaFunctions;
+        private Expr after;
+        private Expr before;
 
         public PageHelper(FaunaClient client,
                           Expr set,
@@ -80,22 +80,27 @@ namespace FaunaDB.Query
                 .ContinueWith(AdjustCursors);
         }
 
-        Value AdjustCursors(Task<Value> page)
+        private Value AdjustCursors(Task<Value> page)
         {
             var result = page.Result;
 
             if (result.At("after") != NullV.Instance)
+            {
                 after = result.At("after");
+            }
 
             if (result.At("before") != NullV.Instance)
+            {
                 before = result.At("before");
+            }
 
             return result.At("data");
         }
 
-        Func<Task<Value>, Task<Value>> ConsumePage(Action<Value> lambda, bool reverse)
+        private Func<Task<Value>, Task<Value>> ConsumePage(Action<Value> lambda, bool reverse)
         {
-            return (task) => {
+            return (task) =>
+            {
                 var page = task.Result;
                 var data = page.At("data");
 
@@ -114,7 +119,7 @@ namespace FaunaDB.Query
             };
         }
 
-        Task<Value> RetrieveNextPage(Expr cursor, bool reverse)
+        private Task<Value> RetrieveNextPage(Expr cursor, bool reverse)
         {
             Expr _after = null;
             Expr _before = null;
@@ -122,18 +127,23 @@ namespace FaunaDB.Query
             if (cursor != null)
             {
                 if (reverse)
+                {
                     _before = cursor;
+                }
                 else
+                {
                     _after = cursor;
+                }
             }
 
             var q = Language.Paginate(set, ts, _after, _before, size, events, sources);
 
             foreach (var lambda in faunaFunctions)
+            {
                 q = lambda(q);
+            }
 
             return client.Query(q);
         }
     }
 }
-

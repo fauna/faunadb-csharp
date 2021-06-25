@@ -50,7 +50,7 @@
         /// </summary>
         public static Expr Identity() =>
             UnescapedObject.With("identity", Null());
-        
+
         /// <summary>
         /// Creates a new CurrentIdentity expression.
         /// <para>
@@ -68,7 +68,7 @@
         /// </summary>
         public static Expr HasIdentity() =>
             UnescapedObject.With("has_identity", Null());
-        
+
         /// <summary>
         /// Creates a new HasCurrentIdentity expression.
         /// <para>
@@ -77,7 +77,7 @@
         /// </summary>
         public static Expr HasCurrentIdentity() =>
             UnescapedObject.With("has_current_identity", Null());
-        
+
         /// <summary>
         /// Creates a new CurrentToken expression.
         /// <para>
@@ -86,7 +86,7 @@
         /// </summary>
         public static Expr CurrentToken() =>
             UnescapedObject.With("current_token", Null());
-        
+
         /// <summary>
         /// Creates a new HasCurrentToken expression.
         /// <para>
@@ -95,7 +95,7 @@
         /// </summary>
         public static Expr HasCurrentToken() =>
             UnescapedObject.With("has_current_token", Null());
-        
+
         /// <summary>
         /// Creates a new AccessProviders expression.
         /// <para>
@@ -113,7 +113,7 @@
         /// </summary>
         public static Expr AccessProvider(Expr name, Expr scope = null) =>
             UnescapedObject.With("access_provider", name, "scope", scope);
-        
+
         /// <summary>
         /// Creates a new CreateAccessProvider expression.
         /// <para>
