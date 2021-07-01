@@ -36,7 +36,7 @@ namespace FaunaDB.Types
         /// </param>
         internal ObjectV(Action<Action<string, Value>> builder)
         {
-            var values = new Dictionary<string, Value>();
+            var values = new Dictionary<string, Value>( StringComparer.OrdinalIgnoreCase );
             builder((k, v) => values.Add(k, v));
             Value = values;
         }
