@@ -19,7 +19,7 @@ namespace FaunaDB.Types
             return type.GetFields(flags).Concat(GetAllFields(type.GetTypeInfo().BaseType));
         }
 
-        public static string GetName(this ParameterInfo parameter)
+        public static string GetName(this ParameterInfo parameter, NamingStrategy namingStrategy)
         {
             var field = parameter.GetCustomAttribute<FaunaFieldAttribute>();
 
@@ -28,10 +28,10 @@ namespace FaunaDB.Types
                 return field.Name;
             }
 
-            return parameter.Name;
+            return namingStrategy.ResolvePropertyName(parameter.Name);
         }
 
-        public static string GetName(this MemberInfo member)
+        public static string GetName(this MemberInfo member, NamingStrategy namingStrategy)
         {
             var field = member.GetCustomAttribute<FaunaFieldAttribute>();
 
@@ -40,7 +40,7 @@ namespace FaunaDB.Types
                 return field.Name;
             }
 
-            return member.Name;
+            return namingStrategy.ResolvePropertyName(member.Name);
         }
 
         public static Type GetOverrideType(this ParameterInfo member)
