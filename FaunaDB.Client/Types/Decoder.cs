@@ -35,7 +35,30 @@ namespace FaunaDB.Types
         /// <param name="value">The FaunaDB value to be decoded</param>
         /// <typeparam name="T">The type name in which the value should be decoded</typeparam>
         public static T Decode<T>(Value value) =>
-            (T)DecoderImpl.Decode(value, typeof(T));
+            (T)new DecoderImpl(NamingStrategy.Default).Decode(value, typeof(T), null);
+
+        /// <summary>
+        /// Decode the FaunaDB value into the specified type T.
+        /// </summary>
+        /// <example>
+        /// Decode&lt;int&gt;(LongV.Of(10)) => 10
+        /// Decode&lt;double&gt;(DoubleV.Of(3.14)) => 3.14
+        /// Decode&lt;bool&gt;(BooleanV.True) => true
+        /// Decode&lt;object&gt;(NullV.Instance) => null
+        /// Decode&lt;string&gt;(StringV.Of("a string")) => "a string"
+        /// Decode&lt;int[]&gt;(ArrayV.Of(1, 2)) => new int[] { 1, 2 }
+        /// Decode&lt;List&lt;int&gt;&gt;(ArrayV.Of(1, 2)) => new List&lt;int&gt;&gt; { 1, 2 }
+        /// Decode&lt;byte[]&gt;(new ByteV(1, 2)) => new byte[] { 1, 2 }
+        /// Decode&lt;DateTime&gt;(new TimeV("2000-01-01T01:10:30.123Z")) => new DateTime(2000, 1, 1, 1, 10, 30, 123)
+        /// Decode&lt;DateTime&gt;(new DateV("2001-01-01")) => new DateTime(2001, 1, 1)
+        /// Decode&lt;User&gt;(ObjectV.With("user_name", "john", "password", "s3cr3t")) => new User("john", "s3cr3t")
+        /// </example>
+        /// <returns>An instance of type T</returns>
+        /// <param name="value">The FaunaDB value to be decoded</param>
+        /// <param name="namingStrategy">The naming strategy to use</param>
+        /// <typeparam name="T">The type name in which the value should be decoded</typeparam>
+        public static T Decode<T>(Value value, NamingStrategy namingStrategy) =>
+            (T)new DecoderImpl(namingStrategy).Decode(value, typeof(T), null);
 
         /// <summary>
         /// Decode the FaunaDB value into the type specified in the argument.
@@ -57,7 +80,30 @@ namespace FaunaDB.Types
         /// <param name="value">The FaunaDB value to be decoded</param>
         /// <param name="dstType">The type in which the value should be decoded</param>
         public static object Decode(Value value, Type dstType) =>
-            DecoderImpl.Decode(value, dstType);
+            new DecoderImpl(NamingStrategy.Default).Decode(value, dstType, null);
+
+        /// <summary>
+        /// Decode the FaunaDB value into the type specified in the argument.
+        /// </summary>
+        /// <example>
+        /// Decode(LongV.Of(10), typeof(int)) => 10
+        /// Decode(DoubleV.Of(3.14), typeof(double)) => 3.14
+        /// Decode(BooleanV.True, typeof(bool)) => true
+        /// Decode(NullV.Instance, typeof(object)) => null
+        /// Decode(StringV.Of("a string"), typeof(string)) => "a string"
+        /// Decode(ArrayV.Of(1, 2), typeof(int[])) => new int[] { 1, 2 }
+        /// Decode(ArrayV.Of(1, 2), typeof(List&lt;int&gt;&gt;)) => new List&lt;int&gt;&gt; { 1, 2 }
+        /// Decode(new ByteV(1, 2), typeof(byte[])) => new byte[] { 1, 2 }
+        /// Decode(new TimeV("2000-01-01T01:10:30.123Z"), typeof(DateTime)) => new DateTime(2000, 1, 1, 1, 10, 30, 123)
+        /// Decode(new DateV("2001-01-01"), typeof(DateTime)) => new DateTime(2001, 1, 1)
+        /// Decode(ObjectV.With("user_name", "john", "password", "s3cr3t"), typeof(User)) => new User("john", "s3cr3t")
+        /// </example>
+        /// <returns>An instance of type specified in the argument</returns>
+        /// <param name="value">The FaunaDB value to be decoded</param>
+        /// <param name="dstType">The type in which the value should be decoded</param>
+        /// <param name="namingStrategy">The naming strategy to use</param>
+        public static object Decode(Value value, Type dstType, NamingStrategy namingStrategy) =>
+            new DecoderImpl(namingStrategy).Decode(value, dstType, null);
     }
 
     internal class DecoderImpl
@@ -65,13 +111,26 @@ namespace FaunaDB.Types
         private static readonly Dictionary<Type, Converter> converters = new Dictionary<Type, Func<Value, object>>();
         private static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
-        private static InvalidCastException invalidCast(object value, Type to)
+        private NamingStrategy namingStrategy;
+
+        private InvalidCastException invalidCast(object value, Type to)
         {
             var from = value?.GetType();
             return new InvalidCastException($"Invalid cast from '{from}' to '{to}'.");
         }
 
-        public static object Decode(Value value, Type dstType, Type forceType = null)
+        public DecoderImpl(NamingStrategy decoderNamingStrategy)
+        {
+            namingStrategy = decoderNamingStrategy;
+        }
+
+        public static object Decode(Value value, Type dstType, Type forceType, NamingStrategy namingStrategy)
+        {
+            return new DecoderImpl(namingStrategy)
+                .Decode(value, dstType, forceType);
+        }
+
+        public object Decode(Value value, Type dstType, Type forceType = null)
         {
             if (value == NullV.Instance && dstType == typeof(Value))
             {
@@ -86,7 +145,7 @@ namespace FaunaDB.Types
             return DecodeIntern(value, dstType, forceType);
         }
 
-        private static object DecodeIntern(Value value, Type dstType, Type forceType = null)
+        private object DecodeIntern(Value value, Type dstType, Type forceType = null)
         {
             if (typeof(Value).IsAssignableFrom(dstType))
             {
@@ -215,7 +274,7 @@ namespace FaunaDB.Types
             throw invalidCast(value, dstType);
         }
 
-        private static IEnumerable FromSet(Value value, Type type)
+        private IEnumerable FromSet(Value value, Type type)
         {
             if (!(value is ArrayV))
             {
@@ -242,7 +301,7 @@ namespace FaunaDB.Types
             return set;
         }
 
-        private static IList FromEnumerable(Value value, Type type)
+        private IList FromEnumerable(Value value, Type type)
         {
             if (!(value is ArrayV))
             {
@@ -270,7 +329,7 @@ namespace FaunaDB.Types
             return ret;
         }
 
-        private static IDictionary FromDictionary(Value value, Type type)
+        private IDictionary FromDictionary(Value value, Type type)
         {
             if (!(value is ObjectV))
             {
@@ -299,7 +358,7 @@ namespace FaunaDB.Types
             return ret;
         }
 
-        private static Array FromArray(Value value, Type type)
+        private Array FromArray(Value value, Type type)
         {
             var elementType = type.GetElementType();
 
@@ -320,7 +379,7 @@ namespace FaunaDB.Types
             return ret;
         }
 
-        private static object ToNumber<R>(Value value)
+        private object ToNumber<R>(Value value)
         {
             var ll = value as ScalarValue<long>;
             if (ll != null)
@@ -343,19 +402,19 @@ namespace FaunaDB.Types
             throw invalidCast(value, typeof(R));
         }
 
-        private static string ToString(Value value) =>
+        private string ToString(Value value) =>
             FromScalar<string>(value, typeof(string));
 
-        private static bool ToBoolean(Value value) =>
+        private bool ToBoolean(Value value) =>
             FromScalar<bool>(value, typeof(bool));
 
-        private static DateTime ToDateTime(Value value) =>
+        private DateTime ToDateTime(Value value) =>
             FromScalar<DateTime>(value, typeof(DateTime));
 
-        private static byte[] ToByteArray(Value value) =>
+        private byte[] ToByteArray(Value value) =>
             FromScalar<byte[]>(value, typeof(byte[]));
 
-        private static T FromScalar<T>(Value value, Type type)
+        private T FromScalar<T>(Value value, Type type)
         {
             var scalar = value as ScalarValue<T>;
 
@@ -367,7 +426,7 @@ namespace FaunaDB.Types
             return scalar.Value;
         }
 
-        private static object ToEnum(Value value, Type dstType)
+        private object ToEnum(Value value, Type dstType)
         {
             Converter converter;
 
@@ -396,7 +455,7 @@ namespace FaunaDB.Types
             return converter.Invoke(value);
         }
 
-        private static object FromObject(Value value, Type dstType)
+        private object FromObject(Value value, Type dstType)
         {
             Converter converter;
 
@@ -430,7 +489,7 @@ namespace FaunaDB.Types
             throw new InvalidOperationException($"Enumeration value '{((StringV)value).Value}' not found in {dstType}");
         }
 
-        private static Converter CreateEnumConverter(Type dstType)
+        private Converter CreateEnumConverter(Type dstType)
         {
             var objExpr = Expression.Parameter(typeof(Value), "obj");
             var varExpr = Expression.Variable(dstType, "output");
@@ -457,7 +516,7 @@ namespace FaunaDB.Types
             .Compile();
         }
 
-        private static SwitchCase CreateSwitchCase(Enum enumValue)
+        private SwitchCase CreateSwitchCase(Enum enumValue)
         {
             var dstType = enumValue.GetType();
             var enumName = Enum.GetName(dstType, enumValue);
@@ -472,7 +531,7 @@ namespace FaunaDB.Types
                     typeof(string)));
         }
 
-        private static Converter CreateConverter(Type dstType)
+        private Converter CreateConverter(Type dstType)
         {
             var creator = GetCreator(dstType);
 
@@ -495,7 +554,7 @@ namespace FaunaDB.Types
             return FromConstructor(constructor, dstType);
         }
 
-        private static MethodInfo GetCreator(Type dstType)
+        private MethodInfo GetCreator(Type dstType)
         {
             var methods = dstType
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
@@ -514,7 +573,7 @@ namespace FaunaDB.Types
             return null;
         }
 
-        private static ConstructorInfo GetConstructor(Type dstType)
+        private ConstructorInfo GetConstructor(Type dstType)
         {
             var constructors = dstType
                 .GetConstructors()
@@ -533,19 +592,19 @@ namespace FaunaDB.Types
             return dstType.GetConstructor(Type.EmptyTypes);
         }
 
-        private static Expression AssignProperties(Expression objExpr, Expression varExpr, Type dstType, IEnumerable<string> ignoreProperties)
+        private Expression AssignProperties(Expression objExpr, Expression varExpr, Type dstType, IEnumerable<string> ignoreProperties)
         {
             var fields = dstType
                 .GetAllFields()
-                .Where(f => !ignoreProperties.Contains(f.GetName()))
+                .Where(f => !ignoreProperties.Contains(f.GetName(namingStrategy)))
                 .Where(f => !f.Has<CompilerGeneratedAttribute>() && !f.Has<FaunaIgnoreAttribute>())
-                .Select(f => Expression.Assign(Expression.Field(varExpr, f), CallDecode(CallGetValue(objExpr, f, f.FieldType), f.FieldType, f.GetOverrideType())));
+                .Select(f => Expression.Assign(Expression.Field(varExpr, f), CallDecode(CallGetValue(objExpr, f, f.FieldType), f.FieldType, f.GetOverrideType(), namingStrategy)));
 
             var properties = dstType
                 .GetProperties()
-                .Where(p => !ignoreProperties.Contains(p.GetName()))
+                .Where(p => !ignoreProperties.Contains(p.GetName(namingStrategy)))
                 .Where(p => p.CanWrite && !p.Has<FaunaIgnoreAttribute>())
-                .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p, p.PropertyType), p.PropertyType, p.GetOverrideType())));
+                .Select(p => Expression.Assign(Expression.MakeMemberAccess(varExpr, p), CallDecode(CallGetValue(objExpr, p, p.PropertyType), p.PropertyType, p.GetOverrideType(), namingStrategy)));
 
             var concat = fields.Concat(properties);
 
@@ -554,16 +613,16 @@ namespace FaunaDB.Types
                 : (Expression)Expression.Empty();
         }
 
-        private static Converter Create(Func<IEnumerable<Expression>, Expression> creatorExpr, ParameterInfo[] parameters, Type dstType)
+        private Converter Create(Func<IEnumerable<Expression>, Expression> creatorExpr, ParameterInfo[] parameters, Type dstType)
         {
             var objExpr = Expression.Parameter(typeof(Value), "obj");
             var varExpr = Expression.Variable(dstType, "output");
             var target = Expression.Label(dstType);
 
             var parametersExpr = parameters
-                .Select(p => CallDecode(CallGetValue(objExpr, p), p.ParameterType, p.GetOverrideType()));
+                .Select(p => CallDecode(CallGetValue(objExpr, p), p.ParameterType, p.GetOverrideType(), namingStrategy));
 
-            var ignoreProperties = parameters.Select(p => p.GetName());
+            var ignoreProperties = parameters.Select(p => p.GetName(namingStrategy));
 
             var block = Expression.Block(
                 new ParameterExpression[] { varExpr },
@@ -588,7 +647,7 @@ namespace FaunaDB.Types
          *      return output;
          * }
          */
-        private static Converter FromValueType(Type dstType)
+        private Converter FromValueType(Type dstType)
         {
             return Create(
                 _ => Expression.New(dstType),
@@ -611,7 +670,7 @@ namespace FaunaDB.Types
          *      return output;
          * }
          */
-        private static Converter FromConstructor(ConstructorInfo constructor, Type dstType)
+        private Converter FromConstructor(ConstructorInfo constructor, Type dstType)
         {
             return Create(
                 p => Expression.New(constructor, p),
@@ -634,7 +693,7 @@ namespace FaunaDB.Types
          *      return output;
          * }
          */
-        private static Converter FromMethodCreator(MethodInfo creator, Type dstType)
+        private Converter FromMethodCreator(MethodInfo creator, Type dstType)
         {
             return Create(
                 p => Expression.Call(creator, p),
@@ -646,15 +705,15 @@ namespace FaunaDB.Types
         /*
          * Decode( objExpr, type )
          */
-        private static Expression CallDecode(Expression objExpr, Type type, Type overrideType = null)
+        private Expression CallDecode(Expression objExpr, Type type, Type overrideType, NamingStrategy namingStrategy)
         {
             var decodeMethod = typeof(DecoderImpl).GetMethod(
-                "Decode", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Value), typeof(Type), typeof(Type) }, null
+                "Decode", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Value), typeof(Type), typeof(Type), typeof(NamingStrategy) }, null
             );
 
             var decodeExpr = Expression.Call(
                 decodeMethod,
-                new Expression[] { objExpr, Expression.Constant(type), Expression.Constant(overrideType, typeof(Type)) }
+                new Expression[] { objExpr, Expression.Constant(type), Expression.Constant(overrideType, typeof(Type)), Expression.Constant(namingStrategy, typeof(NamingStrategy)) }
             );
 
             return type.GetTypeInfo().IsValueType
@@ -662,7 +721,7 @@ namespace FaunaDB.Types
                 : Expression.Convert(decodeExpr, type);
         }
 
-        private static Expression CallGetValue(Expression objExpr, MemberInfo member, Type memberType)
+        private Expression CallGetValue(Expression objExpr, MemberInfo member, Type memberType)
         {
             var field = member.GetCustomAttribute<FaunaFieldAttribute>();
             var defaultValue = field != null ? Encoder.Encode(field.DefaultValue) : null;
@@ -683,10 +742,10 @@ namespace FaunaDB.Types
                 return Expression.Constant(defaultValue, typeof(Value));
             }
 
-            return CallGetValue(objExpr, member.GetName(), defaultValue);
+            return CallGetValue(objExpr, member.GetName(namingStrategy), defaultValue);
         }
 
-        private static Expression CallGetValue(Expression objExpr, ParameterInfo parameter)
+        private Expression CallGetValue(Expression objExpr, ParameterInfo parameter)
         {
             var field = parameter.GetCustomAttribute<FaunaFieldAttribute>();
             var hasDefaultValue = field != null && field.DefaultValue != null;
@@ -710,13 +769,13 @@ namespace FaunaDB.Types
                 return Expression.Constant(defaultValue, typeof(Value));
             }
 
-            return CallGetValue(objExpr, parameter.GetName(), defaultValue);
+            return CallGetValue(objExpr, parameter.GetName(namingStrategy), defaultValue);
         }
 
         /*
          * GetValue( objExpr, property, defaultValue )
          */
-        private static Expression CallGetValue(Expression objExpr, string property, Value defaultValue)
+        private Expression CallGetValue(Expression objExpr, string property, Value defaultValue)
         {
             var getValueMethod = typeof(DecoderImpl).GetMethod(
                 "GetValue", BindingFlags.Static | BindingFlags.NonPublic, null, new Type[] { typeof(ObjectV), typeof(string), typeof(Value) }, null

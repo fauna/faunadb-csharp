@@ -36,7 +36,30 @@ namespace FaunaDB.Types
         /// <param name="obj">Any instance of user defined classes, primitive values or any
         /// generic collection like <see cref="System.Collections.Generic.IList{T}"/> or <see cref="System.Collections.Generic.IDictionary{TKey, TValue}"/></param>
         public static Value Encode(object obj) =>
-            new EncoderImpl().Encode(obj);
+            new EncoderImpl(NamingStrategy.Default).Encode(obj);
+
+        /// <summary>
+        /// Encode the specified object into a corresponding FaunaDB value.
+        /// </summary>
+        /// <example>
+        /// Encode(10) => LongV.Of(10)
+        /// Encode(3.14) => DoubleV.Of(3.14)
+        /// Encode(true) => BooleanV.True
+        /// Encode(null) => NullV.Instance
+        /// Encode("a string") => StringV.Of("a string")
+        /// Encode(new int[] {1, 2}) => ArrayV.Of(1, 2)
+        /// Encode(new List&lt;int&gt; {1, 2}) => ArrayV.Of(1, 2)
+        /// Encode(new byte[] {1, 2}) => new ByteV(1, 2)
+        /// Encode(DateTime.Now) => new TimeV("2000-01-01T01:10:30.123Z")
+        /// Encode(DateTime.Today) => new DateV("2001-01-01")
+        /// Encode(user) => ObjectV.With("user_name", "john", "password", "s3cr3t")
+        /// </example>
+        /// <returns>A FaunaDB <see cref="Value"/> corresponding to the given argument</returns>
+        /// <param name="obj">Any instance of user defined classes, primitive values or any
+        /// generic collection like <see cref="System.Collections.Generic.IList{T}"/> or <see cref="System.Collections.Generic.IDictionary{TKey, TValue}"/></param>
+        /// <param name="namingStrategy">The naming strategy to use</param>
+        public static Value Encode(object obj, NamingStrategy namingStrategy) =>
+            new EncoderImpl(namingStrategy).Encode(obj);
     }
 
     internal class EncoderImpl
@@ -45,6 +68,13 @@ namespace FaunaDB.Types
         private static readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
 
         private Stack<object> stack = new Stack<object>();
+
+        private NamingStrategy namingStrategy;
+
+        public EncoderImpl(NamingStrategy encoderNamingStrategy)
+        {
+            namingStrategy = encoderNamingStrategy;
+        }
 
         public Value Encode(object obj, Type forceType = null)
         {
@@ -362,7 +392,7 @@ namespace FaunaDB.Types
          */
         private ElementInit AddElementToDic(Expression encoderExpr, Type srcType, MemberInfo member, MethodInfo addMethod, Expression objExpr)
         {
-            var keyExpr = Expression.Constant(member.GetName());
+            var keyExpr = Expression.Constant(member.GetName(namingStrategy));
             var typeExpr = Expression.Constant(member.GetOverrideType(), typeof(Type));
             var valueExpr = CallEncode(encoderExpr, AccessMember(srcType, member, objExpr), typeExpr);
 
