@@ -24,13 +24,15 @@ namespace FaunaDB.Client
         private readonly HttpClient client;
         private readonly AuthenticationHeaderValue authHeader;
 
+        private readonly IReadOnlyDictionary<string, string> customHeaders;
+
         private LastSeen lastSeen;
         private Version httpVersion;
 
         public const string StreamingPath = "stream";
         public const HttpMethodKind StreamingHttpMethod = HttpMethodKind.Post;
 
-        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout, Version httpVersion)
+        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout, Version httpVersion, IReadOnlyDictionary<string, string> customHeaders)
         {
             client.AssertNotNull(nameof(client));
             authHeader.AssertNotNull(nameof(authHeader));
@@ -42,6 +44,7 @@ namespace FaunaDB.Client
             this.lastSeen = lastSeen;
             this.endpoint = endpoint;
             this.clientTimeout = timeout;
+            this.customHeaders = customHeaders;
 #if NETSTANDARD2_1
             this.httpVersion = httpVersion == null ? new Version(2, 0) : httpVersion;
 #else
@@ -49,12 +52,12 @@ namespace FaunaDB.Client
 #endif
         }
 
-        public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null, Version httpVersion = null)
-            : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout, httpVersion)
+        public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null, Version httpVersion = null, IReadOnlyDictionary<string, string> customHeaders = null)
+            : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout, httpVersion, customHeaders)
         { }
 
         public IClientIO NewSessionClient(string secret) =>
-            new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, clientTimeout, httpVersion);
+            new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, clientTimeout, httpVersion, customHeaders);
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null) =>
             DoRequestAsync(method, path, data, query, queryTimeout);
@@ -81,6 +84,15 @@ namespace FaunaDB.Client
             message.Headers.Add("X-FaunaDB-API-Version", "4");
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
             message.Version = httpVersion;
+
+            // adding custom headers provided during the client creation
+            if (customHeaders != null)
+            {
+                foreach (KeyValuePair<string, string> header in customHeaders)
+                {
+                    message.Headers.Add(header.Key, header.Value);
+                }
+            }
 
             var last = lastSeen.Txn;
             if (last.HasValue)
@@ -140,6 +152,15 @@ namespace FaunaDB.Client
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
             message.Version = httpVersion;
             message.SetTimeout(Timeout.InfiniteTimeSpan);
+
+            // adding custom headers provided during the client creation
+            if (customHeaders != null)
+            {
+                foreach (KeyValuePair<string, string> header in customHeaders)
+                {
+                    message.Headers.Add(header.Key, header.Value);
+                }
+            }
 
             var last = lastSeen.Txn;
             if (last.HasValue)

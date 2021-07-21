@@ -232,6 +232,13 @@ namespace Test
         }
 
         [Test]
+        public async Task TestGetAnInstanceWithCustomHeaders()
+        {
+            Value document = await clientWithCustomHeaders.Query(Get(magicMissile));
+            Assert.AreEqual("Magic Missile", document.Get(NAME_FIELD));
+        }
+
+        [Test]
         public async Task TestIssueABatchedQueryWithVarargs()
         {
             var result0 = await client.Query(

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -21,8 +22,10 @@ namespace Test
         protected static Field<RefV> REF_FIELD = Field.At("ref").To<RefV>();
 
         protected FaunaClient rootClient;
+        protected FaunaClient rootClientWithCustomHeaders;
         protected Expr DbRef;
         protected FaunaClient client;
+        protected FaunaClient clientWithCustomHeaders;
         protected FaunaClient adminClient;
         protected Value clientKey;
         protected Value adminKey;
@@ -50,6 +53,15 @@ namespace Test
             faunaSecret = env("FAUNA_ROOT_KEY", "secret");
             faunaEndpoint = port != "443" ? $"{scheme}://{domain}:{port}/" : $"{scheme}://{domain}/";
             rootClient = new FaunaClient(secret: faunaSecret, endpoint: faunaEndpoint);
+            rootClientWithCustomHeaders = new FaunaClient(
+                secret: faunaSecret,
+                endpoint: faunaEndpoint,
+                customHeaders: new Dictionary<string, string>
+                {
+                    { "test-header-1", "test-value-1" },
+                    { "test-header-2", "test-value-2" },
+                }
+            );
 
             DbRef = Database(TestDbName);
 
@@ -67,6 +79,7 @@ namespace Test
             adminKey = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "admin")));
             client = rootClient.NewSessionClient(clientKey.Get(SECRET_FIELD));
             adminClient = rootClient.NewSessionClient(adminKey.Get(SECRET_FIELD));
+            clientWithCustomHeaders = rootClient.NewSessionClient(clientKey.Get(SECRET_FIELD));
         }
 
         [OneTimeTearDown]
