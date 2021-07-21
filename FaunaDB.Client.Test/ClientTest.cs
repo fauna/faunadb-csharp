@@ -234,8 +234,32 @@ namespace Test
         [Test]
         public async Task TestGetAnInstanceWithCustomHeaders()
         {
-            Value document = await clientWithCustomHeaders.Query(Get(magicMissile));
-            Assert.AreEqual("Magic Missile", document.Get(NAME_FIELD));
+            var clientWithCustomHeaders = new FaunaClient(
+                secret: faunaSecret,
+                endpoint: faunaEndpoint,
+                customHeaders: new Dictionary<string, string>
+                {
+                    { "test-header-1", "test-value-1" },
+                    { "test-header-2", "test-value-2" },
+                }
+            );
+
+            await clientWithCustomHeaders.Query(
+                CreateCollection(
+                    Obj("name", "magic_spells"))
+            );
+
+            var magicFireball = GetRef(await clientWithCustomHeaders.Query(
+                Create(Collection("magic_spells"),
+                    Obj("data",
+                        Obj(
+                            "name", "Fire Ball",
+                            "element", "arcane",
+                            "cost", 10)))
+            ));
+
+            Value document = await clientWithCustomHeaders.Query(Get(magicFireball));
+            Assert.AreEqual("Fire Ball", document.Get(NAME_FIELD));
         }
 
         [Test]
