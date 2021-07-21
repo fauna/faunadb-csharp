@@ -1,3 +1,8 @@
+## 4.1.0
+- Added a possibility to provide custom headers for the FaunaClient constructor
+- Added naming strategy for value encoder/decoder
+- Notifies about new package version
+
 ## 4.0.0
 - Streaming support
 - 3rd party auth support
