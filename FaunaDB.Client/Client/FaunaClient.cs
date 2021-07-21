@@ -40,8 +40,9 @@ namespace FaunaDB.Client
             TimeSpan? timeout = null,
             HttpClient httpClient = null,
             Version httpVersion = null,
-            bool checkNewVersion = true)
-            : this(CreateClient(secret, endpoint, timeout, httpClient, httpVersion, checkNewVersion))
+            bool checkNewVersion = true,
+            IReadOnlyDictionary<string, string> customHeaders = null)
+            : this(CreateClient(secret, endpoint, timeout, httpClient, httpVersion, checkNewVersion, customHeaders))
         { }
 
         /// <summary>
@@ -253,7 +254,8 @@ namespace FaunaDB.Client
             TimeSpan? timeout = null,
             HttpClient httpClient = null,
             Version httpVersion = null,
-            bool checkNewVersion = true)
+            bool checkNewVersion = true,
+            IReadOnlyDictionary<string, string> customHeaders = null)
         {
             secret.AssertNotNull(nameof(secret));
             endpoint.AssertNotNull(nameof(endpoint));
