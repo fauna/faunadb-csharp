@@ -13,5 +13,5 @@ env:
   - FAUNA_PORT=443
 branches:
   only:
-    - master
+    - main
     - faunadb-csharp-1.0

@@ -64,7 +64,7 @@ namespace FaunaDB.Client.Utils
             sb.Append(System.Environment.NewLine);
             sb.Append($"New fauna version available {currentVersion} -> {latestNuGetVesrion}");
             sb.Append(System.Environment.NewLine);
-            sb.Append($"Changelog: https://github.com/fauna/faunadb-csharp/blob/master/CHANGELOG.md");
+            sb.Append($"Changelog: https://github.com/fauna/faunadb-csharp/blob/main/CHANGELOG.md");
             sb.Append(System.Environment.NewLine);
             sb.Append(System.Environment.NewLine);
             sb.Append(System.Environment.NewLine);
