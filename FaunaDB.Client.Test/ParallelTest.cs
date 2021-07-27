@@ -13,8 +13,8 @@ namespace Test
 {
     public class ParallelTest : TestCase
     {
-        private const int IN_PARALLEL = 1000;
-        private const int MAX_ATTEMPTS = 10;
+        private const int IN_PARALLEL = 200;
+        private const int MAX_ATTEMPTS = 5;
         private const string COLLECTION_NAME = "ParallelTestCollection";
 
         [OneTimeSetUp]
