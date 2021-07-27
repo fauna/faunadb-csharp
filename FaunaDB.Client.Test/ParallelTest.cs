@@ -12,7 +12,7 @@ using static FaunaDB.Query.Language;
 namespace Test
 {
     public class ParallelTest : TestCase
- {
+    {
         private const int IN_PARALLEL = 200;
         private const int MAX_ATTEMPTS = 5;
         private const string COLLECTION_NAME = "ParallelTestCollection";
