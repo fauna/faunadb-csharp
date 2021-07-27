@@ -234,7 +234,7 @@ namespace Test
         [Test]
         public async Task TestGetAnInstanceWithCustomHeaders()
         {
-            var clientWithCustomHeaders = new FaunaClient(
+            var rootClientWithCustomHeaders = new FaunaClient(
                 secret: faunaSecret,
                 endpoint: faunaEndpoint,
                 customHeaders: new Dictionary<string, string>
@@ -243,6 +243,9 @@ namespace Test
                     { "test-header-2", "test-value-2" },
                 }
             );
+
+            var clientWithCustomHeadersKey = await rootClientWithCustomHeaders.Query(CreateKey(Obj("database", DbRef, "role", "server")));
+            var clientWithCustomHeaders = rootClientWithCustomHeaders.NewSessionClient(clientWithCustomHeadersKey.Get(SECRET_FIELD));
 
             await clientWithCustomHeaders.Query(
                 CreateCollection(
