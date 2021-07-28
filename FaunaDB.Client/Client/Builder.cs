@@ -7,14 +7,21 @@ namespace FaunaDB.Client
 {
     internal class Builder
     {
-        internal AuthenticationHeaderValue AuthHeader;
-        internal LastSeen LastSeen;
-        internal HttpClient Client;
-        internal string Secret;
-        internal Uri Endpoint;
-        internal TimeSpan? Timeout;
-        internal IReadOnlyDictionary<string, string> CustomHeaders;
-        internal Version HttpVersion;
+        internal AuthenticationHeaderValue AuthHeader { get; private set; }
+
+        internal LastSeen LastSeen { get; private set; }
+
+        internal HttpClient Client { get; private set; }
+
+        internal string Secret { get; private set; }
+
+        internal Uri Endpoint { get; private set; }
+
+        internal TimeSpan? Timeout { get; private set; }
+
+        internal IReadOnlyDictionary<string, string> CustomHeaders { get; private set; }
+
+        internal Version HttpVersion { get; private set; }
 
         internal Builder SetLastSeen(LastSeen lastSeen)
         {
@@ -55,6 +62,12 @@ namespace FaunaDB.Client
         internal Builder SetHttpVersion(Version httpVersion)
         {
             HttpVersion = httpVersion;
+            return this;
+        }
+
+        internal Builder SetAuthHeader(AuthenticationHeaderValue authHeader)
+        {
+            AuthHeader = authHeader;
             return this;
         }
 
