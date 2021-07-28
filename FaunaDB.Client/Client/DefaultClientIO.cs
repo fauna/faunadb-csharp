@@ -32,6 +32,34 @@ namespace FaunaDB.Client
         public const string StreamingPath = "stream";
         public const HttpMethodKind StreamingHttpMethod = HttpMethodKind.Post;
 
+        public static Builder Builder()
+        {
+            return new Builder();
+        }
+
+        internal DefaultClientIO(Builder builder)
+        {
+            if (builder.AuthHeader == null)
+            {
+                builder.Secret.AssertNotNull(nameof(builder.Secret));
+            }
+
+            builder.Endpoint.AssertNotNull(nameof(builder.Endpoint));
+
+            this.client = builder.Client ?? CreateClient();
+            this.authHeader = builder.AuthHeader ?? AuthHeader(builder.Secret);
+            this.lastSeen = builder.LastSeen ?? new LastSeen();
+            this.endpoint = builder.Endpoint;
+            this.clientTimeout = builder.Timeout;
+            this.customHeaders = builder.CustomHeaders;
+
+#if NETSTANDARD2_1
+            this.httpVersion = builder.HttpVersion == null ? new Version(2, 0) : builder.HttpVersion;
+#else
+            this.httpVersion = builder.HttpVersion == null ? new Version(1, 1) : builder.HttpVersion;
+#endif
+        }
+
         internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout, Version httpVersion, IReadOnlyDictionary<string, string> customHeaders)
         {
             client.AssertNotNull(nameof(client));
