@@ -32,32 +32,46 @@ namespace FaunaDB.Client
         public const string StreamingPath = "stream";
         public const HttpMethodKind StreamingHttpMethod = HttpMethodKind.Post;
 
-        internal DefaultClientIO(HttpClient client, AuthenticationHeaderValue authHeader, LastSeen lastSeen, Uri endpoint, TimeSpan? timeout, Version httpVersion, IReadOnlyDictionary<string, string> customHeaders)
+        public static Builder Builder()
         {
-            client.AssertNotNull(nameof(client));
-            authHeader.AssertNotNull(nameof(authHeader));
-            endpoint.AssertNotNull(nameof(endpoint));
-            lastSeen.AssertNotNull(nameof(lastSeen));
+            return new Builder();
+        }
 
-            this.client = client;
-            this.authHeader = authHeader;
-            this.lastSeen = lastSeen;
-            this.endpoint = endpoint;
-            this.clientTimeout = timeout;
-            this.customHeaders = customHeaders;
+        internal DefaultClientIO(Builder builder)
+        {
+            if (builder.AuthHeader == null)
+            {
+                builder.Secret.AssertNotNull(nameof(builder.Secret));
+            }
+
+            builder.Endpoint.AssertNotNull(nameof(builder.Endpoint));
+
+            this.client = builder.Client ?? CreateClient();
+            this.authHeader = builder.AuthHeader ?? AuthHeader(builder.Secret);
+            this.lastSeen = builder.LastSeen ?? new LastSeen();
+            this.endpoint = builder.Endpoint;
+            this.clientTimeout = builder.Timeout;
+            this.customHeaders = builder.CustomHeaders;
+
 #if NETSTANDARD2_1
-            this.httpVersion = httpVersion == null ? new Version(2, 0) : httpVersion;
+            this.httpVersion = builder.HttpVersion == null ? new Version(2, 0) : builder.HttpVersion;
 #else
-            this.httpVersion = httpVersion == null ? new Version(1, 1) : httpVersion;
+            this.httpVersion = builder.HttpVersion == null ? new Version(1, 1) : builder.HttpVersion;
 #endif
         }
 
-        public DefaultClientIO(string secret, Uri endpoint, TimeSpan? timeout = null, HttpClient httpClient = null, Version httpVersion = null, IReadOnlyDictionary<string, string> customHeaders = null)
-            : this(httpClient ?? CreateClient(), AuthHeader(secret), new LastSeen(), endpoint, timeout, httpVersion, customHeaders)
-        { }
-
-        public IClientIO NewSessionClient(string secret) =>
-            new DefaultClientIO(client, AuthHeader(secret), lastSeen, endpoint, clientTimeout, httpVersion, customHeaders);
+        public IClientIO NewSessionClient(string secret)
+        {
+            return Builder()
+                    .SetClient(client)
+                    .SetAuthHeader(AuthHeader(secret))
+                    .SetLastSeen(lastSeen)
+                    .SetEndpoint(endpoint)
+                    .SetTimeout(clientTimeout)
+                    .SetHttpVersion(httpVersion)
+                    .SetCustomHeaders(customHeaders)
+                    .Build();
+        }
 
         public Task<RequestResult> DoRequest(HttpMethodKind method, string path, string data, IReadOnlyDictionary<string, string> query = null, TimeSpan? queryTimeout = null) =>
             DoRequestAsync(method, path, data, query, queryTimeout);

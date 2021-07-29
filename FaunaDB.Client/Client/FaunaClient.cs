@@ -265,12 +265,13 @@ namespace FaunaDB.Client
                 Task.Run(() => CheckLatestVersion.GetVersionAsync());
             }
 
-            return new DefaultClientIO(
-                secret: secret,
-                endpoint: new Uri(endpoint),
-                timeout: timeout,
-                httpClient: httpClient,
-                httpVersion: httpVersion);
+            return DefaultClientIO.Builder()
+                                  .SetSecret(secret)
+                                  .SetEndpoint(new Uri(endpoint))
+                                  .SetTimeout(timeout)
+                                  .SetClient(httpClient)
+                                  .SetHttpVersion(httpVersion)
+                                  .Build();
         }
     }
 }
