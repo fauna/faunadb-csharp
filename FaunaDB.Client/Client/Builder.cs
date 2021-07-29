@@ -5,6 +5,9 @@ using System.Net.Http.Headers;
 
 namespace FaunaDB.Client
 {
+    /// <summary>
+    /// Builder class for DefaultClientIO class
+    /// </summary>
     internal class Builder
     {
         internal AuthenticationHeaderValue AuthHeader { get; private set; }
