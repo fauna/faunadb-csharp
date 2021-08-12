@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FaunaDB.Client.Exceptions;
 using FaunaDB.Client.Utils;
 using FaunaDB.Collections;
 using FaunaDB.Errors;
@@ -187,13 +188,14 @@ namespace FaunaDB.Client
             switch (statusCode)
             {
                 case 400:
-                    throw new BadRequest(response);
+                case 404:
+                    throw ExceptionResolver.Resolve(response, statusCode).FirstOrDefault(); //new BadRequest(response); 
                 case 401:
                     throw new Unauthorized(response);
                 case 403:
                     throw new PermissionDenied(response);
-                case 404:
-                    throw new NotFound(response);
+                //case 404:
+                //    throw new NotFound(response);
                 case 500:
                     throw new InternalError(response);
                 case 503:
