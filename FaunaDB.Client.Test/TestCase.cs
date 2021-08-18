@@ -58,7 +58,7 @@ namespace Test
             {
                 await rootClient.Query(Delete(DbRef));
             }
-            catch (BadRequest)
+            catch (InvalidRef)
             {
             }
 

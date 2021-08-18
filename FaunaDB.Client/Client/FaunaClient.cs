@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using FaunaDB.Client.Exceptions;
 using FaunaDB.Client.Utils;
 using FaunaDB.Collections;
 using FaunaDB.Errors;
@@ -185,24 +184,7 @@ namespace FaunaDB.Client
 
             var response = new QueryErrorResponse(statusCode, wrapper.Errors);
 
-            switch (statusCode)
-            {
-                case 400:
-                case 404:
-                    throw ExceptionResolver.Resolve(response, statusCode).FirstOrDefault(); //new BadRequest(response); 
-                case 401:
-                    throw new Unauthorized(response);
-                case 403:
-                    throw new PermissionDenied(response);
-                //case 404:
-                //    throw new NotFound(response);
-                case 500:
-                    throw new InternalError(response);
-                case 503:
-                    throw new UnavailableError(response);
-                default:
-                    throw new UnknowException(response);
-            }
+            throw ExceptionResolver.Resolve(response, statusCode).FirstOrDefault();
         }
 
         internal static void RaiseForStatusCode(StreamingRequestResult resultRequest)
@@ -217,24 +199,7 @@ namespace FaunaDB.Client
             var wrapper = JsonConvert.DeserializeObject<ErrorsWrapper>(resultRequest.ErrorContent);
 
             var response = new QueryErrorResponse(statusCode, wrapper.Errors);
-
-            switch (statusCode)
-            {
-                case 400:
-                    throw new BadRequest(response);
-                case 401:
-                    throw new Unauthorized(response);
-                case 403:
-                    throw new PermissionDenied(response);
-                case 404:
-                    throw new NotFound(response);
-                case 500:
-                    throw new InternalError(response);
-                case 503:
-                    throw new UnavailableError(response);
-                default:
-                    throw new UnknowException(response);
-            }
+            throw ExceptionResolver.Resolve(response, statusCode).FirstOrDefault();
         }
 
         public static ObjectV FromJson(string json)
@@ -246,7 +211,7 @@ namespace FaunaDB.Client
             }
             catch (JsonReaderException ex)
             {
-                throw new UnknowException($"Bad JSON: {ex}");
+                throw new UnknownException($"Bad JSON: {ex}");
             }
         }
 

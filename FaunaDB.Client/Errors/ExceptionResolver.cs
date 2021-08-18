@@ -1,13 +1,10 @@
-﻿using FaunaDB.Errors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FaunaDB.Client.Exceptions
+namespace FaunaDB.Errors
 {
-    public static class ExceptionResolver
+    public class ExceptionResolver
     {
         public static FaunaException[] Resolve(QueryErrorResponse responce, int httpStatusCode)
         {
@@ -75,7 +72,7 @@ namespace FaunaDB.Client.Exceptions
                         exceptions.Add(new StackOverflow(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.PermissionDenied:
-                        exceptions.Add(new PermissionDenied2(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new PermissionDenied(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InvalidObjectInContainer:
                         exceptions.Add(new InvalidObjectInContainer(httpStatusCode, error.Description, exceptionPositions));
@@ -86,8 +83,14 @@ namespace FaunaDB.Client.Exceptions
                     case ExceptionCodes.RecoveryFailed:
                         exceptions.Add(new RecoveryFailed(httpStatusCode, error.Description, exceptionPositions));
                         break;
+                    case ExceptionCodes.InstanceNotUnique:
+                        exceptions.Add(new InstanceNotUnique(httpStatusCode, error.Description, exceptionPositions));
+                        break;
+                    case ExceptionCodes.Unauthorized:
+                        exceptions.Add(new Unauthorized(httpStatusCode, error.Description, exceptionPositions));
+                        break;
                     default:
-                        exceptions.Add(new UnknownCode(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new UnknownException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                 }
             }

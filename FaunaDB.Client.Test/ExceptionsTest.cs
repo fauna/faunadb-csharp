@@ -1,16 +1,12 @@
 ﻿using System.Threading.Tasks;
-using FaunaDB.Client.Exceptions;
-using NUnit.Framework;
-using Test;
 using FaunaDB.Client;
 using FaunaDB.Errors;
 using FaunaDB.Query;
 using FaunaDB.Types;
+using NUnit.Framework;
 using static FaunaDB.Query.Language;
-using static FaunaDB.Types.Encoder;
-using static FaunaDB.Types.Option;
 
-namespace FaunaDB.Client.Test
+namespace Test
 {
     [TestFixture]
     public class ExceptionsTest : TestCase
@@ -35,30 +31,24 @@ namespace FaunaDB.Client.Test
             }
 
             await testClient.Query(CreateCollection(Obj("name", EXISTS_COLLECTION)));
-            await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("data", Obj("unique_filed", 1))));
+
             await testClient.Query(
                         CreateIndex(Obj(
                                     "name", EXISTS_COLLECTION_INDEX,
                                     "active", true,
                                     "source", Collection(EXISTS_COLLECTION),
-                                    "terms", Arr(Obj("field", Arr("data", "unique_filed"))),
+                                    "terms", Arr(Obj("field", Arr("data", "unique_field"))),
                                     "unique", true
                                 )
                             )
                     );
+            await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("data", Obj("unique_field", 1))));
         }
 
         [Test]
         public void InvalidRefTest()
         {
             Assert.ThrowsAsync<InvalidRef>(async () => await testClient.Query(Map(Paginate(Documents(Collection("aa"))), reference => Get(reference))));
-        }
-
-        [Test]
-        public void TestHttpUnauthorized()
-        {
-            var client = GetClient(secret: "bad_key");
-            Assert.ThrowsAsync<UnknownCode>(async () => await testClient.Query(Get(DbRef)));
         }
 
         [Test]
@@ -70,21 +60,13 @@ namespace FaunaDB.Client.Test
         [Test]
         public void ValidationFailedTest()
         {
-            Assert.ThrowsAsync<ValidationFailed>(async () => await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("data", Arr("unique_filed", 1)))));
+            Assert.ThrowsAsync<ValidationFailed>(async () => await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("data", Arr("unique_field", 1)))));
         }
 
         [Test]
         public void InstanceNotUniqueTest()
         {
-            Assert.ThrowsAsync<InstanceNotUnique>(async () => await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("data", Obj("unique_filed", 1)))));
-        }
-
-        //not ready 
-        [Test]
-        public async Task FeatureNotAvailableTest()
-        {
-            //Assert.ThrowsAsync<FeatureNotAvailable>(async () => await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("wrong_parameter", Obj("unique_filed", 1)))));
-            await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("wrong_parameter", Obj("unique_filed", 1))));
+            Assert.ThrowsAsync<InstanceNotUnique>(async () => await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("data", Obj("unique_field", 1)))));
         }
 
         [Test]
@@ -106,9 +88,43 @@ namespace FaunaDB.Client.Test
         }
 
         [Test]
-        public void InvalidArgument()
+        public void InvalidArgumentTest()
         {
             Assert.ThrowsAsync<InvalidArgument>(async () => await testClient.Query(Delete(Ref(Collection(EXISTS_COLLECTION), "abcsvf"))));
+        }
+
+        [Test]
+        public void InvalidExpressionTest()
+        {
+            Assert.ThrowsAsync<InvalidExpression>(async () => await adminClient.Stream(CreateCollection(Collection("spells"))));
+        }
+
+        [Test]
+        public void TransactionAbortedTest()
+        {
+            Assert.ThrowsAsync<TransactionAborted>(async () => await testClient.Query(Abort("a message")));
+        }
+
+        [Test]
+        public async Task CallErrorTest()
+        {
+            await testClient.Query(CreateFunction(Obj("name", "increment", "body", Query(Lambda("x", Divide(Var("x"), LongV.Of(0)))))));
+            Assert.ThrowsAsync<CallError>(async () => await testClient.Query(Call(Function("increment"), 10)));
+        }
+
+        [Test]
+        public async Task PermissionDeniedTest()
+        {
+            var key = await rootClient.Query(CreateKey(Obj("database", DbRef, "role", "client")));
+            FaunaClient client = GetClient(key.Get(SECRET_FIELD));
+            Assert.ThrowsAsync<PermissionDenied>(async () => await testClient.Query(Paginate(Databases())));
+        }
+
+        [Test]
+        public async Task StackOverflowTest()
+        {
+            await testClient.Query(CreateFunction(Obj("name", "StackOverflowFunc", "body", Query(Lambda("x", Call(Function("StackOverflowFunc"), Var("x")))))));
+            Assert.ThrowsAsync<StackOverflow>(async () => await testClient.Query(Call(Function("StackOverflowFunc"), 10)));
         }
     }
 }

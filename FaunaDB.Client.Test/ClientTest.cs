@@ -153,13 +153,11 @@ namespace Test
         [Test]
         public void TestAbort()
         {
-            var ex = Assert.ThrowsAsync<BadRequest>(
+            var ex = Assert.ThrowsAsync<TransactionAborted>(
                 async () => await client.Query(Abort("error message"))
             );
 
             AssertErrors(ex, code: "transaction aborted", description: "error message");
-
-            AssertEmptyFailures(ex);
 
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
@@ -173,21 +171,17 @@ namespace Test
 
             AssertErrors(ex, code: "unauthorized", description: "Unauthorized");
 
-            AssertEmptyFailures(ex);
-
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
 
         [Test]
         public void TestNotFoundWhenInstanceDoesntExists()
         {
-            var ex = Assert.ThrowsAsync<NotFound>(
+            var ex = Assert.ThrowsAsync<InstanceNotFound>(
                 async () => await client.Query(Get(Ref(Collection("spells"), "1234")))
             );
 
             AssertErrors(ex, code: "instance not found", description: "Document not found.");
-
-            AssertEmptyFailures(ex);
 
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
@@ -366,11 +360,9 @@ namespace Test
             Value exists = await client.Query(Exists(@ref));
             Assert.AreEqual(false, exists.To<bool>().Value);
 
-            var ex = Assert.ThrowsAsync<NotFound>(async () => await client.Query(Get(@ref)));
+            var ex = Assert.ThrowsAsync<InstanceNotFound>(async () => await client.Query(Get(@ref)));
 
             AssertErrors(ex, code: "instance not found", description: "Document not found.");
-
-            AssertEmptyFailures(ex);
 
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
@@ -487,9 +479,9 @@ namespace Test
 
             Assert.DoesNotThrowAsync(create);
 
-            var ex = Assert.ThrowsAsync<BadRequest>(create);
+            var ex = Assert.ThrowsAsync<InstanceNotUnique>(create);
 
-            Assert.AreEqual("instance not unique: document is not unique.", ex.Message);
+            Assert.AreEqual("document is not unique.", ex.Message);
 
             AssertErrors(ex, code: "instance not unique", description: "document is not unique.");
 
@@ -1155,12 +1147,12 @@ namespace Test
         [Test]
         public void TestEvalDivideExpressionWrongArgument()
         {
-            var ex = Assert.ThrowsAsync<BadRequest>(
+            var ex = Assert.ThrowsAsync<InvalidArgument>(
                     async () => await client.Query(Divide(Null(), 10))
             );
 
-            AssertErrors(ex, code: "invalid argument", description: "Number expected, Null provided.");
-            AssertEmptyFailures(ex);
+            AssertErrors(ex, code: "invalid argument", description: "Number expected, Null provided.", errorCount: 2);
+
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { "divide", "0" }));
         }
 
@@ -2347,7 +2339,6 @@ namespace Test
             );
 
             AssertErrors(ex, code: "permission denied", description: "Insufficient privileges to perform the action.");
-            AssertEmptyFailures(ex);
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
 
             // Paginating
@@ -2691,10 +2682,10 @@ namespace Test
         [Test]
         public void TestThrowBadRequestOnDouble()
         {
-            var ex = Assert.ThrowsAsync<BadRequest>(
+            var ex = Assert.ThrowsAsync<InvalidArgument>(
                 async () => await adminClient.Query(ToDouble(Now()))
             );
-            Assert.AreEqual("invalid argument: Cannot cast Time to Double.", ex.Message);
+            Assert.AreEqual("Cannot cast Time to Double.", ex.Message);
         }
 
         [Test]
@@ -2713,10 +2704,10 @@ namespace Test
         [Test]
         public void TestThrowBadRequestOnInteger()
         {
-            var ex = Assert.ThrowsAsync<BadRequest>(
+            var ex = Assert.ThrowsAsync<InvalidArgument>(
                 async () => await adminClient.Query(ToInteger(Now()))
             );
-            Assert.AreEqual("invalid argument: Cannot cast Time to Integer.", ex.Message);
+            Assert.AreEqual("Cannot cast Time to Integer.", ex.Message);
         }
 
         [Test]
@@ -2809,30 +2800,27 @@ namespace Test
             );
         }
 
-        internal static void AssertErrors(FaunaException ex, string code, string description)
+        internal static void AssertErrors(FaunaException ex, string code, string description, int errorCount = 1)
         {
-            Assert.That(ex.Errors, Has.Count.EqualTo(1));
-            Assert.AreEqual(code, ex.Errors[0].Code);
-            Assert.AreEqual(description, ex.Errors[0].Description);
+            if (ex.Position.Length > 0)
+            {
+                Assert.That(ex.Position, Has.Length.EqualTo(errorCount));
+            }
+
+            Assert.AreEqual(code, ex.Code);
+            Assert.AreEqual(description, ex.Message);
         }
 
         private static void AssertFailures(FaunaException ex, string code, string description, IResolveConstraint fields)
         {
-            Assert.That(ex.Errors[0].Failures, Has.Count.EqualTo(1));
-            Assert.AreEqual(code, ex.Errors[0].Failures[0].Code);
-            Assert.AreEqual(description, ex.Errors[0].Failures[0].Description);
-
-            Assert.That(ex.Errors[0].Failures[0].Field, fields);
-        }
-
-        private static void AssertEmptyFailures(FaunaException ex)
-        {
-            Assert.That(ex.Errors[0].Failures, Is.Empty);
+            Assert.That(ex.Position, Has.Count.EqualTo(1));
+            Assert.AreEqual(code, ex.Code);
+            Assert.AreEqual(description, ex.Message);
         }
 
         private static void AssertPosition(FaunaException ex, IResolveConstraint positions)
         {
-            Assert.That(ex.Errors[0].Position, positions);
+            Assert.That(ex.Position, positions);
         }
     }
 }

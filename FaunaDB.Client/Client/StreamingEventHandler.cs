@@ -76,7 +76,7 @@ namespace FaunaDB.Client
         {
             var queryError = new QueryError(null, "internal exception", ex.Message, null);
             var response = new QueryErrorResponse(500, new List<QueryError> { queryError });
-            return new StreamingException(response);
+            return ExceptionResolver.Resolve(response, 500).FirstOrDefault();
         }
 
         private FaunaException ConstructStreamingException(ObjectV value)
@@ -85,7 +85,7 @@ namespace FaunaDB.Client
             var description = value.Get(DESCRIPTION);
             var queryError = new QueryError(null, code, description, null);
             var response = new QueryErrorResponse(500, new List<QueryError> { queryError });
-            return new StreamingException(response);
+            return ExceptionResolver.Resolve(response, 500).FirstOrDefault();
         }
     }
 

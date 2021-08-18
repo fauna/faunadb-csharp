@@ -230,10 +230,10 @@ namespace FaunaDB.Types
         {
             if (expected == JsonToken.None)
             {
-                throw new UnknowException($"Unexpected token {reader.TokenType.ToString()}");
+                throw new UnknownException($"Unexpected token {reader.TokenType.ToString()}");
             }
 
-            throw new UnknowException($"Expected {expected.ToString()} but received {reader.TokenType.ToString()}");
+            throw new UnknownException($"Expected {expected.ToString()} but received {reader.TokenType.ToString()}");
         }
     }
 
