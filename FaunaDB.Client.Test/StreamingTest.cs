@@ -29,7 +29,7 @@ namespace Test
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(Get(Ref(Collection("streams_test"), "1234"))); };
 
-            var ex = Assert.ThrowsAsync<InstanceNotFound>(doc);
+            var ex = Assert.ThrowsAsync<InstanceNotFoundException>(doc);
             Assert.AreEqual("Document not found.", ex.Message);
             AssertErrors(ex, code: "instance not found", description: "Document not found.");
         }
@@ -38,7 +38,7 @@ namespace Test
         public void TestStreamFailsIfIncorrectValuePassedToStreamMethod()
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(Collection("streams_test")); };
-            var ex = Assert.ThrowsAsync<InvalidArgument>(doc);
+            var ex = Assert.ThrowsAsync<InvalidArgumentException>(doc);
             Assert.AreEqual("Expected a Document Ref or Version, got Collection Ref.", ex.Message);
             AssertErrors(ex, code: "invalid argument", description: "Expected a Document Ref or Version, got Collection Ref.");
         }
@@ -47,7 +47,7 @@ namespace Test
         public void TestStreamFailsIfQueryIsNotReadOnly()
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(CreateCollection(Collection("streams_test"))); };
-            var ex = Assert.ThrowsAsync<InvalidExpression>(doc);
+            var ex = Assert.ThrowsAsync<InvalidExpressionException>(doc);
             Assert.AreEqual("Write effect in read-only query expression.", ex.Message);
             AssertErrors(ex, code: "invalid expression", description: "Write effect in read-only query expression.");
         }
@@ -276,7 +276,7 @@ namespace Test
             AsyncTestDelegate res = async () => await done.Task;
 
             // blocking until we get an exception
-            var exception = Assert.ThrowsAsync<PermissionDenied>(res);
+            var exception = Assert.ThrowsAsync<PermissionDeniedException>(res);
 
             // clear the subscription
             monitor.Unsubscribe();

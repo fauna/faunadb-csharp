@@ -6,88 +6,73 @@ namespace FaunaDB.Errors
 {
     public class ExceptionResolver
     {
-        public static FaunaException[] Resolve(QueryErrorResponse responce, int httpStatusCode)
+        public static FaunaException[] Resolve(QueryErrorResponse response, int httpStatusCode)
         {
             List<FaunaException> exceptions = new List<FaunaException>();
-            foreach (var error in responce.Errors)
+            foreach (var error in response.Errors)
             {
-                string[] exceptionPositions = new string[error.Position.Count];
-                string[] responsePosition = error.Position.ToArray();
-                Array.Copy(responsePosition, exceptionPositions, responsePosition.Length);
+                string[] exceptionPositions = new string[error.Positions.Count];
+                string[] responsePositions = error.Positions.ToArray();
+                Array.Copy(responsePositions, exceptionPositions, responsePositions.Length);
 
                 switch (error.Code)
                 {
-                    case ExceptionCodes.InvaliRef:
-                        exceptions.Add(new InvalidRef(httpStatusCode, error.Description, exceptionPositions));
+                    case ExceptionCodes.InvalidRef:
+                        exceptions.Add(new InvalidRefException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InvalidUrlParameter:
-                        exceptions.Add(new InvalidUrlParameter(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InvalidUrlParameterException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InvalidExpression:
-                        exceptions.Add(new InvalidExpression(httpStatusCode, error.Description, exceptionPositions));
-                        break;
-                    case ExceptionCodes.SchemaNotFound:
-                        exceptions.Add(new SchemaNotFound(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InvalidExpressionException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InstanceAlreadyExists:
-                        exceptions.Add(new InstanceAlreadyExists(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InstanceAlreadyExistsException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.ValidationFailed:
-                        exceptions.Add(new ValidationFailed(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new ValidationFailedException(httpStatusCode, error.Description, exceptionPositions, error.Failures));
                         break;
                     case ExceptionCodes.FeatureNotAvailable:
-                        exceptions.Add(new FeatureNotAvailable(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new FeatureNotAvailableException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.ValueNotFound:
-                        exceptions.Add(new ValueNotFound(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new ValueNotFoundException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InstanceNotFound:
-                        exceptions.Add(new InstanceNotFound(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InstanceNotFoundException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.AuthenticationFailed:
-                        exceptions.Add(new AuthenticationFailed(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new AuthenticationFailedException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InvalidArgument:
-                        exceptions.Add(new InvalidArgument(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InvalidArgumentException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.TransactionAborted:
-                        exceptions.Add(new TransactionAborted(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new TransactionAbortedException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InvalidWriteTime:
-                        exceptions.Add(new InvalidWriteTime(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InvalidWriteTimeException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.MissingIdentity:
-                        exceptions.Add(new MissingIdentity(httpStatusCode, error.Description, exceptionPositions));
-                        break;
-                    case ExceptionCodes.InvalidScope:
-                        exceptions.Add(new InvalidScope(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new MissingIdentityException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InvalidToken:
-                        exceptions.Add(new InvalidToken(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InvalidTokenException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.CallError:
-                        exceptions.Add(new CallError(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new FunctionCallErrorException(httpStatusCode, error.Description, exceptionPositions, error.Failures));
                         break;
                     case ExceptionCodes.StackOverflow:
-                        exceptions.Add(new StackOverflow(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new StackOverflowException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.PermissionDenied:
-                        exceptions.Add(new PermissionDenied(httpStatusCode, error.Description, exceptionPositions));
-                        break;
-                    case ExceptionCodes.InvalidObjectInContainer:
-                        exceptions.Add(new InvalidObjectInContainer(httpStatusCode, error.Description, exceptionPositions));
-                        break;
-                    case ExceptionCodes.MoveDatabaseError:
-                        exceptions.Add(new MoveDatabaseError(httpStatusCode, error.Description, exceptionPositions));
-                        break;
-                    case ExceptionCodes.RecoveryFailed:
-                        exceptions.Add(new RecoveryFailed(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new PermissionDeniedException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.InstanceNotUnique:
-                        exceptions.Add(new InstanceNotUnique(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new InstanceNotUniqueException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.Unauthorized:
-                        exceptions.Add(new Unauthorized(httpStatusCode, error.Description, exceptionPositions));
+                        exceptions.Add(new UnauthorizedException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     default:
                         exceptions.Add(new UnknownException(httpStatusCode, error.Description, exceptionPositions));
