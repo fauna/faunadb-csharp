@@ -14,9 +14,9 @@ namespace FaunaDB.Errors
         public IReadOnlyList<ValidationFailure> Failures { get; private set; }
 
         [JsonConstructor]
-        public QueryError(IReadOnlyList<string> positions, string code, string description, IReadOnlyList<ValidationFailure> failures, IReadOnlyList<ValidationFailure> cause = null)
+        public QueryError(IReadOnlyList<string> position, string code, string description, IReadOnlyList<ValidationFailure> failures, IReadOnlyList<ValidationFailure> cause = null)
         {
-            Positions = positions ?? new List<string>();
+            Positions = position ?? new List<string>();
             Code = code;
             Description = description;
             Failures = failures ?? cause ?? new List<ValidationFailure>();
