@@ -163,7 +163,7 @@ namespace FaunaDB.Client
 
             RaiseForStatusCode(responseHttp);
 
-            return new StreamingEventHandler(responseHttp.ResponseContent);
+            return new StreamingEventHandler(responseHttp.ResponseContent, async () => await Query(dataString));
         }
 
         internal struct ErrorsWrapper
