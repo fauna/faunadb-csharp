@@ -9,7 +9,7 @@ executors:
         enum: ["stable", "nightly"]
     resource_class: large
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+      - image: mcr.microsoft.com/dotnet/nightly/runtime-deps
 
       - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:latest
         name: core
@@ -38,7 +38,6 @@ commands:
       - run:
           name: Run Tests 3.1
           command: |
-            apt-get install -y dotnet-sdk-5.0
             dotnet --info
             mkdir results31
             dotnet restore
