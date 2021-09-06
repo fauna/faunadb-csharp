@@ -9,7 +9,7 @@ executors:
         enum: ["stable", "nightly"]
     resource_class: large
     docker:
-      - image: mcr.microsoft.com/dotnet/nightly/runtime-deps
+      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
 
       - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:latest
         name: core
