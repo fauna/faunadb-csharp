@@ -36,28 +36,28 @@ commands:
             while ! $(curl --output /dev/null --silent --fail --max-time 1 http://core:8443/ping); do sleep 1; done
 
       - run:
-          name: Run Tests
+          name: Run Tests 3.1
           command: |
             dotnet --info
             mkdir results
             dotnet restore
-            dotnet test --framework netcoreapp3.1 --logger "junit;LogFilePath=./results/results.xml" FaunaDB.Client.Test
+            dotnet test --framework netcoreapp3.1 --logger "junit;LogFilePath=./results/results31.xml" FaunaDB.Client.Test
       
       - run:
-          name: Run Tests
+          name: Run Tests 5.0
           command: |
             dotnet --info
             mkdir results
             dotnet restore
-            dotnet test --framework net5.0 --logger "junit;LogFilePath=./results/results.xml" FaunaDB.Client.Test
+            dotnet test --framework net5.0 --logger "junit;LogFilePath=./results/results50.xml" FaunaDB.Client.Test
             
       - run:
-          name: Run Tests
+          name: Run Tests 45
           command: |
             dotnet --info
             mkdir results
             dotnet restore
-            dotnet test --framework net45 --logger "junit;LogFilePath=./results/results.xml" FaunaDB.Client.Test      
+            dotnet test --framework net45 --logger "junit;LogFilePath=./results/results45.xml" FaunaDB.Client.Test      
             
       - store_test_results:
           path: FaunaDB.Client.Test/results/
