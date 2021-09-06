@@ -47,12 +47,12 @@ commands:
           name: Run Tests 5.0
           command: |
             wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-            sudo dpkg -i packages-microsoft-prod.deb
+            dpkg -i packages-microsoft-prod.deb
             rm packages-microsoft-prod.deb
-            sudo apt-get update; \
-            sudo apt-get install -y apt-transport-https && \
-            sudo apt-get update && \
-            sudo apt-get install -y dotnet-sdk-5.0
+            apt-get update; \
+            apt-get install -y apt-transport-https && \
+            apt-get update && \
+            apt-get install -y dotnet-sdk-5.0
             dotnet --info
             mkdir results50
             dotnet restore
