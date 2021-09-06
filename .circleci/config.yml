@@ -38,6 +38,7 @@ commands:
       - run:
           name: Run Tests 3.1
           command: |
+            apt-get install -y dotnet-sdk-5.0
             dotnet --info
             mkdir results31
             dotnet restore
