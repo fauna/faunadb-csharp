@@ -39,7 +39,7 @@ commands:
           name: Run Tests 3.1
           command: |
             dotnet --info
-            mkdir results
+            mkdir results31
             dotnet restore
             dotnet test --framework netcoreapp3.1 --logger "junit;LogFilePath=./results/results31.xml" FaunaDB.Client.Test
       
@@ -47,7 +47,7 @@ commands:
           name: Run Tests 5.0
           command: |
             dotnet --info
-            mkdir results
+            mkdir results50
             dotnet restore
             dotnet test --framework net5.0 --logger "junit;LogFilePath=./results/results50.xml" FaunaDB.Client.Test
             
@@ -55,7 +55,7 @@ commands:
           name: Run Tests 45
           command: |
             dotnet --info
-            mkdir results
+            mkdir results45
             dotnet restore
             dotnet test --framework net45 --logger "junit;LogFilePath=./results/results45.xml" FaunaDB.Client.Test      
             
