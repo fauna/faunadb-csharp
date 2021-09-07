@@ -69,7 +69,7 @@ commands:
             mono --version
             dotnet --info
             dotnet restore
-            dotnet test --framework net45 FaunaDB.Client.Test
+            dotnet test --framework net45 --logger "junit;LogFilePath=./results/results45.xml" FaunaDB.Client.Test
             
       - store_test_results:
           path: FaunaDB.Client.Test/results/
