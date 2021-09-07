@@ -61,8 +61,7 @@ commands:
       - run:
           name: Run Tests 45
           command: |
-            apt-get remove --purge dotnet-*
-            apt install mono-complete 
+            apt install mono-runtime 
             mono --version
             dotnet --info
             mkdir results45
