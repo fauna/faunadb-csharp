@@ -61,12 +61,16 @@ commands:
       - run:
           name: Run Tests 45
           command: |
+            apt update
+            apt install dirmngr gnupg apt-transport-https ca-certificates
+            apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+            sh -c 'echo "deb https://download.mono-project.com/repo/debian stable-buster main" > /etc/apt/sources.list.d/mono-official-stable.list'
+            apt update
             apt-get -y install mono-complete
             mono --version
             dotnet --info
             mkdir results45
             dotnet restore
-            xbuild faunadb-csharp.sln
             dotnet test --framework net47 FaunaDB.Client.Test
             dotnet test --framework net46 FaunaDB.Client.Test
             dotnet test --framework net45 FaunaDB.Client.Test
