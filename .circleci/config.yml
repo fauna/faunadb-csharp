@@ -61,7 +61,7 @@ commands:
       - run:
           name: Run Tests 45
           command: |
-            apt-get -y install mono-runtime 
+            apt-get -y install mono-complete
             mono --version
             dotnet --info
             mkdir results45
