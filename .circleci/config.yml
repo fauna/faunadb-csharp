@@ -54,7 +54,6 @@ commands:
             apt-get update && \
             apt-get install -y dotnet-sdk-5.0
             dotnet --info
-            mkdir results50
             dotnet restore
             dotnet test --framework net5.0 --logger "junit;LogFilePath=./results/results50.xml" FaunaDB.Client.Test
             
@@ -69,7 +68,6 @@ commands:
             apt-get -y install mono-complete
             mono --version
             dotnet --info
-            mkdir results45
             dotnet restore
             dotnet test --framework net45 FaunaDB.Client.Test
             
