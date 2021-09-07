@@ -66,6 +66,7 @@ commands:
             dotnet --info
             mkdir results45
             dotnet restore
+            xbuild faunadb-csharp.sln
             dotnet test --framework net47 FaunaDB.Client.Test  
             
       - store_test_results:
