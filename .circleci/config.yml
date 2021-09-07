@@ -71,8 +71,6 @@ commands:
             dotnet --info
             mkdir results45
             dotnet restore
-            dotnet test --framework net47 FaunaDB.Client.Test
-            dotnet test --framework net46 FaunaDB.Client.Test
             dotnet test --framework net45 FaunaDB.Client.Test
             
       - store_test_results:
