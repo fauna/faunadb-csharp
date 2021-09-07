@@ -39,9 +39,9 @@ commands:
           name: Run Tests 3.1
           command: |
             dotnet --info
-            mkdir results31
+            mkdir TestResults
             dotnet restore
-            dotnet test --framework netcoreapp3.1 --logger "junit;LogFilePath=./results/results31.xml" FaunaDB.Client.Test
+            dotnet test --framework netcoreapp3.1 --logger "junit;LogFilePath=./TestResults/results31.xml" FaunaDB.Client.Test
       
       - run:
           name: Run Tests 5.0
@@ -55,7 +55,7 @@ commands:
             apt-get install -y dotnet-sdk-5.0
             dotnet --info
             dotnet restore
-            dotnet test --framework net5.0 --logger "junit;LogFilePath=./results/results50.xml" FaunaDB.Client.Test
+            dotnet test --framework net5.0 --logger "junit;LogFilePath=./TestResults/results50.xml" FaunaDB.Client.Test
             
       - run:
           name: Run Tests 45
@@ -72,7 +72,7 @@ commands:
             dotnet test --framework net45 --logger "trx;LogFileName=results45.xml" FaunaDB.Client.Test
             
       - store_test_results:
-          path: FaunaDB.Client.Test/results/
+          path: FaunaDB.Client.Test/TestResults/
 
 jobs:
   core-stable:
