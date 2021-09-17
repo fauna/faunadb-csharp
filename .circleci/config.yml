@@ -9,7 +9,7 @@ executors:
         enum: ["stable", "nightly"]
     resource_class: large
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+      - image: mcr.microsoft.com/dotnet/sdk
 
       - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:latest
         name: core
@@ -46,13 +46,6 @@ commands:
       - run:
           name: Run Tests 5.0
           command: |
-            wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-            dpkg -i packages-microsoft-prod.deb
-            rm packages-microsoft-prod.deb
-            apt-get update; \
-            apt-get install -y apt-transport-https && \
-            apt-get update && \
-            apt-get install -y dotnet-sdk-5.0
             dotnet --info
             dotnet restore
             dotnet test --framework net5.0 --logger "junit;LogFilePath=./TestResults/results50.xml" FaunaDB.Client.Test
