@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FaunaDB.Errors
 {
@@ -10,114 +9,143 @@ namespace FaunaDB.Errors
     /// </summary>
     public class FaunaException : Exception
     {
-        private QueryErrorResponse queryErrorResponse;
+        /// <summary>
+        /// Server http error code
+        /// </summary>
+        public int HttpStatusCode { get; private set; }
 
         /// <summary>
-        /// List of all errors sent by the server.
+        /// Server error code
         /// </summary>
-        public IReadOnlyList<QueryError> Errors =>
-            queryErrorResponse.Errors;
+        public string Code { get; private set; }
 
-        public int StatusCode =>
-            queryErrorResponse.StatusCode;
+        /// <summary>
+        /// Array of errors sent by the server.
+        /// </summary>
+        public IReadOnlyList<string> Positions { get; private set; }
 
-        protected FaunaException(QueryErrorResponse response) : base(CreateMessage(response.Errors))
+        public FaunaException(int httpStatusCode, string code, string message, string[] positions) : base(message)
         {
-            queryErrorResponse = response;
+            Code = code;
+            HttpStatusCode = httpStatusCode;
+            Positions = positions;
         }
-
-        protected FaunaException(string message) : base(message) { }
-
-        private static string CreateMessage(IReadOnlyList<QueryError> errors) =>
-            string.Join(", ", from error in errors select $"{error.Code}: {error.Description}");
-   }
-
-    /// <summary>
-    /// HTTP 400 error.
-    /// An exception thrown if FaunaDB cannot evaluate a query.
-    /// <para>HTTP 400 error.</para>
-    /// </summary>
-    public class BadRequest : FaunaException
-    {
-        internal BadRequest(QueryErrorResponse response)
-            : base(response) { }
     }
 
-    /// <summary>
-    /// HTTP 401 error.
-    /// An exception thrown if FaunaDB responds with an HTTP 401 (Unauthorized).
-    /// <para>HTTP 401 error.</para>
-    /// </summary>
-    public class Unauthorized : FaunaException
+    public class InvalidExpressionException : FaunaException
     {
-        internal Unauthorized(QueryErrorResponse response)
-            : base(response) { }
+        public InvalidExpressionException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidExpression, message, position) { }
     }
 
-    /// <summary>
-    /// HTTP 403 error.
-    /// An exception thrown if FaunaDB responds with an HTTP 403 (Permission Denied).
-    /// <para>HTTP 403 error.</para>
-    /// </summary>
-    public class PermissionDenied : FaunaException
+    public class InvalidRefException : FaunaException
     {
-        internal PermissionDenied(QueryErrorResponse response)
-            : base(response) { }
+        public InvalidRefException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidRef, message, position) { }
     }
 
-    /// <summary>
-    /// HTTP 404 error.
-    /// An exception thrown if a HTTP 404 (Not Found) is returned from FaunaDB.
-    /// <para>HTTP 404 error.</para>
-    /// </summary>
-    public class NotFound : FaunaException
+    public class InvalidUrlParameterException : FaunaException
     {
-        public NotFound(QueryErrorResponse response)
-            : base(response) { }
+        public InvalidUrlParameterException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidRef, message, position) { }
     }
 
-    /// <summary>
-    /// HTTP 500 error.
-    /// An exception thrown if a HTTP 500 (Internal Server Error) occurs when making a request to FaunaDB. Such
-    /// errors represent an internal failure within the database.
-    /// <para>HTTP 500 error.</para>
-    /// </summary>
-    public class InternalError : FaunaException
+    public class InstanceAlreadyExistsException : FaunaException
     {
-        internal InternalError(QueryErrorResponse response)
-            : base(response) { }
+        public InstanceAlreadyExistsException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidRef, message, position) { }
     }
 
-    /// <summary>
-    /// HTTP 503 error.
-    /// An exception thrown if a FaunaDB host is unavailable for any reason. For example, if the client cannot connect
-    /// to the host, or if the host does not respond.
-    /// <para>HTTP 503 error.</para>
-    /// </summary>
-    public class UnavailableError : FaunaException
+    public class ValidationFailedException : FaunaException
     {
-        internal UnavailableError(QueryErrorResponse response)
-            : base(response) { }
+        public IReadOnlyList<ValidationFailure> Failures { get; private set; }
+
+        public ValidationFailedException(int httpStatusCode, string message, string[] position, IReadOnlyList<ValidationFailure> failures) : base(httpStatusCode, ExceptionCodes.ValidationFailed, message, position)
+        {
+            this.Failures = failures;
+        }
     }
 
-    /// <summary>
-    /// An exception thrown if an error response returned during consumption of a stream
-    /// </summary>
+    public class InstanceNotUniqueException : FaunaException
+    {
+        public InstanceNotUniqueException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InstanceNotUnique, message, position) { }
+    }
+
+    public class FeatureNotAvailableException : FaunaException
+    {
+        public FeatureNotAvailableException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.FeatureNotAvailable, message, position) { }
+    }
+
+    public class ValueNotFoundException : FaunaException
+    {
+        public ValueNotFoundException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.ValueNotFound, message, position) { }
+    }
+
+    public class InstanceNotFoundException : FaunaException
+    {
+        public InstanceNotFoundException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InstanceNotFound, message, position) { }
+    }
+
+    public class AuthenticationFailedException : FaunaException
+    {
+        public AuthenticationFailedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.AuthenticationFailed, message, position) { }
+    }
+
+    public class InvalidArgumentException : FaunaException
+    {
+        public InvalidArgumentException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidArgument, message, position) { }
+    }
+
+    public class TransactionAbortedException : FaunaException
+    {
+        public TransactionAbortedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.TransactionAborted, message, position) { }
+    }
+
+    public class InvalidWriteTimeException : FaunaException
+    {
+        public InvalidWriteTimeException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidWriteTime, message, position) { }
+    }
+
+    public class MissingIdentityException : FaunaException
+    {
+        public MissingIdentityException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.MissingIdentity, message, position) { }
+    }
+
+    public class InvalidTokenException : FaunaException
+    {
+        public InvalidTokenException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidToken, message, position) { }
+    }
+
+    public class FunctionCallErrorException : FaunaException
+    {
+        public IReadOnlyList<ValidationFailure> Failures { get; private set; }
+
+        public FunctionCallErrorException(int httpStatusCode, string message, string[] position, IReadOnlyList<ValidationFailure> failures) : base(httpStatusCode, ExceptionCodes.CallError, message, position)
+        {
+            this.Failures = failures;
+        }
+    }
+
+    public class StackOverflowException : FaunaException
+    {
+        public StackOverflowException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.StackOverflow, message, position) { }
+    }
+
+    public class PermissionDeniedException : FaunaException
+    {
+        public PermissionDeniedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.PermissionDenied, message, position) { }
+    }
+
+    public class UnknownException : FaunaException
+    {
+        public UnknownException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.UnknownCode, message, position) { }
+
+        public UnknownException(string message) : base(-1, ExceptionCodes.UnknownCode, message, new string[] { string.Empty }) { }
+    }
+
     public class StreamingException : FaunaException
     {
-        internal StreamingException(QueryErrorResponse response)
-            : base(response) { }
+        public StreamingException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidRef, message, position) { }
     }
 
-    /// <summary>
-    /// An exception thrown if a FaunaDB response is unknown or unparseable by the client.
-    /// </summary>
-    public class UnknowException : FaunaException
+    public class UnauthorizedException : FaunaException
     {
-        internal UnknowException(QueryErrorResponse response)
-            : base(response) { }
-
-        internal UnknowException(string message)
-            : base(message) { }
+        public UnauthorizedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.Unauthorized, message, position) { }
     }
 }

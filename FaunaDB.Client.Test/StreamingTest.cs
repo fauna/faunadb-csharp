@@ -29,8 +29,8 @@ namespace Test
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(Get(Ref(Collection("streams_test"), "1234"))); };
 
-            var ex = Assert.ThrowsAsync<NotFound>(doc);
-            Assert.AreEqual("instance not found: Document not found.", ex.Message);
+            var ex = Assert.ThrowsAsync<InstanceNotFoundException>(doc);
+            Assert.AreEqual("Document not found.", ex.Message);
             AssertErrors(ex, code: "instance not found", description: "Document not found.");
         }
 
@@ -38,8 +38,8 @@ namespace Test
         public void TestStreamFailsIfIncorrectValuePassedToStreamMethod()
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(Collection("streams_test")); };
-            var ex = Assert.ThrowsAsync<BadRequest>(doc);
-            Assert.AreEqual("invalid argument: Expected a Document Ref or Version, got Collection Ref.", ex.Message);
+            var ex = Assert.ThrowsAsync<InvalidArgumentException>(doc);
+            Assert.AreEqual("Expected a Document Ref or Version, got Collection Ref.", ex.Message);
             AssertErrors(ex, code: "invalid argument", description: "Expected a Document Ref or Version, got Collection Ref.");
         }
 
@@ -47,8 +47,8 @@ namespace Test
         public void TestStreamFailsIfQueryIsNotReadOnly()
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(CreateCollection(Collection("streams_test"))); };
-            var ex = Assert.ThrowsAsync<BadRequest>(doc);
-            Assert.AreEqual("invalid expression: Write effect in read-only query expression.", ex.Message);
+            var ex = Assert.ThrowsAsync<InvalidExpressionException>(doc);
+            Assert.AreEqual("Write effect in read-only query expression.", ex.Message);
             AssertErrors(ex, code: "invalid expression", description: "Write effect in read-only query expression.");
         }
 
@@ -276,13 +276,13 @@ namespace Test
             AsyncTestDelegate res = async () => await done.Task;
 
             // blocking until we get an exception
-            var exception = Assert.ThrowsAsync<StreamingException>(res);
+            var exception = Assert.ThrowsAsync<PermissionDeniedException>(res);
 
             // clear the subscription
             monitor.Unsubscribe();
 
             // validating exception message
-            Assert.AreEqual("permission denied: Authorization lost during stream evaluation.", exception.Message);
+            Assert.AreEqual("Authorization lost during stream evaluation.", exception.Message);
             AssertErrors(exception, code: "permission denied", description: "Authorization lost during stream evaluation.");
         }
     }
