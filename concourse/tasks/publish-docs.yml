@@ -1,0 +1,17 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: mcr.microsoft.com/dotnet/sdk
+    tag: 5.0-alpine
+
+inputs:
+  - name: fauna-csharp-repository
+  - name: fauna-csharp-repository-docs
+
+outputs:
+  - name: fauna-csharp-repository-updated-docs
+
+run:
+  path: ./fauna-csharp-repository/concourse/scripts/publish_docs.sh

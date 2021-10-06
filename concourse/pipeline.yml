@@ -5,7 +5,15 @@ resources:
     icon: github
     source:
       uri: https://github.com/fauna/faunadb-csharp
-      branch: main
+      branch: OSS-775
+      
+  - name: fauna-csharp-repository-docs
+    type: git
+    icon: github
+    source:
+      uri: git@github.com:fauna/faunadb-csharp.git
+      branch: gh-pages
+      private_key: ((fauna/repo.key))
 
 jobs:
   - name: release
@@ -14,17 +22,24 @@ jobs:
     plan:
       - get: fauna-csharp-repository
 
-      - task: integration-tests
-        file: fauna-csharp-repository/concourse/tasks/integration-tests.yml
-        privileged: true
-        params:
-          FAUNA_ROOT_KEY: ((fauna.secret))
-          FAUNA_DOMAIN: ((fauna.domain))
-          FAUNA_SCHEME: ((fauna.scheme))
-          FAUNA_PORT: ((fauna.port))
-          FAUNA_REPO_PASSWORD: ((gcr-key))
+      # - task: integration-tests
+        # file: fauna-csharp-repository/concourse/tasks/integration-tests.yml
+        # privileged: true
+        # params:
+          # FAUNA_ROOT_KEY: ((fauna.secret))
+          # FAUNA_DOMAIN: ((fauna.domain))
+          # FAUNA_SCHEME: ((fauna.scheme))
+          # FAUNA_PORT: ((fauna.port))
+          # FAUNA_REPO_PASSWORD: ((gcr-key))
       
-      - task: publish
-        file: fauna-csharp-repository/concourse/tasks/publish.yml
+      # - task: publish
+        # file: fauna-csharp-repository/concourse/tasks/publish.yml
+        # params:
+          # NUGET_API_KEY: ((nuget_api_key))
+      
+      - task: publish-docs
+        file: fauna-csharp-repository/concourse/tasks/publish-docs.yml
+
+      - put: fauna-csharp-repository-docs
         params:
-          NUGET_API_KEY: ((nuget_api_key))
+          repository: fauna-csharp-repository-updated-docs
