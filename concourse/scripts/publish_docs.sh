@@ -2,7 +2,7 @@
 set -eou
 cd ./fauna-csharp-repository
 
-PACKAGE_VERSION="4.0.1"
+# PACKAGE_VERSION="4.0.1"
 
 apk add xmlstarlet
 PACKAGE_VERSION=$(xml sel -t -v "/Project/PropertyGroup/Version" ./FaunaDB.Client/FaunaDB.Client.csproj)
