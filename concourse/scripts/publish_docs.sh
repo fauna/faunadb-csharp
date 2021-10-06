@@ -2,7 +2,9 @@
 set -eou
 cd ./fauna-csharp-repository
 
---get vesion
+PACKAGE_VERSION="4.0.1"
+
+echo "Current docs version: $PACKAGE_VERSION"
 cd ../
 git clone fauna-csharp-repository-docs fauna-csharp-repository-updated-docs
 
