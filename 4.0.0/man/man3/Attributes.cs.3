@@ -1,0 +1,53 @@
+.TH "/mnt/c/Work/fauna/faunadb-csharp/FaunaDB.Client/Types/Attributes.cs" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/mnt/c/Work/fauna/faunadb-csharp/FaunaDB.Client/Types/Attributes.cs
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBFaunaDB\&.Types\&.FaunaFieldAttribute\fP"
+.br
+.RI "Maps a property/field member constructor parameter to \fBFaunaDB\fP object property while encoding/deconding an object\&. If this attribute if not specified the property/field name constructor parameter name will be used instead\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Types\&.FaunaDate\fP"
+.br
+.RI "Instruct the encoder that this DateTime property should always be converted to \fBTypes\&.DateV\fP "
+.ti -1c
+.RI "class \fBFaunaDB\&.Types\&.FaunaTime\fP"
+.br
+.RI "Instruct the encoder that this DateTime property should always be converted to \fBTypes\&.TimeV\fP "
+.ti -1c
+.RI "class \fBFaunaDB\&.Types\&.FaunaString\fP"
+.br
+.RI "Instruct the encoder that this object should be treated as a string when stored in Fauna\&. The Encoder will call the object or primative type's \&.ToString() method\&. The Decoder will attempt to create an object with the constructor with a single string parameter\&. If it does not have that constructor the Decoder will fail\&. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Types\&.FaunaIgnoreAttribute\fP"
+.br
+.RI "Instruct the encoder to not encode the specified member\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Types\&.FaunaConstructorAttribute\fP"
+.br
+.RI "Instruct the decoder wich constructor to use when decoding a object\&. It can also be used in a public static method instead in a constructor\&. That attribute can only be used once per class\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Types\&.FaunaEnum\fP"
+.br
+.RI "Instruct the encoder/decoder to rename the annotated enum field\&. If not used the method Enum\&.GetName(Type, object) will be used instead\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI "namespace \fBFaunaDB\fP"
+.br
+.ti -1c
+.RI "namespace \fBFaunaDB\&.Types\fP"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

@@ -1,0 +1,32 @@
+.TH "FaunaDB.Types.FaunaIgnoreAttribute" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.FaunaIgnoreAttribute \- Instruct the encoder to not encode the specified member\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Attribute\&.
+.SH "Detailed Description"
+.PP 
+Instruct the encoder to not encode the specified member\&. 
+
+class User { [FaunaField('user_name')] public string UserName { get; set; }
+.PP
+[FaunaIgnore] public string Password { get; set; } }
+.PP
+var user = new User { UserName = 'john', Password = 's3cr3t' };
+.PP
+var encoded = Encoder\&.Encode(user);
+.PP
+//encoded will be equivalent to:
+.PP
+\fBObjectV\&.With\fP('user_name', 'john') 
+.PP
+Definition at line 142 of file Attributes\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

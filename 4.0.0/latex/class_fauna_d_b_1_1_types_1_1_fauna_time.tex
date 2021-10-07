@@ -1,0 +1,31 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_time}{}\doxysection{Fauna\+D\+B.\+Types.\+Fauna\+Time Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_fauna_time}\index{FaunaDB.Types.FaunaTime@{FaunaDB.Types.FaunaTime}}
+
+
+Instruct the encoder that this Date\+Time property should always be converted to \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{Types.\+TimeV}}  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+Fauna\+Time\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_types_1_1_fauna_time}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Detailed Description}
+Instruct the encoder that this Date\+Time property should always be converted to \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{Types.\+TimeV}} 
+
+class User \{ \mbox{[}\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_time}{Fauna\+Time}}\mbox{]} public Date\+Time Time\+Signed\+Up \{ get; set; \} \}
+
+var user = new User \{ Time\+Signed\+Up = Date\+Time.\+Now \};
+
+var encoded = Encoder.\+Encode(user); 
+
+Definition at line 93 of file Attributes.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_attributes_8cs}{Attributes.\+cs}}\end{DoxyCompactItemize}

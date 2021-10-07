@@ -1,0 +1,117 @@
+.TH "FaunaDB.Types.ArrayV" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.ArrayV \- Represents an array value in the \fBFaunaDB\fP query language\&. Arrays are polymorphic ordered lists of other values\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFaunaDB\&.Types\&.Value\fP, and IEnumerable< Value >\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override bool \fBEquals\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "override string \fBToString\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBArrayV\fP \fBOf\fP (params \fBValue\fP[] values)"
+.br
+.ti -1c
+.RI "static \fBArrayV\fP \fBOf\fP (IEnumerable< \fBValue\fP > values)"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static readonly \fBArrayV\fP \fBEmpty\fP = new \fBArrayV\fP(new List<\fBValue\fP>())"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override int \fBHashCode\fP ()"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "IReadOnlyList< \fBValue\fP > \fBValue\fP\fC [get]\fP"
+.br
+.ti -1c
+.RI "\fBValue\fP \fBthis[int n]\fP\fC [get]\fP"
+.br
+.RI "Get the nth value\&. "
+.ti -1c
+.RI "int \fBLength\fP\fC [get]\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents an array value in the \fBFaunaDB\fP query language\&. Arrays are polymorphic ordered lists of other values\&. 
+
+
+.PP
+Definition at line 15 of file ArrayV\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "override bool FaunaDB\&.Types\&.ArrayV\&.Equals (\fBExpr\fP v)\fC [virtual]\fP"
+
+.PP
+Implements \fBFaunaDB\&.Query\&.Expr\fP\&.
+.PP
+Definition at line 71 of file ArrayV\&.cs\&.
+.SS "override int FaunaDB\&.Types\&.ArrayV\&.HashCode ()\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBFaunaDB\&.Query\&.Expr\fP\&.
+.SS "static \fBArrayV\fP FaunaDB\&.Types\&.ArrayV\&.Of (IEnumerable< \fBValue\fP > values)\fC [static]\fP"
+
+.SS "static \fBArrayV\fP FaunaDB\&.Types\&.ArrayV\&.Of (params \fBValue\fP[] values)\fC [static]\fP"
+
+.SS "override string FaunaDB\&.Types\&.ArrayV\&.ToString ()"
+
+.SH "Member Data Documentation"
+.PP 
+.SS "readonly \fBArrayV\fP FaunaDB\&.Types\&.ArrayV\&.Empty = new \fBArrayV\fP(new List<\fBValue\fP>())\fC [static]\fP"
+
+.PP
+Definition at line 17 of file ArrayV\&.cs\&.
+.SH "Property Documentation"
+.PP 
+.SS "int FaunaDB\&.Types\&.ArrayV\&.Length\fC [get]\fP"
+
+.PP
+Definition at line 55 of file ArrayV\&.cs\&.
+.SS "\fBValue\fP FaunaDB\&.Types\&.ArrayV\&.this[int n]\fC [get]\fP"
+
+.PP
+Get the nth value\&. 
+.PP
+\fBExceptions\fP
+.RS 4
+\fIIndexOutOfRangeException\fP 
+.RE
+.PP
+
+.PP
+Definition at line 53 of file ArrayV\&.cs\&.
+.SS "IReadOnlyList<\fBValue\fP> FaunaDB\&.Types\&.ArrayV\&.Value\fC [get]\fP"
+
+.PP
+Definition at line 19 of file ArrayV\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

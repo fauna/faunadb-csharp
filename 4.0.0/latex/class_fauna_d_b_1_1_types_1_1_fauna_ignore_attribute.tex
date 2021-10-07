@@ -1,0 +1,37 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_ignore_attribute}{}\doxysection{Fauna\+D\+B.\+Types.\+Fauna\+Ignore\+Attribute Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_fauna_ignore_attribute}\index{FaunaDB.Types.FaunaIgnoreAttribute@{FaunaDB.Types.FaunaIgnoreAttribute}}
+
+
+Instruct the encoder to not encode the specified member.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+Fauna\+Ignore\+Attribute\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_types_1_1_fauna_ignore_attribute}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Detailed Description}
+Instruct the encoder to not encode the specified member. 
+
+class User \{ \mbox{[}Fauna\+Field(\char`\"{}user\+\_\+name\char`\"{})\mbox{]} public string User\+Name \{ get; set; \}
+
+\mbox{[}Fauna\+Ignore\mbox{]} public string Password \{ get; set; \} \}
+
+var user = new User \{ User\+Name = \char`\"{}john\char`\"{}, Password = \char`\"{}s3cr3t\char`\"{} \};
+
+var encoded = Encoder.\+Encode(user);
+
+//encoded will be equivalent to\+:
+
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v_afe2af6058ae644bfbf249c8eaadb4b9e}{Object\+V.\+With}}(\char`\"{}user\+\_\+name\char`\"{}, \char`\"{}john\char`\"{}) 
+
+Definition at line 142 of file Attributes.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_attributes_8cs}{Attributes.\+cs}}\end{DoxyCompactItemize}

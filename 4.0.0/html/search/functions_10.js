@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['query_806',['Query',['../class_fauna_d_b_1_1_client_1_1_fauna_client.html#ae0630259c2a812246a4e9cf341f390a6',1,'FaunaDB.Client.FaunaClient.Query(Expr expression, TimeSpan? queryTimeout=null)'],['../class_fauna_d_b_1_1_client_1_1_fauna_client.html#a945ad9466bdb2e2c579744ef48ba999f',1,'FaunaDB.Client.FaunaClient.Query(params Expr[] expressions)'],['../class_fauna_d_b_1_1_client_1_1_fauna_client.html#a89d7a8507269bcc949f01f603006aeda',1,'FaunaDB.Client.FaunaClient.Query(TimeSpan queryTimeout, params Expr[] expressions)'],['../class_fauna_d_b_1_1_client_1_1_fauna_client.html#a5145ed56d19e1aadb48e87435d6ab053',1,'FaunaDB.Client.FaunaClient.Query(IEnumerable&lt; Expr &gt; expressions, TimeSpan? queryTimeout=null)'],['../struct_fauna_d_b_1_1_query_1_1_language.html#ac6f8c142df452d84b3cfc11147d1b362',1,'FaunaDB.Query.Language.Query()']]],
+  ['queryerror_807',['QueryError',['../class_fauna_d_b_1_1_errors_1_1_query_error.html#afdaf20c8a90ea1391414c12fccfb616a',1,'FaunaDB::Errors::QueryError']]],
+  ['queryerrorresponse_808',['QueryErrorResponse',['../struct_fauna_d_b_1_1_errors_1_1_query_error_response.html#ab7f2f255d83c57674a512e6ed634566c',1,'FaunaDB::Errors::QueryErrorResponse']]]
+];

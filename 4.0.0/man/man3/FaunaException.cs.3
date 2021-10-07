@@ -1,0 +1,63 @@
+.TH "/mnt/c/Work/fauna/faunadb-csharp/FaunaDB.Client/Errors/FaunaException.cs" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+/mnt/c/Work/fauna/faunadb-csharp/FaunaDB.Client/Errors/FaunaException.cs
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.FaunaException\fP"
+.br
+.RI "Error returned by the \fBFaunaDB\fP server\&. For documentation of error types, see the docs
+.PP
+\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.BadRequest\fP"
+.br
+.RI "HTTP 400 error\&. An exception thrown if \fBFaunaDB\fP cannot evaluate a query\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.Unauthorized\fP"
+.br
+.RI "HTTP 401 error\&. An exception thrown if \fBFaunaDB\fP responds with an HTTP 401 (\fBUnauthorized\fP)\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.PermissionDenied\fP"
+.br
+.RI "HTTP 403 error\&. An exception thrown if \fBFaunaDB\fP responds with an HTTP 403 (Permission Denied)\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.NotFound\fP"
+.br
+.RI "HTTP 404 error\&. An exception thrown if a HTTP 404 (Not Found) is returned from \fBFaunaDB\fP\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.InternalError\fP"
+.br
+.RI "HTTP 500 error\&. An exception thrown if a HTTP 500 (Internal Server Error) occurs when making a request to \fBFaunaDB\fP\&. Such errors represent an internal failure within the database\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.UnavailableError\fP"
+.br
+.RI "HTTP 503 error\&. An exception thrown if a \fBFaunaDB\fP host is unavailable for any reason\&. For example, if the client cannot connect to the host, or if the host does not respond\&. "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.StreamingException\fP"
+.br
+.RI "An exception thrown if an error response returned during consumption of a stream "
+.ti -1c
+.RI "class \fBFaunaDB\&.Errors\&.UnknowException\fP"
+.br
+.RI "An exception thrown if a \fBFaunaDB\fP response is unknown or unparseable by the client\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI "namespace \fBFaunaDB\fP"
+.br
+.ti -1c
+.RI "namespace \fBFaunaDB\&.Errors\fP"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

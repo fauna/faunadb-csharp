@@ -1,0 +1,33 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_constructor_attribute}{}\doxysection{Fauna\+D\+B.\+Types.\+Fauna\+Constructor\+Attribute Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_fauna_constructor_attribute}\index{FaunaDB.Types.FaunaConstructorAttribute@{FaunaDB.Types.FaunaConstructorAttribute}}
+
+
+Instruct the decoder wich constructor to use when decoding a object. It can also be used in a public static method instead in a constructor. That attribute can only be used once per class.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+Fauna\+Constructor\+Attribute\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_types_1_1_fauna_constructor_attribute}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Detailed Description}
+Instruct the decoder wich constructor to use when decoding a object. It can also be used in a public static method instead in a constructor. That attribute can only be used once per class. 
+
+class Product \{ public string Description \{ get; set; \} public double Price \{ get; set; \}
+
+\mbox{[}Fauna\+Constructor\mbox{]} public Product(string description, double price) \{ Description = description; Price = price; \} \}
+
+class Order \{ public string Number \{ get; set; \} public List$<$Product$>$ Products \{ get; set; \}
+
+\mbox{[}Fauna\+Constructor\mbox{]} public static Order Create\+Order(string number, List$<$Product$>$ products) \{ return new Order \{ Number = number, Products = products \} \} \} 
+
+Definition at line 181 of file Attributes.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_attributes_8cs}{Attributes.\+cs}}\end{DoxyCompactItemize}

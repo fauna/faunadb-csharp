@@ -1,0 +1,139 @@
+.TH "FaunaDB.Client.RequestResult" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Client.RequestResult \- Stores information about a single request and response\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRequestResult\fP (\fBHttpMethodKind\fP method, string path, IReadOnlyDictionary< string, string > query, string requestContent, string responseContent, int statusCode, IReadOnlyDictionary< string, IEnumerable< string >> responseHeaders, DateTime startTime, DateTime endTime)"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "\fBHttpMethodKind\fP \fBMethod\fP\fC [get]\fP"
+.br
+.RI "HTTP method that was used\&. "
+.ti -1c
+.RI "string \fBPath\fP\fC [get]\fP"
+.br
+.RI "Path that was queried\&. Relative to client's domain\&. "
+.ti -1c
+.RI "IReadOnlyDictionary< string, string > \fBQuery\fP\fC [get]\fP"
+.br
+.RI "The query parameters submitted on the request\&. "
+.ti -1c
+.RI "string \fBRequestContent\fP\fC [get]\fP"
+.br
+.RI "String data submited for the server\&. "
+.ti -1c
+.RI "string \fBResponseContent\fP\fC [get]\fP"
+.br
+.RI "String returned by the server\&. "
+.ti -1c
+.RI "int \fBStatusCode\fP\fC [get]\fP"
+.br
+.RI "Http status code result of the request\&. "
+.ti -1c
+.RI "IReadOnlyDictionary< string, IEnumerable< string > > \fBResponseHeaders\fP\fC [get]\fP"
+.br
+.RI "Response headers returned by the \fBFaunaDB\fP server\&. "
+.ti -1c
+.RI "DateTime \fBStartTime\fP\fC [get]\fP"
+.br
+.RI "DateTime when the query was issued\&. "
+.ti -1c
+.RI "DateTime \fBEndTime\fP\fC [get]\fP"
+.br
+.RI "DateTime when the query finished\&. "
+.ti -1c
+.RI "TimeSpan \fBTimeTaken\fP\fC [get]\fP"
+.br
+.RI "Indicates how long the query took to execute\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Stores information about a single request and response\&. 
+
+
+.PP
+Definition at line 9 of file RequestResult\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Client\&.RequestResult\&.RequestResult (\fBHttpMethodKind\fP method, string path, IReadOnlyDictionary< string, string > query, string requestContent, string responseContent, int statusCode, IReadOnlyDictionary< string, IEnumerable< string >> responseHeaders, DateTime startTime, DateTime endTime)"
+
+.PP
+Definition at line 61 of file RequestResult\&.cs\&.
+.SH "Property Documentation"
+.PP 
+.SS "DateTime FaunaDB\&.Client\&.RequestResult\&.EndTime\fC [get]\fP"
+
+.PP
+DateTime when the query finished\&. 
+.PP
+Definition at line 54 of file RequestResult\&.cs\&.
+.SS "\fBHttpMethodKind\fP FaunaDB\&.Client\&.RequestResult\&.Method\fC [get]\fP"
+
+.PP
+HTTP method that was used\&. 
+.PP
+Definition at line 14 of file RequestResult\&.cs\&.
+.SS "string FaunaDB\&.Client\&.RequestResult\&.Path\fC [get]\fP"
+
+.PP
+Path that was queried\&. Relative to client's domain\&. 
+.PP
+Definition at line 19 of file RequestResult\&.cs\&.
+.SS "IReadOnlyDictionary<string, string> FaunaDB\&.Client\&.RequestResult\&.Query\fC [get]\fP"
+
+.PP
+The query parameters submitted on the request\&. 
+.PP
+Definition at line 24 of file RequestResult\&.cs\&.
+.SS "string FaunaDB\&.Client\&.RequestResult\&.RequestContent\fC [get]\fP"
+
+.PP
+String data submited for the server\&. 
+.PP
+Definition at line 29 of file RequestResult\&.cs\&.
+.SS "string FaunaDB\&.Client\&.RequestResult\&.ResponseContent\fC [get]\fP"
+
+.PP
+String returned by the server\&. 
+.PP
+Definition at line 34 of file RequestResult\&.cs\&.
+.SS "IReadOnlyDictionary<string, IEnumerable<string> > FaunaDB\&.Client\&.RequestResult\&.ResponseHeaders\fC [get]\fP"
+
+.PP
+Response headers returned by the \fBFaunaDB\fP server\&. 
+.PP
+Definition at line 44 of file RequestResult\&.cs\&.
+.SS "DateTime FaunaDB\&.Client\&.RequestResult\&.StartTime\fC [get]\fP"
+
+.PP
+DateTime when the query was issued\&. 
+.PP
+Definition at line 49 of file RequestResult\&.cs\&.
+.SS "int FaunaDB\&.Client\&.RequestResult\&.StatusCode\fC [get]\fP"
+
+.PP
+Http status code result of the request\&. 
+.PP
+Definition at line 39 of file RequestResult\&.cs\&.
+.SS "TimeSpan FaunaDB\&.Client\&.RequestResult\&.TimeTaken\fC [get]\fP"
+
+.PP
+Indicates how long the query took to execute\&. 
+.PP
+Definition at line 59 of file RequestResult\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

@@ -1,0 +1,107 @@
+\hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper}{}\doxysection{Fauna\+D\+B.\+Query.\+Page\+Helper Class Reference}
+\label{class_fauna_d_b_1_1_query_1_1_page_helper}\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper_a7612adef9e2f60a8ada2df2aa634d798}{Page\+Helper}} (\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} client, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} set, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} ts=null, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} after=null, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} before=null, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} size=null, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} events=null, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} sources=null)
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper}{Page\+Helper}} \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper_af8d36164c24d994a3c8b4e48b6001f64}{Map}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} lambda)
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper}{Page\+Helper}} \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper_a2d0033f57a0be50ce0f329eb44770e19}{Filter}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} lambda)
+\item 
+async Task \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper_a167421336bb3e491b56134b867b91df0}{Each}} (Action$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ lambda)
+\item 
+async Task \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper_ac5b955e7fe07095053d72f00c72cc6d6}{Each\+Reverse}} (Action$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ lambda)
+\item 
+async Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper_ad06450ca945301bd7caa8f8f1cafa34d}{Next\+Page}} ()
+\item 
+async Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper_a3b978cea9776dc79f2e6ad2d11f8c5a8}{Previous\+Page}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 10 of file Page\+Helper.\+cs.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper_a7612adef9e2f60a8ada2df2aa634d798}\label{class_fauna_d_b_1_1_query_1_1_page_helper_a7612adef9e2f60a8ada2df2aa634d798}} 
+\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}!PageHelper@{PageHelper}}
+\index{PageHelper@{PageHelper}!FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsubsection{\texorpdfstring{PageHelper()}{PageHelper()}}
+{\footnotesize\ttfamily Fauna\+D\+B.\+Query.\+Page\+Helper.\+Page\+Helper (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}}}]{client,  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{set,  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{ts = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{after = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{before = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{size = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{events = {\ttfamily null},  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{sources = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 22 of file Page\+Helper.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper_a167421336bb3e491b56134b867b91df0}\label{class_fauna_d_b_1_1_query_1_1_page_helper_a167421336bb3e491b56134b867b91df0}} 
+\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}!Each@{Each}}
+\index{Each@{Each}!FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsubsection{\texorpdfstring{Each()}{Each()}}
+{\footnotesize\ttfamily async Task Fauna\+D\+B.\+Query.\+Page\+Helper.\+Each (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$}]{lambda }\end{DoxyParamCaption})}
+
+
+
+Definition at line 57 of file Page\+Helper.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper_ac5b955e7fe07095053d72f00c72cc6d6}\label{class_fauna_d_b_1_1_query_1_1_page_helper_ac5b955e7fe07095053d72f00c72cc6d6}} 
+\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}!EachReverse@{EachReverse}}
+\index{EachReverse@{EachReverse}!FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsubsection{\texorpdfstring{EachReverse()}{EachReverse()}}
+{\footnotesize\ttfamily async Task Fauna\+D\+B.\+Query.\+Page\+Helper.\+Each\+Reverse (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$}]{lambda }\end{DoxyParamCaption})}
+
+
+
+Definition at line 64 of file Page\+Helper.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper_a2d0033f57a0be50ce0f329eb44770e19}\label{class_fauna_d_b_1_1_query_1_1_page_helper_a2d0033f57a0be50ce0f329eb44770e19}} 
+\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}!Filter@{Filter}}
+\index{Filter@{Filter}!FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsubsection{\texorpdfstring{Filter()}{Filter()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper}{Page\+Helper}} Fauna\+D\+B.\+Query.\+Page\+Helper.\+Filter (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{lambda }\end{DoxyParamCaption})}
+
+
+
+Definition at line 51 of file Page\+Helper.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper_af8d36164c24d994a3c8b4e48b6001f64}\label{class_fauna_d_b_1_1_query_1_1_page_helper_af8d36164c24d994a3c8b4e48b6001f64}} 
+\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}!Map@{Map}}
+\index{Map@{Map}!FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsubsection{\texorpdfstring{Map()}{Map()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_page_helper}{Page\+Helper}} Fauna\+D\+B.\+Query.\+Page\+Helper.\+Map (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{lambda }\end{DoxyParamCaption})}
+
+
+
+Definition at line 45 of file Page\+Helper.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper_ad06450ca945301bd7caa8f8f1cafa34d}\label{class_fauna_d_b_1_1_query_1_1_page_helper_ad06450ca945301bd7caa8f8f1cafa34d}} 
+\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}!NextPage@{NextPage}}
+\index{NextPage@{NextPage}!FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsubsection{\texorpdfstring{NextPage()}{NextPage()}}
+{\footnotesize\ttfamily async Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$ Fauna\+D\+B.\+Query.\+Page\+Helper.\+Next\+Page (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 71 of file Page\+Helper.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_page_helper_a3b978cea9776dc79f2e6ad2d11f8c5a8}\label{class_fauna_d_b_1_1_query_1_1_page_helper_a3b978cea9776dc79f2e6ad2d11f8c5a8}} 
+\index{FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}!PreviousPage@{PreviousPage}}
+\index{PreviousPage@{PreviousPage}!FaunaDB.Query.PageHelper@{FaunaDB.Query.PageHelper}}
+\doxysubsubsection{\texorpdfstring{PreviousPage()}{PreviousPage()}}
+{\footnotesize\ttfamily async Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$ Fauna\+D\+B.\+Query.\+Page\+Helper.\+Previous\+Page (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 77 of file Page\+Helper.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Query/\mbox{\hyperlink{_page_helper_8cs}{Page\+Helper.\+cs}}\end{DoxyCompactItemize}

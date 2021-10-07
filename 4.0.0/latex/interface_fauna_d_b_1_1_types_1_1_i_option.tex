@@ -1,0 +1,135 @@
+\hypertarget{interface_fauna_d_b_1_1_types_1_1_i_option}{}\doxysection{Fauna\+D\+B.\+Types.\+I\+Option$<$ T $>$ Interface Template Reference}
+\label{interface_fauna_d_b_1_1_types_1_1_i_option}\index{FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}}
+
+
+Represents an optional value.  
+
+
+
+
+Inherited by Fauna\+D\+B.\+Types.\+None$<$ T $>$, and Fauna\+D\+B.\+Types.\+Some$<$ T $>$.
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$ U $>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option_a5200e1baac1855254920c78c44f2ecfa}{Map$<$ U $>$}} (Func$<$ T, U $>$ func)
+\begin{DoxyCompactList}\small\item\em Apply the function passed on the optional value. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$ U $>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option_a01bda3b4b8ce832ff95702a41e301f55}{Flat\+Map$<$ U $>$}} (Func$<$ T, \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$ U $>$$>$ func)
+\begin{DoxyCompactList}\small\item\em Apply the function passed on the optional value. \end{DoxyCompactList}\item 
+U \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option_a32295814af2ad7d2022d3a32318dc6ac}{Match$<$ U $>$}} (Func$<$ T, U $>$ Some, Func$<$ U $>$ None)
+\begin{DoxyCompactList}\small\item\em Matches the current instance. Case it contains some value it will execute the first argument. Case it contains none value it will execute the second argument. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option_a2c44a4b2fe64e4647c19a7e2139b348c}{Match}} (Action$<$ T $>$ Some, Action None)
+\begin{DoxyCompactList}\small\item\em Matches the current instance. Case it contains some value it will execute the first argument. Case it contains none value it will execute the second argument. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+T \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option_a2a35e41373c8e8d959e8e9996964973c}{Value}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an optional value. 
+
+
+
+Definition at line 8 of file Option.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_option_a01bda3b4b8ce832ff95702a41e301f55}\label{interface_fauna_d_b_1_1_types_1_1_i_option_a01bda3b4b8ce832ff95702a41e301f55}} 
+\index{FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}!FlatMap$<$ U $>$@{FlatMap$<$ U $>$}}
+\index{FlatMap$<$ U $>$@{FlatMap$<$ U $>$}!FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FlatMap$<$ U $>$()}{FlatMap< U >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$U$>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{Fauna\+D\+B.\+Types.\+I\+Option}}$<$ T $>$.Flat\+Map$<$ U $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$ U $>$$>$}]{func }\end{DoxyParamCaption})}
+
+
+
+Apply the function passed on the optional value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & the map function to be applied\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If this is a some value, return a new optional with the function applied to it. If this is a none value, returns none and ignore the function. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_option_a5200e1baac1855254920c78c44f2ecfa}\label{interface_fauna_d_b_1_1_types_1_1_i_option_a5200e1baac1855254920c78c44f2ecfa}} 
+\index{FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}!Map$<$ U $>$@{Map$<$ U $>$}}
+\index{Map$<$ U $>$@{Map$<$ U $>$}!FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Map$<$ U $>$()}{Map< U >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$U$>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{Fauna\+D\+B.\+Types.\+I\+Option}}$<$ T $>$.Map$<$ U $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, U $>$}]{func }\end{DoxyParamCaption})}
+
+
+
+Apply the function passed on the optional value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & the map function to be applied\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If this is a some value, return a new optional with the function applied to it. If this is a none value, returns none and ignore the function. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_option_a2c44a4b2fe64e4647c19a7e2139b348c}\label{interface_fauna_d_b_1_1_types_1_1_i_option_a2c44a4b2fe64e4647c19a7e2139b348c}} 
+\index{FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}!Match@{Match}}
+\index{Match@{Match}!FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Match()}{Match()}}
+{\footnotesize\ttfamily void \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{Fauna\+D\+B.\+Types.\+I\+Option}}$<$ T $>$.Match (\begin{DoxyParamCaption}\item[{Action$<$ T $>$}]{Some,  }\item[{Action}]{None }\end{DoxyParamCaption})}
+
+
+
+Matches the current instance. Case it contains some value it will execute the first argument. Case it contains none value it will execute the second argument. 
+
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$string$>$ optional = ...
+
+result.\+Match( Some\+: value =$>$ Do\+Something(value), None\+: () =$>$ Do\+Something\+Else() ); 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Some} & Function to be executed case this instance contains some value\\
+\hline
+{\em None} & Function to be executed case this instance contains none value\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_option_a32295814af2ad7d2022d3a32318dc6ac}\label{interface_fauna_d_b_1_1_types_1_1_i_option_a32295814af2ad7d2022d3a32318dc6ac}} 
+\index{FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}!Match$<$ U $>$@{Match$<$ U $>$}}
+\index{Match$<$ U $>$@{Match$<$ U $>$}!FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Match$<$ U $>$()}{Match< U >()}}
+{\footnotesize\ttfamily U \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{Fauna\+D\+B.\+Types.\+I\+Option}}$<$ T $>$.\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option_a2c44a4b2fe64e4647c19a7e2139b348c}{Match}}$<$ U $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, U $>$}]{Some,  }\item[{Func$<$ U $>$}]{None }\end{DoxyParamCaption})}
+
+
+
+Matches the current instance. Case it contains some value it will execute the first argument. Case it contains none value it will execute the second argument. 
+
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$string$>$ optional = ...
+
+int parsed = result.\+Match( Some\+: value =$>$ int.\+Parse(value), None\+: () =$>$ Return\+Default\+Value() ); 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Some} & Function to be executed case this instance contains some value\\
+\hline
+{\em None} & Function to be executed case this instance contains none value\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_option_a2a35e41373c8e8d959e8e9996964973c}\label{interface_fauna_d_b_1_1_types_1_1_i_option_a2a35e41373c8e8d959e8e9996964973c}} 
+\index{FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}!Value@{Value}}
+\index{Value@{Value}!FaunaDB.Types.IOption$<$ T $>$@{FaunaDB.Types.IOption$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Value}{Value}}
+{\footnotesize\ttfamily T \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{Fauna\+D\+B.\+Types.\+I\+Option}}$<$ T $>$.\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line 10 of file Option.\+cs.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_option_8cs}{Option.\+cs}}\end{DoxyCompactItemize}

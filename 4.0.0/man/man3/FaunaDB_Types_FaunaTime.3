@@ -1,0 +1,26 @@
+.TH "FaunaDB.Types.FaunaTime" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.FaunaTime \- Instruct the encoder that this DateTime property should always be converted to \fBTypes\&.TimeV\fP  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Attribute\&.
+.SH "Detailed Description"
+.PP 
+Instruct the encoder that this DateTime property should always be converted to \fBTypes\&.TimeV\fP 
+
+class User { [\fBFaunaTime\fP] public DateTime TimeSignedUp { get; set; } }
+.PP
+var user = new User { TimeSignedUp = DateTime\&.Now };
+.PP
+var encoded = Encoder\&.Encode(user); 
+.PP
+Definition at line 93 of file Attributes\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

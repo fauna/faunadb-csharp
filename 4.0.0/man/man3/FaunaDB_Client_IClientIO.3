@@ -1,0 +1,43 @@
+.TH "FaunaDB.Client.IClientIO" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Client.IClientIO \- Handles actual I/O for a \fBFaunaClient\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by FaunaDB\&.Client\&.DefaultClientIO\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBIClientIO\fP \fBNewSessionClient\fP (string secret)"
+.br
+.ti -1c
+.RI "Task< \fBRequestResult\fP > \fBDoRequest\fP (\fBHttpMethodKind\fP method, string path, string data, IReadOnlyDictionary< string, string > query=null, TimeSpan? queryTimeout=null)"
+.br
+.ti -1c
+.RI "Task< \fBStreamingRequestResult\fP > \fBDoStreamingRequest\fP (string data, IReadOnlyDictionary< string, string > query=null)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Handles actual I/O for a \fBFaunaClient\fP\&. 
+
+
+.PP
+Definition at line 10 of file IClientIO\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "Task<\fBRequestResult\fP> FaunaDB\&.Client\&.IClientIO\&.DoRequest (\fBHttpMethodKind\fP method, string path, string data, IReadOnlyDictionary< string, string > query = \fCnull\fP, TimeSpan? queryTimeout = \fCnull\fP)"
+
+.SS "Task<\fBStreamingRequestResult\fP> FaunaDB\&.Client\&.IClientIO\&.DoStreamingRequest (string data, IReadOnlyDictionary< string, string > query = \fCnull\fP)"
+
+.SS "\fBIClientIO\fP FaunaDB\&.Client\&.IClientIO\&.NewSessionClient (string secret)"
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

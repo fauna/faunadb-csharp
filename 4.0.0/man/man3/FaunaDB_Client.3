@@ -1,0 +1,114 @@
+.TH "FaunaDB.Client" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Client \- A thread-safe static helper used to store the last seen transaction time returned by the database\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI "namespace \fBUtils\fP"
+.br
+.in -1c
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBBuilder\fP"
+.br
+.RI "Builder class for DefaultClientIO class "
+.ti -1c
+.RI "class \fBDefaultClientIO\fP"
+.br
+.RI "Default client that handles all http connections using HttpClient\&. "
+.ti -1c
+.RI "class \fBEnvironmentEditor\fP"
+.br
+.ti -1c
+.RI "class \fBEventField\fP"
+.br
+.ti -1c
+.RI "class \fBFaunaClient\fP"
+.br
+.RI "C# native client for \fBFaunaDB\fP\&. "
+.ti -1c
+.RI "class \fBHttpMethodKindExtensions\fP"
+.br
+.ti -1c
+.RI "class \fBHttpRequestExtensions\fP"
+.br
+.RI "Http \fBClient\fP proper timing out "
+.ti -1c
+.RI "interface \fBIClientIO\fP"
+.br
+.RI "Handles actual I/O for a \fBFaunaClient\fP\&. "
+.ti -1c
+.RI "interface \fBIEnvironmentEditor\fP"
+.br
+.ti -1c
+.RI "class \fBLastSeen\fP"
+.br
+.ti -1c
+.RI "class \fBRequestResult\fP"
+.br
+.RI "Stores information about a single request and response\&. "
+.ti -1c
+.RI "class \fBRuntimeEnvironmentHeader\fP"
+.br
+.ti -1c
+.RI "class \fBStreamingEventHandler\fP"
+.br
+.ti -1c
+.RI "class \fBStreamingEventMonitor\fP"
+.br
+.ti -1c
+.RI "class \fBStreamingRequestResult\fP"
+.br
+.ti -1c
+.RI "class \fBTimeoutHandler\fP"
+.br
+.ti -1c
+.RI "class \fBUnsubscriber\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBHttpMethodKind\fP { \fBHttpMethodKind\&.Get\fP, \fBHttpMethodKind\&.Post\fP, \fBHttpMethodKind\&.Put\fP, \fBHttpMethodKind\&.Patch\fP, \fBHttpMethodKind\&.Delete\fP }"
+.br
+.RI "A method used by the FaunaClient\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+A thread-safe static helper used to store the last seen transaction time returned by the database\&. 
+
+
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBFaunaDB\&.Client\&.HttpMethodKind\fP\fC [strong]\fP"
+
+.PP
+A method used by the \fBFaunaClient\fP\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIGet \fP\fP
+.TP
+\fB\fIPost \fP\fP
+.TP
+\fB\fIPut \fP\fP
+.TP
+\fB\fIPatch \fP\fP
+.TP
+\fB\fIDelete \fP\fP
+.PP
+Definition at line 8 of file HttpMethodKind\&.cs\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

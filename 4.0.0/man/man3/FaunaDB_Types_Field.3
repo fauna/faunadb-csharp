@@ -1,0 +1,157 @@
+.TH "FaunaDB.Types.Field< T >" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.Field< T > \- A field extractor for a \fBFaunaDB\fP \fBValue\fP  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBField\fP< U > \fBAt< U >\fP (\fBField\fP< U > other)"
+.br
+.RI "Creates a field extractor composed with another nested field "
+.ti -1c
+.RI "\fBField\fP< U > \fBTo< U >\fP ()"
+.br
+.RI "Creates a field extractor that coerces its value using the type specified "
+.ti -1c
+.RI "\fBField\fP< IReadOnlyList< U > > \fBCollect< U >\fP (\fBField\fP< U > field)"
+.br
+.RI "Creates a field extractor that collects each inner value of an array using the nested field passed, assuming the root value is an instance of \fBArrayV\fP "
+.ti -1c
+.RI "override bool \fBEquals\fP (object obj)"
+.br
+.ti -1c
+.RI "override int \fBGetHashCode\fP ()"
+.br
+.ti -1c
+.RI "override string \fBToString\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBField\fP< \fBValue\fP > \fBAt\fP (params string[] keys)"
+.br
+.RI "Creates a field that extracts its value from a object path, assuming the value is an instance of \fBObjectV\fP\&. "
+.ti -1c
+.RI "static \fBField\fP< \fBValue\fP > \fBAt\fP (params int[] indexes)"
+.br
+.RI "Creates a field that extracts its value from a array index, assuming the value is an instance of \fBArrayV\fP\&. "
+.ti -1c
+.RI "static \fBField\fP< T > \fBTo< T >\fP ()"
+.br
+.RI "Creates a field that coerces its value using the type specified\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+A field extractor for a \fBFaunaDB\fP \fBValue\fP 
+
+See \fBValue\fP 
+.PP
+Definition at line 12 of file Field\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "static \fBField\fP<\fBValue\fP> \fBFaunaDB\&.Types\&.Field\fP< T >\&.At (params int[] indexes)\fC [static]\fP"
+
+.PP
+Creates a field that extracts its value from a array index, assuming the value is an instance of \fBArrayV\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIindexes\fP indexes path to the value
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+the field extractor
+.RE
+.PP
+
+.SS "static \fBField\fP<\fBValue\fP> \fBFaunaDB\&.Types\&.Field\fP< T >\&.At (params string[] keys)\fC [static]\fP"
+
+.PP
+Creates a field that extracts its value from a object path, assuming the value is an instance of \fBObjectV\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIkeys\fP path to the field
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+the field extractor
+.RE
+.PP
+
+.SS "\fBField\fP<U> \fBFaunaDB\&.Types\&.Field\fP< T >\&.\fBAt\fP< U > (\fBField\fP< U > other)"
+
+.PP
+Creates a field extractor composed with another nested field 
+.PP
+\fBParameters\fP
+.RS 4
+\fIother\fP nested field to compose with
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a new field extractor with the nested field
+.RE
+.PP
+
+.SS "\fBField\fP<IReadOnlyList<U> > \fBFaunaDB\&.Types\&.Field\fP< T >\&.Collect< U > (\fBField\fP< U > field)"
+
+.PP
+Creates a field extractor that collects each inner value of an array using the nested field passed, assuming the root value is an instance of \fBArrayV\fP 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfield\fP field to be extracted from each array's element
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a new field that collects each inner value using the field passed
+.RE
+.PP
+
+.SS "override bool \fBFaunaDB\&.Types\&.Field\fP< T >\&.Equals (object obj)"
+
+.PP
+Definition at line 50 of file Field\&.cs\&.
+.SS "override int \fBFaunaDB\&.Types\&.Field\fP< T >\&.GetHashCode ()"
+
+.SS "static \fBField\fP<T> \fBFaunaDB\&.Types\&.Field\fP< T >\&.To< T > ()\fC [static]\fP"
+
+.PP
+Creates a field that coerces its value using the type specified\&. 
+.PP
+\fBReturns\fP
+.RS 4
+the field extractor
+.RE
+.PP
+
+.SS "\fBField\fP<U> \fBFaunaDB\&.Types\&.Field\fP< T >\&.To< U > ()"
+
+.PP
+Creates a field extractor that coerces its value using the type specified 
+.PP
+\fBReturns\fP
+.RS 4
+a new field that coerces its value using the type specified
+.RE
+.PP
+
+.SS "override string \fBFaunaDB\&.Types\&.Field\fP< T >\&.ToString ()"
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

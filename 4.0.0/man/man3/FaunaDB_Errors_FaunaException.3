@@ -1,0 +1,81 @@
+.TH "FaunaDB.Errors.FaunaException" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Errors.FaunaException \- Error returned by the \fBFaunaDB\fP server\&. For documentation of error types, see the docs
+.PP
+\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Exception\&.
+.PP
+Inherited by \fBFaunaDB\&.Errors\&.BadRequest\fP, \fBFaunaDB\&.Errors\&.InternalError\fP, \fBFaunaDB\&.Errors\&.NotFound\fP, \fBFaunaDB\&.Errors\&.PermissionDenied\fP, \fBFaunaDB\&.Errors\&.StreamingException\fP, \fBFaunaDB\&.Errors\&.Unauthorized\fP, \fBFaunaDB\&.Errors\&.UnavailableError\fP, and \fBFaunaDB\&.Errors\&.UnknowException\fP\&.
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "IReadOnlyList< \fBQueryError\fP > \fBErrors\fP"
+.br
+.RI "List of all errors sent by the server\&. "
+.ti -1c
+.RI "int \fBStatusCode\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFaunaException\fP (\fBQueryErrorResponse\fP response)"
+.br
+.ti -1c
+.RI "\fBFaunaException\fP (string message)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Error returned by the \fBFaunaDB\fP server\&. For documentation of error types, see the docs
+.PP
+\&. 
+
+
+.PP
+Definition at line 11 of file FaunaException\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Errors\&.FaunaException\&.FaunaException (\fBQueryErrorResponse\fP response)\fC [protected]\fP"
+
+.PP
+Definition at line 24 of file FaunaException\&.cs\&.
+.SS "FaunaDB\&.Errors\&.FaunaException\&.FaunaException (string message)\fC [protected]\fP"
+
+.PP
+Definition at line 29 of file FaunaException\&.cs\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "IReadOnlyList<\fBQueryError\fP> FaunaDB\&.Errors\&.FaunaException\&.Errors"
+\fBInitial value:\fP
+.PP
+.nf
+=>
+            queryErrorResponse\&.Errors
+.fi
+.PP
+List of all errors sent by the server\&. 
+.PP
+Definition at line 18 of file FaunaException\&.cs\&.
+.SS "int FaunaDB\&.Errors\&.FaunaException\&.StatusCode"
+\fBInitial value:\fP
+.PP
+.nf
+=>
+            queryErrorResponse\&.StatusCode
+.fi
+.PP
+Definition at line 21 of file FaunaException\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

@@ -1,0 +1,91 @@
+.TH "FaunaDB.Types.DateV" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.DateV \- Represents a Date value in the \fBFaunaDB\fP query language\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFaunaDB\&.Types\&.ScalarValue< DateTime >\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override bool \fBEquals\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "override string \fBToString\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBDateV\fP \fBOf\fP (string isoDate)"
+.br
+.ti -1c
+.RI "static \fBDateV\fP \fBOf\fP (DateTime dateTime)"
+.br
+.ti -1c
+.RI "static \fBoperator DateV\fP (DateTime value)"
+.br
+.RI "Convert from a DateTime by rendering as iso8601\&. This throws out time-of-day data\&. "
+.ti -1c
+.RI "static implicit \fBoperator DateTime\fP (\fBDateV\fP ft)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override int \fBHashCode\fP ()"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "DateTimeOffset \fBDateTimeOffset\fP\fC [get]\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents a Date value in the \fBFaunaDB\fP query language\&. 
+
+See the \fBFaunaDB\fP Special \fBTypes\fP
+.PP
+\&. 
+.PP
+Definition at line 216 of file ScalarValue\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "override bool FaunaDB\&.Types\&.DateV\&.Equals (\fBExpr\fP v)"
+
+.PP
+Definition at line 260 of file ScalarValue\&.cs\&.
+.SS "override int FaunaDB\&.Types\&.DateV\&.HashCode ()\fC [protected]\fP"
+
+.SS "static \fBDateV\fP FaunaDB\&.Types\&.DateV\&.Of (DateTime dateTime)\fC [static]\fP"
+
+.SS "static \fBDateV\fP FaunaDB\&.Types\&.DateV\&.Of (string isoDate)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.DateV\&.operator DateTime (\fBDateV\fP ft)\fC [static]\fP"
+
+.SS "static FaunaDB\&.Types\&.DateV\&.operator \fBDateV\fP (DateTime value)\fC [explicit]\fP, \fC [static]\fP"
+
+.PP
+Convert from a DateTime by rendering as iso8601\&. This throws out time-of-day data\&. 
+.SS "override string FaunaDB\&.Types\&.DateV\&.ToString ()"
+
+.SH "Property Documentation"
+.PP 
+.SS "DateTimeOffset FaunaDB\&.Types\&.DateV\&.DateTimeOffset\fC [get]\fP"
+
+.PP
+Definition at line 235 of file ScalarValue\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

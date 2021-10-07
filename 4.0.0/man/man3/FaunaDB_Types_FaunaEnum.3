@@ -1,0 +1,51 @@
+.TH "FaunaDB.Types.FaunaEnum" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.FaunaEnum \- Instruct the encoder/decoder to rename the annotated enum field\&. If not used the method Enum\&.GetName(Type, object) will be used instead\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Attribute\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFaunaEnum\fP (string alias)"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string \fBAlias\fP\fC [get]\fP"
+.br
+.RI "Alias used to encode/decode the enum value "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Instruct the encoder/decoder to rename the annotated enum field\&. If not used the method Enum\&.GetName(Type, object) will be used instead\&. 
+
+enum CpuTypes { [\fBFaunaEnum\fP('x86_32')] X86, [\fBFaunaEnum\fP('x86_64')] X86_64, ARM, MIPS } 
+.PP
+Definition at line 198 of file Attributes\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Types\&.FaunaEnum\&.FaunaEnum (string alias)"
+
+.PP
+Definition at line 205 of file Attributes\&.cs\&.
+.SH "Property Documentation"
+.PP 
+.SS "string FaunaDB\&.Types\&.FaunaEnum\&.Alias\fC [get]\fP"
+
+.PP
+Alias used to encode/decode the enum value 
+.PP
+Definition at line 203 of file Attributes\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

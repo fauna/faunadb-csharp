@@ -1,0 +1,299 @@
+.TH "FaunaDB.Types.Value" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.Value \- Represents any scalar or non-scalar value in the \fBFaunaDB\fP query language\&. \fBFaunaDB\fP value types consist of all of the JSON value types, as well as the FaunaDB-specific types, \fBRefV\fP and \fBSetRefV\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFaunaDB\&.Query\&.Expr\fP\&.
+.PP
+Inherited by \fBFaunaDB\&.Types\&.ArrayV\fP, \fBFaunaDB\&.Types\&.NullV\fP, \fBFaunaDB\&.Types\&.ObjectV\fP, and \fBFaunaDB\&.Types\&.ScalarValue< TWrapped >\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBValue\fP \fBAt\fP (params string[] keys)"
+.br
+.RI "Navigate through object's keys, assuming value is an instance of \fBObjectV\fP\&. "
+.ti -1c
+.RI "\fBValue\fP \fBAt\fP (params int[] indexes)"
+.br
+.RI "Navigate through array's indexes, assuming value is an instance of \fBArrayV\fP\&. "
+.ti -1c
+.RI "\fBIResult\fP< T > \fBTo< T >\fP ()"
+.br
+.RI "Attempts to coerce this value to given type T specified\&. "
+.ti -1c
+.RI "IReadOnlyList< T > \fBCollect< T >\fP (\fBField\fP< T > field)"
+.br
+.RI "Loop through this node collecting the \fBField\fP passed, assuming the node is an instance of \fBArrayV\fP "
+.ti -1c
+.RI "T \fBGet< T >\fP (\fBField\fP< T > field)"
+.br
+.RI "Extract a \fBField\fP from this node "
+.ti -1c
+.RI "\fBIOption\fP< T > \fBGetOption< T >\fP (\fBField\fP< T > field)"
+.br
+.RI "Attempts to extact a \fBField\fP from this node "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (bool b)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (double d)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (long l)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (int i)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (string s)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (DateTime dt)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (DateTimeOffset dt)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Value\fP (byte[] bytes)"
+.br
+.ti -1c
+.RI "static \fBoperator bool\fP (\fBValue\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator double\fP (\fBValue\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator long\fP (\fBValue\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator string\fP (\fBValue\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator DateTime\fP (\fBValue\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator DateTimeOffset\fP (\fBValue\fP v)"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Represents any scalar or non-scalar value in the \fBFaunaDB\fP query language\&. \fBFaunaDB\fP value types consist of all of the JSON value types, as well as the FaunaDB-specific types, \fBRefV\fP and \fBSetRefV\fP\&. 
+
+Scalar values are \fBLongV\fP, \fBStringV\fP, \fBDoubleV\fP, \fBBooleanV\fP, \fBNullV\fP, \fBRefV\fP, and \fBSetRefV\fP\&. 
+.PP
+Non-scalar values are \fBObjectV\fP and \fBArrayV\fP\&. 
+.PP
+This interface itself does not have any directly accessible data\&. It must first be coerced into a type before its data can be accessed\&. 
+.PP
+See \fBFaunaDB\fP \fBValue\fP \fBTypes\fP
+.PP
+Consider the \fBValue\fP node modeling the root of the tree: 
+.PP
+.nf
+{
+  "ref": { "@ref": { "id": "classes" } },
+  "data": { "someKey": "string1", "someKey2": 123 }
+}
+
+.fi
+.PP
+ 
+.PP
+The result tree can be accessed using: 
+.PP
+.nf
+Field<RefV> ref = Field\&.At("ref")\&.To<RefV>();
+Field<string> someKey = Field\&.At("data", "someKey")\&.To<string>();
+Field<string> nonExistingKey = Field\&.At("non-existing-key")\&.To<long>();
+
+node\&.Get(ref); // new RefV("classes")
+node\&.Get(someKey); // "string1"
+node\&.GetOption(nonExistingKey) // Option\&.None<string>()
+
+.fi
+.PP
+ 
+.PP
+The interface also has helpers to transverse values without \fBField\fP references: 
+.PP
+.nf
+node\&.At("ref")\&.To<RefV>()\&.Get(); // new RefV("classes")
+node\&.At("data", "someKey")\&.To<string>()\&.Get() // "string1"
+node\&.At("non-existing-key")\&.To<long>()\&.GetOption() // Option\&.None<long>()
+
+.fi
+.PP
+ 
+.PP
+See \fBField\fP 
+.PP
+Definition at line 59 of file Value\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBValue\fP FaunaDB\&.Types\&.Value\&.At (params int[] indexes)"
+
+.PP
+Navigate through array's indexes, assuming value is an instance of \fBArrayV\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIindexes\fP indexes path to navigate to
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fBValue\fP under the path or \fBNullV\fP
+.RE
+.PP
+
+.SS "\fBValue\fP FaunaDB\&.Types\&.Value\&.At (params string[] keys)"
+
+.PP
+Navigate through object's keys, assuming value is an instance of \fBObjectV\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIkeys\fP keys path to navigate to
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fBValue\fP under the path or \fBNullV\fP
+.RE
+.PP
+
+.SS "IReadOnlyList<T> FaunaDB\&.Types\&.Value\&.Collect< T > (\fBField\fP< T > field)"
+
+.PP
+Loop through this node collecting the \fBField\fP passed, assuming the node is an instance of \fBArrayV\fP See \fBField\fP 
+.PP
+Consider the \fBValue\fP node modeling the root of the tree: 
+.PP
+.nf
+{
+  "data": {
+    "arrayOfStrings": ["Jhon", "Bill"],
+    "arrayOfObjects": [ {"name": "Jhon"}, {"name": "Bill"} ]
+   }
+}
+
+.fi
+.PP
+ 
+.PP
+The result tree can be accessed using: 
+.PP
+.nf
+  node\&.Get("arrayOfStrings")\&.Collect(Field\&.To<string>()); // ["Jhon", "Bill"]
+
+  Field<string> name = Field\&.At("name")\&.To<string>();
+  node\&.Get("arrayOfObjects")\&.Collect(name); // ["Jhon", "Bill"]
+}
+
+.fi
+.PP
+ 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfield\fP field to extract from each array value
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a IReadOnlyList<T> with the collected \fBField\fP
+.RE
+.PP
+
+.SS "T FaunaDB\&.Types\&.Value\&.Get< T > (\fBField\fP< T > field)"
+
+.PP
+Extract a \fBField\fP from this node See \fBField\fP 
+.PP
+\fBExceptions\fP
+.RS 4
+\fIInvalidOperationException\fP 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfield\fP field to extract
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+the resulting value of extracting the \fBField\fP from this node
+.RE
+.PP
+.RE
+.PP
+
+.SS "\fBIOption\fP<T> FaunaDB\&.Types\&.Value\&.GetOption< T > (\fBField\fP< T > field)"
+
+.PP
+Attempts to extact a \fBField\fP from this node See \fBField\fP 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfield\fP field to extract
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+An IOption<T> with the resulting value if the field's extraction was successful
+.RE
+.PP
+
+.SS "static FaunaDB\&.Types\&.Value\&.operator bool (\fBValue\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Types\&.Value\&.operator DateTime (\fBValue\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Types\&.Value\&.operator DateTimeOffset (\fBValue\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Types\&.Value\&.operator double (\fBValue\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Types\&.Value\&.operator long (\fBValue\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Types\&.Value\&.operator string (\fBValue\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (bool b)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (byte[] bytes)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (DateTime dt)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (DateTimeOffset dt)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (double d)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (int i)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (long l)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.Value\&.operator \fBValue\fP (string s)\fC [static]\fP"
+
+.SS "\fBIResult\fP<T> FaunaDB\&.Types\&.Value\&.To< T > ()"
+
+.PP
+Attempts to coerce this value to given type T specified\&. 
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fIT\fP The type name in which this value shoulbe be decoded
+.RE
+.PP
+
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

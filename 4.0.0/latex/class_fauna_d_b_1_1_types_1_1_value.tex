@@ -1,0 +1,335 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_value}{}\doxysection{Fauna\+D\+B.\+Types.\+Value Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_value}\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+
+
+Represents any scalar or non-\/scalar value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} value types consist of all of the J\+S\+ON value types, as well as the Fauna\+D\+B-\/specific types, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_ref_v}{RefV}} and \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_set_ref_v}{Set\+RefV}}.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+Value\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.097378cm]{class_fauna_d_b_1_1_types_1_1_value}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a926e202cb63128c80a1fa6c8503ea8a2}{At}} (params string\mbox{[}$\,$\mbox{]} keys)
+\begin{DoxyCompactList}\small\item\em Navigate through object\textquotesingle{}s keys, assuming value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a56dcf2044e334cedfb74599247bf6c28}{At}} (params int\mbox{[}$\,$\mbox{]} indexes)
+\begin{DoxyCompactList}\small\item\em Navigate through array\textquotesingle{}s indexes, assuming value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$ T $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_ac8449569da4d9b2006a4eb227bf77853}{To$<$ T $>$}} ()
+\begin{DoxyCompactList}\small\item\em Attempts to coerce this value to given type T specified. \end{DoxyCompactList}\item 
+I\+Read\+Only\+List$<$ T $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_ade136d9fdf06ceb8d285a8d59df37c47}{Collect$<$ T $>$}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ T $>$ field)
+\begin{DoxyCompactList}\small\item\em Loop through this node collecting the \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} passed, assuming the node is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} \end{DoxyCompactList}\item 
+T \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a1bbcb589b24b6b07ade3b48304185570}{Get$<$ T $>$}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ T $>$ field)
+\begin{DoxyCompactList}\small\item\em Extract a \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} from this node \end{DoxyCompactList}\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$ T $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_ae848ac9fcaf6749210dca6753e9ff983}{Get\+Option$<$ T $>$}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ T $>$ field)
+\begin{DoxyCompactList}\small\item\em Attempts to extact a \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} from this node \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a75a3bc96521792d9e48e4eb43a8cb82e}{operator Value}} (bool b)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a328c09731d5bc9d148b080362cb828fe}{operator Value}} (double d)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a716ab85ac90323c6c7d8df5a7136dc6b}{operator Value}} (long l)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a3169b589f79ddeb8baad72f1171d3063}{operator Value}} (int i)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a523f97a646636b055457a0c23a01bba7}{operator Value}} (string s)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a377444f5e247088edaabaef84b135f8e}{operator Value}} (Date\+Time dt)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a8fd25d050ab2409fe3e06cedda423cac}{operator Value}} (Date\+Time\+Offset dt)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_ae16e77a55e38dcf118a4bf0ce1ce92fa}{operator Value}} (byte\mbox{[}$\,$\mbox{]} bytes)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a5a953f19256b41cedc99812bac5aa962}{operator bool}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a60b69c3a60a7babbd480ca6472ce6d43}{operator double}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a9575eb7f8a7a159bb239ca91dba4db2d}{operator long}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a1365a97ec3d078693cb4fa5331ba1781}{operator string}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a6afdc0065db620b7036d1e9450bc6691}{operator Date\+Time}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a882035db67dc3045046b2f52f7bf21a7}{operator Date\+Time\+Offset}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} v)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Represents any scalar or non-\/scalar value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} value types consist of all of the J\+S\+ON value types, as well as the Fauna\+D\+B-\/specific types, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_ref_v}{RefV}} and \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_set_ref_v}{Set\+RefV}}. 
+
+Scalar values are \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_long_v}{LongV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_string_v}{StringV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_double_v}{DoubleV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_boolean_v}{BooleanV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_null_v}{NullV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_ref_v}{RefV}}, and \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_set_ref_v}{Set\+RefV}}. 
+
+Non-\/scalar values are \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}} and \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}. 
+
+This interface itself does not have any directly accessible data. It must first be coerced into a type before its data can be accessed. 
+
+See \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} \mbox{\hyperlink{namespace_fauna_d_b_1_1_types}{Types}}
+
+Consider the \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} node modeling the root of the tree\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  \textcolor{stringliteral}{"ref"}: \{ \textcolor{stringliteral}{"@ref"}: \{ \textcolor{stringliteral}{"id"}: \textcolor{stringliteral}{"classes"} \} \},}
+\DoxyCodeLine{  \textcolor{stringliteral}{"data"}: \{ \textcolor{stringliteral}{"someKey"}: \textcolor{stringliteral}{"string1"}, \textcolor{stringliteral}{"someKey2"}: 123 \}}
+\DoxyCodeLine{\}}
+\end{DoxyCode}
+ 
+
+The result tree can be accessed using\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{Field<RefV> ref = Field.At(\textcolor{stringliteral}{"ref"}).To<RefV>();}
+\DoxyCodeLine{Field<string> someKey = Field.At(\textcolor{stringliteral}{"data"}, \textcolor{stringliteral}{"someKey"}).To<\textcolor{keywordtype}{string}>();}
+\DoxyCodeLine{Field<string> nonExistingKey = Field.At(\textcolor{stringliteral}{"non-\/existing-\/key"}).To<\textcolor{keywordtype}{long}>();}
+\DoxyCodeLine{}
+\DoxyCodeLine{node.Get(ref); \textcolor{comment}{// new RefV("classes")}}
+\DoxyCodeLine{node.Get(someKey); \textcolor{comment}{// "string1"}}
+\DoxyCodeLine{node.GetOption(nonExistingKey) \textcolor{comment}{// Option.None<string>()}}
+\end{DoxyCode}
+ 
+
+The interface also has helpers to transverse values without \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} references\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{node.At(\textcolor{stringliteral}{"ref"}).To<RefV>().\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ac55582518cba2c464f29f5bae1c68def}{Get}}(); \textcolor{comment}{// new RefV("classes")}}
+\DoxyCodeLine{node.At(\textcolor{stringliteral}{"data"}, \textcolor{stringliteral}{"someKey"}).To<\textcolor{keywordtype}{string}>().\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ac55582518cba2c464f29f5bae1c68def}{Get}}() \textcolor{comment}{// "string1"}}
+\DoxyCodeLine{node.\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value_a926e202cb63128c80a1fa6c8503ea8a2}{At}}("non-\/existing-\/key").To<\textcolor{keywordtype}{long}>().GetOption() \textcolor{comment}{// Option.None<long>()}}
+\end{DoxyCode}
+ 
+
+See \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} 
+
+Definition at line 59 of file Value.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a56dcf2044e334cedfb74599247bf6c28}\label{class_fauna_d_b_1_1_types_1_1_value_a56dcf2044e334cedfb74599247bf6c28}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!At@{At}}
+\index{At@{At}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{At()}{At()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} Fauna\+D\+B.\+Types.\+Value.\+At (\begin{DoxyParamCaption}\item[{params int\mbox{[}$\,$\mbox{]}}]{indexes }\end{DoxyParamCaption})}
+
+
+
+Navigate through array\textquotesingle{}s indexes, assuming value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indexes} & indexes path to navigate to\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} under the path or \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_null_v}{NullV}}
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a926e202cb63128c80a1fa6c8503ea8a2}\label{class_fauna_d_b_1_1_types_1_1_value_a926e202cb63128c80a1fa6c8503ea8a2}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!At@{At}}
+\index{At@{At}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{At()}{At()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} Fauna\+D\+B.\+Types.\+Value.\+At (\begin{DoxyParamCaption}\item[{params string\mbox{[}$\,$\mbox{]}}]{keys }\end{DoxyParamCaption})}
+
+
+
+Navigate through object\textquotesingle{}s keys, assuming value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & keys path to navigate to\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} under the path or \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_null_v}{NullV}}
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_ade136d9fdf06ceb8d285a8d59df37c47}\label{class_fauna_d_b_1_1_types_1_1_value_ade136d9fdf06ceb8d285a8d59df37c47}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!Collect$<$ T $>$@{Collect$<$ T $>$}}
+\index{Collect$<$ T $>$@{Collect$<$ T $>$}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{Collect$<$ T $>$()}{Collect< T >()}}
+{\footnotesize\ttfamily I\+Read\+Only\+List$<$T$>$ Fauna\+D\+B.\+Types.\+Value.\+Collect$<$ T $>$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ T $>$}]{field }\end{DoxyParamCaption})}
+
+
+
+Loop through this node collecting the \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} passed, assuming the node is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} 
+
+See \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} 
+
+Consider the \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} node modeling the root of the tree\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{  \textcolor{stringliteral}{"data"}: \{}
+\DoxyCodeLine{    \textcolor{stringliteral}{"arrayOfStrings"}: [\textcolor{stringliteral}{"Jhon"}, \textcolor{stringliteral}{"Bill"}],}
+\DoxyCodeLine{    \textcolor{stringliteral}{"arrayOfObjects"}: [ \{\textcolor{stringliteral}{"name"}: \textcolor{stringliteral}{"Jhon"}\}, \{\textcolor{stringliteral}{"name"}: \textcolor{stringliteral}{"Bill"}\} ]}
+\DoxyCodeLine{   \}}
+\DoxyCodeLine{\}}
+\end{DoxyCode}
+ 
+
+The result tree can be accessed using\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{  node.Get(\textcolor{stringliteral}{"arrayOfStrings"}).Collect(Field.To<\textcolor{keywordtype}{string}>()); \textcolor{comment}{// ["Jhon", "Bill"]}}
+\DoxyCodeLine{}
+\DoxyCodeLine{  Field<string> name = Field.At(\textcolor{stringliteral}{"name"}).To<\textcolor{keywordtype}{string}>();}
+\DoxyCodeLine{  node.Get(\textcolor{stringliteral}{"arrayOfObjects"}).Collect(name); \textcolor{comment}{// ["Jhon", "Bill"]}}
+\DoxyCodeLine{\}}
+\end{DoxyCode}
+ 
+
+
+\begin{DoxyParams}{Parameters}
+{\em field} & field to extract from each array value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a I\+Read\+Only\+List$<$\+T$>$ with the collected \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a1bbcb589b24b6b07ade3b48304185570}\label{class_fauna_d_b_1_1_types_1_1_value_a1bbcb589b24b6b07ade3b48304185570}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!Get$<$ T $>$@{Get$<$ T $>$}}
+\index{Get$<$ T $>$@{Get$<$ T $>$}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{Get$<$ T $>$()}{Get< T >()}}
+{\footnotesize\ttfamily T Fauna\+D\+B.\+Types.\+Value.\+Get$<$ T $>$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ T $>$}]{field }\end{DoxyParamCaption})}
+
+
+
+Extract a \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} from this node 
+
+See \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Invalid\+Operation\+Exception} & 
+\begin{DoxyParams}{Parameters}
+{\em field} & field to extract\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the resulting value of extracting the \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} from this node
+\end{DoxyReturn}
+\\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_ae848ac9fcaf6749210dca6753e9ff983}\label{class_fauna_d_b_1_1_types_1_1_value_ae848ac9fcaf6749210dca6753e9ff983}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!GetOption$<$ T $>$@{GetOption$<$ T $>$}}
+\index{GetOption$<$ T $>$@{GetOption$<$ T $>$}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{GetOption$<$ T $>$()}{GetOption< T >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$T$>$ Fauna\+D\+B.\+Types.\+Value.\+Get\+Option$<$ T $>$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ T $>$}]{field }\end{DoxyParamCaption})}
+
+
+
+Attempts to extact a \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} from this node 
+
+See \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em field} & field to extract\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An I\+Option$<$\+T$>$ with the resulting value if the field\textquotesingle{}s extraction was successful
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a5a953f19256b41cedc99812bac5aa962}\label{class_fauna_d_b_1_1_types_1_1_value_a5a953f19256b41cedc99812bac5aa962}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator bool@{operator bool}}
+\index{operator bool@{operator bool}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator bool()}{operator bool()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Value.\+operator bool (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a6afdc0065db620b7036d1e9450bc6691}\label{class_fauna_d_b_1_1_types_1_1_value_a6afdc0065db620b7036d1e9450bc6691}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator DateTime@{operator DateTime}}
+\index{operator DateTime@{operator DateTime}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator DateTime()}{operator DateTime()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Value.\+operator Date\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a882035db67dc3045046b2f52f7bf21a7}\label{class_fauna_d_b_1_1_types_1_1_value_a882035db67dc3045046b2f52f7bf21a7}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator DateTimeOffset@{operator DateTimeOffset}}
+\index{operator DateTimeOffset@{operator DateTimeOffset}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator DateTimeOffset()}{operator DateTimeOffset()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Value.\+operator Date\+Time\+Offset (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a60b69c3a60a7babbd480ca6472ce6d43}\label{class_fauna_d_b_1_1_types_1_1_value_a60b69c3a60a7babbd480ca6472ce6d43}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator double@{operator double}}
+\index{operator double@{operator double}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator double()}{operator double()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Value.\+operator double (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a9575eb7f8a7a159bb239ca91dba4db2d}\label{class_fauna_d_b_1_1_types_1_1_value_a9575eb7f8a7a159bb239ca91dba4db2d}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator long@{operator long}}
+\index{operator long@{operator long}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator long()}{operator long()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Value.\+operator long (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a1365a97ec3d078693cb4fa5331ba1781}\label{class_fauna_d_b_1_1_types_1_1_value_a1365a97ec3d078693cb4fa5331ba1781}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator string@{operator string}}
+\index{operator string@{operator string}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator string()}{operator string()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Value.\+operator string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a75a3bc96521792d9e48e4eb43a8cb82e}\label{class_fauna_d_b_1_1_types_1_1_value_a75a3bc96521792d9e48e4eb43a8cb82e}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [1/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{bool}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_ae16e77a55e38dcf118a4bf0ce1ce92fa}\label{class_fauna_d_b_1_1_types_1_1_value_ae16e77a55e38dcf118a4bf0ce1ce92fa}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [2/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{bytes }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a377444f5e247088edaabaef84b135f8e}\label{class_fauna_d_b_1_1_types_1_1_value_a377444f5e247088edaabaef84b135f8e}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [3/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{Date\+Time}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a8fd25d050ab2409fe3e06cedda423cac}\label{class_fauna_d_b_1_1_types_1_1_value_a8fd25d050ab2409fe3e06cedda423cac}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [4/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{Date\+Time\+Offset}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a328c09731d5bc9d148b080362cb828fe}\label{class_fauna_d_b_1_1_types_1_1_value_a328c09731d5bc9d148b080362cb828fe}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [5/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{double}]{d }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a3169b589f79ddeb8baad72f1171d3063}\label{class_fauna_d_b_1_1_types_1_1_value_a3169b589f79ddeb8baad72f1171d3063}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [6/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a716ab85ac90323c6c7d8df5a7136dc6b}\label{class_fauna_d_b_1_1_types_1_1_value_a716ab85ac90323c6c7d8df5a7136dc6b}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [7/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{long}]{l }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_a523f97a646636b055457a0c23a01bba7}\label{class_fauna_d_b_1_1_types_1_1_value_a523f97a646636b055457a0c23a01bba7}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!operator Value@{operator Value}}
+\index{operator Value@{operator Value}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{operator Value()}{operator Value()}\hspace{0.1cm}{\footnotesize\ttfamily [8/8]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Value.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} (\begin{DoxyParamCaption}\item[{string}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_value_ac8449569da4d9b2006a4eb227bf77853}\label{class_fauna_d_b_1_1_types_1_1_value_ac8449569da4d9b2006a4eb227bf77853}} 
+\index{FaunaDB.Types.Value@{FaunaDB.Types.Value}!To$<$ T $>$@{To$<$ T $>$}}
+\index{To$<$ T $>$@{To$<$ T $>$}!FaunaDB.Types.Value@{FaunaDB.Types.Value}}
+\doxysubsubsection{\texorpdfstring{To$<$ T $>$()}{To< T >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$T$>$ Fauna\+D\+B.\+Types.\+Value.\+To$<$ T $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Attempts to coerce this value to given type T specified. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type name in which this value shoulbe be decoded\\
+\hline
+\end{DoxyTemplParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_value_8cs}{Value.\+cs}}\end{DoxyCompactItemize}

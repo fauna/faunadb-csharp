@@ -1,0 +1,103 @@
+\hypertarget{namespace_fauna_d_b_1_1_types}{}\doxysection{Fauna\+D\+B.\+Types Namespace Reference}
+\label{namespace_fauna_d_b_1_1_types}\index{FaunaDB.Types@{FaunaDB.Types}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}
+\begin{DoxyCompactList}\small\item\em Represents an array value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. Arrays are polymorphic ordered lists of other values. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_boolean_v}{BooleanV}}
+\begin{DoxyCompactList}\small\item\em Represents a Boolean value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_bytes_v}{BytesV}}
+\begin{DoxyCompactList}\small\item\em A \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} bytes type. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_camel_case_naming_strategy}{Camel\+Case\+Naming\+Strategy}}
+\item 
+class {\bfseries Date\+Time\+Util}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}}
+\begin{DoxyCompactList}\small\item\em Represents a Date value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class {\bfseries Decoder}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} to object decoder. \end{DoxyCompactList}\item 
+class {\bfseries Decoder\+Impl}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_default_naming_strategy}{Default\+Naming\+Strategy}}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_double_v}{DoubleV}}
+\begin{DoxyCompactList}\small\item\em Represents a Double value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class {\bfseries Encoder}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} object to \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} encoder. \end{DoxyCompactList}\item 
+class {\bfseries Encoder\+Impl}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_expr_v}{ExprV}}
+\begin{DoxyCompactList}\small\item\em A \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} Expression wrapped as a \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} \end{DoxyCompactList}\item 
+class {\bfseries Failure}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_constructor_attribute}{Fauna\+Constructor\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Instruct the decoder wich constructor to use when decoding a object. It can also be used in a public static method instead in a constructor. That attribute can only be used once per class. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_date}{Fauna\+Date}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder that this Date\+Time property should always be converted to \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{Types.\+DateV}} \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_enum}{Fauna\+Enum}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder/decoder to rename the annotated enum field. If not used the method Enum.\+Get\+Name(\+Type, object) will be used instead. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute}{Fauna\+Field\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Maps a property/field member constructor parameter to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} object property while encoding/deconding an object. If this attribute if not specified the property/field name constructor parameter name will be used instead. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_ignore_attribute}{Fauna\+Ignore\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder to not encode the specified member. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_string}{Fauna\+String}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder that this object should be treated as a string when stored in Fauna. The Encoder will call the object or primative type\textquotesingle{}s .To\+String() method. The Decoder will attempt to create an object with the constructor with a single string parameter. If it does not have that constructor the Decoder will fail. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_time}{Fauna\+Time}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder that this Date\+Time property should always be converted to \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{Types.\+TimeV}} \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}
+\begin{DoxyCompactList}\small\item\em A field extractor for a \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} \end{DoxyCompactList}\item 
+interface {\bfseries I\+None}
+\item 
+interface \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}
+\begin{DoxyCompactList}\small\item\em Represents an optional value. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}
+\begin{DoxyCompactList}\small\item\em Represents the result of an operation. Usually a coercion operation. \end{DoxyCompactList}\item 
+class {\bfseries Json\+Writer\+Extensions}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_long_v}{LongV}}
+\begin{DoxyCompactList}\small\item\em Represents a Long value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_naming_strategy}{Naming\+Strategy}}
+\begin{DoxyCompactList}\small\item\em Naming strategy for \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} encoder/decoder. \end{DoxyCompactList}\item 
+class {\bfseries Native}
+\item 
+class {\bfseries None}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_null_v}{NullV}}
+\begin{DoxyCompactList}\small\item\em Represents a null value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}}
+\begin{DoxyCompactList}\small\item\em Represents an Object value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. Objects are polymorphic dictionaries. \end{DoxyCompactList}\item 
+class {\bfseries Option}
+\begin{DoxyCompactList}\small\item\em Represents an optional value. \end{DoxyCompactList}\item 
+class {\bfseries Path}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_query_v}{QueryV}}
+\begin{DoxyCompactList}\small\item\em Represents a query value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_fauna_d_b_1_1_types_1_1_ref_i_d}{Ref\+ID}}
+\item 
+class {\bfseries Reflection}
+\item 
+class {\bfseries Ref\+Parser}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_ref_v}{RefV}}
+\begin{DoxyCompactList}\small\item\em A \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} ref type. \end{DoxyCompactList}\item 
+class {\bfseries Result}
+\begin{DoxyCompactList}\small\item\em Represents the result of an operation. Usually a coercion operation. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_scalar_value}{Scalar\+Value}}
+\begin{DoxyCompactList}\small\item\em Represents a scalar value at the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_set_ref_v}{Set\+RefV}}
+\begin{DoxyCompactList}\small\item\em A \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} set literal. See \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} Special \mbox{\hyperlink{namespace_fauna_d_b_1_1_types}{Types}}\end{DoxyCompactList}\item 
+class {\bfseries Some}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_string_v}{StringV}}
+\begin{DoxyCompactList}\small\item\em Represents a String value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class {\bfseries Success}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}}
+\begin{DoxyCompactList}\small\item\em Represents a Timestamp value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}
+\begin{DoxyCompactList}\small\item\em Represents any scalar or non-\/scalar value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} value types consist of all of the J\+S\+ON value types, as well as the Fauna\+D\+B-\/specific types, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_ref_v}{RefV}} and \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_set_ref_v}{Set\+RefV}}. \end{DoxyCompactList}\item 
+class {\bfseries Value\+Json\+Converter}
+\item 
+class {\bfseries Value\+Reader}
+\end{DoxyCompactItemize}

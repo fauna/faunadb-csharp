@@ -1,0 +1,94 @@
+.TH "FaunaDB.Types.TimeV" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.TimeV \- Represents a Timestamp value in the \fBFaunaDB\fP query language\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFaunaDB\&.Types\&.ScalarValue< DateTime >\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override bool \fBEquals\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "override string \fBToString\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBTimeV\fP \fBOf\fP (string isoTime)"
+.br
+.ti -1c
+.RI "static \fBTimeV\fP \fBOf\fP (DateTime dateTime)"
+.br
+.ti -1c
+.RI "static \fBoperator TimeV\fP (DateTime value)"
+.br
+.RI "Convert from a DateTime by rendering as iso8601\&. "
+.ti -1c
+.RI "static implicit \fBoperator DateTime\fP (\fBTimeV\fP ft)"
+.br
+.RI "Convert to DateTime\&. Since DateTime has millisecond precision, this is lossy\&. "
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override int \fBHashCode\fP ()"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "DateTimeOffset \fBDateTimeOffset\fP\fC [get]\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents a Timestamp value in the \fBFaunaDB\fP query language\&. 
+
+See the \fBFaunaDB\fP Special \fBTypes\fP
+.PP
+\&. 
+.PP
+Definition at line 148 of file ScalarValue\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "override bool FaunaDB\&.Types\&.TimeV\&.Equals (\fBExpr\fP v)"
+
+.PP
+Definition at line 196 of file ScalarValue\&.cs\&.
+.SS "override int FaunaDB\&.Types\&.TimeV\&.HashCode ()\fC [protected]\fP"
+
+.SS "static \fBTimeV\fP FaunaDB\&.Types\&.TimeV\&.Of (DateTime dateTime)\fC [static]\fP"
+
+.SS "static \fBTimeV\fP FaunaDB\&.Types\&.TimeV\&.Of (string isoTime)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Types\&.TimeV\&.operator DateTime (\fBTimeV\fP ft)\fC [static]\fP"
+
+.PP
+Convert to DateTime\&. Since DateTime has millisecond precision, this is lossy\&. 
+.SS "static FaunaDB\&.Types\&.TimeV\&.operator \fBTimeV\fP (DateTime value)\fC [explicit]\fP, \fC [static]\fP"
+
+.PP
+Convert from a DateTime by rendering as iso8601\&. 
+.SS "override string FaunaDB\&.Types\&.TimeV\&.ToString ()"
+
+.SH "Property Documentation"
+.PP 
+.SS "DateTimeOffset FaunaDB\&.Types\&.TimeV\&.DateTimeOffset\fC [get]\fP"
+
+.PP
+Definition at line 168 of file ScalarValue\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

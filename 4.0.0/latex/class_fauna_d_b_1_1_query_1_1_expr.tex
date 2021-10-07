@@ -1,0 +1,296 @@
+\hypertarget{class_fauna_d_b_1_1_query_1_1_expr}{}\doxysection{Fauna\+D\+B.\+Query.\+Expr Class Reference}
+\label{class_fauna_d_b_1_1_query_1_1_expr}\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+
+
+A query language expression. Constructors for this class are at the \mbox{\hyperlink{struct_fauna_d_b_1_1_query_1_1_language}{Language}} class.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Query.\+Expr\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.097378cm]{class_fauna_d_b_1_1_query_1_1_expr}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override bool \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a6d640a271561f69146a0c5934bd57991}{Equals}} (object obj)
+\item 
+abstract bool \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a2f83312dd7cc2168b0d1e9a13fdb52a5}{Equals}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+override int \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a085e1e48b343377862dabaed2698402e}{Get\+Hash\+Code}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_abb73d3482e7576dba2b14664666f4705}{operator==}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} a, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} b)
+\item 
+static bool \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a47dd499ed38aed368f89f70a082a6c83}{operator!=}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} a, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} b)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_acea6a3cebd2c36eacae5cac68ab0925c}{operator Expr}} (bool b)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a5b9fb7498d5aa88c15d551e03c986986}{operator Expr}} (double d)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a8b9531d1064ced86d25ef2635206d257}{operator Expr}} (long l)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_ab66db4b6816c2673dcd3a64e07ef9f0f}{operator Expr}} (int i)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a96d3a2ccfa094081001d980dc68142a7}{operator Expr}} (string s)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_ac9be1c99edadd46a0106c67e13bba021}{operator Expr}} (Date\+Time dt)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a34b4cedd15d63e318b82fa733ad7c719}{operator Expr}} (Date\+Time\+Offset dt)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a16c9ba3722fd879605d86ecd7f65b3e8}{operator Expr}} (Dictionary$<$ string, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} $>$ dict)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a3daab75ab605a2b344b83fb55e8eeab0}{operator Expr}} (byte\mbox{[}$\,$\mbox{]} bytes)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a6b2ba9d577ab1f4cc962e9802ccba7eb}{operator Expr}} (Action\+Type action)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_af35cb9bada6a66ac08d674d128985775}{operator Expr}} (Time\+Unit unit)
+\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a5766f6e591a9e16ef05bd0f934b613d7}{operator Expr}} (Normalizer normalizer)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_af62581f773fb0f19cb32838df3cf6951}{operator bool}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a4613bc33b09cd1211c3c77258bcd9696}{operator double}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_ad354a235bc7ddea21dd5219753884291}{operator long}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a1451e168f79a585b9e743cd667eef4da}{operator string}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_ae21e4a3e9bfc24623b9a12c0ccdc6fec}{operator Date\+Time}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a3dfbc8bdb5e48a4704900da8a391889f}{operator Date\+Time\+Offset}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_afd0aae4e7a9014e1c8ff9ddea0e90d5b}{operator Action\+Type}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_aa255adf829d30e81f3328ee4eed5ec62}{operator Time\+Unit}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} unit)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_ab3891a9336b94d3798b0427c85da3331}{operator Normalizer}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} normalizer)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+abstract int \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a1d487109ba0432b77604968a0dc07590}{Hash\+Code}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A query language expression. Constructors for this class are at the \mbox{\hyperlink{struct_fauna_d_b_1_1_query_1_1_language}{Language}} class. 
+
+
+
+Definition at line 11 of file Expr.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a2f83312dd7cc2168b0d1e9a13fdb52a5}\label{class_fauna_d_b_1_1_query_1_1_expr_a2f83312dd7cc2168b0d1e9a13fdb52a5}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!Equals@{Equals}}
+\index{Equals@{Equals}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily abstract bool Fauna\+D\+B.\+Query.\+Expr.\+Equals (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_a422ca87290f0566865ff0f1c1640378b}{Fauna\+D\+B.\+Types.\+ArrayV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v_aad5c22186334d5f9d3cd59eecd831c7b}{Fauna\+D\+B.\+Types.\+ObjectV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_scalar_value_a5664a5f707e408a024b4cfc1894ea302}{Fauna\+D\+B.\+Types.\+Scalar\+Value$<$ T\+Wrapped $>$}}, and \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_null_v_a6c046261b192f2c66c9275db19c605d0}{Fauna\+D\+B.\+Types.\+NullV}}.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a6d640a271561f69146a0c5934bd57991}\label{class_fauna_d_b_1_1_query_1_1_expr_a6d640a271561f69146a0c5934bd57991}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!Equals@{Equals}}
+\index{Equals@{Equals}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily override bool Fauna\+D\+B.\+Query.\+Expr.\+Equals (\begin{DoxyParamCaption}\item[{object}]{obj }\end{DoxyParamCaption})}
+
+
+
+Definition at line 29 of file Expr.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a085e1e48b343377862dabaed2698402e}\label{class_fauna_d_b_1_1_query_1_1_expr_a085e1e48b343377862dabaed2698402e}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!GetHashCode@{GetHashCode}}
+\index{GetHashCode@{GetHashCode}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{GetHashCode()}{GetHashCode()}}
+{\footnotesize\ttfamily override int Fauna\+D\+B.\+Query.\+Expr.\+Get\+Hash\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a1d487109ba0432b77604968a0dc07590}\label{class_fauna_d_b_1_1_query_1_1_expr_a1d487109ba0432b77604968a0dc07590}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!HashCode@{HashCode}}
+\index{HashCode@{HashCode}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{HashCode()}{HashCode()}}
+{\footnotesize\ttfamily abstract int Fauna\+D\+B.\+Query.\+Expr.\+Hash\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_a4463cb42d7b8ba47b2f017e0240c127e}{Fauna\+D\+B.\+Types.\+ArrayV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v_a7f5a8560b3988eafb62e999985c59ad3}{Fauna\+D\+B.\+Types.\+ObjectV}}, \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_scalar_value_adda5328e44bfc3b3ea4a0f0c109e6c4d}{Fauna\+D\+B.\+Types.\+Scalar\+Value$<$ T\+Wrapped $>$}}, and \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_null_v_aad72874c15dc578b226effbc3c909a13}{Fauna\+D\+B.\+Types.\+NullV}}.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_afd0aae4e7a9014e1c8ff9ddea0e90d5b}\label{class_fauna_d_b_1_1_query_1_1_expr_afd0aae4e7a9014e1c8ff9ddea0e90d5b}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator ActionType@{operator ActionType}}
+\index{operator ActionType@{operator ActionType}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator ActionType()}{operator ActionType()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator Action\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+
+
+Definition at line 156 of file Expr.\+Operators.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_af62581f773fb0f19cb32838df3cf6951}\label{class_fauna_d_b_1_1_query_1_1_expr_af62581f773fb0f19cb32838df3cf6951}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator bool@{operator bool}}
+\index{operator bool@{operator bool}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator bool()}{operator bool()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator bool (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_ae21e4a3e9bfc24623b9a12c0ccdc6fec}\label{class_fauna_d_b_1_1_query_1_1_expr_ae21e4a3e9bfc24623b9a12c0ccdc6fec}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator DateTime@{operator DateTime}}
+\index{operator DateTime@{operator DateTime}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator DateTime()}{operator DateTime()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator Date\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a3dfbc8bdb5e48a4704900da8a391889f}\label{class_fauna_d_b_1_1_query_1_1_expr_a3dfbc8bdb5e48a4704900da8a391889f}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator DateTimeOffset@{operator DateTimeOffset}}
+\index{operator DateTimeOffset@{operator DateTimeOffset}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator DateTimeOffset()}{operator DateTimeOffset()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator Date\+Time\+Offset (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a4613bc33b09cd1211c3c77258bcd9696}\label{class_fauna_d_b_1_1_query_1_1_expr_a4613bc33b09cd1211c3c77258bcd9696}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator double@{operator double}}
+\index{operator double@{operator double}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator double()}{operator double()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator double (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a6b2ba9d577ab1f4cc962e9802ccba7eb}\label{class_fauna_d_b_1_1_query_1_1_expr_a6b2ba9d577ab1f4cc962e9802ccba7eb}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [1/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{Action\+Type}]{action }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 39 of file Expr.\+Operators.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_acea6a3cebd2c36eacae5cac68ab0925c}\label{class_fauna_d_b_1_1_query_1_1_expr_acea6a3cebd2c36eacae5cac68ab0925c}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [2/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{bool}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a3daab75ab605a2b344b83fb55e8eeab0}\label{class_fauna_d_b_1_1_query_1_1_expr_a3daab75ab605a2b344b83fb55e8eeab0}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [3/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{byte\mbox{[}$\,$\mbox{]}}]{bytes }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_ac9be1c99edadd46a0106c67e13bba021}\label{class_fauna_d_b_1_1_query_1_1_expr_ac9be1c99edadd46a0106c67e13bba021}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [4/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{Date\+Time}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a34b4cedd15d63e318b82fa733ad7c719}\label{class_fauna_d_b_1_1_query_1_1_expr_a34b4cedd15d63e318b82fa733ad7c719}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [5/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{Date\+Time\+Offset}]{dt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a16c9ba3722fd879605d86ecd7f65b3e8}\label{class_fauna_d_b_1_1_query_1_1_expr_a16c9ba3722fd879605d86ecd7f65b3e8}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [6/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{Dictionary$<$ string, \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} $>$}]{dict }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a5b9fb7498d5aa88c15d551e03c986986}\label{class_fauna_d_b_1_1_query_1_1_expr_a5b9fb7498d5aa88c15d551e03c986986}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [7/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{double}]{d }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_ab66db4b6816c2673dcd3a64e07ef9f0f}\label{class_fauna_d_b_1_1_query_1_1_expr_ab66db4b6816c2673dcd3a64e07ef9f0f}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [8/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{int}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a8b9531d1064ced86d25ef2635206d257}\label{class_fauna_d_b_1_1_query_1_1_expr_a8b9531d1064ced86d25ef2635206d257}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [9/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{long}]{l }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a5766f6e591a9e16ef05bd0f934b613d7}\label{class_fauna_d_b_1_1_query_1_1_expr_a5766f6e591a9e16ef05bd0f934b613d7}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [10/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{Normalizer}]{normalizer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 78 of file Expr.\+Operators.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a96d3a2ccfa094081001d980dc68142a7}\label{class_fauna_d_b_1_1_query_1_1_expr_a96d3a2ccfa094081001d980dc68142a7}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [11/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{string}]{s }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_af35cb9bada6a66ac08d674d128985775}\label{class_fauna_d_b_1_1_query_1_1_expr_af35cb9bada6a66ac08d674d128985775}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Expr@{operator Expr}}
+\index{operator Expr@{operator Expr}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Expr()}{operator Expr()}\hspace{0.1cm}{\footnotesize\ttfamily [12/12]}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Query.\+Expr.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} (\begin{DoxyParamCaption}\item[{Time\+Unit}]{unit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 53 of file Expr.\+Operators.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_ad354a235bc7ddea21dd5219753884291}\label{class_fauna_d_b_1_1_query_1_1_expr_ad354a235bc7ddea21dd5219753884291}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator long@{operator long}}
+\index{operator long@{operator long}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator long()}{operator long()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator long (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_ab3891a9336b94d3798b0427c85da3331}\label{class_fauna_d_b_1_1_query_1_1_expr_ab3891a9336b94d3798b0427c85da3331}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator Normalizer@{operator Normalizer}}
+\index{operator Normalizer@{operator Normalizer}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator Normalizer()}{operator Normalizer()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator Normalizer (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{normalizer }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+
+
+Definition at line 202 of file Expr.\+Operators.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a1451e168f79a585b9e743cd667eef4da}\label{class_fauna_d_b_1_1_query_1_1_expr_a1451e168f79a585b9e743cd667eef4da}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator string@{operator string}}
+\index{operator string@{operator string}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator string()}{operator string()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator string (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_aa255adf829d30e81f3328ee4eed5ec62}\label{class_fauna_d_b_1_1_query_1_1_expr_aa255adf829d30e81f3328ee4eed5ec62}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator TimeUnit@{operator TimeUnit}}
+\index{operator TimeUnit@{operator TimeUnit}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator TimeUnit()}{operator TimeUnit()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Query.\+Expr.\+operator Time\+Unit (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{unit }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+
+
+Definition at line 170 of file Expr.\+Operators.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_a47dd499ed38aed368f89f70a082a6c83}\label{class_fauna_d_b_1_1_query_1_1_expr_a47dd499ed38aed368f89f70a082a6c83}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily static bool Fauna\+D\+B.\+Query.\+Expr.\+operator!= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{a,  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_query_1_1_expr_abb73d3482e7576dba2b14664666f4705}\label{class_fauna_d_b_1_1_query_1_1_expr_abb73d3482e7576dba2b14664666f4705}} 
+\index{FaunaDB.Query.Expr@{FaunaDB.Query.Expr}!operator==@{operator==}}
+\index{operator==@{operator==}!FaunaDB.Query.Expr@{FaunaDB.Query.Expr}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily static bool Fauna\+D\+B.\+Query.\+Expr.\+operator== (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{a,  }\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{b }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 15 of file Expr.\+cs.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Query/\mbox{\hyperlink{_expr_8cs}{Expr.\+cs}}\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Query/\mbox{\hyperlink{_expr_8_operators_8cs}{Expr.\+Operators.\+cs}}\end{DoxyCompactItemize}

@@ -1,0 +1,169 @@
+.TH "FaunaDB.Types.ObjectV" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.ObjectV \- Represents an Object value in the \fBFaunaDB\fP query language\&. Objects are polymorphic dictionaries\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFaunaDB\&.Types\&.Value\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBValue\fP \fBGetOrNull\fP (string key)"
+.br
+.RI "If there is no value at the given key, just return \fCnull\fP\&. Otherwise, return the value\&. "
+.ti -1c
+.RI "override bool \fBEquals\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "override string \fBToString\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP ()"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (IReadOnlyDictionary< string, \fBValue\fP > values)"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (string key1, \fBValue\fP value1)"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2)"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3)"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4)"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4, string key5, \fBValue\fP value5)"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4, string key5, \fBValue\fP value5, string key6, \fBValue\fP value6)"
+.br
+.ti -1c
+.RI "static \fBObjectV\fP \fBWith\fP (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4, string key5, \fBValue\fP value5, string key6, \fBValue\fP value6, string key7, \fBValue\fP value7)"
+.br
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static readonly \fBObjectV\fP \fBEmpty\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override int \fBHashCode\fP ()"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "IReadOnlyDictionary< string, \fBValue\fP > \fBValue\fP\fC [get]\fP"
+.br
+.ti -1c
+.RI "\fBValue\fP \fBthis[string key]\fP\fC [get]\fP"
+.br
+.RI "
+.PP
+\fBExceptions\fP
+.RS 4
+\fIKeyNotFoundException\fP 
+.RE
+.PP
+"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents an Object value in the \fBFaunaDB\fP query language\&. Objects are polymorphic dictionaries\&. 
+
+
+.PP
+Definition at line 15 of file ObjectV\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "override bool FaunaDB\&.Types\&.ObjectV\&.Equals (\fBExpr\fP v)\fC [virtual]\fP"
+
+.PP
+Implements \fBFaunaDB\&.Query\&.Expr\fP\&.
+.PP
+Definition at line 69 of file ObjectV\&.cs\&.
+.SS "\fBValue\fP FaunaDB\&.Types\&.ObjectV\&.GetOrNull (string key)"
+
+.PP
+If there is no value at the given key, just return \fCnull\fP\&. Otherwise, return the value\&. 
+.PP
+Definition at line 53 of file ObjectV\&.cs\&.
+.SS "override int FaunaDB\&.Types\&.ObjectV\&.HashCode ()\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Implements \fBFaunaDB\&.Query\&.Expr\fP\&.
+.SS "override string FaunaDB\&.Types\&.ObjectV\&.ToString ()"
+
+.PP
+Definition at line 78 of file ObjectV\&.cs\&.
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With ()\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (IReadOnlyDictionary< string, \fBValue\fP > values)\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (string key1, \fBValue\fP value1)\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2)\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3)\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4)\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4, string key5, \fBValue\fP value5)\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4, string key5, \fBValue\fP value5, string key6, \fBValue\fP value6)\fC [static]\fP"
+
+.SS "static \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.With (string key1, \fBValue\fP value1, string key2, \fBValue\fP value2, string key3, \fBValue\fP value3, string key4, \fBValue\fP value4, string key5, \fBValue\fP value5, string key6, \fBValue\fP value6, string key7, \fBValue\fP value7)\fC [static]\fP"
+
+.SH "Member Data Documentation"
+.PP 
+.SS "readonly \fBObjectV\fP FaunaDB\&.Types\&.ObjectV\&.Empty\fC [static]\fP"
+\fBInitial value:\fP
+.PP
+.nf
+=
+            new ObjectV(ImmutableDictionary\&.Empty<string, Value>())
+.fi
+.PP
+Definition at line 18 of file ObjectV\&.cs\&.
+.SH "Property Documentation"
+.PP 
+.SS "\fBValue\fP FaunaDB\&.Types\&.ObjectV\&.this[string key]\fC [get]\fP"
+
+.PP
+
+.PP
+\fBExceptions\fP
+.RS 4
+\fIKeyNotFoundException\fP 
+.RE
+.PP
+
+.PP
+Definition at line 47 of file ObjectV\&.cs\&.
+.SS "IReadOnlyDictionary<string, \fBValue\fP> FaunaDB\&.Types\&.ObjectV\&.Value\fC [get]\fP"
+
+.PP
+Definition at line 21 of file ObjectV\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

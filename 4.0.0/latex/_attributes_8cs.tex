@@ -1,0 +1,26 @@
+\hypertarget{_attributes_8cs}{}\doxysection{/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+DB.Client/\+Types/\+Attributes.cs File Reference}
+\label{_attributes_8cs}\index{/mnt/c/Work/fauna/faunadb-\/csharp/FaunaDB.Client/Types/Attributes.cs@{/mnt/c/Work/fauna/faunadb-\/csharp/FaunaDB.Client/Types/Attributes.cs}}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute}{Fauna\+D\+B.\+Types.\+Fauna\+Field\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Maps a property/field member constructor parameter to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} object property while encoding/deconding an object. If this attribute if not specified the property/field name constructor parameter name will be used instead. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_date}{Fauna\+D\+B.\+Types.\+Fauna\+Date}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder that this Date\+Time property should always be converted to \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{Types.\+DateV}} \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_time}{Fauna\+D\+B.\+Types.\+Fauna\+Time}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder that this Date\+Time property should always be converted to \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{Types.\+TimeV}} \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_string}{Fauna\+D\+B.\+Types.\+Fauna\+String}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder that this object should be treated as a string when stored in Fauna. The Encoder will call the object or primative type\textquotesingle{}s .To\+String() method. The Decoder will attempt to create an object with the constructor with a single string parameter. If it does not have that constructor the Decoder will fail. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_ignore_attribute}{Fauna\+D\+B.\+Types.\+Fauna\+Ignore\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder to not encode the specified member. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_constructor_attribute}{Fauna\+D\+B.\+Types.\+Fauna\+Constructor\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Instruct the decoder wich constructor to use when decoding a object. It can also be used in a public static method instead in a constructor. That attribute can only be used once per class. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_enum}{Fauna\+D\+B.\+Types.\+Fauna\+Enum}}
+\begin{DoxyCompactList}\small\item\em Instruct the encoder/decoder to rename the annotated enum field. If not used the method Enum.\+Get\+Name(\+Type, object) will be used instead. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_d_b_1_1_types}{Fauna\+D\+B.\+Types}}
+\end{DoxyCompactItemize}

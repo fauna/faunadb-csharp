@@ -1,0 +1,26 @@
+.TH "FaunaDB.Types.FaunaString" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.FaunaString \- Instruct the encoder that this object should be treated as a string when stored in Fauna\&. The Encoder will call the object or primative type's \&.ToString() method\&. The Decoder will attempt to create an object with the constructor with a single string parameter\&. If it does not have that constructor the Decoder will fail\&. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Attribute\&.
+.SH "Detailed Description"
+.PP 
+Instruct the encoder that this object should be treated as a string when stored in Fauna\&. The Encoder will call the object or primative type's \&.ToString() method\&. The Decoder will attempt to create an object with the constructor with a single string parameter\&. If it does not have that constructor the Decoder will fail\&. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type\&. 
+
+class Website { [\fBFaunaString\fP] public Uri MyLink { get; set; } }
+.PP
+var web = new Website { MyLink = new Uri('http://fauanadb\&.com') };
+.PP
+var encodedWebsite = Encoder\&.Encode(web); 
+.PP
+Definition at line 117 of file Attributes\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

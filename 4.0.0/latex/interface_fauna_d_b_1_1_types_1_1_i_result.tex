@@ -1,0 +1,190 @@
+\hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result}{}\doxysection{Fauna\+D\+B.\+Types.\+I\+Result$<$ T $>$ Interface Template Reference}
+\label{interface_fauna_d_b_1_1_types_1_1_i_result}\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+
+
+Represents the result of an operation. Usually a coercion operation.  
+
+
+
+
+Inherited by Fauna\+D\+B.\+Types.\+Failure$<$ T $>$, and Fauna\+D\+B.\+Types.\+Success$<$ T $>$.
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$ U $>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_a8b7aa1f87bc4406cf386de6d931a5619}{Map$<$ U $>$}} (Func$<$ T, U $>$ func)
+\begin{DoxyCompactList}\small\item\em Apply the function passed on the result value. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$ U $>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_a2fd9b1a6a0c2df1714b653c8edf263a7}{Flat\+Map$<$ U $>$}} (Func$<$ T, \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$ U $>$$>$ func)
+\begin{DoxyCompactList}\small\item\em Apply the function passed on the result value. \end{DoxyCompactList}\item 
+U \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_ab8b04ee0020f7843dfe15fa19f1bf41b}{Match$<$ U $>$}} (Func$<$ T, U $>$ Success, Func$<$ string, U $>$ Failure)
+\begin{DoxyCompactList}\small\item\em Matches the current instance. Case it represents a successful result it will execute the first argument. Case it represents a failure object it will execute the second argument. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_a02484af3170a933db99e869bd06a0001}{Match}} (Action$<$ T $>$ Success, Action$<$ string $>$ Failure)
+\begin{DoxyCompactList}\small\item\em Matches the current instance. Case it represents a successful result it will execute the first argument. Case it represents a failure object it will execute the second argument. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+T \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_a415be16bd509db5f05f7c9cacb021653}{Value}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Extracts the resulting value or throw an exception if the operation has failed. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_af00eef664166636c0c9d5f499e6ebfaf}{To\+Option}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets an I\+Option$<$\+T$>$ type containing the result value if the operation was successful, or Option.\+None$<$\+T$>$() if it was a failure \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_a9c14fccfbd2ca2344c4507c555e9ed7f}{is\+Success}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Return true if the operation was successful \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_a27f00a8fea977bfc6b566ebfb99e3f44}{is\+Failure}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Return true if the operation has failed \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the result of an operation. Usually a coercion operation. 
+
+
+
+Definition at line 8 of file Result.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_a2fd9b1a6a0c2df1714b653c8edf263a7}\label{interface_fauna_d_b_1_1_types_1_1_i_result_a2fd9b1a6a0c2df1714b653c8edf263a7}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!FlatMap$<$ U $>$@{FlatMap$<$ U $>$}}
+\index{FlatMap$<$ U $>$@{FlatMap$<$ U $>$}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FlatMap$<$ U $>$()}{FlatMap< U >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$U$>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.Flat\+Map$<$ U $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$ U $>$$>$}]{func }\end{DoxyParamCaption})}
+
+
+
+Apply the function passed on the result value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & the map function to be applied\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If this is a successful result, returns the map function result. If this is a failure, returns a new failure with the same error message. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_a8b7aa1f87bc4406cf386de6d931a5619}\label{interface_fauna_d_b_1_1_types_1_1_i_result_a8b7aa1f87bc4406cf386de6d931a5619}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!Map$<$ U $>$@{Map$<$ U $>$}}
+\index{Map$<$ U $>$@{Map$<$ U $>$}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Map$<$ U $>$()}{Map< U >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$U$>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.Map$<$ U $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, U $>$}]{func }\end{DoxyParamCaption})}
+
+
+
+Apply the function passed on the result value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & the map function to be applied\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+If this is a successful result, return a new successful result with the map function result. If this is a failure, returns a new failure with the same error message. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_a02484af3170a933db99e869bd06a0001}\label{interface_fauna_d_b_1_1_types_1_1_i_result_a02484af3170a933db99e869bd06a0001}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!Match@{Match}}
+\index{Match@{Match}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Match()}{Match()}}
+{\footnotesize\ttfamily void \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.Match (\begin{DoxyParamCaption}\item[{Action$<$ T $>$}]{Success,  }\item[{Action$<$ string $>$}]{Failure }\end{DoxyParamCaption})}
+
+
+
+Matches the current instance. Case it represents a successful result it will execute the first argument. Case it represents a failure object it will execute the second argument. 
+
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$string$>$ result = ...
+
+result.\+Match( Success\+: value =$>$ Do\+Something(), Failure\+: reason =$>$ Do\+Something\+Else(reason) ); 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Success} & Action to be executed case this instance represents a successful result\\
+\hline
+{\em Failure} & Action to be executed case this instance represents a failure result\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_ab8b04ee0020f7843dfe15fa19f1bf41b}\label{interface_fauna_d_b_1_1_types_1_1_i_result_ab8b04ee0020f7843dfe15fa19f1bf41b}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!Match$<$ U $>$@{Match$<$ U $>$}}
+\index{Match$<$ U $>$@{Match$<$ U $>$}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Match$<$ U $>$()}{Match< U >()}}
+{\footnotesize\ttfamily U \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result_a02484af3170a933db99e869bd06a0001}{Match}}$<$ U $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, U $>$}]{Success,  }\item[{Func$<$ string, U $>$}]{Failure }\end{DoxyParamCaption})}
+
+
+
+Matches the current instance. Case it represents a successful result it will execute the first argument. Case it represents a failure object it will execute the second argument. 
+
+\mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{I\+Result}}$<$string$>$ result = ... int parsed = result.\+Match( Success\+: value =$>$ int.\+Parse(value), Failure\+: reason =$>$ Return\+Default\+Value() ); 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Success} & Function to be executed case this instance represents a successful result\\
+\hline
+{\em Failure} & Function to be executed case this instance represents a failure result\\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_a27f00a8fea977bfc6b566ebfb99e3f44}\label{interface_fauna_d_b_1_1_types_1_1_i_result_a27f00a8fea977bfc6b566ebfb99e3f44}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!isFailure@{isFailure}}
+\index{isFailure@{isFailure}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{isFailure}{isFailure}}
+{\footnotesize\ttfamily bool \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.is\+Failure\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Return true if the operation has failed 
+
+
+
+Definition at line 81 of file Result.\+cs.
+
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_a9c14fccfbd2ca2344c4507c555e9ed7f}\label{interface_fauna_d_b_1_1_types_1_1_i_result_a9c14fccfbd2ca2344c4507c555e9ed7f}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!isSuccess@{isSuccess}}
+\index{isSuccess@{isSuccess}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{isSuccess}{isSuccess}}
+{\footnotesize\ttfamily bool \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.is\+Success\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Return true if the operation was successful 
+
+
+
+Definition at line 76 of file Result.\+cs.
+
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_af00eef664166636c0c9d5f499e6ebfaf}\label{interface_fauna_d_b_1_1_types_1_1_i_result_af00eef664166636c0c9d5f499e6ebfaf}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!ToOption@{ToOption}}
+\index{ToOption@{ToOption}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToOption}{ToOption}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_option}{I\+Option}}$<$T$>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.To\+Option\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets an I\+Option$<$\+T$>$ type containing the result value if the operation was successful, or Option.\+None$<$\+T$>$() if it was a failure 
+
+
+
+Definition at line 71 of file Result.\+cs.
+
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_types_1_1_i_result_a415be16bd509db5f05f7c9cacb021653}\label{interface_fauna_d_b_1_1_types_1_1_i_result_a415be16bd509db5f05f7c9cacb021653}} 
+\index{FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}!Value@{Value}}
+\index{Value@{Value}!FaunaDB.Types.IResult$<$ T $>$@{FaunaDB.Types.IResult$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Value}{Value}}
+{\footnotesize\ttfamily T \mbox{\hyperlink{interface_fauna_d_b_1_1_types_1_1_i_result}{Fauna\+D\+B.\+Types.\+I\+Result}}$<$ T $>$.\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Extracts the resulting value or throw an exception if the operation has failed. 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Invalid\+Operation\+Exception} & \\
+\hline
+\end{DoxyExceptions}
+
+
+Definition at line 65 of file Result.\+cs.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_result_8cs}{Result.\+cs}}\end{DoxyCompactItemize}

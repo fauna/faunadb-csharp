@@ -1,0 +1,214 @@
+\hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result}{}\doxysection{Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result Class Reference}
+\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result}\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a20041daafcad9a942c8f7886abbf187f}{Streaming\+Request\+Result}} (I\+Read\+Only\+Dictionary$<$ string, string $>$ query, string request\+Content, Stream response\+Content, int status\+Code, string error\+Content, I\+Read\+Only\+Dictionary$<$ string, I\+Enumerable$<$ string $>$$>$ response\+Headers, Date\+Time start\+Time, Date\+Time end\+Time)
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}{Http\+Method\+Kind}} \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_ae62455631b1980a1becc975ef12abc05}{Method}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em H\+T\+TP method that was used. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a62b8ea564b6d462375f62d317ca4e647}{Path}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Path that was queried. Relative to client\textquotesingle{}s domain. \end{DoxyCompactList}\item 
+I\+Read\+Only\+Dictionary$<$ string, string $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a609f7738661431db92b010c9270661dd}{Query}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The query parameters submitted on the request. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_aa4cce8fd329f536c3bc727faf796116e}{Request\+Content}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em String data submited for the server. \end{DoxyCompactList}\item 
+Stream \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a9c9cedebfd46d24727a035fd8c6c7474}{Response\+Content}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em String returned by the server. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a5de43283f69bbdd752724057504b6a90}{Status\+Code}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Http status code result of the request. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a9d1b7c2ef03a3c92e7a28bb0e933cc85}{Error\+Content}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Http content message in case request results in an error response. \end{DoxyCompactList}\item 
+I\+Read\+Only\+Dictionary$<$ string, I\+Enumerable$<$ string $>$ $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a39b1817c8cc79eafcc3c7c7b2b439588}{Response\+Headers}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Response headers returned by the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} server. \end{DoxyCompactList}\item 
+Date\+Time \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_ae4defc23bf85972d31b27d903bd83633}{Start\+Time}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Date\+Time when the query was issued. \end{DoxyCompactList}\item 
+Date\+Time \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a476dfed22a90ba474778b18fcaed9e66}{End\+Time}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Date\+Time when the query finished. \end{DoxyCompactList}\item 
+Time\+Span \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a1d012a2352e9257d402d6b37b1c8e8a9}{Time\+Taken}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Indicates how long the query took to execute. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 7 of file Streaming\+Request\+Result.\+cs.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a20041daafcad9a942c8f7886abbf187f}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a20041daafcad9a942c8f7886abbf187f}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!StreamingRequestResult@{StreamingRequestResult}}
+\index{StreamingRequestResult@{StreamingRequestResult}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{StreamingRequestResult()}{StreamingRequestResult()}}
+{\footnotesize\ttfamily Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Streaming\+Request\+Result (\begin{DoxyParamCaption}\item[{I\+Read\+Only\+Dictionary$<$ string, string $>$}]{query,  }\item[{string}]{request\+Content,  }\item[{Stream}]{response\+Content,  }\item[{int}]{status\+Code,  }\item[{string}]{error\+Content,  }\item[{I\+Read\+Only\+Dictionary$<$ string, I\+Enumerable$<$ string $>$$>$}]{response\+Headers,  }\item[{Date\+Time}]{start\+Time,  }\item[{Date\+Time}]{end\+Time }\end{DoxyParamCaption})}
+
+
+
+Definition at line 64 of file Streaming\+Request\+Result.\+cs.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a476dfed22a90ba474778b18fcaed9e66}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a476dfed22a90ba474778b18fcaed9e66}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!EndTime@{EndTime}}
+\index{EndTime@{EndTime}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{EndTime}{EndTime}}
+{\footnotesize\ttfamily Date\+Time Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+End\+Time\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Date\+Time when the query finished. 
+
+
+
+Definition at line 57 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a9d1b7c2ef03a3c92e7a28bb0e933cc85}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a9d1b7c2ef03a3c92e7a28bb0e933cc85}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!ErrorContent@{ErrorContent}}
+\index{ErrorContent@{ErrorContent}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{ErrorContent}{ErrorContent}}
+{\footnotesize\ttfamily string Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Error\+Content\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Http content message in case request results in an error response. 
+
+
+
+Definition at line 42 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_ae62455631b1980a1becc975ef12abc05}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_ae62455631b1980a1becc975ef12abc05}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!Method@{Method}}
+\index{Method@{Method}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{Method}{Method}}
+{\footnotesize\ttfamily \mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}{Http\+Method\+Kind}} Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Method\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+H\+T\+TP method that was used. 
+
+
+
+Definition at line 12 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a62b8ea564b6d462375f62d317ca4e647}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a62b8ea564b6d462375f62d317ca4e647}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!Path@{Path}}
+\index{Path@{Path}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{Path}{Path}}
+{\footnotesize\ttfamily string Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Path\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Path that was queried. Relative to client\textquotesingle{}s domain. 
+
+
+
+Definition at line 17 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a609f7738661431db92b010c9270661dd}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a609f7738661431db92b010c9270661dd}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!Query@{Query}}
+\index{Query@{Query}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{Query}{Query}}
+{\footnotesize\ttfamily I\+Read\+Only\+Dictionary$<$string, string$>$ Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Query\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The query parameters submitted on the request. 
+
+
+
+Definition at line 22 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_aa4cce8fd329f536c3bc727faf796116e}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_aa4cce8fd329f536c3bc727faf796116e}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!RequestContent@{RequestContent}}
+\index{RequestContent@{RequestContent}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{RequestContent}{RequestContent}}
+{\footnotesize\ttfamily string Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Request\+Content\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+String data submited for the server. 
+
+
+
+Definition at line 27 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a9c9cedebfd46d24727a035fd8c6c7474}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a9c9cedebfd46d24727a035fd8c6c7474}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!ResponseContent@{ResponseContent}}
+\index{ResponseContent@{ResponseContent}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{ResponseContent}{ResponseContent}}
+{\footnotesize\ttfamily Stream Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Response\+Content\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+String returned by the server. 
+
+
+
+Definition at line 32 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a39b1817c8cc79eafcc3c7c7b2b439588}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a39b1817c8cc79eafcc3c7c7b2b439588}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!ResponseHeaders@{ResponseHeaders}}
+\index{ResponseHeaders@{ResponseHeaders}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{ResponseHeaders}{ResponseHeaders}}
+{\footnotesize\ttfamily I\+Read\+Only\+Dictionary$<$string, I\+Enumerable$<$string$>$ $>$ Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Response\+Headers\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Response headers returned by the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} server. 
+
+
+
+Definition at line 47 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_ae4defc23bf85972d31b27d903bd83633}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_ae4defc23bf85972d31b27d903bd83633}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!StartTime@{StartTime}}
+\index{StartTime@{StartTime}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{StartTime}{StartTime}}
+{\footnotesize\ttfamily Date\+Time Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Start\+Time\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Date\+Time when the query was issued. 
+
+
+
+Definition at line 52 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a5de43283f69bbdd752724057504b6a90}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a5de43283f69bbdd752724057504b6a90}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!StatusCode@{StatusCode}}
+\index{StatusCode@{StatusCode}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{StatusCode}{StatusCode}}
+{\footnotesize\ttfamily int Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Status\+Code\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Http status code result of the request. 
+
+
+
+Definition at line 37 of file Streaming\+Request\+Result.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a1d012a2352e9257d402d6b37b1c8e8a9}\label{class_fauna_d_b_1_1_client_1_1_streaming_request_result_a1d012a2352e9257d402d6b37b1c8e8a9}} 
+\index{FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}!TimeTaken@{TimeTaken}}
+\index{TimeTaken@{TimeTaken}!FaunaDB.Client.StreamingRequestResult@{FaunaDB.Client.StreamingRequestResult}}
+\doxysubsubsection{\texorpdfstring{TimeTaken}{TimeTaken}}
+{\footnotesize\ttfamily Time\+Span Fauna\+D\+B.\+Client.\+Streaming\+Request\+Result.\+Time\+Taken\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Indicates how long the query took to execute. 
+
+
+
+Definition at line 62 of file Streaming\+Request\+Result.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Client/\mbox{\hyperlink{_streaming_request_result_8cs}{Streaming\+Request\+Result.\+cs}}\end{DoxyCompactItemize}

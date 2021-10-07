@@ -1,0 +1,119 @@
+.TH "FaunaDB.Types.IOption< T >" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.IOption< T > \- Represents an optional value\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by FaunaDB\&.Types\&.None< T >, and FaunaDB\&.Types\&.Some< T >\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBIOption\fP< U > \fBMap< U >\fP (Func< T, U > func)"
+.br
+.RI "Apply the function passed on the optional value\&. "
+.ti -1c
+.RI "\fBIOption\fP< U > \fBFlatMap< U >\fP (Func< T, \fBIOption\fP< U >> func)"
+.br
+.RI "Apply the function passed on the optional value\&. "
+.ti -1c
+.RI "U \fBMatch< U >\fP (Func< T, U > Some, Func< U > None)"
+.br
+.RI "Matches the current instance\&. Case it contains some value it will execute the first argument\&. Case it contains none value it will execute the second argument\&. "
+.ti -1c
+.RI "void \fBMatch\fP (Action< T > Some, Action None)"
+.br
+.RI "Matches the current instance\&. Case it contains some value it will execute the first argument\&. Case it contains none value it will execute the second argument\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "T \fBValue\fP\fC [get]\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents an optional value\&. 
+
+
+.PP
+Definition at line 8 of file Option\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBIOption\fP<U> \fBFaunaDB\&.Types\&.IOption\fP< T >\&.FlatMap< U > (Func< T, \fBIOption\fP< U >> func)"
+
+.PP
+Apply the function passed on the optional value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfunc\fP the map function to be applied
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+If this is a some value, return a new optional with the function applied to it\&. If this is a none value, returns none and ignore the function\&. 
+.RE
+.PP
+
+.SS "\fBIOption\fP<U> \fBFaunaDB\&.Types\&.IOption\fP< T >\&.Map< U > (Func< T, U > func)"
+
+.PP
+Apply the function passed on the optional value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfunc\fP the map function to be applied
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+If this is a some value, return a new optional with the function applied to it\&. If this is a none value, returns none and ignore the function\&. 
+.RE
+.PP
+
+.SS "void \fBFaunaDB\&.Types\&.IOption\fP< T >\&.Match (Action< T > Some, Action None)"
+
+.PP
+Matches the current instance\&. Case it contains some value it will execute the first argument\&. Case it contains none value it will execute the second argument\&. \fBIOption\fP<string> optional = \&.\&.\&.
+.PP
+result\&.Match( Some: value => DoSomething(value), None: () => DoSomethingElse() ); 
+.PP
+\fBParameters\fP
+.RS 4
+\fISome\fP Function to be executed case this instance contains some value
+.br
+\fINone\fP Function to be executed case this instance contains none value
+.RE
+.PP
+
+.SS "U \fBFaunaDB\&.Types\&.IOption\fP< T >\&.\fBMatch\fP< U > (Func< T, U > Some, Func< U > None)"
+
+.PP
+Matches the current instance\&. Case it contains some value it will execute the first argument\&. Case it contains none value it will execute the second argument\&. \fBIOption\fP<string> optional = \&.\&.\&.
+.PP
+int parsed = result\&.Match( Some: value => int\&.Parse(value), None: () => ReturnDefaultValue() ); 
+.PP
+\fBParameters\fP
+.RS 4
+\fISome\fP Function to be executed case this instance contains some value
+.br
+\fINone\fP Function to be executed case this instance contains none value
+.RE
+.PP
+
+.SH "Property Documentation"
+.PP 
+.SS "T \fBFaunaDB\&.Types\&.IOption\fP< T >\&.\fBValue\fP\fC [get]\fP"
+
+.PP
+Definition at line 10 of file Option\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

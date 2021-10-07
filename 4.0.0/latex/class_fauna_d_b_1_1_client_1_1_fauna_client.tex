@@ -1,0 +1,264 @@
+\hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client}{}\doxysection{Fauna\+D\+B.\+Client.\+Fauna\+Client Class Reference}
+\label{class_fauna_d_b_1_1_client_1_1_fauna_client}\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+
+
+C\# native client for \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}.  
+
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct {\bfseries Errors\+Wrapper}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a52814129310cbf9f983e7604fb9f6dc8}{Fauna\+Client}} (string secret, string endpoint=\char`\"{}https\+://db.\+fauna.\+com\+:443\char`\"{}, Time\+Span? timeout=null, Http\+Client http\+Client=null, Version http\+Version=null, bool check\+New\+Version=true, I\+Read\+Only\+Dictionary$<$ string, string $>$ custom\+Headers=null)
+\begin{DoxyCompactList}\small\item\em Constructs a new instance of \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} with the specified arguments. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a11b97c698dc2e7a270aadfc1d964eaa6}{Fauna\+Client}} (\mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{I\+Client\+IO}} client\+IO)
+\begin{DoxyCompactList}\small\item\em Constructs a new instance of \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} with the specified \mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{I\+Client\+IO}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a5c99117357d070d20b051cb4aab454a0}{New\+Session\+Client}} (string secret)
+\begin{DoxyCompactList}\small\item\em Creates a new \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} with the user secret provided. Queries submitted to a session client will be authenticated with the secret provided. A session client shares its parent\textquotesingle{}s internal resources. \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_ae0630259c2a812246a4e9cf341f390a6}{Query}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} expression, Time\+Span? query\+Timeout=null)
+\begin{DoxyCompactList}\small\item\em Issues a \mbox{\hyperlink{namespace_fauna_d_b_1_1_query}{Query}} to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a945ad9466bdb2e2c579744ef48ba999f}{Query}} (params \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}\mbox{[}$\,$\mbox{]} expressions)
+\begin{DoxyCompactList}\small\item\em Issues multiple queries to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a89d7a8507269bcc949f01f603006aeda}{Query}} (Time\+Span query\+Timeout, params \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}\mbox{[}$\,$\mbox{]} expressions)
+\begin{DoxyCompactList}\small\item\em Issues multiple queries to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. \end{DoxyCompactList}\item 
+async Task$<$ I\+Enumerable$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a5145ed56d19e1aadb48e87435d6ab053}{Query}} (I\+Enumerable$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} $>$ expressions, Time\+Span? query\+Timeout=null)
+\begin{DoxyCompactList}\small\item\em Issues multiple queries to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. \end{DoxyCompactList}\item 
+async Task$<$ string $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a8a4ad78f4d155c64dca65e620558f779}{Ping}} (string scope=null, int? timeout=null)
+\begin{DoxyCompactList}\small\item\em Check service health. \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_handler}{Streaming\+Event\+Handler}} $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_ad23e47282d727310208202548ddcde65}{Stream}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} data=null, I\+Read\+Only\+List$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_event_field}{Event\+Field}} $>$ fields=null)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}} \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a8f78444a2075c47640b94bc52f1f4acf}{From\+Json}} (string json)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+C\# native client for \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. 
+
+Queries are constructed by using static helpers in Language package.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{var client = \textcolor{keyword}{new} \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client_a52814129310cbf9f983e7604fb9f6dc8}{FaunaClient}}(secret: \textcolor{stringliteral}{"someAuthToken"});}
+\DoxyCodeLine{client.Query(\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ac55582518cba2c464f29f5bae1c68def}{Get}}(Ref(\textcolor{stringliteral}{"some/ref"})));}
+\end{DoxyCode}
+ 
+
+Definition at line 25 of file Fauna\+Client.\+cs.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a52814129310cbf9f983e7604fb9f6dc8}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a52814129310cbf9f983e7604fb9f6dc8}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!FaunaClient@{FaunaClient}}
+\index{FaunaClient@{FaunaClient}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{FaunaClient()}{FaunaClient()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Fauna\+Client (\begin{DoxyParamCaption}\item[{string}]{secret,  }\item[{string}]{endpoint = {\ttfamily \char`\"{}https\+://db.fauna.com\+:443\char`\"{}},  }\item[{Time\+Span?}]{timeout = {\ttfamily null},  }\item[{Http\+Client}]{http\+Client = {\ttfamily null},  }\item[{Version}]{http\+Version = {\ttfamily null},  }\item[{bool}]{check\+New\+Version = {\ttfamily true},  }\item[{I\+Read\+Only\+Dictionary$<$ string, string $>$}]{custom\+Headers = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Constructs a new instance of \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} with the specified arguments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em secret} & Auth token for the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} server.\\
+\hline
+{\em endpoint} & U\+RL for the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} server. Defaults to \char`\"{}https\+://db.\+fauna.\+com\+:443\char`\"{}\\
+\hline
+{\em timeout} & Timeout for I/O operations. Defaults to 1 minute.\\
+\hline
+{\em http\+Version} & Version of http. Default value is Http\+Version.\+Version11, is you use .net core 3.\+0 and above you can enable http/2 support by passing Http\+Version.\+Version20\\
+\hline
+{\em check\+New\+Version} & Check new Nu\+Get package driver version. Default value is true (Check new version).\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 37 of file Fauna\+Client.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a11b97c698dc2e7a270aadfc1d964eaa6}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a11b97c698dc2e7a270aadfc1d964eaa6}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!FaunaClient@{FaunaClient}}
+\index{FaunaClient@{FaunaClient}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{FaunaClient()}{FaunaClient()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Fauna\+Client (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{I\+Client\+IO}}}]{client\+IO }\end{DoxyParamCaption})}
+
+
+
+Constructs a new instance of \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} with the specified \mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{I\+Client\+IO}}. 
+
+
+
+Definition at line 51 of file Fauna\+Client.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a8f78444a2075c47640b94bc52f1f4acf}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a8f78444a2075c47640b94bc52f1f4acf}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!FromJson@{FromJson}}
+\index{FromJson@{FromJson}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{FromJson()}{FromJson()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}} Fauna\+D\+B.\+Client.\+Fauna\+Client.\+From\+Json (\begin{DoxyParamCaption}\item[{string}]{json }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 238 of file Fauna\+Client.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a5c99117357d070d20b051cb4aab454a0}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a5c99117357d070d20b051cb4aab454a0}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!NewSessionClient@{NewSessionClient}}
+\index{NewSessionClient@{NewSessionClient}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{NewSessionClient()}{NewSessionClient()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} Fauna\+D\+B.\+Client.\+Fauna\+Client.\+New\+Session\+Client (\begin{DoxyParamCaption}\item[{string}]{secret }\end{DoxyParamCaption})}
+
+
+
+Creates a new \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}} with the user secret provided. Queries submitted to a session client will be authenticated with the secret provided. A session client shares its parent\textquotesingle{}s internal resources. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em secret} & Auth token for the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} server.\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a8a4ad78f4d155c64dca65e620558f779}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a8a4ad78f4d155c64dca65e620558f779}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!Ping@{Ping}}
+\index{Ping@{Ping}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{Ping()}{Ping()}}
+{\footnotesize\ttfamily async Task$<$string$>$ Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Ping (\begin{DoxyParamCaption}\item[{string}]{scope = {\ttfamily null},  }\item[{int?}]{timeout = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Check service health. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scope} & Must be \char`\"{}node\char`\"{}, \char`\"{}local\char`\"{}, \char`\"{}global\char`\"{}, or \char`\"{}all\char`\"{}. Defaults to \char`\"{}global\char`\"{}\\
+\hline
+{\em timeout} & Time to wait for the ping to succeed, in milliseconds.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a Task with the message representing the result operation
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_ae0630259c2a812246a4e9cf341f390a6}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_ae0630259c2a812246a4e9cf341f390a6}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!Query@{Query}}
+\index{Query@{Query}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{Query()}{Query()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily async Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$ Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Query (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{expression,  }\item[{Time\+Span?}]{query\+Timeout = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Issues a \mbox{\hyperlink{namespace_fauna_d_b_1_1_query}{Query}} to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. 
+
+Queries are modeled through the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language, represented by the helper functions in the Language class. 
+
+Responses are modeled as a general response tree. Each node is a Value, and can be coerced to structured types through various methods on that class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em expression} & Expression generated by methods of Language.\\
+\hline
+{\em query\+Timeout} & Timeout for that specific query (it will override the client timetout, if any).\\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a5145ed56d19e1aadb48e87435d6ab053}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a5145ed56d19e1aadb48e87435d6ab053}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!Query@{Query}}
+\index{Query@{Query}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{Query()}{Query()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily async Task$<$I\+Enumerable$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$ $>$ Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Query (\begin{DoxyParamCaption}\item[{I\+Enumerable$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} $>$}]{expressions,  }\item[{Time\+Span?}]{query\+Timeout = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Issues multiple queries to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. 
+
+These queries are sent to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} in a single request, and are evaluated. The list of response nodes is returned in the same order as the issued queries. 
+
+See Query(\+Expr) for more information on the individual queries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em expressions} & the list of query expressions to be sent to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}.\\
+\hline
+{\em query\+Timeout} & Timeout for that specific query (it will override the client timetout, if any).\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a Task containing an ordered list of root response nodes.
+\end{DoxyReturn}
+
+
+Definition at line 130 of file Fauna\+Client.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a945ad9466bdb2e2c579744ef48ba999f}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a945ad9466bdb2e2c579744ef48ba999f}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!Query@{Query}}
+\index{Query@{Query}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{Query()}{Query()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily async Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\mbox{[}$\,$\mbox{]}$>$ Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Query (\begin{DoxyParamCaption}\item[{params \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}\mbox{[}$\,$\mbox{]}}]{expressions }\end{DoxyParamCaption})}
+
+
+
+Issues multiple queries to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. 
+
+These queries are sent to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} in a single request, and are evaluated. The list of response nodes is returned in the same order as the issued queries. 
+
+See Query(\+Expr) for more information on the individual queries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em expressions} & the list of query expressions to be sent to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a Task containing an ordered list of root response nodes.
+\end{DoxyReturn}
+
+
+Definition at line 92 of file Fauna\+Client.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_a89d7a8507269bcc949f01f603006aeda}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_a89d7a8507269bcc949f01f603006aeda}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!Query@{Query}}
+\index{Query@{Query}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{Query()}{Query()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily async Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\mbox{[}$\,$\mbox{]}$>$ Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Query (\begin{DoxyParamCaption}\item[{Time\+Span}]{query\+Timeout,  }\item[{params \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}\mbox{[}$\,$\mbox{]}}]{expressions }\end{DoxyParamCaption})}
+
+
+
+Issues multiple queries to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. 
+
+These queries are sent to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} in a single request, and are evaluated. The list of response nodes is returned in the same order as the issued queries. 
+
+See Query(\+Expr) for more information on the individual queries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em query\+Timeout} & Timeout for that specific query (it will override the client timetout, if any).\\
+\hline
+{\em expressions} & the list of query expressions to be sent to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a Task containing an ordered list of root response nodes.
+\end{DoxyReturn}
+
+
+Definition at line 111 of file Fauna\+Client.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_fauna_client_ad23e47282d727310208202548ddcde65}\label{class_fauna_d_b_1_1_client_1_1_fauna_client_ad23e47282d727310208202548ddcde65}} 
+\index{FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}!Stream@{Stream}}
+\index{Stream@{Stream}!FaunaDB.Client.FaunaClient@{FaunaDB.Client.FaunaClient}}
+\doxysubsubsection{\texorpdfstring{Stream()}{Stream()}}
+{\footnotesize\ttfamily async Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_handler}{Streaming\+Event\+Handler}}$>$ Fauna\+D\+B.\+Client.\+Fauna\+Client.\+Stream (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{data = {\ttfamily null},  }\item[{I\+Read\+Only\+List$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_event_field}{Event\+Field}} $>$}]{fields = {\ttfamily null} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 156 of file Fauna\+Client.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Client/\mbox{\hyperlink{_fauna_client_8cs}{Fauna\+Client.\+cs}}\end{DoxyCompactItemize}

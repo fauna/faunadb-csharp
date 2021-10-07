@@ -1,0 +1,168 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_field}{}\doxysection{Fauna\+D\+B.\+Types.\+Field$<$ T $>$ Class Template Reference}
+\label{class_fauna_d_b_1_1_types_1_1_field}\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+
+
+A field extractor for a \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}  
+
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ U $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a06f157610b01c79db573ff5f4796a190}{At$<$ U $>$}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ U $>$ other)
+\begin{DoxyCompactList}\small\item\em Creates a field extractor composed with another nested field \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ U $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a0773f80d7e414fe504d65f510d2c9d93}{To$<$ U $>$}} ()
+\begin{DoxyCompactList}\small\item\em Creates a field extractor that coerces its value using the type specified \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ I\+Read\+Only\+List$<$ U $>$ $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a4212fcbed91ef0727de695970405440b}{Collect$<$ U $>$}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ U $>$ field)
+\begin{DoxyCompactList}\small\item\em Creates a field extractor that collects each inner value of an array using the nested field passed, assuming the root value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a9004828dd569d13c7c292cd8c55a23b3}{Equals}} (object obj)
+\item 
+override int \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a04d6aa4ac6975ee4a3586be6482fa89e}{Get\+Hash\+Code}} ()
+\item 
+override string \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a91c6efde070870ace73d97c3d75d8660}{To\+String}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a9ebf449bcefe61f1d1c0198f2007c28b}{At}} (params string\mbox{[}$\,$\mbox{]} keys)
+\begin{DoxyCompactList}\small\item\em Creates a field that extracts its value from a object path, assuming the value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}}. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a8d1e0831a4376c6f3952013d0b742d64}{At}} (params int\mbox{[}$\,$\mbox{]} indexes)
+\begin{DoxyCompactList}\small\item\em Creates a field that extracts its value from a array index, assuming the value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ T $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a76406e633ec224ff0fbb1cd4d45965df}{To$<$ T $>$}} ()
+\begin{DoxyCompactList}\small\item\em Creates a field that coerces its value using the type specified. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A field extractor for a \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} 
+
+See \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} 
+
+Definition at line 12 of file Field.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a8d1e0831a4376c6f3952013d0b742d64}\label{class_fauna_d_b_1_1_types_1_1_field_a8d1e0831a4376c6f3952013d0b742d64}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!At@{At}}
+\index{At@{At}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{At()}{At()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.At (\begin{DoxyParamCaption}\item[{params int\mbox{[}$\,$\mbox{]}}]{indexes }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Creates a field that extracts its value from a array index, assuming the value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em indexes} & indexes path to the value\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the field extractor
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a9ebf449bcefe61f1d1c0198f2007c28b}\label{class_fauna_d_b_1_1_types_1_1_field_a9ebf449bcefe61f1d1c0198f2007c28b}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!At@{At}}
+\index{At@{At}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{At()}{At()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.At (\begin{DoxyParamCaption}\item[{params string\mbox{[}$\,$\mbox{]}}]{keys }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Creates a field that extracts its value from a object path, assuming the value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v}{ObjectV}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em keys} & path to the field\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+the field extractor
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a06f157610b01c79db573ff5f4796a190}\label{class_fauna_d_b_1_1_types_1_1_field_a06f157610b01c79db573ff5f4796a190}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!At$<$ U $>$@{At$<$ U $>$}}
+\index{At$<$ U $>$@{At$<$ U $>$}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{At$<$ U $>$()}{At< U >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$U$>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field_a9ebf449bcefe61f1d1c0198f2007c28b}{At}}$<$ U $>$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ U $>$}]{other }\end{DoxyParamCaption})}
+
+
+
+Creates a field extractor composed with another nested field 
+
+
+\begin{DoxyParams}{Parameters}
+{\em other} & nested field to compose with\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a new field extractor with the nested field
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a4212fcbed91ef0727de695970405440b}\label{class_fauna_d_b_1_1_types_1_1_field_a4212fcbed91ef0727de695970405440b}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!Collect$<$ U $>$@{Collect$<$ U $>$}}
+\index{Collect$<$ U $>$@{Collect$<$ U $>$}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Collect$<$ U $>$()}{Collect< U >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$I\+Read\+Only\+List$<$U$>$ $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.Collect$<$ U $>$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$ U $>$}]{field }\end{DoxyParamCaption})}
+
+
+
+Creates a field extractor that collects each inner value of an array using the nested field passed, assuming the root value is an instance of \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} 
+
+
+\begin{DoxyParams}{Parameters}
+{\em field} & field to be extracted from each array\textquotesingle{}s element\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+a new field that collects each inner value using the field passed
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a9004828dd569d13c7c292cd8c55a23b3}\label{class_fauna_d_b_1_1_types_1_1_field_a9004828dd569d13c7c292cd8c55a23b3}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!Equals@{Equals}}
+\index{Equals@{Equals}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily override bool \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.Equals (\begin{DoxyParamCaption}\item[{object}]{obj }\end{DoxyParamCaption})}
+
+
+
+Definition at line 50 of file Field.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a04d6aa4ac6975ee4a3586be6482fa89e}\label{class_fauna_d_b_1_1_types_1_1_field_a04d6aa4ac6975ee4a3586be6482fa89e}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!GetHashCode@{GetHashCode}}
+\index{GetHashCode@{GetHashCode}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{GetHashCode()}{GetHashCode()}}
+{\footnotesize\ttfamily override int \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.Get\+Hash\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a76406e633ec224ff0fbb1cd4d45965df}\label{class_fauna_d_b_1_1_types_1_1_field_a76406e633ec224ff0fbb1cd4d45965df}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!To$<$ T $>$@{To$<$ T $>$}}
+\index{To$<$ T $>$@{To$<$ T $>$}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{To$<$ T $>$()}{To< T >()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$T$>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.To$<$ T $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Creates a field that coerces its value using the type specified. 
+
+\begin{DoxyReturn}{Returns}
+the field extractor
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a0773f80d7e414fe504d65f510d2c9d93}\label{class_fauna_d_b_1_1_types_1_1_field_a0773f80d7e414fe504d65f510d2c9d93}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!To$<$ U $>$@{To$<$ U $>$}}
+\index{To$<$ U $>$@{To$<$ U $>$}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{To$<$ U $>$()}{To< U >()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Field}}$<$U$>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.To$<$ U $>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Creates a field extractor that coerces its value using the type specified 
+
+\begin{DoxyReturn}{Returns}
+a new field that coerces its value using the type specified
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_field_a91c6efde070870ace73d97c3d75d8660}\label{class_fauna_d_b_1_1_types_1_1_field_a91c6efde070870ace73d97c3d75d8660}} 
+\index{FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}!ToString@{ToString}}
+\index{ToString@{ToString}!FaunaDB.Types.Field$<$ T $>$@{FaunaDB.Types.Field$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily override string \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_field}{Fauna\+D\+B.\+Types.\+Field}}$<$ T $>$.To\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_field_8cs}{Field.\+cs}}\end{DoxyCompactItemize}

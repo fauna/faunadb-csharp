@@ -1,0 +1,123 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_date_v}{}\doxysection{Fauna\+D\+B.\+Types.\+DateV Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_date_v}\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+
+
+Represents a Date value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+DateV\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_types_1_1_date_v}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override bool \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_a3bfc71ebca8c1cc8907828c982ef7d9d}{Equals}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+override string \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_a593d96a35a037cd04191984fb858d7ae}{To\+String}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_abc483678a1c45126330be5369f67a386}{Of}} (string iso\+Date)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_ac7da6826f35dd20ab1ddf119d97ccafe}{Of}} (Date\+Time date\+Time)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_a2e566eeb7afd00fa866e812548768e88}{operator DateV}} (Date\+Time value)
+\begin{DoxyCompactList}\small\item\em Convert from a Date\+Time by rendering as iso8601. This throws out time-\/of-\/day data. \end{DoxyCompactList}\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_aad466dfa9ceba4f3d8deec5f62524727}{operator Date\+Time}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}} ft)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override int \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_ad8546d45b400ef759b22f1c19dcba1b6}{Hash\+Code}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Date\+Time\+Offset \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v_a5fbddd64863688d2060f5b4600435dc3}{Date\+Time\+Offset}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a Date value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. 
+
+See the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} Special \mbox{\hyperlink{namespace_fauna_d_b_1_1_types}{Types}}
+
+. 
+
+Definition at line 216 of file Scalar\+Value.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_a3bfc71ebca8c1cc8907828c982ef7d9d}\label{class_fauna_d_b_1_1_types_1_1_date_v_a3bfc71ebca8c1cc8907828c982ef7d9d}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!Equals@{Equals}}
+\index{Equals@{Equals}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily override bool Fauna\+D\+B.\+Types.\+Date\+V.\+Equals (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})}
+
+
+
+Definition at line 260 of file Scalar\+Value.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_ad8546d45b400ef759b22f1c19dcba1b6}\label{class_fauna_d_b_1_1_types_1_1_date_v_ad8546d45b400ef759b22f1c19dcba1b6}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!HashCode@{HashCode}}
+\index{HashCode@{HashCode}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{HashCode()}{HashCode()}}
+{\footnotesize\ttfamily override int Fauna\+D\+B.\+Types.\+Date\+V.\+Hash\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_ac7da6826f35dd20ab1ddf119d97ccafe}\label{class_fauna_d_b_1_1_types_1_1_date_v_ac7da6826f35dd20ab1ddf119d97ccafe}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!Of@{Of}}
+\index{Of@{Of}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{Of()}{Of()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}} Fauna\+D\+B.\+Types.\+Date\+V.\+Of (\begin{DoxyParamCaption}\item[{Date\+Time}]{date\+Time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_abc483678a1c45126330be5369f67a386}\label{class_fauna_d_b_1_1_types_1_1_date_v_abc483678a1c45126330be5369f67a386}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!Of@{Of}}
+\index{Of@{Of}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{Of()}{Of()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}} Fauna\+D\+B.\+Types.\+Date\+V.\+Of (\begin{DoxyParamCaption}\item[{string}]{iso\+Date }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_aad466dfa9ceba4f3d8deec5f62524727}\label{class_fauna_d_b_1_1_types_1_1_date_v_aad466dfa9ceba4f3d8deec5f62524727}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!operator DateTime@{operator DateTime}}
+\index{operator DateTime@{operator DateTime}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{operator DateTime()}{operator DateTime()}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Date\+V.\+operator Date\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}}}]{ft }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_a2e566eeb7afd00fa866e812548768e88}\label{class_fauna_d_b_1_1_types_1_1_date_v_a2e566eeb7afd00fa866e812548768e88}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!operator DateV@{operator DateV}}
+\index{operator DateV@{operator DateV}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{operator DateV()}{operator DateV()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Date\+V.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_date_v}{DateV}} (\begin{DoxyParamCaption}\item[{Date\+Time}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+
+
+Convert from a Date\+Time by rendering as iso8601. This throws out time-\/of-\/day data. 
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_a593d96a35a037cd04191984fb858d7ae}\label{class_fauna_d_b_1_1_types_1_1_date_v_a593d96a35a037cd04191984fb858d7ae}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!ToString@{ToString}}
+\index{ToString@{ToString}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily override string Fauna\+D\+B.\+Types.\+Date\+V.\+To\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_date_v_a5fbddd64863688d2060f5b4600435dc3}\label{class_fauna_d_b_1_1_types_1_1_date_v_a5fbddd64863688d2060f5b4600435dc3}} 
+\index{FaunaDB.Types.DateV@{FaunaDB.Types.DateV}!DateTimeOffset@{DateTimeOffset}}
+\index{DateTimeOffset@{DateTimeOffset}!FaunaDB.Types.DateV@{FaunaDB.Types.DateV}}
+\doxysubsubsection{\texorpdfstring{DateTimeOffset}{DateTimeOffset}}
+{\footnotesize\ttfamily Date\+Time\+Offset Fauna\+D\+B.\+Types.\+Date\+V.\+Date\+Time\+Offset\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line 235 of file Scalar\+Value.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_scalar_value_8cs}{Scalar\+Value.\+cs}}\end{DoxyCompactItemize}

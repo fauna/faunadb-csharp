@@ -1,0 +1,60 @@
+.TH "FaunaDB.Client.StreamingEventHandler" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Client.StreamingEventHandler
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits IObservable< Value >, and IDisposable\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBStreamingEventHandler\fP (Stream dataSource)"
+.br
+.ti -1c
+.RI "IDisposable \fBSubscribe\fP (IObserver< \fBValue\fP > observer)"
+.br
+.ti -1c
+.RI "async void \fBRequestData\fP ()"
+.br
+.ti -1c
+.RI "void \fBComplete\fP ()"
+.br
+.ti -1c
+.RI "void \fBDispose\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 10 of file StreamingEventHandler\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Client\&.StreamingEventHandler\&.StreamingEventHandler (Stream dataSource)"
+
+.PP
+Definition at line 19 of file StreamingEventHandler\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void FaunaDB\&.Client\&.StreamingEventHandler\&.Complete ()"
+
+.PP
+Definition at line 62 of file StreamingEventHandler\&.cs\&.
+.SS "void FaunaDB\&.Client\&.StreamingEventHandler\&.Dispose ()"
+
+.PP
+Definition at line 70 of file StreamingEventHandler\&.cs\&.
+.SS "async void FaunaDB\&.Client\&.StreamingEventHandler\&.RequestData ()"
+
+.PP
+Definition at line 36 of file StreamingEventHandler\&.cs\&.
+.SS "IDisposable FaunaDB\&.Client\&.StreamingEventHandler\&.Subscribe (IObserver< \fBValue\fP > observer)"
+
+.PP
+Definition at line 26 of file StreamingEventHandler\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

@@ -1,0 +1,160 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_array_v}{}\doxysection{Fauna\+D\+B.\+Types.\+ArrayV Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_array_v}\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+
+
+Represents an array value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. Arrays are polymorphic ordered lists of other values.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+ArrayV\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_fauna_d_b_1_1_types_1_1_array_v}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override bool \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_a422ca87290f0566865ff0f1c1640378b}{Equals}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+override string \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_aa27877f4e82382363736e89979aa29fc}{To\+String}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_ab285f900600f5495a49e97bd94f1e0ae}{Of}} (params \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\mbox{[}$\,$\mbox{]} values)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_a2dcc39ca60ccd6bc9ab7b5469561cf2e}{Of}} (I\+Enumerable$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ values)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static readonly \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_a0cbcd77ed745475af2a7cd68939a8ade}{Empty}} = new \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}(new List$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$())
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override int \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_a4463cb42d7b8ba47b2f017e0240c127e}{Hash\+Code}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+I\+Read\+Only\+List$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_abca8105cf15c2ecef10461fb25863101}{Value}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_ac2a15ad1a2406462ecad6305ea1605cc}{this\mbox{[}int n\mbox{]}}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Get the nth value. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v_adc8d828086030e0f1d13f027edf9da12}{Length}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an array value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. Arrays are polymorphic ordered lists of other values. 
+
+
+
+Definition at line 15 of file Array\+V.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_a422ca87290f0566865ff0f1c1640378b}\label{class_fauna_d_b_1_1_types_1_1_array_v_a422ca87290f0566865ff0f1c1640378b}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!Equals@{Equals}}
+\index{Equals@{Equals}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily override bool Fauna\+D\+B.\+Types.\+Array\+V.\+Equals (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a2f83312dd7cc2168b0d1e9a13fdb52a5}{Fauna\+D\+B.\+Query.\+Expr}}.
+
+
+
+Definition at line 71 of file Array\+V.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_a4463cb42d7b8ba47b2f017e0240c127e}\label{class_fauna_d_b_1_1_types_1_1_array_v_a4463cb42d7b8ba47b2f017e0240c127e}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!HashCode@{HashCode}}
+\index{HashCode@{HashCode}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{HashCode()}{HashCode()}}
+{\footnotesize\ttfamily override int Fauna\+D\+B.\+Types.\+Array\+V.\+Hash\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr_a1d487109ba0432b77604968a0dc07590}{Fauna\+D\+B.\+Query.\+Expr}}.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_a2dcc39ca60ccd6bc9ab7b5469561cf2e}\label{class_fauna_d_b_1_1_types_1_1_array_v_a2dcc39ca60ccd6bc9ab7b5469561cf2e}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!Of@{Of}}
+\index{Of@{Of}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{Of()}{Of()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} Fauna\+D\+B.\+Types.\+Array\+V.\+Of (\begin{DoxyParamCaption}\item[{I\+Enumerable$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$}]{values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_ab285f900600f5495a49e97bd94f1e0ae}\label{class_fauna_d_b_1_1_types_1_1_array_v_ab285f900600f5495a49e97bd94f1e0ae}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!Of@{Of}}
+\index{Of@{Of}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{Of()}{Of()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} Fauna\+D\+B.\+Types.\+Array\+V.\+Of (\begin{DoxyParamCaption}\item[{params \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}\mbox{[}$\,$\mbox{]}}]{values }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_aa27877f4e82382363736e89979aa29fc}\label{class_fauna_d_b_1_1_types_1_1_array_v_aa27877f4e82382363736e89979aa29fc}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!ToString@{ToString}}
+\index{ToString@{ToString}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily override string Fauna\+D\+B.\+Types.\+Array\+V.\+To\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_a0cbcd77ed745475af2a7cd68939a8ade}\label{class_fauna_d_b_1_1_types_1_1_array_v_a0cbcd77ed745475af2a7cd68939a8ade}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!Empty@{Empty}}
+\index{Empty@{Empty}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{Empty}{Empty}}
+{\footnotesize\ttfamily readonly \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}} Fauna\+D\+B.\+Types.\+Array\+V.\+Empty = new \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_array_v}{ArrayV}}(new List$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$())\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 17 of file Array\+V.\+cs.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_adc8d828086030e0f1d13f027edf9da12}\label{class_fauna_d_b_1_1_types_1_1_array_v_adc8d828086030e0f1d13f027edf9da12}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!Length@{Length}}
+\index{Length@{Length}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{Length}{Length}}
+{\footnotesize\ttfamily int Fauna\+D\+B.\+Types.\+Array\+V.\+Length\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line 55 of file Array\+V.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_ac2a15ad1a2406462ecad6305ea1605cc}\label{class_fauna_d_b_1_1_types_1_1_array_v_ac2a15ad1a2406462ecad6305ea1605cc}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!this\mbox{[}int n\mbox{]}@{this[int n]}}
+\index{this\mbox{[}int n\mbox{]}@{this[int n]}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{this[int n]}{this[int n]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} Fauna\+D\+B.\+Types.\+Array\+V.\+this\mbox{[}int n\mbox{]}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Get the nth value. 
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Index\+Out\+Of\+Range\+Exception} & \\
+\hline
+\end{DoxyExceptions}
+
+
+Definition at line 53 of file Array\+V.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_array_v_abca8105cf15c2ecef10461fb25863101}\label{class_fauna_d_b_1_1_types_1_1_array_v_abca8105cf15c2ecef10461fb25863101}} 
+\index{FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}!Value@{Value}}
+\index{Value@{Value}!FaunaDB.Types.ArrayV@{FaunaDB.Types.ArrayV}}
+\doxysubsubsection{\texorpdfstring{Value}{Value}}
+{\footnotesize\ttfamily I\+Read\+Only\+List$<$\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}$>$ Fauna\+D\+B.\+Types.\+Array\+V.\+Value\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line 19 of file Array\+V.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_array_v_8cs}{Array\+V.\+cs}}\end{DoxyCompactItemize}

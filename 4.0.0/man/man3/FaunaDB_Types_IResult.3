@@ -1,0 +1,157 @@
+.TH "FaunaDB.Types.IResult< T >" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.IResult< T > \- Represents the result of an operation\&. Usually a coercion operation\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by FaunaDB\&.Types\&.Failure< T >, and FaunaDB\&.Types\&.Success< T >\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBIResult\fP< U > \fBMap< U >\fP (Func< T, U > func)"
+.br
+.RI "Apply the function passed on the result value\&. "
+.ti -1c
+.RI "\fBIResult\fP< U > \fBFlatMap< U >\fP (Func< T, \fBIResult\fP< U >> func)"
+.br
+.RI "Apply the function passed on the result value\&. "
+.ti -1c
+.RI "U \fBMatch< U >\fP (Func< T, U > Success, Func< string, U > Failure)"
+.br
+.RI "Matches the current instance\&. Case it represents a successful result it will execute the first argument\&. Case it represents a failure object it will execute the second argument\&. "
+.ti -1c
+.RI "void \fBMatch\fP (Action< T > Success, Action< string > Failure)"
+.br
+.RI "Matches the current instance\&. Case it represents a successful result it will execute the first argument\&. Case it represents a failure object it will execute the second argument\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "T \fBValue\fP\fC [get]\fP"
+.br
+.RI "Extracts the resulting value or throw an exception if the operation has failed\&. "
+.ti -1c
+.RI "\fBIOption\fP< T > \fBToOption\fP\fC [get]\fP"
+.br
+.RI "Gets an IOption<T> type containing the result value if the operation was successful, or Option\&.None<T>() if it was a failure "
+.ti -1c
+.RI "bool \fBisSuccess\fP\fC [get]\fP"
+.br
+.RI "Return true if the operation was successful "
+.ti -1c
+.RI "bool \fBisFailure\fP\fC [get]\fP"
+.br
+.RI "Return true if the operation has failed "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents the result of an operation\&. Usually a coercion operation\&. 
+
+
+.PP
+Definition at line 8 of file Result\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBIResult\fP<U> \fBFaunaDB\&.Types\&.IResult\fP< T >\&.FlatMap< U > (Func< T, \fBIResult\fP< U >> func)"
+
+.PP
+Apply the function passed on the result value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfunc\fP the map function to be applied
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+If this is a successful result, returns the map function result\&. If this is a failure, returns a new failure with the same error message\&. 
+.RE
+.PP
+
+.SS "\fBIResult\fP<U> \fBFaunaDB\&.Types\&.IResult\fP< T >\&.Map< U > (Func< T, U > func)"
+
+.PP
+Apply the function passed on the result value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIfunc\fP the map function to be applied
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+If this is a successful result, return a new successful result with the map function result\&. If this is a failure, returns a new failure with the same error message\&. 
+.RE
+.PP
+
+.SS "void \fBFaunaDB\&.Types\&.IResult\fP< T >\&.Match (Action< T > Success, Action< string > Failure)"
+
+.PP
+Matches the current instance\&. Case it represents a successful result it will execute the first argument\&. Case it represents a failure object it will execute the second argument\&. \fBIResult\fP<string> result = \&.\&.\&.
+.PP
+result\&.Match( Success: value => DoSomething(), Failure: reason => DoSomethingElse(reason) ); 
+.PP
+\fBParameters\fP
+.RS 4
+\fISuccess\fP Action to be executed case this instance represents a successful result
+.br
+\fIFailure\fP Action to be executed case this instance represents a failure result
+.RE
+.PP
+
+.SS "U \fBFaunaDB\&.Types\&.IResult\fP< T >\&.\fBMatch\fP< U > (Func< T, U > Success, Func< string, U > Failure)"
+
+.PP
+Matches the current instance\&. Case it represents a successful result it will execute the first argument\&. Case it represents a failure object it will execute the second argument\&. \fBIResult\fP<string> result = \&.\&.\&. int parsed = result\&.Match( Success: value => int\&.Parse(value), Failure: reason => ReturnDefaultValue() ); 
+.PP
+\fBParameters\fP
+.RS 4
+\fISuccess\fP Function to be executed case this instance represents a successful result
+.br
+\fIFailure\fP Function to be executed case this instance represents a failure result
+.RE
+.PP
+
+.SH "Property Documentation"
+.PP 
+.SS "bool \fBFaunaDB\&.Types\&.IResult\fP< T >\&.isFailure\fC [get]\fP"
+
+.PP
+Return true if the operation has failed 
+.PP
+Definition at line 81 of file Result\&.cs\&.
+.SS "bool \fBFaunaDB\&.Types\&.IResult\fP< T >\&.isSuccess\fC [get]\fP"
+
+.PP
+Return true if the operation was successful 
+.PP
+Definition at line 76 of file Result\&.cs\&.
+.SS "\fBIOption\fP<T> \fBFaunaDB\&.Types\&.IResult\fP< T >\&.ToOption\fC [get]\fP"
+
+.PP
+Gets an IOption<T> type containing the result value if the operation was successful, or Option\&.None<T>() if it was a failure 
+.PP
+Definition at line 71 of file Result\&.cs\&.
+.SS "T \fBFaunaDB\&.Types\&.IResult\fP< T >\&.\fBValue\fP\fC [get]\fP"
+
+.PP
+Extracts the resulting value or throw an exception if the operation has failed\&. 
+.PP
+\fBExceptions\fP
+.RS 4
+\fIInvalidOperationException\fP 
+.RE
+.PP
+
+.PP
+Definition at line 65 of file Result\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

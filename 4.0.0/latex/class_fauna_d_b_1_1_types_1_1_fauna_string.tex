@@ -1,0 +1,31 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_string}{}\doxysection{Fauna\+D\+B.\+Types.\+Fauna\+String Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_fauna_string}\index{FaunaDB.Types.FaunaString@{FaunaDB.Types.FaunaString}}
+
+
+Instruct the encoder that this object should be treated as a string when stored in Fauna. The Encoder will call the object or primative type\textquotesingle{}s .To\+String() method. The Decoder will attempt to create an object with the constructor with a single string parameter. If it does not have that constructor the Decoder will fail. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+Fauna\+String\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_types_1_1_fauna_string}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Detailed Description}
+Instruct the encoder that this object should be treated as a string when stored in Fauna. The Encoder will call the object or primative type\textquotesingle{}s .To\+String() method. The Decoder will attempt to create an object with the constructor with a single string parameter. If it does not have that constructor the Decoder will fail. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type. 
+
+class Website \{ \mbox{[}\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_string}{Fauna\+String}}\mbox{]} public Uri My\+Link \{ get; set; \} \}
+
+var web = new Website \{ My\+Link = new Uri(\char`\"{}http\+://fauanadb.\+com\char`\"{}) \};
+
+var encoded\+Website = Encoder.\+Encode(web); 
+
+Definition at line 117 of file Attributes.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_attributes_8cs}{Attributes.\+cs}}\end{DoxyCompactItemize}

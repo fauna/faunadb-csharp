@@ -1,0 +1,81 @@
+.TH "FaunaDB.Client.StreamingEventMonitor" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Client.StreamingEventMonitor
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits IObserver< Value >\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBStreamingEventMonitor\fP ()"
+.br
+.ti -1c
+.RI "\fBStreamingEventMonitor\fP (Action< \fBValue\fP > onNext, Action< Exception > onError, Action onCompleted)"
+.br
+.ti -1c
+.RI "void \fBSubscribe\fP (\fBStreamingEventHandler\fP provider)"
+.br
+.ti -1c
+.RI "void \fBUnsubscribe\fP ()"
+.br
+.ti -1c
+.RI "virtual void \fBOnNext\fP (\fBValue\fP value)"
+.br
+.ti -1c
+.RI "virtual void \fBOnError\fP (Exception error)"
+.br
+.ti -1c
+.RI "virtual void \fBOnCompleted\fP ()"
+.br
+.ti -1c
+.RI "void \fBRequestData\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 12 of file StreamingEventMonitor\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Client\&.StreamingEventMonitor\&.StreamingEventMonitor ()"
+
+.PP
+Definition at line 21 of file StreamingEventMonitor\&.cs\&.
+.SS "FaunaDB\&.Client\&.StreamingEventMonitor\&.StreamingEventMonitor (Action< \fBValue\fP > onNext, Action< Exception > onError, Action onCompleted)"
+
+.PP
+Definition at line 23 of file StreamingEventMonitor\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual void FaunaDB\&.Client\&.StreamingEventMonitor\&.OnCompleted ()\fC [virtual]\fP"
+
+.PP
+Definition at line 53 of file StreamingEventMonitor\&.cs\&.
+.SS "virtual void FaunaDB\&.Client\&.StreamingEventMonitor\&.OnError (Exception error)\fC [virtual]\fP"
+
+.PP
+Definition at line 48 of file StreamingEventMonitor\&.cs\&.
+.SS "virtual void FaunaDB\&.Client\&.StreamingEventMonitor\&.OnNext (\fBValue\fP value)\fC [virtual]\fP"
+
+.PP
+Definition at line 43 of file StreamingEventMonitor\&.cs\&.
+.SS "void FaunaDB\&.Client\&.StreamingEventMonitor\&.RequestData ()"
+
+.PP
+Definition at line 58 of file StreamingEventMonitor\&.cs\&.
+.SS "void FaunaDB\&.Client\&.StreamingEventMonitor\&.Subscribe (\fBStreamingEventHandler\fP provider)"
+
+.PP
+Definition at line 30 of file StreamingEventMonitor\&.cs\&.
+.SS "void FaunaDB\&.Client\&.StreamingEventMonitor\&.Unsubscribe ()"
+
+.PP
+Definition at line 38 of file StreamingEventMonitor\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

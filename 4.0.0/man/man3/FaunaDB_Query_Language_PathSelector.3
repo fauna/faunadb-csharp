@@ -1,0 +1,70 @@
+.TH "FaunaDB.Query.Language.PathSelector" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Query.Language.PathSelector \- Builder for path selectors\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPathSelector\fP \fBAt\fP (params string[] others)"
+.br
+.RI "Narrow to a specific path on a object node\&. "
+.ti -1c
+.RI "\fBPathSelector\fP \fBAt\fP (params int[] others)"
+.br
+.RI "Narrow to a specific element index on a array node\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Builder for path selectors\&. 
+
+See the \fBFaunaDB\fP Miscellaneous Functions
+.PP
+Definition at line 16 of file Language\&.Values\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBPathSelector\fP FaunaDB\&.Query\&.Language\&.PathSelector\&.At (params int[] others)"
+
+.PP
+Narrow to a specific element index on a array node\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIothers\fP A list of nested indexes
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A new narrowed path
+.RE
+.PP
+
+.PP
+Definition at line 70 of file Language\&.Values\&.cs\&.
+.SS "\fBPathSelector\fP FaunaDB\&.Query\&.Language\&.PathSelector\&.At (params string[] others)"
+
+.PP
+Narrow to a specific path on a object node\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIothers\fP A list of nested fields
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A new narrowed path
+.RE
+.PP
+
+.PP
+Definition at line 54 of file Language\&.Values\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

@@ -1,0 +1,193 @@
+.TH "FaunaDB.Types" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBArrayV\fP"
+.br
+.RI "Represents an array value in the \fBFaunaDB\fP query language\&. Arrays are polymorphic ordered lists of other values\&. "
+.ti -1c
+.RI "class \fBBooleanV\fP"
+.br
+.RI "Represents a Boolean value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBBytesV\fP"
+.br
+.RI "A \fBFaunaDB\fP bytes type\&. "
+.ti -1c
+.RI "class \fBCamelCaseNamingStrategy\fP"
+.br
+.ti -1c
+.RI "class \fBDateTimeUtil\fP"
+.br
+.ti -1c
+.RI "class \fBDateV\fP"
+.br
+.RI "Represents a Date value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBDecoder\fP"
+.br
+.RI "\fBFaunaDB\fP \fBValue\fP to object decoder\&. "
+.ti -1c
+.RI "class \fBDecoderImpl\fP"
+.br
+.ti -1c
+.RI "class \fBDefaultNamingStrategy\fP"
+.br
+.ti -1c
+.RI "class \fBDoubleV\fP"
+.br
+.RI "Represents a Double value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBEncoder\fP"
+.br
+.RI "\fBFaunaDB\fP object to \fBValue\fP encoder\&. "
+.ti -1c
+.RI "class \fBEncoderImpl\fP"
+.br
+.ti -1c
+.RI "class \fBExprV\fP"
+.br
+.RI "A \fBFaunaDB\fP Expression wrapped as a \fBValue\fP "
+.ti -1c
+.RI "class \fBFailure\fP"
+.br
+.ti -1c
+.RI "class \fBFaunaConstructorAttribute\fP"
+.br
+.RI "Instruct the decoder wich constructor to use when decoding a object\&. It can also be used in a public static method instead in a constructor\&. That attribute can only be used once per class\&. "
+.ti -1c
+.RI "class \fBFaunaDate\fP"
+.br
+.RI "Instruct the encoder that this DateTime property should always be converted to \fBTypes\&.DateV\fP "
+.ti -1c
+.RI "class \fBFaunaEnum\fP"
+.br
+.RI "Instruct the encoder/decoder to rename the annotated enum field\&. If not used the method Enum\&.GetName(Type, object) will be used instead\&. "
+.ti -1c
+.RI "class \fBFaunaFieldAttribute\fP"
+.br
+.RI "Maps a property/field member constructor parameter to \fBFaunaDB\fP object property while encoding/deconding an object\&. If this attribute if not specified the property/field name constructor parameter name will be used instead\&. "
+.ti -1c
+.RI "class \fBFaunaIgnoreAttribute\fP"
+.br
+.RI "Instruct the encoder to not encode the specified member\&. "
+.ti -1c
+.RI "class \fBFaunaString\fP"
+.br
+.RI "Instruct the encoder that this object should be treated as a string when stored in Fauna\&. The Encoder will call the object or primative type's \&.ToString() method\&. The Decoder will attempt to create an object with the constructor with a single string parameter\&. If it does not have that constructor the Decoder will fail\&. For primatives the Decoder will attempt to use standard system conversions to convert the string back to the primative type\&. "
+.ti -1c
+.RI "class \fBFaunaTime\fP"
+.br
+.RI "Instruct the encoder that this DateTime property should always be converted to \fBTypes\&.TimeV\fP "
+.ti -1c
+.RI "class \fBField\fP"
+.br
+.RI "A field extractor for a \fBFaunaDB\fP \fBValue\fP "
+.ti -1c
+.RI "interface \fBINone\fP"
+.br
+.ti -1c
+.RI "interface \fBIOption\fP"
+.br
+.RI "Represents an optional value\&. "
+.ti -1c
+.RI "interface \fBIResult\fP"
+.br
+.RI "Represents the result of an operation\&. Usually a coercion operation\&. "
+.ti -1c
+.RI "class \fBJsonWriterExtensions\fP"
+.br
+.ti -1c
+.RI "class \fBLongV\fP"
+.br
+.RI "Represents a Long value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBNamingStrategy\fP"
+.br
+.RI "Naming strategy for \fBValue\fP encoder/decoder\&. "
+.ti -1c
+.RI "class \fBNative\fP"
+.br
+.ti -1c
+.RI "class \fBNone\fP"
+.br
+.ti -1c
+.RI "class \fBNullV\fP"
+.br
+.RI "Represents a null value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBObjectV\fP"
+.br
+.RI "Represents an Object value in the \fBFaunaDB\fP query language\&. Objects are polymorphic dictionaries\&. "
+.ti -1c
+.RI "class \fBOption\fP"
+.br
+.RI "Represents an optional value\&. "
+.ti -1c
+.RI "class \fBPath\fP"
+.br
+.ti -1c
+.RI "class \fBQueryV\fP"
+.br
+.RI "Represents a query value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "struct \fBRefID\fP"
+.br
+.ti -1c
+.RI "class \fBReflection\fP"
+.br
+.ti -1c
+.RI "class \fBRefParser\fP"
+.br
+.ti -1c
+.RI "class \fBRefV\fP"
+.br
+.RI "A \fBFaunaDB\fP ref type\&. "
+.ti -1c
+.RI "class \fBResult\fP"
+.br
+.RI "Represents the result of an operation\&. Usually a coercion operation\&. "
+.ti -1c
+.RI "class \fBScalarValue\fP"
+.br
+.RI "Represents a scalar value at the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBSetRefV\fP"
+.br
+.RI "A \fBFaunaDB\fP set literal\&. See \fBFaunaDB\fP Special \fBTypes\fP"
+.ti -1c
+.RI "class \fBSome\fP"
+.br
+.ti -1c
+.RI "class \fBStringV\fP"
+.br
+.RI "Represents a String value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBSuccess\fP"
+.br
+.ti -1c
+.RI "class \fBTimeV\fP"
+.br
+.RI "Represents a Timestamp value in the \fBFaunaDB\fP query language\&. "
+.ti -1c
+.RI "class \fBValue\fP"
+.br
+.RI "Represents any scalar or non-scalar value in the \fBFaunaDB\fP query language\&. \fBFaunaDB\fP value types consist of all of the JSON value types, as well as the FaunaDB-specific types, \fBRefV\fP and \fBSetRefV\fP\&. "
+.ti -1c
+.RI "class \fBValueJsonConverter\fP"
+.br
+.ti -1c
+.RI "class \fBValueReader\fP"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

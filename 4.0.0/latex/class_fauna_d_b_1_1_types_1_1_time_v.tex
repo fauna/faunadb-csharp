@@ -1,0 +1,127 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_time_v}{}\doxysection{Fauna\+D\+B.\+Types.\+TimeV Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_time_v}\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+
+
+Represents a Timestamp value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+TimeV\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_types_1_1_time_v}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override bool \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_aacb4d76c6359a0f6c0aaddf98d29e848}{Equals}} (\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}} v)
+\item 
+override string \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_a308f2f55bdbe2de306b20cc5280aa44d}{To\+String}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_a5a7a8102f159bbee0fe0723562f9eb6d}{Of}} (string iso\+Time)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}} \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_a9301dc1950b2b95bffc9d10ff2dc394f}{Of}} (Date\+Time date\+Time)
+\item 
+static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_a054838ed299f59a404c341f7e37010fb}{operator TimeV}} (Date\+Time value)
+\begin{DoxyCompactList}\small\item\em Convert from a Date\+Time by rendering as iso8601. \end{DoxyCompactList}\item 
+static implicit \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_a50fd8f2491e98f9f7d049930765ba866}{operator Date\+Time}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}} ft)
+\begin{DoxyCompactList}\small\item\em Convert to Date\+Time. Since Date\+Time has millisecond precision, this is lossy. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+override int \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_a2d9cee2305550fed32d4393abd608475}{Hash\+Code}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Date\+Time\+Offset \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v_a8e8816e3e5c6be09437424dbe867f992}{Date\+Time\+Offset}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a Timestamp value in the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} query language. 
+
+See the \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} Special \mbox{\hyperlink{namespace_fauna_d_b_1_1_types}{Types}}
+
+. 
+
+Definition at line 148 of file Scalar\+Value.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_aacb4d76c6359a0f6c0aaddf98d29e848}\label{class_fauna_d_b_1_1_types_1_1_time_v_aacb4d76c6359a0f6c0aaddf98d29e848}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!Equals@{Equals}}
+\index{Equals@{Equals}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}}
+{\footnotesize\ttfamily override bool Fauna\+D\+B.\+Types.\+Time\+V.\+Equals (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_query_1_1_expr}{Expr}}}]{v }\end{DoxyParamCaption})}
+
+
+
+Definition at line 196 of file Scalar\+Value.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_a2d9cee2305550fed32d4393abd608475}\label{class_fauna_d_b_1_1_types_1_1_time_v_a2d9cee2305550fed32d4393abd608475}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!HashCode@{HashCode}}
+\index{HashCode@{HashCode}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{HashCode()}{HashCode()}}
+{\footnotesize\ttfamily override int Fauna\+D\+B.\+Types.\+Time\+V.\+Hash\+Code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_a9301dc1950b2b95bffc9d10ff2dc394f}\label{class_fauna_d_b_1_1_types_1_1_time_v_a9301dc1950b2b95bffc9d10ff2dc394f}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!Of@{Of}}
+\index{Of@{Of}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{Of()}{Of()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}} Fauna\+D\+B.\+Types.\+Time\+V.\+Of (\begin{DoxyParamCaption}\item[{Date\+Time}]{date\+Time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_a5a7a8102f159bbee0fe0723562f9eb6d}\label{class_fauna_d_b_1_1_types_1_1_time_v_a5a7a8102f159bbee0fe0723562f9eb6d}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!Of@{Of}}
+\index{Of@{Of}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{Of()}{Of()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}} Fauna\+D\+B.\+Types.\+Time\+V.\+Of (\begin{DoxyParamCaption}\item[{string}]{iso\+Time }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_a50fd8f2491e98f9f7d049930765ba866}\label{class_fauna_d_b_1_1_types_1_1_time_v_a50fd8f2491e98f9f7d049930765ba866}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!operator DateTime@{operator DateTime}}
+\index{operator DateTime@{operator DateTime}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{operator DateTime()}{operator DateTime()}}
+{\footnotesize\ttfamily static implicit Fauna\+D\+B.\+Types.\+Time\+V.\+operator Date\+Time (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}}}]{ft }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Convert to Date\+Time. Since Date\+Time has millisecond precision, this is lossy. 
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_a054838ed299f59a404c341f7e37010fb}\label{class_fauna_d_b_1_1_types_1_1_time_v_a054838ed299f59a404c341f7e37010fb}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!operator TimeV@{operator TimeV}}
+\index{operator TimeV@{operator TimeV}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{operator TimeV()}{operator TimeV()}}
+{\footnotesize\ttfamily static Fauna\+D\+B.\+Types.\+Time\+V.\+operator \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_time_v}{TimeV}} (\begin{DoxyParamCaption}\item[{Date\+Time}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}, {\ttfamily [static]}}
+
+
+
+Convert from a Date\+Time by rendering as iso8601. 
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_a308f2f55bdbe2de306b20cc5280aa44d}\label{class_fauna_d_b_1_1_types_1_1_time_v_a308f2f55bdbe2de306b20cc5280aa44d}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!ToString@{ToString}}
+\index{ToString@{ToString}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily override string Fauna\+D\+B.\+Types.\+Time\+V.\+To\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_time_v_a8e8816e3e5c6be09437424dbe867f992}\label{class_fauna_d_b_1_1_types_1_1_time_v_a8e8816e3e5c6be09437424dbe867f992}} 
+\index{FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}!DateTimeOffset@{DateTimeOffset}}
+\index{DateTimeOffset@{DateTimeOffset}!FaunaDB.Types.TimeV@{FaunaDB.Types.TimeV}}
+\doxysubsubsection{\texorpdfstring{DateTimeOffset}{DateTimeOffset}}
+{\footnotesize\ttfamily Date\+Time\+Offset Fauna\+D\+B.\+Types.\+Time\+V.\+Date\+Time\+Offset\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line 168 of file Scalar\+Value.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_scalar_value_8cs}{Scalar\+Value.\+cs}}\end{DoxyCompactItemize}

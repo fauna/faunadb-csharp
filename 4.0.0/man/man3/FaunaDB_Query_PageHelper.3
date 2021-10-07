@@ -1,0 +1,72 @@
+.TH "FaunaDB.Query.PageHelper" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Query.PageHelper
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPageHelper\fP (\fBFaunaClient\fP client, \fBExpr\fP set, \fBExpr\fP ts=null, \fBExpr\fP after=null, \fBExpr\fP before=null, \fBExpr\fP size=null, \fBExpr\fP events=null, \fBExpr\fP sources=null)"
+.br
+.ti -1c
+.RI "\fBPageHelper\fP \fBMap\fP (\fBExpr\fP lambda)"
+.br
+.ti -1c
+.RI "\fBPageHelper\fP \fBFilter\fP (\fBExpr\fP lambda)"
+.br
+.ti -1c
+.RI "async Task \fBEach\fP (Action< \fBValue\fP > lambda)"
+.br
+.ti -1c
+.RI "async Task \fBEachReverse\fP (Action< \fBValue\fP > lambda)"
+.br
+.ti -1c
+.RI "async Task< \fBValue\fP > \fBNextPage\fP ()"
+.br
+.ti -1c
+.RI "async Task< \fBValue\fP > \fBPreviousPage\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 10 of file PageHelper\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Query\&.PageHelper\&.PageHelper (\fBFaunaClient\fP client, \fBExpr\fP set, \fBExpr\fP ts = \fCnull\fP, \fBExpr\fP after = \fCnull\fP, \fBExpr\fP before = \fCnull\fP, \fBExpr\fP size = \fCnull\fP, \fBExpr\fP events = \fCnull\fP, \fBExpr\fP sources = \fCnull\fP)"
+
+.PP
+Definition at line 22 of file PageHelper\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "async Task FaunaDB\&.Query\&.PageHelper\&.Each (Action< \fBValue\fP > lambda)"
+
+.PP
+Definition at line 57 of file PageHelper\&.cs\&.
+.SS "async Task FaunaDB\&.Query\&.PageHelper\&.EachReverse (Action< \fBValue\fP > lambda)"
+
+.PP
+Definition at line 64 of file PageHelper\&.cs\&.
+.SS "\fBPageHelper\fP FaunaDB\&.Query\&.PageHelper\&.Filter (\fBExpr\fP lambda)"
+
+.PP
+Definition at line 51 of file PageHelper\&.cs\&.
+.SS "\fBPageHelper\fP FaunaDB\&.Query\&.PageHelper\&.Map (\fBExpr\fP lambda)"
+
+.PP
+Definition at line 45 of file PageHelper\&.cs\&.
+.SS "async Task<\fBValue\fP> FaunaDB\&.Query\&.PageHelper\&.NextPage ()"
+
+.PP
+Definition at line 71 of file PageHelper\&.cs\&.
+.SS "async Task<\fBValue\fP> FaunaDB\&.Query\&.PageHelper\&.PreviousPage ()"
+
+.PP
+Definition at line 77 of file PageHelper\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

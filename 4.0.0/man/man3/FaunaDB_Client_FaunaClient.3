@@ -1,0 +1,228 @@
+.TH "FaunaDB.Client.FaunaClient" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Client.FaunaClient \- C# native client for \fBFaunaDB\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBErrorsWrapper\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFaunaClient\fP (string secret, string endpoint='https://db\&.fauna\&.com:443', TimeSpan? timeout=null, HttpClient httpClient=null, Version httpVersion=null, bool checkNewVersion=true, IReadOnlyDictionary< string, string > customHeaders=null)"
+.br
+.RI "Constructs a new instance of \fBFaunaClient\fP with the specified arguments\&. "
+.ti -1c
+.RI "\fBFaunaClient\fP (\fBIClientIO\fP clientIO)"
+.br
+.RI "Constructs a new instance of \fBFaunaClient\fP with the specified \fBIClientIO\fP\&. "
+.ti -1c
+.RI "\fBFaunaClient\fP \fBNewSessionClient\fP (string secret)"
+.br
+.RI "Creates a new \fBFaunaClient\fP with the user secret provided\&. Queries submitted to a session client will be authenticated with the secret provided\&. A session client shares its parent's internal resources\&. "
+.ti -1c
+.RI "async Task< \fBValue\fP > \fBQuery\fP (\fBExpr\fP expression, TimeSpan? queryTimeout=null)"
+.br
+.RI "Issues a \fBQuery\fP to \fBFaunaDB\fP\&. "
+.ti -1c
+.RI "async Task< \fBValue\fP[]> \fBQuery\fP (params \fBExpr\fP[] expressions)"
+.br
+.RI "Issues multiple queries to \fBFaunaDB\fP\&. "
+.ti -1c
+.RI "async Task< \fBValue\fP[]> \fBQuery\fP (TimeSpan queryTimeout, params \fBExpr\fP[] expressions)"
+.br
+.RI "Issues multiple queries to \fBFaunaDB\fP\&. "
+.ti -1c
+.RI "async Task< IEnumerable< \fBValue\fP > > \fBQuery\fP (IEnumerable< \fBExpr\fP > expressions, TimeSpan? queryTimeout=null)"
+.br
+.RI "Issues multiple queries to \fBFaunaDB\fP\&. "
+.ti -1c
+.RI "async Task< string > \fBPing\fP (string scope=null, int? timeout=null)"
+.br
+.RI "Check service health\&. "
+.ti -1c
+.RI "async Task< \fBStreamingEventHandler\fP > \fBStream\fP (\fBExpr\fP data=null, IReadOnlyList< \fBEventField\fP > fields=null)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBObjectV\fP \fBFromJson\fP (string json)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+C# native client for \fBFaunaDB\fP\&. 
+
+Queries are constructed by using static helpers in Language package\&.
+.PP
+.PP
+.nf
+var client = new FaunaClient(secret: "someAuthToken");
+client\&.Query(Get(Ref("some/ref")));
+.fi
+.PP
+ 
+.PP
+Definition at line 25 of file FaunaClient\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Client\&.FaunaClient\&.FaunaClient (string secret, string endpoint = \fC'https://db\&.fauna\&.com:443'\fP, TimeSpan? timeout = \fCnull\fP, HttpClient httpClient = \fCnull\fP, Version httpVersion = \fCnull\fP, bool checkNewVersion = \fCtrue\fP, IReadOnlyDictionary< string, string > customHeaders = \fCnull\fP)"
+
+.PP
+Constructs a new instance of \fBFaunaClient\fP with the specified arguments\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIsecret\fP Auth token for the \fBFaunaDB\fP server\&.
+.br
+\fIendpoint\fP URL for the \fBFaunaDB\fP server\&. Defaults to 'https://db\&.fauna\&.com:443'
+.br
+\fItimeout\fP Timeout for I/O operations\&. Defaults to 1 minute\&.
+.br
+\fIhttpVersion\fP Version of http\&. Default value is HttpVersion\&.Version11, is you use \&.net core 3\&.0 and above you can enable http/2 support by passing HttpVersion\&.Version20
+.br
+\fIcheckNewVersion\fP Check new NuGet package driver version\&. Default value is true (Check new version)\&.
+.RE
+.PP
+
+.PP
+Definition at line 37 of file FaunaClient\&.cs\&.
+.SS "FaunaDB\&.Client\&.FaunaClient\&.FaunaClient (\fBIClientIO\fP clientIO)"
+
+.PP
+Constructs a new instance of \fBFaunaClient\fP with the specified \fBIClientIO\fP\&. 
+.PP
+Definition at line 51 of file FaunaClient\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "static \fBObjectV\fP FaunaDB\&.Client\&.FaunaClient\&.FromJson (string json)\fC [static]\fP"
+
+.PP
+Definition at line 238 of file FaunaClient\&.cs\&.
+.SS "\fBFaunaClient\fP FaunaDB\&.Client\&.FaunaClient\&.NewSessionClient (string secret)"
+
+.PP
+Creates a new \fBFaunaClient\fP with the user secret provided\&. Queries submitted to a session client will be authenticated with the secret provided\&. A session client shares its parent's internal resources\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIsecret\fP Auth token for the \fBFaunaDB\fP server\&.
+.RE
+.PP
+
+.SS "async Task<string> FaunaDB\&.Client\&.FaunaClient\&.Ping (string scope = \fCnull\fP, int? timeout = \fCnull\fP)"
+
+.PP
+Check service health\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIscope\fP Must be 'node', 'local', 'global', or 'all'\&. Defaults to 'global'
+.br
+\fItimeout\fP Time to wait for the ping to succeed, in milliseconds\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a Task with the message representing the result operation
+.RE
+.PP
+
+.SS "async Task<\fBValue\fP> FaunaDB\&.Client\&.FaunaClient\&.Query (\fBExpr\fP expression, TimeSpan? queryTimeout = \fCnull\fP)"
+
+.PP
+Issues a \fBQuery\fP to \fBFaunaDB\fP\&. Queries are modeled through the \fBFaunaDB\fP query language, represented by the helper functions in the Language class\&. 
+.PP
+Responses are modeled as a general response tree\&. Each node is a Value, and can be coerced to structured types through various methods on that class\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIexpression\fP Expression generated by methods of Language\&.
+.br
+\fIqueryTimeout\fP Timeout for that specific query (it will override the client timetout, if any)\&.
+.RE
+.PP
+
+.SS "async Task<IEnumerable<\fBValue\fP> > FaunaDB\&.Client\&.FaunaClient\&.Query (IEnumerable< \fBExpr\fP > expressions, TimeSpan? queryTimeout = \fCnull\fP)"
+
+.PP
+Issues multiple queries to \fBFaunaDB\fP\&. These queries are sent to \fBFaunaDB\fP in a single request, and are evaluated\&. The list of response nodes is returned in the same order as the issued queries\&. 
+.PP
+See Query(Expr) for more information on the individual queries\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIexpressions\fP the list of query expressions to be sent to \fBFaunaDB\fP\&.
+.br
+\fIqueryTimeout\fP Timeout for that specific query (it will override the client timetout, if any)\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a Task containing an ordered list of root response nodes\&.
+.RE
+.PP
+
+.PP
+Definition at line 130 of file FaunaClient\&.cs\&.
+.SS "async Task<\fBValue\fP[]> FaunaDB\&.Client\&.FaunaClient\&.Query (params \fBExpr\fP[] expressions)"
+
+.PP
+Issues multiple queries to \fBFaunaDB\fP\&. These queries are sent to \fBFaunaDB\fP in a single request, and are evaluated\&. The list of response nodes is returned in the same order as the issued queries\&. 
+.PP
+See Query(Expr) for more information on the individual queries\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIexpressions\fP the list of query expressions to be sent to \fBFaunaDB\fP\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a Task containing an ordered list of root response nodes\&.
+.RE
+.PP
+
+.PP
+Definition at line 92 of file FaunaClient\&.cs\&.
+.SS "async Task<\fBValue\fP[]> FaunaDB\&.Client\&.FaunaClient\&.Query (TimeSpan queryTimeout, params \fBExpr\fP[] expressions)"
+
+.PP
+Issues multiple queries to \fBFaunaDB\fP\&. These queries are sent to \fBFaunaDB\fP in a single request, and are evaluated\&. The list of response nodes is returned in the same order as the issued queries\&. 
+.PP
+See Query(Expr) for more information on the individual queries\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIqueryTimeout\fP Timeout for that specific query (it will override the client timetout, if any)\&.
+.br
+\fIexpressions\fP the list of query expressions to be sent to \fBFaunaDB\fP\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+a Task containing an ordered list of root response nodes\&.
+.RE
+.PP
+
+.PP
+Definition at line 111 of file FaunaClient\&.cs\&.
+.SS "async Task<\fBStreamingEventHandler\fP> FaunaDB\&.Client\&.FaunaClient\&.Stream (\fBExpr\fP data = \fCnull\fP, IReadOnlyList< \fBEventField\fP > fields = \fCnull\fP)"
+
+.PP
+Definition at line 156 of file FaunaClient\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

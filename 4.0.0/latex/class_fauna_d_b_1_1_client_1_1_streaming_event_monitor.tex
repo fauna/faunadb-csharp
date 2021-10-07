@@ -1,0 +1,125 @@
+\hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor}{}\doxysection{Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor Class Reference}
+\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor}\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+Inheritance diagram for Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a73efa98d371e2abf38bcb64c9a1a5cba}{Streaming\+Event\+Monitor}} ()
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_afcb5101b3f4912be469124ae8a3b177b}{Streaming\+Event\+Monitor}} (Action$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$ on\+Next, Action$<$ Exception $>$ on\+Error, Action on\+Completed)
+\item 
+void \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a754976eef578ff14b2e0968f94d71fe4}{Subscribe}} (\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_handler}{Streaming\+Event\+Handler}} provider)
+\item 
+void \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a073c7fedf0293241d7bb6981e4d1cb79}{Unsubscribe}} ()
+\item 
+virtual void \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a3c5107b335336f43faa75adf416ba6cc}{On\+Next}} (\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} value)
+\item 
+virtual void \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a4aeca4a4f8ebb8498ff13a7a40583f6c}{On\+Error}} (Exception error)
+\item 
+virtual void \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_ac7c47f069d6eeff0b978417bb49f553d}{On\+Completed}} ()
+\item 
+void \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_aa8d083048eacc24b49079b8f5690fdeb}{Request\+Data}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 12 of file Streaming\+Event\+Monitor.\+cs.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a73efa98d371e2abf38bcb64c9a1a5cba}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a73efa98d371e2abf38bcb64c9a1a5cba}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!StreamingEventMonitor@{StreamingEventMonitor}}
+\index{StreamingEventMonitor@{StreamingEventMonitor}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{StreamingEventMonitor()}{StreamingEventMonitor()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+Streaming\+Event\+Monitor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 21 of file Streaming\+Event\+Monitor.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_afcb5101b3f4912be469124ae8a3b177b}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_afcb5101b3f4912be469124ae8a3b177b}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!StreamingEventMonitor@{StreamingEventMonitor}}
+\index{StreamingEventMonitor@{StreamingEventMonitor}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{StreamingEventMonitor()}{StreamingEventMonitor()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+Streaming\+Event\+Monitor (\begin{DoxyParamCaption}\item[{Action$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}} $>$}]{on\+Next,  }\item[{Action$<$ Exception $>$}]{on\+Error,  }\item[{Action}]{on\+Completed }\end{DoxyParamCaption})}
+
+
+
+Definition at line 23 of file Streaming\+Event\+Monitor.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_ac7c47f069d6eeff0b978417bb49f553d}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_ac7c47f069d6eeff0b978417bb49f553d}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!OnCompleted@{OnCompleted}}
+\index{OnCompleted@{OnCompleted}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{OnCompleted()}{OnCompleted()}}
+{\footnotesize\ttfamily virtual void Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+On\+Completed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Definition at line 53 of file Streaming\+Event\+Monitor.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a4aeca4a4f8ebb8498ff13a7a40583f6c}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a4aeca4a4f8ebb8498ff13a7a40583f6c}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!OnError@{OnError}}
+\index{OnError@{OnError}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{OnError()}{OnError()}}
+{\footnotesize\ttfamily virtual void Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+On\+Error (\begin{DoxyParamCaption}\item[{Exception}]{error }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Definition at line 48 of file Streaming\+Event\+Monitor.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a3c5107b335336f43faa75adf416ba6cc}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a3c5107b335336f43faa75adf416ba6cc}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!OnNext@{OnNext}}
+\index{OnNext@{OnNext}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{OnNext()}{OnNext()}}
+{\footnotesize\ttfamily virtual void Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+On\+Next (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_value}{Value}}}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Definition at line 43 of file Streaming\+Event\+Monitor.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_aa8d083048eacc24b49079b8f5690fdeb}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_aa8d083048eacc24b49079b8f5690fdeb}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!RequestData@{RequestData}}
+\index{RequestData@{RequestData}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{RequestData()}{RequestData()}}
+{\footnotesize\ttfamily void Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+Request\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 58 of file Streaming\+Event\+Monitor.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a754976eef578ff14b2e0968f94d71fe4}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a754976eef578ff14b2e0968f94d71fe4}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!Subscribe@{Subscribe}}
+\index{Subscribe@{Subscribe}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{Subscribe()}{Subscribe()}}
+{\footnotesize\ttfamily void Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+Subscribe (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_handler}{Streaming\+Event\+Handler}}}]{provider }\end{DoxyParamCaption})}
+
+
+
+Definition at line 30 of file Streaming\+Event\+Monitor.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a073c7fedf0293241d7bb6981e4d1cb79}\label{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor_a073c7fedf0293241d7bb6981e4d1cb79}} 
+\index{FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}!Unsubscribe@{Unsubscribe}}
+\index{Unsubscribe@{Unsubscribe}!FaunaDB.Client.StreamingEventMonitor@{FaunaDB.Client.StreamingEventMonitor}}
+\doxysubsubsection{\texorpdfstring{Unsubscribe()}{Unsubscribe()}}
+{\footnotesize\ttfamily void Fauna\+D\+B.\+Client.\+Streaming\+Event\+Monitor.\+Unsubscribe (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 38 of file Streaming\+Event\+Monitor.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Client/\mbox{\hyperlink{_streaming_event_monitor_8cs}{Streaming\+Event\+Monitor.\+cs}}\end{DoxyCompactItemize}

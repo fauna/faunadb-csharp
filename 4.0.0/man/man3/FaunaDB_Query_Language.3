@@ -1,0 +1,3109 @@
+.TH "FaunaDB.Query.Language" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Query.Language \- Methods modeling the \fBFaunaDB\fP query language\&. This class is intended to be statically imported into your code:  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBCursor\fP"
+.br
+.RI "Creates a new \fBCursor\fP to be used with a Paginate expression\&. "
+.ti -1c
+.RI "struct \fBLetBinding\fP"
+.br
+.ti -1c
+.RI "struct \fBPathSelector\fP"
+.br
+.RI "Builder for path selectors\&. "
+.in -1c
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "enum \fBNormalizer\fP { \fBNormalizer\&.NFD\fP, \fBNormalizer\&.NFC\fP, \fBNormalizer\&.NFKD\fP, \fBNormalizer\&.NFKC\fP, \fBNormalizer\&.NFKCCaseFold\fP }"
+.br
+.RI "Possible normalizer values accepted by Casefold(Expr, Normalizer)\&. "
+.ti -1c
+.RI "enum \fBTimeUnit\fP { \fBTimeUnit\&.Day\fP, \fBTimeUnit\&.HalfDay\fP, \fBTimeUnit\&.Hour\fP, \fBTimeUnit\&.Minute\fP, \fBTimeUnit\&.Second\fP, \fBTimeUnit\&.Millisecond\fP, \fBTimeUnit\&.Microsecond\fP, \fBTimeUnit\&.Nanosecond\fP }"
+.br
+.RI "Possible time units accepted by \fBEpoch(Expr, TimeUnit)\fP\&. "
+.ti -1c
+.RI "enum \fBActionType\fP { \fBActionType\&.Create\fP, \fBActionType\&.Delete\fP }"
+.br
+.RI "Possible actions for functions Insert(Expr, Expr, ActionType, Expr) and Remove(Expr, Expr, ActionType)\&. "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBExpr\fP \fBLogin\fP (\fBExpr\fP @ref, \fBExpr\fP @params)"
+.br
+.RI "Creates a new Login expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLogout\fP (\fBExpr\fP deleteTokens)"
+.br
+.RI "Creates a new Logout expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLogout\fP (bool deleteTokens)"
+.br
+.RI "Creates a new Logout expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIdentify\fP (\fBExpr\fP @ref, \fBExpr\fP password)"
+.br
+.RI "Creates a new Identify expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIdentity\fP ()"
+.br
+.RI "Creates a new Identity expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCurrentIdentity\fP ()"
+.br
+.RI "Creates a new CurrentIdentity expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBHasIdentity\fP ()"
+.br
+.RI "Creates a new HasIdentity expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBHasCurrentIdentity\fP ()"
+.br
+.RI "Creates a new HasCurrentIdentity expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCurrentToken\fP ()"
+.br
+.RI "Creates a new CurrentToken expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBHasCurrentToken\fP ()"
+.br
+.RI "Creates a new HasCurrentToken expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAccessProviders\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Creates a new AccessProviders expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAccessProvider\fP (\fBExpr\fP name, \fBExpr\fP scope=null)"
+.br
+.RI "Creates a new AccessProvider expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateAccessProvider\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new CreateAccessProvider expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAbort\fP (\fBExpr\fP msg)"
+.br
+.RI "Creates a new Abort expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCall\fP (\fBExpr\fP @ref, params \fBExpr\fP[] arguments)"
+.br
+.RI "Creates a new Call expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBQuery\fP (\fBExpr\fP lambda)"
+.br
+.RI "Creates a new \fBQuery\fP expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAt\fP (\fBExpr\fP timestamp, \fBExpr\fP expr)"
+.br
+.RI "Creates a new At expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLet\fP (IReadOnlyDictionary< string, \fBExpr\fP > vars, \fBExpr\fP @in)"
+.br
+.RI "Creates a new Let expression wrapping the provided map of bindings\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBVar\fP (string varName)"
+.br
+.RI "Creates a new Var expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIf\fP (\fBExpr\fP @if, \fBExpr\fP @then, \fBExpr\fP @else)"
+.br
+.RI "Creates a new If expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDo\fP (params \fBExpr\fP[] expressions)"
+.br
+.RI "Creates a new Do expression containing the provided expressions\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLambda\fP (\fBExpr\fP vars, \fBExpr\fP expr)"
+.br
+.RI "Creates a new Lambda expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLambda\fP (Func< \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a lambda expression that receives one argument\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLambda\fP (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a lambda expression that receives two arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLambda\fP (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a lambda expression that receives three arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLambda\fP (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a lambda expression that receives four arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLambda\fP (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a lambda expression that receives five arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLambda\fP (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a lambda expression that receives six arguments\&. "
+.ti -1c
+.RI "static \fBLetBinding\fP \fBLet\fP (string k0, \fBExpr\fP v0)"
+.br
+.RI "Creates a new Let expression with the provided bindings\&. "
+.ti -1c
+.RI "static \fBLetBinding\fP \fBLet\fP (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1)"
+.br
+.RI "Creates a new Let expression with the provided bindings\&. "
+.ti -1c
+.RI "static \fBLetBinding\fP \fBLet\fP (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2)"
+.br
+.RI "Creates a new Let expression with the provided bindings\&. "
+.ti -1c
+.RI "static \fBLetBinding\fP \fBLet\fP (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2, string k3, \fBExpr\fP v3)"
+.br
+.RI "Creates a new Let expression with the provided bindings\&. "
+.ti -1c
+.RI "static \fBLetBinding\fP \fBLet\fP (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2, string k3, \fBExpr\fP v3, string k4, \fBExpr\fP v4)"
+.br
+.RI "Creates a new Let expression with the provided bindings\&. "
+.ti -1c
+.RI "static \fBLetBinding\fP \fBLet\fP (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2, string k3, \fBExpr\fP v3, string k4, \fBExpr\fP v4, string k5, \fBExpr\fP v5)"
+.br
+.RI "Creates a new Let expression with the provided bindings\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMap\fP (\fBExpr\fP collection, \fBExpr\fP lambda)"
+.br
+.RI "Creates a new Map expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBForeach\fP (\fBExpr\fP collection, \fBExpr\fP lambda)"
+.br
+.RI "Creates a new Foreach expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFilter\fP (\fBExpr\fP collection, \fBExpr\fP lambda)"
+.br
+.RI "Creates a new Filter expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTake\fP (\fBExpr\fP number, \fBExpr\fP collection)"
+.br
+.RI "Creates a new Take expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDrop\fP (\fBExpr\fP number, \fBExpr\fP collection)"
+.br
+.RI "Creates a new Drop expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBPrepend\fP (\fBExpr\fP elements, \fBExpr\fP collection)"
+.br
+.RI "Creates a new Prepend expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAppend\fP (\fBExpr\fP elements, \fBExpr\fP collection)"
+.br
+.RI "Creates a new Append expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsEmpty\fP (\fBExpr\fP collection)"
+.br
+.RI "Creates a new IsEmpty expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsNonEmpty\fP (\fBExpr\fP collection)"
+.br
+.RI "Creates a new IsNonEmpty expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBReverse\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Reverse expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAll\fP (\fBExpr\fP collection)"
+.br
+.RI "Evaluates to true if all elements of the collection is true\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAny\fP (\fBExpr\fP collection)"
+.br
+.RI "Evaluates to true if any element of the collection is true\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFilter\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Filter expression with a lambda function that receives one argument\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFilter\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Filter expression with a lambda function that receives two arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFilter\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Filter expression with a lambda function that receives three arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFilter\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Filter expression with a lambda function that receives four arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFilter\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Filter expression with a lambda function that receives five arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFilter\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Filter expression with a lambda function that receives six arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBForeach\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Foreach expression with a lambda function that receives one argument\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBForeach\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Foreach expression with a lambda function that receives two arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBForeach\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Foreach expression with a lambda function that receives three arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBForeach\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Foreach expression with a lambda function that receives four arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBForeach\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Foreach expression with a lambda function that receives five arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBForeach\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Foreach expression with a lambda function that receives six arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMap\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Map expression with a lambda function that receives one argument\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMap\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Map expression with a lambda function that receives two arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMap\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Map expression with a lambda function that receives three arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMap\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Map expression with a lambda function that receives four arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMap\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Map expression with a lambda function that receives five arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMap\fP (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Creates a new Map expression with a lambda function that receives six arguments\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBNextId\fP ()"
+.br
+.RI "Creates a new NextId expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBNewId\fP ()"
+.br
+.RI "Creates a new NewId expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDatabase\fP (\fBExpr\fP db_name, \fBExpr\fP scope=null)"
+.br
+.RI "Creates a new Database expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIndex\fP (\fBExpr\fP index_name, \fBExpr\fP scope=null)"
+.br
+.RI "Creates a new Index expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCollection\fP (\fBExpr\fP coll_name, \fBExpr\fP scope=null)"
+.br
+.RI "Creates a new Collection expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBClass\fP (\fBExpr\fP class_name, \fBExpr\fP scope=null)"
+.br
+.RI "Creates a new Class expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFunction\fP (\fBExpr\fP function_name, \fBExpr\fP scope=null)"
+.br
+.RI "Creates a new Function expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRole\fP (\fBExpr\fP role_name, \fBExpr\fP scope=null)"
+.br
+.RI "Creates a new Role expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCollections\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to collections object\&. Useful to paginate over all classes of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBClasses\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to classes object\&. Useful to paginate over all classes of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIndexes\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to indexes object\&. Useful to paginate over all indexes of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDatabases\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to databases object\&. Useful to paginate over all databases of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFunctions\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to functions object\&. Useful to paginate over all functions of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRoles\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to roles object\&. Useful to paginate over all roles of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBKeys\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to keys object\&. Useful to paginate over all keys of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTokens\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to tokens object\&. Useful to paginate over all tokens of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCredentials\fP (\fBExpr\fP scope=null)"
+.br
+.RI "Returns an internal reference to credentials object\&. Useful to paginate over all credentials of a given scope database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBEqualsFn\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Equals expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBContains\fP (\fBExpr\fP path, \fBExpr\fP @in)"
+.br
+.RI "Creates a new Contains expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBContainsField\fP (\fBExpr\fP path, \fBExpr\fP @in)"
+.br
+.RI "Creates a new ContainsField expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBContainsValue\fP (\fBExpr\fP value, \fBExpr\fP @in)"
+.br
+.RI "Creates a new ContainsValue expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBContains\fP (\fBPathSelector\fP path, \fBExpr\fP @in)"
+.br
+.RI "Creates a new Contains expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBContainsPath\fP (\fBPathSelector\fP path, \fBExpr\fP @in)"
+.br
+.RI "Creates a new ContainsPath expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBContainsPath\fP (\fBExpr\fP expr, \fBExpr\fP @in)"
+.br
+.RI "Creates a new ContainsPath expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSelect\fP (\fBExpr\fP path, \fBExpr\fP @from, \fBExpr\fP @default=null)"
+.br
+.RI "Creates a new Select expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSelect\fP (\fBPathSelector\fP path, \fBExpr\fP @from, \fBExpr\fP @default=null)"
+.br
+.RI "Creates a new Select expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSelectAll\fP (\fBExpr\fP path, \fBExpr\fP @from)"
+.br
+.RI "Creates a new SelectAll expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSelectAll\fP (\fBPathSelector\fP path, \fBExpr\fP @from)"
+.br
+.RI "Creates a new SelectAll expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAdd\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Add expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMultiply\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Multiply expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSubtract\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Subtract expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDivide\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Divide expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBModulo\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Modulo expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLT\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new LT expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLTE\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new LTE expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBGT\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new GT expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBGTE\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new GTE expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAnd\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new And expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBOr\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Or expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBNot\fP (\fBExpr\fP boolean)"
+.br
+.RI "Creates a new Not expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToStringExpr\fP (\fBExpr\fP expr)"
+.br
+.RI "Converts an expression to a string literal\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToNumber\fP (\fBExpr\fP expr)"
+.br
+.RI "Converts an expression to a number literal\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToTime\fP (\fBExpr\fP expr)"
+.br
+.RI "Converts an expresion to a time literal\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToSeconds\fP (\fBExpr\fP expr)"
+.br
+.RI "Converts a time expression to seconds since the UNIX epoch\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToMillis\fP (\fBExpr\fP expr)"
+.br
+.RI "Converts a time expression to milliseconds since the UNIX epoch\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToMicros\fP (\fBExpr\fP expr)"
+.br
+.RI "Converts a time expression to microseconds since the UNIX epoch\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDayOfYear\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a time expression's day of the year, from 1 to 365, or 366 in a leap year\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDayOfMonth\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a time expression's day of the month, from 1 to 31\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDayOfWeek\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a time expression's day of the week following ISO-8601 convention, from 1 (Monday) to 7 (Sunday)\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBYear\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns the time expression's year, following the ISO-8601 standard\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMonth\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a time expression's month of the year, from 1 to 12\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBHour\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a time expression's hour of the day, from 0 to 23\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMinute\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a time expression's minute of the hour, from 0 to 59\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSecond\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a time expression's second of the minute, from 0 to 59\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToDate\fP (\fBExpr\fP expr)"
+.br
+.RI "Converts an expression to a date literal\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMerge\fP (\fBExpr\fP merge, \fBExpr\fP with)"
+.br
+.RI "Merges two or more objects "
+.ti -1c
+.RI "static \fBExpr\fP \fBMerge\fP (\fBExpr\fP merge, \fBExpr\fP with, \fBExpr\fP lambda)"
+.br
+.RI "Merges two or more objects "
+.ti -1c
+.RI "static \fBExpr\fP \fBMerge\fP (\fBExpr\fP merge, \fBExpr\fP with, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)"
+.br
+.RI "Merges two or more objects "
+.ti -1c
+.RI "static \fBExpr\fP \fBAbs\fP (\fBExpr\fP value)"
+.br
+.RI "Creates a new Abs expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAcos\fP (\fBExpr\fP value)"
+.br
+.RI "Creates a new Acos expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAsin\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Asin expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBAtan\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Atan expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBBitAnd\fP (params \fBExpr\fP[] terms)"
+.br
+.RI "Creates a new BitAnd expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBBitNot\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new BitNot expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBBitOr\fP (params \fBExpr\fP[] terms)"
+.br
+.RI "Creates a new BitOr expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBBitXor\fP (params \fBExpr\fP[] terms)"
+.br
+.RI "Creates a new BitXor expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCeil\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Ceil expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCos\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Cos expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCosh\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Cosh expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDegrees\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Degrees expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBExp\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Exp expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFloor\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Floor expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBHypot\fP (\fBExpr\fP value, \fBExpr\fP exp=null)"
+.br
+.RI "Creates a new Hypot expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLn\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Ln expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLog\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Log expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMax\fP (params \fBExpr\fP[] terms)"
+.br
+.RI "Creates a new Max expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMin\fP (params \fBExpr\fP[] terms)"
+.br
+.RI "Creates a new Min expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBPow\fP (\fBExpr\fP value, \fBExpr\fP exp=null)"
+.br
+.RI "Creates a new Pow expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRadians\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Radians expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRound\fP (\fBExpr\fP expr, \fBExpr\fP precision=null)"
+.br
+.RI "Creates a new Round expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSign\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Sign expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSin\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Sin expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSinh\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Sinh expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSqrt\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Sqrt expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTan\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Tan expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTanh\fP (\fBExpr\fP expr)"
+.br
+.RI "Creates a new Tanh expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTrunc\fP (\fBExpr\fP expr, \fBExpr\fP precision=null)"
+.br
+.RI "Creates a new Trunc expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFindStr\fP (\fBExpr\fP expr, \fBExpr\fP find, \fBExpr\fP start=null)"
+.br
+.RI "Returns the offset position of a string in another string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFindStrRegex\fP (\fBExpr\fP expr, \fBExpr\fP pattern, \fBExpr\fP start=null, \fBExpr\fP numResults=null)"
+.br
+.RI "Returns an array of up to 1024 objects describing where the pattern is found in the search string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLength\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns the number of code points in the string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLowerCase\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a string in which all uppercase characters have been replaced by their corresponding lowercase characters\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBLTrim\fP (\fBExpr\fP expr)"
+.br
+.RI "Removes all white spaces, tabs, and new lines from the beginning of a string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRepeat\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a string consisting of the value string repeated number times\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRepeat\fP (\fBExpr\fP expr, \fBExpr\fP number)"
+.br
+.RI "Returns a string consisting of the value string repeated number times\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBReplaceStr\fP (\fBExpr\fP expr, \fBExpr\fP find, \fBExpr\fP replace)"
+.br
+.RI "Replaces a string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBReplaceStrRegex\fP (\fBExpr\fP expr, \fBExpr\fP pattern, \fBExpr\fP replace, \fBExpr\fP first=null)"
+.br
+.RI "Replaces all the occurrences (or the first one) of find pattern substituted with replace string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRTrim\fP (\fBExpr\fP expr)"
+.br
+.RI "Replaces a string inside\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSpace\fP (\fBExpr\fP count)"
+.br
+.RI "Replaces a string inside\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSubString\fP (\fBExpr\fP expr, \fBExpr\fP start=null, \fBExpr\fP length=null)"
+.br
+.RI "Returns a portion of the string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTitleCase\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a string which has the first letter of each word capitalized\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTrim\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a string which has both the leading and trailing white spaces, tabs, and new lines removed\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBUpperCase\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns a string which has all lowercase characters in the string replaced by their corresponding uppercase characters\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBStartsWith\fP (\fBExpr\fP value, \fBExpr\fP search)"
+.br
+.RI "See the \fBFaunaDB\fP StartsWith Function"
+.ti -1c
+.RI "static \fBExpr\fP \fBEndsWith\fP (\fBExpr\fP value, \fBExpr\fP search)"
+.br
+.RI "See the \fBFaunaDB\fP EndsWith Function"
+.ti -1c
+.RI "static \fBExpr\fP \fBContainsStr\fP (\fBExpr\fP value, \fBExpr\fP search)"
+.br
+.ti -1c
+.RI "static \fBExpr\fP \fBContainsStrRegex\fP (\fBExpr\fP value, \fBExpr\fP pattern)"
+.br
+.ti -1c
+.RI "static \fBExpr\fP \fBRegexEscape\fP (\fBExpr\fP value)"
+.br
+.ti -1c
+.RI "static \fBExpr\fP \fBDocuments\fP (\fBExpr\fP collection)"
+.br
+.ti -1c
+.RI "static \fBExpr\fP \fBToArray\fP (\fBExpr\fP expr)"
+.br
+.RI "Try to convert an object into an array of (field, value)\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToObject\fP (\fBExpr\fP fields)"
+.br
+.RI "Try to convert an array of (field, value) into an object\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToDouble\fP (\fBExpr\fP value)"
+.br
+.RI "Casts an expression to a double value, if possible\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBToInteger\fP (\fBExpr\fP value)"
+.br
+.RI "Casts an expression to an integer value, if possible\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBGet\fP (\fBExpr\fP @ref, \fBExpr\fP ts=null)"
+.br
+.RI "Creates a new Get expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBKeyFromSecret\fP (\fBExpr\fP secret)"
+.br
+.RI "Creates a new KeyFromSecret expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBPaginate\fP (\fBExpr\fP set, \fBExpr\fP ts=null, \fBExpr\fP after=null, \fBExpr\fP before=null, \fBExpr\fP size=null, \fBExpr\fP events=null, \fBExpr\fP sources=null, \fBCursor\fP cursor=null)"
+.br
+.RI "Creates a new Paginate expression\&. "
+.ti -1c
+.RI "static \fBCursor\fP \fBRawCursor\fP (\fBExpr\fP expr)"
+.br
+.ti -1c
+.RI "static \fBCursor\fP \fBAfter\fP (\fBExpr\fP expr)"
+.br
+.ti -1c
+.RI "static \fBCursor\fP \fBBefore\fP (\fBExpr\fP expr)"
+.br
+.ti -1c
+.RI "static \fBExpr\fP \fBExists\fP (\fBExpr\fP @ref, \fBExpr\fP ts=null)"
+.br
+.RI "Creates a new Exists expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBReduce\fP (\fBExpr\fP lambda, \fBExpr\fP initial, \fBExpr\fP collection)"
+.br
+.RI "Creates a new Exists expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBReduce\fP (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda, \fBExpr\fP initial, \fBExpr\fP collection)"
+.br
+.RI "Creates a new Exists expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCount\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns the number of items that exist in the array or set "
+.ti -1c
+.RI "static \fBExpr\fP \fBSum\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns the sum of all items\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMean\fP (\fBExpr\fP expr)"
+.br
+.RI "Returns the average value of the items\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBSingleton\fP (\fBExpr\fP @ref)"
+.br
+.RI "Creates a new Singleton expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBEvents\fP (\fBExpr\fP refSet)"
+.br
+.RI "Creates a new Events expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMatch\fP (\fBExpr\fP index, params \fBExpr\fP[] terms)"
+.br
+.RI "Creates a new Match expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBUnion\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Union expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIntersection\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Intersection expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDifference\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Difference expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDistinct\fP (\fBExpr\fP set)"
+.br
+.RI "Creates a new Distinct expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBJoin\fP (\fBExpr\fP source, \fBExpr\fP target)"
+.br
+.RI "Creates a new Join expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRange\fP (\fBExpr\fP set, \fBExpr\fP from, \fBExpr\fP to)"
+.br
+.RI "Filters the set based on the lower/upper bounds (inclusive)\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBJoin\fP (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP > target)"
+.br
+.RI "Creates a new Join expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBJoin\fP (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)"
+.br
+.RI "Creates a new Join expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBJoin\fP (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)"
+.br
+.RI "Creates a new Join expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBJoin\fP (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)"
+.br
+.RI "Creates a new Join expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBJoin\fP (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)"
+.br
+.RI "Creates a new Join expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBJoin\fP (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)"
+.br
+.RI "Creates a new Join expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBConcat\fP (\fBExpr\fP strings, \fBExpr\fP separator=null)"
+.br
+.RI "Creates a new Concat expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCasefold\fP (\fBExpr\fP @string, \fBNormalizer\fP normalizer)"
+.br
+.RI "Creates a new Casefold expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCasefold\fP (\fBExpr\fP @string, \fBExpr\fP normalizer=null)"
+.br
+.RI "Creates a new Casefold expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBNGram\fP (\fBExpr\fP terms, \fBExpr\fP min=null, \fBExpr\fP max=null)"
+.br
+.RI "Creates a new NGram expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBFormat\fP (\fBExpr\fP format, params \fBExpr\fP[] values)"
+.br
+.RI "Format values into string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTime\fP (\fBExpr\fP time)"
+.br
+.RI "Creates a new Time expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBEpoch\fP (\fBExpr\fP number, \fBTimeUnit\fP unit)"
+.br
+.RI "Creates a new Epoch expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBEpoch\fP (\fBExpr\fP number, \fBExpr\fP unit)"
+.br
+.RI "Creates a new Epoch expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDate\fP (\fBExpr\fP date)"
+.br
+.RI "Creates a new Date expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBNow\fP ()"
+.br
+.RI "Constructs a Timestamp representing the transaction’s start time\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTimeAdd\fP (\fBExpr\fP value, \fBExpr\fP offset, \fBExpr\fP unit)"
+.br
+.RI "Returns a new time or date with the offset in terms of the unit added\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTimeSubtract\fP (\fBExpr\fP value, \fBExpr\fP offset, \fBExpr\fP unit)"
+.br
+.RI "Returns a new time or date with the offset in terms of the unit subtracted\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTimeDiff\fP (\fBExpr\fP start, \fBExpr\fP finish, \fBExpr\fP unit)"
+.br
+.RI "Returns the number of intervals in terms of the unit between two times or dates\&. Both start and finish must be of the same type\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsArray\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is an array\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsBoolean\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a boolean\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsBytes\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a byte array\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsCollection\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a collection\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsCredentials\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a credentials\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsDatabase\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a database\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsDate\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a date\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsDoc\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a document (either a reference or an instance)\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsDouble\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a double\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsFunction\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a function\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsIndex\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is an index\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsInteger\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is an integer\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsKey\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a key\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsLambda\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a lambda\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsNull\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is null\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsNumber\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a number\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsObject\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is an object\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsRef\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a reference\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsRole\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a role\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsSet\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a set\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsString\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsTimestamp\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a timestamp\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBIsToken\fP (\fBExpr\fP expr)"
+.br
+.RI "Check if the expression is a token\&. "
+.ti -1c
+.RI "static \fBPathSelector\fP \fBPath\fP (params string[] segments)"
+.br
+.RI "Helper for constructing a \fBPathSelector\fP with the given path terms\&. "
+.ti -1c
+.RI "static \fBPathSelector\fP \fBPath\fP (params int[] segments)"
+.br
+.RI "Helper for constructing a \fBPathSelector\fP with the given path terms\&. "
+.ti -1c
+.RI "static \fBPathSelector\fP \fBPath\fP (params \fBExpr\fP[] expr)"
+.br
+.RI "Helper for constructing a \fBPathSelector\fP with the given expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBNull\fP ()"
+.br
+.RI "Creates a null value\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRef\fP (string @ref)"
+.br
+.RI "Creates a ref value from a string\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRef\fP (\fBExpr\fP classRef, \fBExpr\fP id)"
+.br
+.RI "Calls ref function to create a ref value\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTs\fP (DateTime dateTime)"
+.br
+.RI "Creates a new Timestamp value\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBTs\fP (string iso8601Time)"
+.br
+.RI "Creates a new Timestamp value\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDt\fP (DateTime dateTime)"
+.br
+.RI "Creates a new Date value\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDt\fP (string iso8601Date)"
+.br
+.RI "Creates a new Date value\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBArr\fP (params \fBExpr\fP[] values)"
+.br
+.RI "Creates a new Array value containing the provided entries\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBArr\fP (IEnumerable< \fBExpr\fP > values)"
+.br
+.RI "Creates a new Array value containing the provided enumerable of values\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP (IReadOnlyDictionary< string, \fBExpr\fP > fields)"
+.br
+.RI "Creates a new Object value wrapping the provided map\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBBytes\fP (params byte[] bytes)"
+.br
+.RI "Creates a new Bytes value "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP ()"
+.br
+.RI "Creates a new empty Object value\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP (string key1, \fBExpr\fP value1)"
+.br
+.RI "Creates a new Object value with the provided entries\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2)"
+.br
+.RI "Creates a new Object value with the provided entries\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3)"
+.br
+.RI "Creates a new Object value with the provided entries\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3, string key4, \fBExpr\fP value4)"
+.br
+.RI "Creates a new Object value with the provided entries\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3, string key4, \fBExpr\fP value4, string key5, \fBExpr\fP value5)"
+.br
+.RI "Creates a new Object value with the provided entries\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBObj\fP (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3, string key4, \fBExpr\fP value4, string key5, \fBExpr\fP value5, string key6, \fBExpr\fP value6)"
+.br
+.RI "Creates a new Object value with the provided entries\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreate\fP (\fBExpr\fP classRef, \fBExpr\fP @params)"
+.br
+.RI "Creates a new Create expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBUpdate\fP (\fBExpr\fP @ref, \fBExpr\fP @params)"
+.br
+.RI "Creates a new Update expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBReplace\fP (\fBExpr\fP @ref, \fBExpr\fP @params)"
+.br
+.RI "Creates a new Replace expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBDelete\fP (\fBExpr\fP @ref)"
+.br
+.RI "Creates a new Delete expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBInsert\fP (\fBExpr\fP @ref, \fBExpr\fP ts, \fBActionType\fP action, \fBExpr\fP @params)"
+.br
+.RI "Creates a new Insert expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBInsert\fP (\fBExpr\fP @ref, \fBExpr\fP ts, \fBExpr\fP action, \fBExpr\fP @params)"
+.br
+.RI "Creates a new Insert expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRemove\fP (\fBExpr\fP @ref, \fBExpr\fP ts, \fBActionType\fP action)"
+.br
+.RI "Creates a new Remove expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBRemove\fP (\fBExpr\fP @ref, \fBExpr\fP ts, \fBExpr\fP action)"
+.br
+.RI "Creates a new Remove expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateClass\fP (\fBExpr\fP class_params)"
+.br
+.RI "Creates a new CreateClass expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateCollection\fP (\fBExpr\fP coll_params)"
+.br
+.RI "Creates a new CreateCollection expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateDatabase\fP (\fBExpr\fP db_params)"
+.br
+.RI "Creates a new CreateDatabase expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateIndex\fP (\fBExpr\fP index_params)"
+.br
+.RI "Creates a new CreateIndex expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateKey\fP (\fBExpr\fP key_params)"
+.br
+.RI "Creates a new CreateKey expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateFunction\fP (\fBExpr\fP function_params)"
+.br
+.RI "Creates a new CreateFunction expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBCreateRole\fP (\fBExpr\fP role_params)"
+.br
+.RI "Creates a new CreateRole expression\&. "
+.ti -1c
+.RI "static \fBExpr\fP \fBMoveDatabase\fP (\fBExpr\fP from, \fBExpr\fP to)"
+.br
+.RI "Moves a database to a new hierarchy\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Methods modeling the \fBFaunaDB\fP query language\&. This class is intended to be statically imported into your code: 
+
+\fCusing static \fBFaunaDB\&.Query\&.Language\fP;\fP 
+.PP
+Each of these methods constructs a \fBExpr\fP, which can then be composed with other methods to form complex expressions\&.
+.PP
+.PP
+.nf
+Expr existsValue = Exists(Ref("some/ref"));
+
+Expr createValue = Create(
+ Ref("classes/some_class"),
+ Obj("data",
+   Obj("some", "field"))
+);
+.fi
+.PP
+ 
+.PP
+\fBFaunaDB\fP \fBQuery\fP API
+.PP
+Definition at line 3 of file Language\&.Authentication\&.cs\&.
+.SH "Member Enumeration Documentation"
+.PP 
+.SS "enum \fBFaunaDB\&.Query\&.Language\&.ActionType\fP\fC [strong]\fP"
+
+.PP
+Possible actions for functions Insert(Expr, Expr, ActionType, Expr) and Remove(Expr, Expr, ActionType)\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fICreate \fP\fP
+.TP
+\fB\fIDelete \fP\fP
+.PP
+Definition at line 46 of file Language\&.Write\&.cs\&.
+.SS "enum \fBFaunaDB\&.Query\&.Language\&.Normalizer\fP\fC [strong]\fP"
+
+.PP
+Possible normalizer values accepted by Casefold(Expr, Normalizer)\&. See the \fBFaunaDB\fP Time and Date Functions
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fINFD \fP\fP
+.TP
+\fB\fINFC \fP\fP
+.TP
+\fB\fINFKD \fP\fP
+.TP
+\fB\fINFKC \fP\fP
+.TP
+\fB\fINFKCCaseFold \fP\fP
+.PP
+Definition at line 20 of file Language\&.String\&.cs\&.
+.SS "enum \fBFaunaDB\&.Query\&.Language\&.TimeUnit\fP\fC [strong]\fP"
+
+.PP
+Possible time units accepted by \fBEpoch(Expr, TimeUnit)\fP\&. See the \fBFaunaDB\fP Time and Date Functions
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIDay \fP\fP
+.TP
+\fB\fIHalfDay \fP\fP
+.TP
+\fB\fIHour \fP\fP
+.TP
+\fB\fIMinute \fP\fP
+.TP
+\fB\fISecond \fP\fP
+.TP
+\fB\fIMillisecond \fP\fP
+.TP
+\fB\fIMicrosecond \fP\fP
+.TP
+\fB\fINanosecond \fP\fP
+.PP
+Definition at line 20 of file Language\&.TimeDate\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Abort (\fBExpr\fP msg)\fC [static]\fP"
+
+.PP
+Creates a new Abort expression\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Abs (\fBExpr\fP value)\fC [static]\fP"
+
+.PP
+Creates a new Abs expression\&. See the \fBFaunaDB\fP Abs Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.AccessProvider (\fBExpr\fP name, \fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new AccessProvider expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.AccessProviders (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new AccessProviders expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Acos (\fBExpr\fP value)\fC [static]\fP"
+
+.PP
+Creates a new Acos expression\&. See the \fBFaunaDB\fP Acos Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Add (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Add expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBCursor\fP FaunaDB\&.Query\&.Language\&.After (\fBExpr\fP expr)\fC [static]\fP"
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.All (\fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Evaluates to true if all elements of the collection is true\&. All function
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(All(Arr(true, true, true)));
+
+Assert\&.IsTrue(true, result\&.To<bool>()\&.Value);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.And (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new And expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Any (\fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Evaluates to true if any element of the collection is true\&. Any function
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Any(Arr(true, false, false)));
+
+Assert\&.IsTrue(true, result\&.To<bool>()\&.Value);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Append (\fBExpr\fP elements, \fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new Append expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIelements\fP Elements to be appended into the collection
+.br
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Append(Arr(4, 5, 6), Arr(1, 2, 3)));
+
+Assert\&.AreEqual(Arr(1, 2, 3, 4, 5, 6), result);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Arr (IEnumerable< \fBExpr\fP > values)\fC [static]\fP"
+
+.PP
+Creates a new Array value containing the provided enumerable of values\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Arr (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Array value containing the provided entries\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Asin (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Asin expression\&. See the \fBFaunaDB\fP Asin Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.At (\fBExpr\fP timestamp, \fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new At expression\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Atan (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Atan expression\&. See the \fBFaunaDB\fP Atan Function
+.SS "static \fBCursor\fP FaunaDB\&.Query\&.Language\&.Before (\fBExpr\fP expr)\fC [static]\fP"
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.BitAnd (params \fBExpr\fP[] terms)\fC [static]\fP"
+
+.PP
+Creates a new BitAnd expression\&. See the \fBFaunaDB\fP BitAnd Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.BitNot (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new BitNot expression\&. See the \fBFaunaDB\fP BitNot Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.BitOr (params \fBExpr\fP[] terms)\fC [static]\fP"
+
+.PP
+Creates a new BitOr expression\&. See the \fBFaunaDB\fP BitOr Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.BitXor (params \fBExpr\fP[] terms)\fC [static]\fP"
+
+.PP
+Creates a new BitXor expression\&. See the \fBFaunaDB\fP BitXor Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Bytes (params byte[] bytes)\fC [static]\fP"
+
+.PP
+Creates a new Bytes value 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Call (\fBExpr\fP @ ref, params \fBExpr\fP[] arguments)\fC [static]\fP"
+
+.PP
+Creates a new Call expression\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Casefold (\fBExpr\fP @ string, \fBExpr\fP normalizer = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Casefold expression\&. See the \fBFaunaDB\fP String Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Casefold (\fBExpr\fP @ string, \fBNormalizer\fP normalizer)\fC [static]\fP"
+
+.PP
+Creates a new Casefold expression\&. See the \fBFaunaDB\fP String Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Ceil (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Ceil expression\&. See the \fBFaunaDB\fP Ceil Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Class (\fBExpr\fP class_name, \fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Class expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Classes (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to classes object\&. Useful to paginate over all classes of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Collection (\fBExpr\fP coll_name, \fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Collection expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Collections (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to collections object\&. Useful to paginate over all classes of a given scope database\&. See the \fBFaunaDB\fP \fBCollections\fP
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Concat (\fBExpr\fP strings, \fBExpr\fP separator = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Concat expression\&. See the \fBFaunaDB\fP String Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Contains (\fBExpr\fP path, \fBExpr\fP @ in)\fC [static]\fP"
+
+.PP
+Creates a new Contains expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Contains (\fBPathSelector\fP path, \fBExpr\fP @ in)\fC [static]\fP"
+
+.PP
+Creates a new Contains expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ContainsField (\fBExpr\fP path, \fBExpr\fP @ in)\fC [static]\fP"
+
+.PP
+Creates a new ContainsField expression\&. See the \fBFaunaDB\fP ConstainsField Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ContainsPath (\fBExpr\fP expr, \fBExpr\fP @ in)\fC [static]\fP"
+
+.PP
+Creates a new ContainsPath expression\&. See the \fBFaunaDB\fP ConstainsPath Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ContainsPath (\fBPathSelector\fP path, \fBExpr\fP @ in)\fC [static]\fP"
+
+.PP
+Creates a new ContainsPath expression\&. See the \fBFaunaDB\fP ConstainsPath Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ContainsStr (\fBExpr\fP value, \fBExpr\fP search)\fC [static]\fP"
+
+.PP
+See the \fBFaunaDB\fP ContainsStr Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ContainsStrRegex (\fBExpr\fP value, \fBExpr\fP pattern)\fC [static]\fP"
+
+.PP
+See the \fBFaunaDB\fP ContainsStrRegex Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ContainsValue (\fBExpr\fP value, \fBExpr\fP @ in)\fC [static]\fP"
+
+.PP
+Creates a new ContainsValue expression\&. See the \fBFaunaDB\fP ConstainsValue Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Cos (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Cos expression\&. See the \fBFaunaDB\fP Cos Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Cosh (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Cosh expression\&. See the \fBFaunaDB\fP Cosh Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Count (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns the number of items that exist in the array or set See the \fBFaunaDB\fP Count Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Create (\fBExpr\fP classRef, \fBExpr\fP @ params)\fC [static]\fP"
+
+.PP
+Creates a new Create expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateAccessProvider (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new CreateAccessProvider expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateClass (\fBExpr\fP class_params)\fC [static]\fP"
+
+.PP
+Creates a new CreateClass expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateCollection (\fBExpr\fP coll_params)\fC [static]\fP"
+
+.PP
+Creates a new CreateCollection expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateDatabase (\fBExpr\fP db_params)\fC [static]\fP"
+
+.PP
+Creates a new CreateDatabase expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateFunction (\fBExpr\fP function_params)\fC [static]\fP"
+
+.PP
+Creates a new CreateFunction expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateIndex (\fBExpr\fP index_params)\fC [static]\fP"
+
+.PP
+Creates a new CreateIndex expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateKey (\fBExpr\fP key_params)\fC [static]\fP"
+
+.PP
+Creates a new CreateKey expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CreateRole (\fBExpr\fP role_params)\fC [static]\fP"
+
+.PP
+Creates a new CreateRole expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Credentials (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to credentials object\&. Useful to paginate over all credentials of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CurrentIdentity ()\fC [static]\fP"
+
+.PP
+Creates a new CurrentIdentity expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.CurrentToken ()\fC [static]\fP"
+
+.PP
+Creates a new CurrentToken expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Database (\fBExpr\fP db_name, \fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Database expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Databases (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to databases object\&. Useful to paginate over all databases of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Date (\fBExpr\fP date)\fC [static]\fP"
+
+.PP
+Creates a new Date expression\&. See the \fBFaunaDB\fP Time and Date Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.DayOfMonth (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a time expression's day of the month, from 1 to 31\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.DayOfWeek (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a time expression's day of the week following ISO-8601 convention, from 1 (Monday) to 7 (Sunday)\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.DayOfYear (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a time expression's day of the year, from 1 to 365, or 366 in a leap year\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Degrees (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Degrees expression\&. See the \fBFaunaDB\fP Degrees Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Delete (\fBExpr\fP @ ref)\fC [static]\fP"
+
+.PP
+Creates a new Delete expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Difference (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Difference expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Distinct (\fBExpr\fP set)\fC [static]\fP"
+
+.PP
+Creates a new Distinct expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Divide (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Divide expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Do (params \fBExpr\fP[] expressions)\fC [static]\fP"
+
+.PP
+Creates a new Do expression containing the provided expressions\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Documents (\fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+See the \fBFaunaDB\fP Documents Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Drop (\fBExpr\fP number, \fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new Drop expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fInumber\fP Number of elements to drop from the head of collection
+.br
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Drop(2, Arr(1, 2, 3)));
+
+Assert\&.AreEqual(Arr(3), result);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Dt (DateTime dateTime)\fC [static]\fP"
+
+.PP
+Creates a new Date value\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Dt (string iso8601Date)\fC [static]\fP"
+
+.PP
+Creates a new Date value\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.EndsWith (\fBExpr\fP value, \fBExpr\fP search)\fC [static]\fP"
+
+.PP
+See the \fBFaunaDB\fP EndsWith Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Epoch (\fBExpr\fP number, \fBExpr\fP unit)\fC [static]\fP"
+
+.PP
+Creates a new Epoch expression\&. See the \fBFaunaDB\fP Time and Date Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Epoch (\fBExpr\fP number, \fBTimeUnit\fP unit)\fC [static]\fP"
+
+.PP
+Creates a new Epoch expression\&. See the \fBFaunaDB\fP Time and Date Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.EqualsFn (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Equals expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Events (\fBExpr\fP refSet)\fC [static]\fP"
+
+.PP
+Creates a new Events expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Exists (\fBExpr\fP @ ref, \fBExpr\fP ts = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Exists expression\&. See the \fBFaunaDB\fP Read Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Exp (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Exp expression\&. See the \fBFaunaDB\fP Exp Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Filter (\fBExpr\fP collection, \fBExpr\fP lambda)\fC [static]\fP"
+
+.PP
+Creates a new Filter expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+This is the raw version\&. Usually it's easier to use the overload\&. 
+.PP
+See Filter(Expr, System\&.Func<Expr, Expr>), Filter(Expr, System\&.Func<Expr, Expr, Expr>), Filter(Expr, System\&.Func<Expr, Expr, Expr, Expr>), Filter(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr>), Filter(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr>), Filter(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP Lambda expression created by \fBLambda(Expr, Expr)\fP\&. It must return a boolean value\&.
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Filter(Arr(1, 2, 3, 4), Lambda("i", GT(Var("i"), 2))));
+
+Assert\&.AreEqual(Arr(3, 4), result);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Filter (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Filter expression with a lambda function that receives one argument\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives one argument
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Filter (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Filter expression with a lambda function that receives two arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives two arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Filter (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Filter expression with a lambda function that receives three arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives three arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Filter (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Filter expression with a lambda function that receives four arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives four arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Filter (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Filter expression with a lambda function that receives five arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives five arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Filter (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Filter expression with a lambda function that receives six arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives six arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.FindStr (\fBExpr\fP expr, \fBExpr\fP find, \fBExpr\fP start = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns the offset position of a string in another string\&. See the \fBFaunaDB\fP FindStr Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.FindStrRegex (\fBExpr\fP expr, \fBExpr\fP pattern, \fBExpr\fP start = \fCnull\fP, \fBExpr\fP numResults = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an array of up to 1024 objects describing where the pattern is found in the search string\&. See the \fBFaunaDB\fP FindStrRegex Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Floor (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Floor expression\&. See the \fBFaunaDB\fP Floor Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Foreach (\fBExpr\fP collection, \fBExpr\fP lambda)\fC [static]\fP"
+
+.PP
+Creates a new Foreach expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+See Foreach(Expr, System\&.Func<Expr, Expr>), Foreach(Expr, System\&.Func<Expr, Expr, Expr>), Foreach(Expr, System\&.Func<Expr, Expr, Expr, Expr>), Foreach(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr>), Foreach(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr>), Foreach(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>) 
+.PP
+This is the raw version\&. Usually it's easier to use the overload\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP Lambda expression created by \fBLambda(Expr, Expr)\fP
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Foreach (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Foreach expression with a lambda function that receives one argument\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives one argument
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Foreach (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Foreach expression with a lambda function that receives two arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives two arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Foreach (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Foreach expression with a lambda function that receives three arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives three arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Foreach (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Foreach expression with a lambda function that receives four arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives four arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Foreach (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Foreach expression with a lambda function that receives five arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives five arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Foreach (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Foreach expression with a lambda function that receives six arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives six arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Format (\fBExpr\fP format, params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Format values into string\&. See the \fBFaunaDB\fP Format Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Function (\fBExpr\fP function_name, \fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Function expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Functions (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to functions object\&. Useful to paginate over all functions of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Get (\fBExpr\fP @ ref, \fBExpr\fP ts = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Get expression\&. See the \fBFaunaDB\fP Read Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.GT (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new GT expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.GTE (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new GTE expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.HasCurrentIdentity ()\fC [static]\fP"
+
+.PP
+Creates a new HasCurrentIdentity expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.HasCurrentToken ()\fC [static]\fP"
+
+.PP
+Creates a new HasCurrentToken expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.HasIdentity ()\fC [static]\fP"
+
+.PP
+Creates a new HasIdentity expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Hour (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a time expression's hour of the day, from 0 to 23\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Hypot (\fBExpr\fP value, \fBExpr\fP exp = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Hypot expression\&. See the \fBFaunaDB\fP Hypot Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Identify (\fBExpr\fP @ ref, \fBExpr\fP password)\fC [static]\fP"
+
+.PP
+Creates a new Identify expression\&. See the docs
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIref\fP Reference to the object
+.br
+\fIpassword\fP Password to be validated
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Identity ()\fC [static]\fP"
+
+.PP
+Creates a new Identity expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.If (\fBExpr\fP @ if, \fBExpr\fP @ then, \fBExpr\fP @ else)\fC [static]\fP"
+
+.PP
+Creates a new If expression\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Index (\fBExpr\fP index_name, \fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Index expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Indexes (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to indexes object\&. Useful to paginate over all indexes of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Insert (\fBExpr\fP @ ref, \fBExpr\fP ts, \fBActionType\fP action, \fBExpr\fP @ params)\fC [static]\fP"
+
+.PP
+Creates a new Insert expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Insert (\fBExpr\fP @ ref, \fBExpr\fP ts, \fBExpr\fP action, \fBExpr\fP @ params)\fC [static]\fP"
+
+.PP
+Creates a new Insert expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Intersection (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Intersection expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsArray (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is an array\&. See the IsArray
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsBoolean (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a boolean\&. See the IsBoolean
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsBytes (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a byte array\&. See the IsBytes
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsCollection (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a collection\&. See the IsCollection
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsCredentials (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a credentials\&. See the IsCredentials
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsDatabase (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a database\&. See the IsDatabase
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsDate (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a date\&. See the IsDate
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsDoc (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a document (either a reference or an instance)\&. See the IsDoc
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsDouble (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a double\&. See the IsDouble
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsEmpty (\fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new IsEmpty expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(IsEmpty(Arr(4, 5, 6)));
+
+Assert\&.AreEqual(false, result\&.To<bool>()\&.Value);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsFunction (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a function\&. See the IsFunction
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsIndex (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is an index\&. See the IsIndex
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsInteger (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is an integer\&. See the IsInteger
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsKey (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a key\&. See the IsKey
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsLambda (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a lambda\&. See the IsLambda
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsNonEmpty (\fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new IsNonEmpty expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(IsNonEmpty(Arr(4, 5, 6)));
+
+Assert\&.AreEqual(true, result\&.To<bool>()\&.Value);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsNull (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is null\&. See the IsNull
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsNumber (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a number\&. See the IsNumber
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsObject (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is an object\&. See the IsObject
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsRef (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a reference\&. See the IsRef
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsRole (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a role\&. See the IsRole
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsSet (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a set\&. See the IsSet
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsString (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a string\&. See the IsString
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsTimestamp (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a timestamp\&. See the IsTimestamp
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.IsToken (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Check if the expression is a token\&. See the IsToken
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Join (\fBExpr\fP source, \fBExpr\fP target)\fC [static]\fP"
+
+.PP
+Creates a new Join expression\&. See the \fBFaunaDB\fP Set Functions
+.PP
+This is the raw version\&. Usually it's easier to use the overload\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIsource\fP A set resulting from one of the Set Functions
+.br
+\fItarget\fP Can be either an index reference or a lambda function
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Join (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP > target)\fC [static]\fP"
+
+.PP
+Creates a new Join expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Join (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)\fC [static]\fP"
+
+.PP
+Creates a new Join expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Join (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)\fC [static]\fP"
+
+.PP
+Creates a new Join expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Join (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)\fC [static]\fP"
+
+.PP
+Creates a new Join expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Join (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)\fC [static]\fP"
+
+.PP
+Creates a new Join expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Join (\fBExpr\fP source, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > target)\fC [static]\fP"
+
+.PP
+Creates a new Join expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.KeyFromSecret (\fBExpr\fP secret)\fC [static]\fP"
+
+.PP
+Creates a new KeyFromSecret expression\&. See the \fBFaunaDB\fP Read Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Keys (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to keys object\&. Useful to paginate over all keys of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Lambda (\fBExpr\fP vars, \fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Lambda expression\&. This is the raw version\&. Usually it's easier to use the overload\&. 
+.PP
+See Lambda(System\&.Func<Expr, Expr>), Lambda(System\&.Func<Expr, Expr, Expr>), Lambda(System\&.Func<Expr, Expr, Expr, Expr>), Lambda(System\&.Func<Expr, Expr, Expr, Expr, Expr>), Lambda(System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr>), Lambda(System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>) 
+.PP
+See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIvars\fP Variable names\&. Can be a single string or an array of strings
+.br
+\fIexpr\fP Any composed expression created by \fBLanguage\fP
+.RE
+.PP
+.PP
+.PP
+.nf
+var lambda1 = Lambda("a", Add(Var("a"), 1);
+var lambda2 = Lambda(Arr("a", "b"), Add(Var("a"), Var("b"));
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Lambda (Func< \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a lambda expression that receives one argument\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+.PP
+.nf
+var lambda = Lambda(a => a);
+.fi
+.PP
+ is equivalent to 
+.PP
+.nf
+var lambda = Lambda("a", Var("a"));
+
+.fi
+.PP
+ 
+.PP
+Definition at line 23 of file Language\&.Basic\&.Lambda\&.cs\&.
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Lambda (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a lambda expression that receives two arguments\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+.PP
+.nf
+var lambda = Lambda((a, b) => Add(a, b));
+.fi
+.PP
+ is equivalent to 
+.PP
+.nf
+var lambda = Lambda(Arr("a", "b"), Add(Var("a"), Var("b")));
+
+.fi
+.PP
+ 
+.PP
+Definition at line 46 of file Language\&.Basic\&.Lambda\&.cs\&.
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Lambda (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a lambda expression that receives three arguments\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+.PP
+.nf
+var lambda = Lambda((a, b, c) => Add(a, b, c));
+.fi
+.PP
+ is equivalent to 
+.PP
+.nf
+var lambda = Lambda(Arr("a", "b", "c"), Add(Var("a"), Var("b"), Var("c")));
+
+.fi
+.PP
+ 
+.PP
+Definition at line 72 of file Language\&.Basic\&.Lambda\&.cs\&.
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Lambda (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a lambda expression that receives four arguments\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+.PP
+.nf
+var lambda = Lambda((a, b, c, d) => Add(a, b, c, d));
+.fi
+.PP
+ is equivalent to 
+.PP
+.nf
+var lambda = Lambda(Arr("a", "b", "c", "d"), Add(Var("a"), Var("b"), Var("c"), Var("d")));
+
+.fi
+.PP
+ 
+.PP
+Definition at line 99 of file Language\&.Basic\&.Lambda\&.cs\&.
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Lambda (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a lambda expression that receives five arguments\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+.PP
+.nf
+var lambda = Lambda((a, b, c, d, e) => Add(a, b, c, d, e));
+.fi
+.PP
+ is equivalent to 
+.PP
+.nf
+var lambda = Lambda(Arr("a", "b", "c", "d", "e"), Add(Var("a"), Var("b"), Var("c"), Var("d"), Var("e")));
+
+.fi
+.PP
+ 
+.PP
+Definition at line 127 of file Language\&.Basic\&.Lambda\&.cs\&.
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Lambda (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a lambda expression that receives six arguments\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+.PP
+.nf
+var lambda = Lambda((a, b, c, d, e, f) => Add(a, b, c, d, e, f));
+.fi
+.PP
+ is equivalent to 
+.PP
+.nf
+var lambda = Lambda(Arr("a", "b", "c", "d", "f"), Add(Var("a"), Var("b"), Var("c"), Var("d"), Var("f")));
+
+.fi
+.PP
+ 
+.PP
+Definition at line 156 of file Language\&.Basic\&.Lambda\&.cs\&.
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Length (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns the number of code points in the string\&. See the \fBFaunaDB\fP Length Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Let (IReadOnlyDictionary< string, \fBExpr\fP > vars, \fBExpr\fP @ in)\fC [static]\fP"
+
+.PP
+Creates a new Let expression wrapping the provided map of bindings\&. See the \fBFaunaDB\fP Let Function
+.PP
+\&. 
+.SS "static \fBLetBinding\fP FaunaDB\&.Query\&.Language\&.Let (string k0, \fBExpr\fP v0)\fC [static]\fP"
+
+.PP
+Creates a new Let expression with the provided bindings\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIk0\fP First variable name
+.br
+\fIv0\fP First variable value
+.RE
+.PP
+
+.SS "static \fBLetBinding\fP FaunaDB\&.Query\&.Language\&.Let (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1)\fC [static]\fP"
+
+.PP
+Creates a new Let expression with the provided bindings\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIk0\fP First variable name
+.br
+\fIv0\fP First variable value
+.br
+\fIk1\fP Second variable name
+.br
+\fIv1\fP Second variable value
+.RE
+.PP
+
+.SS "static \fBLetBinding\fP FaunaDB\&.Query\&.Language\&.Let (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2)\fC [static]\fP"
+
+.PP
+Creates a new Let expression with the provided bindings\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIk0\fP First variable name
+.br
+\fIv0\fP First variable value
+.br
+\fIk1\fP Second variable name
+.br
+\fIv1\fP Second variable value
+.br
+\fIk2\fP Third variable name
+.br
+\fIv2\fP Third variable value
+.RE
+.PP
+
+.SS "static \fBLetBinding\fP FaunaDB\&.Query\&.Language\&.Let (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2, string k3, \fBExpr\fP v3)\fC [static]\fP"
+
+.PP
+Creates a new Let expression with the provided bindings\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIk0\fP First variable name
+.br
+\fIv0\fP First variable value
+.br
+\fIk1\fP Second variable name
+.br
+\fIv1\fP Second variable value
+.br
+\fIk2\fP Third variable name
+.br
+\fIv2\fP Third variable value
+.br
+\fIk3\fP Fourth variable name
+.br
+\fIv3\fP Fourth variable value
+.RE
+.PP
+
+.SS "static \fBLetBinding\fP FaunaDB\&.Query\&.Language\&.Let (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2, string k3, \fBExpr\fP v3, string k4, \fBExpr\fP v4)\fC [static]\fP"
+
+.PP
+Creates a new Let expression with the provided bindings\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIk0\fP First variable name
+.br
+\fIv0\fP First variable value
+.br
+\fIk1\fP Second variable name
+.br
+\fIv1\fP Second variable value
+.br
+\fIk2\fP Third variable name
+.br
+\fIv2\fP Third variable value
+.br
+\fIk3\fP Fourth variable name
+.br
+\fIv3\fP Fourth variable value
+.br
+\fIk4\fP Fifth variable name
+.br
+\fIv4\fP Fifth variable value
+.RE
+.PP
+
+.SS "static \fBLetBinding\fP FaunaDB\&.Query\&.Language\&.Let (string k0, \fBExpr\fP v0, string k1, \fBExpr\fP v1, string k2, \fBExpr\fP v2, string k3, \fBExpr\fP v3, string k4, \fBExpr\fP v4, string k5, \fBExpr\fP v5)\fC [static]\fP"
+
+.PP
+Creates a new Let expression with the provided bindings\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIk0\fP First variable name
+.br
+\fIv0\fP First variable value
+.br
+\fIk1\fP Second variable name
+.br
+\fIv1\fP Second variable value
+.br
+\fIk2\fP Third variable name
+.br
+\fIv2\fP Third variable value
+.br
+\fIk3\fP Fourth variable name
+.br
+\fIv3\fP Fourth variable value
+.br
+\fIk4\fP Fifth variable name
+.br
+\fIv4\fP Fifth variable value
+.br
+\fIk5\fP Sixth variable name
+.br
+\fIv5\fP Sixth variable value
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Ln (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Ln expression\&. See the \fBFaunaDB\fP Ln Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Log (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Log expression\&. See the \fBFaunaDB\fP Log Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Login (\fBExpr\fP @ ref, \fBExpr\fP @ params)\fC [static]\fP"
+
+.PP
+Creates a new Login expression\&. See the docs
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Logout (bool deleteTokens)\fC [static]\fP"
+
+.PP
+Creates a new Logout expression\&. See the docs
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdeleteTokens\fP True will delete all tokens associated with the current session\&. False will delete only the token used in this request
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Logout (\fBExpr\fP deleteTokens)\fC [static]\fP"
+
+.PP
+Creates a new Logout expression\&. See the docs
+.PP
+\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIdeleteTokens\fP \fBExpr\fP object where, True will delete all tokens associated with the current session\&. False will delete only the token used in this request
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.LowerCase (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a string in which all uppercase characters have been replaced by their corresponding lowercase characters\&. See the \fBFaunaDB\fP LowerCase Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.LT (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new LT expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.LTE (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new LTE expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.LTrim (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Removes all white spaces, tabs, and new lines from the beginning of a string\&. See the \fBFaunaDB\fP Ltrim Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Map (\fBExpr\fP collection, \fBExpr\fP lambda)\fC [static]\fP"
+
+.PP
+Creates a new Map expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+This is the raw version\&. Usually it's easier to use the overload\&. 
+.PP
+See Map(Expr, System\&.Func<Expr, Expr>), Map(Expr, System\&.Func<Expr, Expr, Expr>), Map(Expr, System\&.Func<Expr, Expr, Expr, Expr>), Map(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr>), Map(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr>), Map(Expr, System\&.Func<Expr, Expr, Expr, Expr, Expr, Expr, Expr>) 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP Lambda expression created by \fBLambda(Expr, Expr)\fP
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Arr(1, 2, 3), Lambda("i", Multiply(Var("i"), 2)));
+
+Assert\&.AreEqual(Arr(2, 4, 6), result);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Map (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Map expression with a lambda function that receives one argument\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives one argument
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Map (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Map expression with a lambda function that receives two arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives two arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Map (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Map expression with a lambda function that receives three arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives three arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Map (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Map expression with a lambda function that receives four arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives four arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Map (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Map expression with a lambda function that receives five arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives five arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Map (\fBExpr\fP collection, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Creates a new Map expression with a lambda function that receives six arguments\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIcollection\fP A collection expression
+.br
+\fIlambda\fP A lambda function that receives six arguments
+.RE
+.PP
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Match (\fBExpr\fP index, params \fBExpr\fP[] terms)\fC [static]\fP"
+
+.PP
+Creates a new Match expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Max (params \fBExpr\fP[] terms)\fC [static]\fP"
+
+.PP
+Creates a new Max expression\&. See the \fBFaunaDB\fP Max Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Mean (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns the average value of the items\&. See the \fBFaunaDB\fP Mean Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Merge (\fBExpr\fP merge, \fBExpr\fP with)\fC [static]\fP"
+
+.PP
+Merges two or more objects 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Merge (\fBExpr\fP merge, \fBExpr\fP with, \fBExpr\fP lambda)\fC [static]\fP"
+
+.PP
+Merges two or more objects 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Merge (\fBExpr\fP merge, \fBExpr\fP with, Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda)\fC [static]\fP"
+
+.PP
+Merges two or more objects 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Min (params \fBExpr\fP[] terms)\fC [static]\fP"
+
+.PP
+Creates a new Min expression\&. See the \fBFaunaDB\fP Min Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Minute (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a time expression's minute of the hour, from 0 to 59\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Modulo (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Modulo expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Month (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a time expression's month of the year, from 1 to 12\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.MoveDatabase (\fBExpr\fP from, \fBExpr\fP to)\fC [static]\fP"
+
+.PP
+Moves a database to a new hierarchy\&. See the \fBFaunaDB\fP MoveDatabase Function
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Multiply (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Multiply expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.NewId ()\fC [static]\fP"
+
+.PP
+Creates a new NewId expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.NextId ()\fC [static]\fP"
+
+.PP
+Creates a new NextId expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.NGram (\fBExpr\fP terms, \fBExpr\fP min = \fCnull\fP, \fBExpr\fP max = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new NGram expression\&. See the \fBFaunaDB\fP String Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Not (\fBExpr\fP boolean)\fC [static]\fP"
+
+.PP
+Creates a new Not expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Now ()\fC [static]\fP"
+
+.PP
+Constructs a Timestamp representing the transaction’s start time\&. See the \fBFaunaDB\fP Now Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Null ()\fC [static]\fP"
+
+.PP
+Creates a null value\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj ()\fC [static]\fP"
+
+.PP
+Creates a new empty Object value\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj (IReadOnlyDictionary< string, \fBExpr\fP > fields)\fC [static]\fP"
+
+.PP
+Creates a new Object value wrapping the provided map\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj (string key1, \fBExpr\fP value1)\fC [static]\fP"
+
+.PP
+Creates a new Object value with the provided entries\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2)\fC [static]\fP"
+
+.PP
+Creates a new Object value with the provided entries\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3)\fC [static]\fP"
+
+.PP
+Creates a new Object value with the provided entries\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3, string key4, \fBExpr\fP value4)\fC [static]\fP"
+
+.PP
+Creates a new Object value with the provided entries\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3, string key4, \fBExpr\fP value4, string key5, \fBExpr\fP value5)\fC [static]\fP"
+
+.PP
+Creates a new Object value with the provided entries\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Obj (string key1, \fBExpr\fP value1, string key2, \fBExpr\fP value2, string key3, \fBExpr\fP value3, string key4, \fBExpr\fP value4, string key5, \fBExpr\fP value5, string key6, \fBExpr\fP value6)\fC [static]\fP"
+
+.PP
+Creates a new Object value with the provided entries\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Or (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Or expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Paginate (\fBExpr\fP set, \fBExpr\fP ts = \fCnull\fP, \fBExpr\fP after = \fCnull\fP, \fBExpr\fP before = \fCnull\fP, \fBExpr\fP size = \fCnull\fP, \fBExpr\fP events = \fCnull\fP, \fBExpr\fP sources = \fCnull\fP, \fBCursor\fP cursor = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Paginate expression\&. See the \fBFaunaDB\fP Paginate Function
+.SS "static \fBPathSelector\fP FaunaDB\&.Query\&.Language\&.Path (params \fBExpr\fP[] expr)\fC [static]\fP"
+
+.PP
+Helper for constructing a \fBPathSelector\fP with the given expression\&. See \fBPathSelector\fP 
+.SS "static \fBPathSelector\fP FaunaDB\&.Query\&.Language\&.Path (params int[] segments)\fC [static]\fP"
+
+.PP
+Helper for constructing a \fBPathSelector\fP with the given path terms\&. See \fBPathSelector\fP 
+.SS "static \fBPathSelector\fP FaunaDB\&.Query\&.Language\&.Path (params string[] segments)\fC [static]\fP"
+
+.PP
+Helper for constructing a \fBPathSelector\fP with the given path terms\&. See \fBPathSelector\fP 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Pow (\fBExpr\fP value, \fBExpr\fP exp = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Pow expression\&. See the \fBFaunaDB\fP Pow Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Prepend (\fBExpr\fP elements, \fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new Prepend expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fIelements\fP Elements to be prepended into the collection
+.br
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Prepend(Arr(1, 2, 3), Arr(4, 5, 6)));
+
+Assert\&.AreEqual(Arr(1, 2, 3, 4, 5, 6), result);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Query (\fBExpr\fP lambda)\fC [static]\fP"
+
+.PP
+Creates a new \fBQuery\fP expression\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Radians (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Radians expression\&. See the \fBFaunaDB\fP Radians Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Range (\fBExpr\fP set, \fBExpr\fP from, \fBExpr\fP to)\fC [static]\fP"
+
+.PP
+Filters the set based on the lower/upper bounds (inclusive)\&. See the \fBFaunaDB\fP Range Function
+.PP
+\fBParameters\fP
+.RS 4
+\fIset\fP set to be filtered
+.br
+\fIfrom\fP lower bound
+.br
+\fIto\fP upper bound
+.RE
+.PP
+
+.SS "static \fBCursor\fP FaunaDB\&.Query\&.Language\&.RawCursor (\fBExpr\fP expr)\fC [static]\fP"
+
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Reduce (\fBExpr\fP lambda, \fBExpr\fP initial, \fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new Exists expression\&. See the \fBFaunaDB\fP Reduce Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Reduce (Func< \fBExpr\fP, \fBExpr\fP, \fBExpr\fP > lambda, \fBExpr\fP initial, \fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new Exists expression\&. See the \fBFaunaDB\fP Reduce Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Ref (\fBExpr\fP classRef, \fBExpr\fP id)\fC [static]\fP"
+
+.PP
+Calls ref function to create a ref value\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Ref (string @ ref)\fC [static]\fP"
+
+.PP
+Creates a ref value from a string\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.RegexEscape (\fBExpr\fP value)\fC [static]\fP"
+
+.PP
+See the \fBFaunaDB\fP RegexEscape Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Remove (\fBExpr\fP @ ref, \fBExpr\fP ts, \fBActionType\fP action)\fC [static]\fP"
+
+.PP
+Creates a new Remove expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Remove (\fBExpr\fP @ ref, \fBExpr\fP ts, \fBExpr\fP action)\fC [static]\fP"
+
+.PP
+Creates a new Remove expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Repeat (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a string consisting of the value string repeated number times\&. See the \fBFaunaDB\fP Repeat Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Repeat (\fBExpr\fP expr, \fBExpr\fP number)\fC [static]\fP"
+
+.PP
+Returns a string consisting of the value string repeated number times\&. See the \fBFaunaDB\fP Repeat Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Replace (\fBExpr\fP @ ref, \fBExpr\fP @ params)\fC [static]\fP"
+
+.PP
+Creates a new Replace expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ReplaceStr (\fBExpr\fP expr, \fBExpr\fP find, \fBExpr\fP replace)\fC [static]\fP"
+
+.PP
+Replaces a string\&. See the \fBFaunaDB\fP ReplaceStr Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ReplaceStrRegex (\fBExpr\fP expr, \fBExpr\fP pattern, \fBExpr\fP replace, \fBExpr\fP first = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Replaces all the occurrences (or the first one) of find pattern substituted with replace string\&. See the \fBFaunaDB\fP Length Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Reverse (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Reverse expression\&. \fBFaunaDB\fP Reverse Function
+.PP
+\fBParameters\fP
+.RS 4
+\fIexpr\fP An expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Reverse(Arr(0, 1, 2, 3)));
+
+Assert\&.AreEqual(new int[] { 3, 2, 1, 0 }, result\&.To<int[]>()\&.Value);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Role (\fBExpr\fP role_name, \fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Role expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Roles (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to roles object\&. Useful to paginate over all roles of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Round (\fBExpr\fP expr, \fBExpr\fP precision = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Round expression\&. See the \fBFaunaDB\fP Round Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.RTrim (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Replaces a string inside\&. See the \fBFaunaDB\fP RTrim Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Second (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a time expression's second of the minute, from 0 to 59\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Select (\fBExpr\fP path, \fBExpr\fP @ from, \fBExpr\fP @ default = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Select expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Select (\fBPathSelector\fP path, \fBExpr\fP @ from, \fBExpr\fP @ default = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Select expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.SelectAll (\fBExpr\fP path, \fBExpr\fP @ from)\fC [static]\fP"
+
+.PP
+Creates a new SelectAll expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.SelectAll (\fBPathSelector\fP path, \fBExpr\fP @ from)\fC [static]\fP"
+
+.PP
+Creates a new SelectAll expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Sign (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Sign expression\&. See the \fBFaunaDB\fP Sign Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Sin (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Sin expression\&. See the \fBFaunaDB\fP Sin Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Singleton (\fBExpr\fP @ ref)\fC [static]\fP"
+
+.PP
+Creates a new Singleton expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Sinh (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Sinh expression\&. See the \fBFaunaDB\fP Sinh Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Space (\fBExpr\fP count)\fC [static]\fP"
+
+.PP
+Replaces a string inside\&. See the \fBFaunaDB\fP Space Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Sqrt (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Sqrt expression\&. See the \fBFaunaDB\fP Sqrt Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.StartsWith (\fBExpr\fP value, \fBExpr\fP search)\fC [static]\fP"
+
+.PP
+See the \fBFaunaDB\fP StartsWith Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.SubString (\fBExpr\fP expr, \fBExpr\fP start = \fCnull\fP, \fBExpr\fP length = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns a portion of the string\&. See the \fBFaunaDB\fP SubString Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Subtract (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Subtract expression\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Sum (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns the sum of all items\&. See the \fBFaunaDB\fP Sum Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Take (\fBExpr\fP number, \fBExpr\fP collection)\fC [static]\fP"
+
+.PP
+Creates a new Take expression\&. \fBFaunaDB\fP Collection Functions
+.PP
+\fBParameters\fP
+.RS 4
+\fInumber\fP Number of elements to take from the head of collection
+.br
+\fIcollection\fP A collection expression
+.RE
+.PP
+.PP
+.PP
+.nf
+var result = await client\&.Query(Take(2, Arr(1, 2, 3)));
+
+Assert\&.AreEqual(Arr(1, 2), result);
+.fi
+.PP
+ 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Tan (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Tan expression\&. See the \fBFaunaDB\fP Tan Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Tanh (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Creates a new Tanh expression\&. See the \fBFaunaDB\fP Tanh Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Time (\fBExpr\fP time)\fC [static]\fP"
+
+.PP
+Creates a new Time expression\&. See the \fBFaunaDB\fP Time and Date Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.TimeAdd (\fBExpr\fP value, \fBExpr\fP offset, \fBExpr\fP unit)\fC [static]\fP"
+
+.PP
+Returns a new time or date with the offset in terms of the unit added\&. See the TimeAdd
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.TimeDiff (\fBExpr\fP start, \fBExpr\fP finish, \fBExpr\fP unit)\fC [static]\fP"
+
+.PP
+Returns the number of intervals in terms of the unit between two times or dates\&. Both start and finish must be of the same type\&. See the TimeDiff
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.TimeSubtract (\fBExpr\fP value, \fBExpr\fP offset, \fBExpr\fP unit)\fC [static]\fP"
+
+.PP
+Returns a new time or date with the offset in terms of the unit subtracted\&. See the TimeSubtract
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.TitleCase (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a string which has the first letter of each word capitalized\&. See the \fBFaunaDB\fP TitleCase Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToArray (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Try to convert an object into an array of (field, value)\&. See the ToArray
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToDate (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Converts an expression to a date literal\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToDouble (\fBExpr\fP value)\fC [static]\fP"
+
+.PP
+Casts an expression to a double value, if possible\&. See the ToDouble
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToInteger (\fBExpr\fP value)\fC [static]\fP"
+
+.PP
+Casts an expression to an integer value, if possible\&. See the ToInteger
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Tokens (\fBExpr\fP scope = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Returns an internal reference to tokens object\&. Useful to paginate over all tokens of a given scope database\&. See the \fBFaunaDB\fP Miscellaneous Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToMicros (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Converts a time expression to microseconds since the UNIX epoch\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToMillis (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Converts a time expression to milliseconds since the UNIX epoch\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToNumber (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Converts an expression to a number literal\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToObject (\fBExpr\fP fields)\fC [static]\fP"
+
+.PP
+Try to convert an array of (field, value) into an object\&. See the ToObject
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToSeconds (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Converts a time expression to seconds since the UNIX epoch\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToStringExpr (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Converts an expression to a string literal\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.ToTime (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Converts an expresion to a time literal\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Trim (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a string which has both the leading and trailing white spaces, tabs, and new lines removed\&. See the \fBFaunaDB\fP Trim Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Trunc (\fBExpr\fP expr, \fBExpr\fP precision = \fCnull\fP)\fC [static]\fP"
+
+.PP
+Creates a new Trunc expression\&. See the \fBFaunaDB\fP Trunc Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Ts (DateTime dateTime)\fC [static]\fP"
+
+.PP
+Creates a new Timestamp value\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Ts (string iso8601Time)\fC [static]\fP"
+
+.PP
+Creates a new Timestamp value\&. See the \fBFaunaDB\fP Values
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Union (params \fBExpr\fP[] values)\fC [static]\fP"
+
+.PP
+Creates a new Union expression\&. See the \fBFaunaDB\fP Set Functions
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Update (\fBExpr\fP @ ref, \fBExpr\fP @ params)\fC [static]\fP"
+
+.PP
+Creates a new Update expression\&. See the \fBFaunaDB\fP Write Functions
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.UpperCase (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns a string which has all lowercase characters in the string replaced by their corresponding uppercase characters\&. See the \fBFaunaDB\fP UpperCase Function
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Var (string varName)\fC [static]\fP"
+
+.PP
+Creates a new Var expression\&. See the \fBFaunaDB\fP Basic Forms
+.PP
+\&. 
+.SS "static \fBExpr\fP FaunaDB\&.Query\&.Language\&.Year (\fBExpr\fP expr)\fC [static]\fP"
+
+.PP
+Returns the time expression's year, following the ISO-8601 standard\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

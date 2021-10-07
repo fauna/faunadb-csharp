@@ -1,0 +1,75 @@
+.TH "FaunaDB.Types.FaunaFieldAttribute" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.FaunaFieldAttribute \- Maps a property/field member constructor parameter to \fBFaunaDB\fP object property while encoding/deconding an object\&. If this attribute if not specified the property/field name constructor parameter name will be used instead\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Attribute\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFaunaFieldAttribute\fP (string name)"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string \fBName\fP\fC [get]\fP"
+.br
+.RI "The name of the property when encoding/decoding objects\&. "
+.ti -1c
+.RI "object \fBDefaultValue\fP\fC [get, set]\fP"
+.br
+.RI "The default value used for a missing property when decoding an object\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Maps a property/field member constructor parameter to \fBFaunaDB\fP object property while encoding/deconding an object\&. If this attribute if not specified the property/field name constructor parameter name will be used instead\&. 
+
+class Car { [FaunaField('model')] public string Model { get; set; }
+.PP
+[FaunaField('manufacturer')] public string Manufacturer { get; set; } }
+.PP
+var car = new Car { Model = 'DeLorean DMC-12', Manufacturer = 'DeLorean Motor Company' };
+.PP
+var encoded = Encoder\&.Encode(car);
+.PP
+//encoded will be equivalent to:
+.PP
+\fBObjectV\&.With\fP('model', 'DeLorean DMC-12', 'manufacturer', 'DeLorean Motor Company')
+.PP
+class Product { private string description; private double price;
+.PP
+[FaunaConstructor] public Product([FaunaField('Description')] string description, [FaunaField('Price')] double price) { this\&.description = description; this\&.price = price; } } 
+.PP
+Definition at line 41 of file Attributes\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Types\&.FaunaFieldAttribute\&.FaunaFieldAttribute (string name)"
+
+.PP
+Definition at line 53 of file Attributes\&.cs\&.
+.SH "Property Documentation"
+.PP 
+.SS "object FaunaDB\&.Types\&.FaunaFieldAttribute\&.DefaultValue\fC [get]\fP, \fC [set]\fP"
+
+.PP
+The default value used for a missing property when decoding an object\&. 
+.PP
+Definition at line 51 of file Attributes\&.cs\&.
+.SS "string FaunaDB\&.Types\&.FaunaFieldAttribute\&.Name\fC [get]\fP"
+
+.PP
+The name of the property when encoding/decoding objects\&. 
+.PP
+Definition at line 46 of file Attributes\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

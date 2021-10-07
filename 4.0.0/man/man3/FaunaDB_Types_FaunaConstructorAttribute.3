@@ -1,0 +1,28 @@
+.TH "FaunaDB.Types.FaunaConstructorAttribute" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Types.FaunaConstructorAttribute \- Instruct the decoder wich constructor to use when decoding a object\&. It can also be used in a public static method instead in a constructor\&. That attribute can only be used once per class\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits Attribute\&.
+.SH "Detailed Description"
+.PP 
+Instruct the decoder wich constructor to use when decoding a object\&. It can also be used in a public static method instead in a constructor\&. That attribute can only be used once per class\&. 
+
+class Product { public string Description { get; set; } public double Price { get; set; }
+.PP
+[FaunaConstructor] public Product(string description, double price) { Description = description; Price = price; } }
+.PP
+class Order { public string Number { get; set; } public List<Product> Products { get; set; }
+.PP
+[FaunaConstructor] public static Order CreateOrder(string number, List<Product> products) { return new Order { Number = number, Products = products } } } 
+.PP
+Definition at line 181 of file Attributes\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

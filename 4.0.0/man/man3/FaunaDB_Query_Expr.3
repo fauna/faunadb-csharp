@@ -1,0 +1,193 @@
+.TH "FaunaDB.Query.Expr" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Query.Expr \- A query language expression\&. Constructors for this class are at the \fBLanguage\fP class\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits IEquatable< Expr >\&.
+.PP
+Inherited by FaunaDB\&.Query\&.UnescapedArray, FaunaDB\&.Query\&.UnescapedObject, and \fBFaunaDB\&.Types\&.Value\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "override bool \fBEquals\fP (object obj)"
+.br
+.ti -1c
+.RI "abstract bool \fBEquals\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "override int \fBGetHashCode\fP ()"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static bool \fBoperator==\fP (\fBExpr\fP a, \fBExpr\fP b)"
+.br
+.ti -1c
+.RI "static bool \fBoperator!=\fP (\fBExpr\fP a, \fBExpr\fP b)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (bool b)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (double d)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (long l)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (int i)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (string s)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (DateTime dt)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (DateTimeOffset dt)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (Dictionary< string, \fBExpr\fP > dict)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (byte[] bytes)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (ActionType action)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (TimeUnit unit)"
+.br
+.ti -1c
+.RI "static implicit \fBoperator Expr\fP (Normalizer normalizer)"
+.br
+.ti -1c
+.RI "static \fBoperator bool\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator double\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator long\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator string\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator DateTime\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator DateTimeOffset\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator ActionType\fP (\fBExpr\fP v)"
+.br
+.ti -1c
+.RI "static \fBoperator TimeUnit\fP (\fBExpr\fP unit)"
+.br
+.ti -1c
+.RI "static \fBoperator Normalizer\fP (\fBExpr\fP normalizer)"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "abstract int \fBHashCode\fP ()"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A query language expression\&. Constructors for this class are at the \fBLanguage\fP class\&. 
+
+
+.PP
+Definition at line 11 of file Expr\&.cs\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "abstract bool FaunaDB\&.Query\&.Expr\&.Equals (\fBExpr\fP v)\fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBFaunaDB\&.Types\&.ArrayV\fP, \fBFaunaDB\&.Types\&.ObjectV\fP, \fBFaunaDB\&.Types\&.ScalarValue< TWrapped >\fP, and \fBFaunaDB\&.Types\&.NullV\fP\&.
+.SS "override bool FaunaDB\&.Query\&.Expr\&.Equals (object obj)"
+
+.PP
+Definition at line 29 of file Expr\&.cs\&.
+.SS "override int FaunaDB\&.Query\&.Expr\&.GetHashCode ()"
+
+.SS "abstract int FaunaDB\&.Query\&.Expr\&.HashCode ()\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+Implemented in \fBFaunaDB\&.Types\&.ArrayV\fP, \fBFaunaDB\&.Types\&.ObjectV\fP, \fBFaunaDB\&.Types\&.ScalarValue< TWrapped >\fP, and \fBFaunaDB\&.Types\&.NullV\fP\&.
+.SS "static FaunaDB\&.Query\&.Expr\&.operator ActionType (\fBExpr\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.PP
+Definition at line 156 of file Expr\&.Operators\&.cs\&.
+.SS "static FaunaDB\&.Query\&.Expr\&.operator bool (\fBExpr\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Query\&.Expr\&.operator DateTime (\fBExpr\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Query\&.Expr\&.operator DateTimeOffset (\fBExpr\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Query\&.Expr\&.operator double (\fBExpr\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (ActionType action)\fC [static]\fP"
+
+.PP
+Definition at line 39 of file Expr\&.Operators\&.cs\&.
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (bool b)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (byte[] bytes)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (DateTime dt)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (DateTimeOffset dt)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (Dictionary< string, \fBExpr\fP > dict)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (double d)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (int i)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (long l)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (Normalizer normalizer)\fC [static]\fP"
+
+.PP
+Definition at line 78 of file Expr\&.Operators\&.cs\&.
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (string s)\fC [static]\fP"
+
+.SS "static implicit FaunaDB\&.Query\&.Expr\&.operator \fBExpr\fP (TimeUnit unit)\fC [static]\fP"
+
+.PP
+Definition at line 53 of file Expr\&.Operators\&.cs\&.
+.SS "static FaunaDB\&.Query\&.Expr\&.operator long (\fBExpr\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Query\&.Expr\&.operator Normalizer (\fBExpr\fP normalizer)\fC [explicit]\fP, \fC [static]\fP"
+
+.PP
+Definition at line 202 of file Expr\&.Operators\&.cs\&.
+.SS "static FaunaDB\&.Query\&.Expr\&.operator string (\fBExpr\fP v)\fC [explicit]\fP, \fC [static]\fP"
+
+.SS "static FaunaDB\&.Query\&.Expr\&.operator TimeUnit (\fBExpr\fP unit)\fC [explicit]\fP, \fC [static]\fP"
+
+.PP
+Definition at line 170 of file Expr\&.Operators\&.cs\&.
+.SS "static bool FaunaDB\&.Query\&.Expr\&.operator!= (\fBExpr\fP a, \fBExpr\fP b)\fC [static]\fP"
+
+.SS "static bool FaunaDB\&.Query\&.Expr\&.operator== (\fBExpr\fP a, \fBExpr\fP b)\fC [static]\fP"
+
+.PP
+Definition at line 15 of file Expr\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

@@ -1,0 +1,105 @@
+\hypertarget{namespace_fauna_d_b_1_1_client}{}\doxysection{Fauna\+D\+B.\+Client Namespace Reference}
+\label{namespace_fauna_d_b_1_1_client}\index{FaunaDB.Client@{FaunaDB.Client}}
+
+
+A thread-\/safe static helper used to store the last seen transaction time returned by the database.  
+
+
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_d_b_1_1_client_1_1_utils}{Utils}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class {\bfseries Builder}
+\begin{DoxyCompactList}\small\item\em Builder class for Default\+Client\+IO class \end{DoxyCompactList}\item 
+class {\bfseries Default\+Client\+IO}
+\begin{DoxyCompactList}\small\item\em Default client that handles all http connections using Http\+Client. \end{DoxyCompactList}\item 
+class {\bfseries Environment\+Editor}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_event_field}{Event\+Field}}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}}
+\begin{DoxyCompactList}\small\item\em C\# native client for \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}}. \end{DoxyCompactList}\item 
+class {\bfseries Http\+Method\+Kind\+Extensions}
+\item 
+class {\bfseries Http\+Request\+Extensions}
+\begin{DoxyCompactList}\small\item\em Http \mbox{\hyperlink{namespace_fauna_d_b_1_1_client}{Client}} proper timing out \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{I\+Client\+IO}}
+\begin{DoxyCompactList}\small\item\em Handles actual I/O for a \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}}. \end{DoxyCompactList}\item 
+interface {\bfseries I\+Environment\+Editor}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_last_seen}{Last\+Seen}}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_request_result}{Request\+Result}}
+\begin{DoxyCompactList}\small\item\em Stores information about a single request and response. \end{DoxyCompactList}\item 
+class {\bfseries Runtime\+Environment\+Header}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_handler}{Streaming\+Event\+Handler}}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_event_monitor}{Streaming\+Event\+Monitor}}
+\item 
+class \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result}{Streaming\+Request\+Result}}
+\item 
+class {\bfseries Timeout\+Handler}
+\item 
+class {\bfseries Unsubscriber}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}{Http\+Method\+Kind}} \{ \newline
+\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ac55582518cba2c464f29f5bae1c68def}{Http\+Method\+Kind.\+Get}}, 
+\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8a03d947a2158373c3b9d74325850cb8b9}{Http\+Method\+Kind.\+Post}}, 
+\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ad0bf1810982e9728fcf3ac444a015373}{Http\+Method\+Kind.\+Put}}, 
+\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8a156e10596fdc76ee5300bab931d89c0f}{Http\+Method\+Kind.\+Patch}}, 
+\newline
+\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8af2a6c498fb90ee345d997f888fce3b18}{Http\+Method\+Kind.\+Delete}}
+ \}
+\begin{DoxyCompactList}\small\item\em A method used by the Fauna\+Client. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A thread-\/safe static helper used to store the last seen transaction time returned by the database. 
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}\label{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}} 
+\index{FaunaDB.Client@{FaunaDB.Client}!HttpMethodKind@{HttpMethodKind}}
+\index{HttpMethodKind@{HttpMethodKind}!FaunaDB.Client@{FaunaDB.Client}}
+\doxysubsubsection{\texorpdfstring{HttpMethodKind}{HttpMethodKind}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}{Fauna\+D\+B.\+Client.\+Http\+Method\+Kind}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+
+
+A method used by the \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}}. 
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Get@{Get}!FaunaDB.Client@{FaunaDB.Client}}\index{FaunaDB.Client@{FaunaDB.Client}!Get@{Get}}}\mbox{\Hypertarget{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ac55582518cba2c464f29f5bae1c68def}\label{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ac55582518cba2c464f29f5bae1c68def}} 
+Get&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Post@{Post}!FaunaDB.Client@{FaunaDB.Client}}\index{FaunaDB.Client@{FaunaDB.Client}!Post@{Post}}}\mbox{\Hypertarget{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8a03d947a2158373c3b9d74325850cb8b9}\label{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8a03d947a2158373c3b9d74325850cb8b9}} 
+Post&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Put@{Put}!FaunaDB.Client@{FaunaDB.Client}}\index{FaunaDB.Client@{FaunaDB.Client}!Put@{Put}}}\mbox{\Hypertarget{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ad0bf1810982e9728fcf3ac444a015373}\label{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8ad0bf1810982e9728fcf3ac444a015373}} 
+Put&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Patch@{Patch}!FaunaDB.Client@{FaunaDB.Client}}\index{FaunaDB.Client@{FaunaDB.Client}!Patch@{Patch}}}\mbox{\Hypertarget{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8a156e10596fdc76ee5300bab931d89c0f}\label{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8a156e10596fdc76ee5300bab931d89c0f}} 
+Patch&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Delete@{Delete}!FaunaDB.Client@{FaunaDB.Client}}\index{FaunaDB.Client@{FaunaDB.Client}!Delete@{Delete}}}\mbox{\Hypertarget{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8af2a6c498fb90ee345d997f888fce3b18}\label{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8af2a6c498fb90ee345d997f888fce3b18}} 
+Delete&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 8 of file Http\+Method\+Kind.\+cs.
+

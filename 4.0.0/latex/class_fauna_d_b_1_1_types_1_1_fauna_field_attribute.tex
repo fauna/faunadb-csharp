@@ -1,0 +1,97 @@
+\hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute}{}\doxysection{Fauna\+D\+B.\+Types.\+Fauna\+Field\+Attribute Class Reference}
+\label{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute}\index{FaunaDB.Types.FaunaFieldAttribute@{FaunaDB.Types.FaunaFieldAttribute}}
+
+
+Maps a property/field member constructor parameter to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} object property while encoding/deconding an object. If this attribute if not specified the property/field name constructor parameter name will be used instead.  
+
+
+Inheritance diagram for Fauna\+D\+B.\+Types.\+Fauna\+Field\+Attribute\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_ae419a91fdb0dbf098e79b60c3eb147b5}{Fauna\+Field\+Attribute}} (string name)
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_abcd0180e45c1b5a69bf0418259069e51}{Name}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The name of the property when encoding/decoding objects. \end{DoxyCompactList}\item 
+object \mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_ae7031a8a0358b1ec63121682880b54e4}{Default\+Value}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The default value used for a missing property when decoding an object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Maps a property/field member constructor parameter to \mbox{\hyperlink{namespace_fauna_d_b}{Fauna\+DB}} object property while encoding/deconding an object. If this attribute if not specified the property/field name constructor parameter name will be used instead. 
+
+class Car \{ \mbox{[}Fauna\+Field(\char`\"{}model\char`\"{})\mbox{]} public string Model \{ get; set; \}
+
+\mbox{[}Fauna\+Field(\char`\"{}manufacturer\char`\"{})\mbox{]} public string Manufacturer \{ get; set; \} \}
+
+var car = new Car \{ Model = \char`\"{}\+De\+Lorean D\+M\+C-\/12\char`\"{}, Manufacturer = \char`\"{}\+De\+Lorean Motor Company\char`\"{} \};
+
+var encoded = Encoder.\+Encode(car);
+
+//encoded will be equivalent to\+:
+
+\mbox{\hyperlink{class_fauna_d_b_1_1_types_1_1_object_v_afe2af6058ae644bfbf249c8eaadb4b9e}{Object\+V.\+With}}(\char`\"{}model\char`\"{}, \char`\"{}\+De\+Lorean D\+M\+C-\/12\char`\"{}, \char`\"{}manufacturer\char`\"{}, \char`\"{}\+De\+Lorean Motor Company\char`\"{})
+
+class Product \{ private string description; private double price;
+
+\mbox{[}Fauna\+Constructor\mbox{]} public Product(\mbox{[}Fauna\+Field(\char`\"{}\+Description\char`\"{})\mbox{]} string description, \mbox{[}Fauna\+Field(\char`\"{}\+Price\char`\"{})\mbox{]} double price) \{ this.\+description = description; this.\+price = price; \} \} 
+
+Definition at line 41 of file Attributes.\+cs.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_ae419a91fdb0dbf098e79b60c3eb147b5}\label{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_ae419a91fdb0dbf098e79b60c3eb147b5}} 
+\index{FaunaDB.Types.FaunaFieldAttribute@{FaunaDB.Types.FaunaFieldAttribute}!FaunaFieldAttribute@{FaunaFieldAttribute}}
+\index{FaunaFieldAttribute@{FaunaFieldAttribute}!FaunaDB.Types.FaunaFieldAttribute@{FaunaDB.Types.FaunaFieldAttribute}}
+\doxysubsubsection{\texorpdfstring{FaunaFieldAttribute()}{FaunaFieldAttribute()}}
+{\footnotesize\ttfamily Fauna\+D\+B.\+Types.\+Fauna\+Field\+Attribute.\+Fauna\+Field\+Attribute (\begin{DoxyParamCaption}\item[{string}]{name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 53 of file Attributes.\+cs.
+
+
+
+\doxysubsection{Property Documentation}
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_ae7031a8a0358b1ec63121682880b54e4}\label{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_ae7031a8a0358b1ec63121682880b54e4}} 
+\index{FaunaDB.Types.FaunaFieldAttribute@{FaunaDB.Types.FaunaFieldAttribute}!DefaultValue@{DefaultValue}}
+\index{DefaultValue@{DefaultValue}!FaunaDB.Types.FaunaFieldAttribute@{FaunaDB.Types.FaunaFieldAttribute}}
+\doxysubsubsection{\texorpdfstring{DefaultValue}{DefaultValue}}
+{\footnotesize\ttfamily object Fauna\+D\+B.\+Types.\+Fauna\+Field\+Attribute.\+Default\+Value\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+The default value used for a missing property when decoding an object. 
+
+
+
+Definition at line 51 of file Attributes.\+cs.
+
+\mbox{\Hypertarget{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_abcd0180e45c1b5a69bf0418259069e51}\label{class_fauna_d_b_1_1_types_1_1_fauna_field_attribute_abcd0180e45c1b5a69bf0418259069e51}} 
+\index{FaunaDB.Types.FaunaFieldAttribute@{FaunaDB.Types.FaunaFieldAttribute}!Name@{Name}}
+\index{Name@{Name}!FaunaDB.Types.FaunaFieldAttribute@{FaunaDB.Types.FaunaFieldAttribute}}
+\doxysubsubsection{\texorpdfstring{Name}{Name}}
+{\footnotesize\ttfamily string Fauna\+D\+B.\+Types.\+Fauna\+Field\+Attribute.\+Name\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The name of the property when encoding/decoding objects. 
+
+
+
+Definition at line 46 of file Attributes.\+cs.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Types/\mbox{\hyperlink{_attributes_8cs}{Attributes.\+cs}}\end{DoxyCompactItemize}

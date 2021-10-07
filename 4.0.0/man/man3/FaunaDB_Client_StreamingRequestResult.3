@@ -1,0 +1,144 @@
+.TH "FaunaDB.Client.StreamingRequestResult" 3 "Thu Oct 7 2021" "Version 1.0" "Fauna csharp driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FaunaDB.Client.StreamingRequestResult
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBStreamingRequestResult\fP (IReadOnlyDictionary< string, string > query, string requestContent, Stream responseContent, int statusCode, string errorContent, IReadOnlyDictionary< string, IEnumerable< string >> responseHeaders, DateTime startTime, DateTime endTime)"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "\fBHttpMethodKind\fP \fBMethod\fP\fC [get]\fP"
+.br
+.RI "HTTP method that was used\&. "
+.ti -1c
+.RI "string \fBPath\fP\fC [get]\fP"
+.br
+.RI "Path that was queried\&. Relative to client's domain\&. "
+.ti -1c
+.RI "IReadOnlyDictionary< string, string > \fBQuery\fP\fC [get]\fP"
+.br
+.RI "The query parameters submitted on the request\&. "
+.ti -1c
+.RI "string \fBRequestContent\fP\fC [get]\fP"
+.br
+.RI "String data submited for the server\&. "
+.ti -1c
+.RI "Stream \fBResponseContent\fP\fC [get]\fP"
+.br
+.RI "String returned by the server\&. "
+.ti -1c
+.RI "int \fBStatusCode\fP\fC [get]\fP"
+.br
+.RI "Http status code result of the request\&. "
+.ti -1c
+.RI "string \fBErrorContent\fP\fC [get]\fP"
+.br
+.RI "Http content message in case request results in an error response\&. "
+.ti -1c
+.RI "IReadOnlyDictionary< string, IEnumerable< string > > \fBResponseHeaders\fP\fC [get]\fP"
+.br
+.RI "Response headers returned by the \fBFaunaDB\fP server\&. "
+.ti -1c
+.RI "DateTime \fBStartTime\fP\fC [get]\fP"
+.br
+.RI "DateTime when the query was issued\&. "
+.ti -1c
+.RI "DateTime \fBEndTime\fP\fC [get]\fP"
+.br
+.RI "DateTime when the query finished\&. "
+.ti -1c
+.RI "TimeSpan \fBTimeTaken\fP\fC [get]\fP"
+.br
+.RI "Indicates how long the query took to execute\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 7 of file StreamingRequestResult\&.cs\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "FaunaDB\&.Client\&.StreamingRequestResult\&.StreamingRequestResult (IReadOnlyDictionary< string, string > query, string requestContent, Stream responseContent, int statusCode, string errorContent, IReadOnlyDictionary< string, IEnumerable< string >> responseHeaders, DateTime startTime, DateTime endTime)"
+
+.PP
+Definition at line 64 of file StreamingRequestResult\&.cs\&.
+.SH "Property Documentation"
+.PP 
+.SS "DateTime FaunaDB\&.Client\&.StreamingRequestResult\&.EndTime\fC [get]\fP"
+
+.PP
+DateTime when the query finished\&. 
+.PP
+Definition at line 57 of file StreamingRequestResult\&.cs\&.
+.SS "string FaunaDB\&.Client\&.StreamingRequestResult\&.ErrorContent\fC [get]\fP"
+
+.PP
+Http content message in case request results in an error response\&. 
+.PP
+Definition at line 42 of file StreamingRequestResult\&.cs\&.
+.SS "\fBHttpMethodKind\fP FaunaDB\&.Client\&.StreamingRequestResult\&.Method\fC [get]\fP"
+
+.PP
+HTTP method that was used\&. 
+.PP
+Definition at line 12 of file StreamingRequestResult\&.cs\&.
+.SS "string FaunaDB\&.Client\&.StreamingRequestResult\&.Path\fC [get]\fP"
+
+.PP
+Path that was queried\&. Relative to client's domain\&. 
+.PP
+Definition at line 17 of file StreamingRequestResult\&.cs\&.
+.SS "IReadOnlyDictionary<string, string> FaunaDB\&.Client\&.StreamingRequestResult\&.Query\fC [get]\fP"
+
+.PP
+The query parameters submitted on the request\&. 
+.PP
+Definition at line 22 of file StreamingRequestResult\&.cs\&.
+.SS "string FaunaDB\&.Client\&.StreamingRequestResult\&.RequestContent\fC [get]\fP"
+
+.PP
+String data submited for the server\&. 
+.PP
+Definition at line 27 of file StreamingRequestResult\&.cs\&.
+.SS "Stream FaunaDB\&.Client\&.StreamingRequestResult\&.ResponseContent\fC [get]\fP"
+
+.PP
+String returned by the server\&. 
+.PP
+Definition at line 32 of file StreamingRequestResult\&.cs\&.
+.SS "IReadOnlyDictionary<string, IEnumerable<string> > FaunaDB\&.Client\&.StreamingRequestResult\&.ResponseHeaders\fC [get]\fP"
+
+.PP
+Response headers returned by the \fBFaunaDB\fP server\&. 
+.PP
+Definition at line 47 of file StreamingRequestResult\&.cs\&.
+.SS "DateTime FaunaDB\&.Client\&.StreamingRequestResult\&.StartTime\fC [get]\fP"
+
+.PP
+DateTime when the query was issued\&. 
+.PP
+Definition at line 52 of file StreamingRequestResult\&.cs\&.
+.SS "int FaunaDB\&.Client\&.StreamingRequestResult\&.StatusCode\fC [get]\fP"
+
+.PP
+Http status code result of the request\&. 
+.PP
+Definition at line 37 of file StreamingRequestResult\&.cs\&.
+.SS "TimeSpan FaunaDB\&.Client\&.StreamingRequestResult\&.TimeTaken\fC [get]\fP"
+
+.PP
+Indicates how long the query took to execute\&. 
+.PP
+Definition at line 62 of file StreamingRequestResult\&.cs\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna csharp driver from the source code\&.

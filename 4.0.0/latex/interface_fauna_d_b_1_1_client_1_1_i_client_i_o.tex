@@ -1,0 +1,55 @@
+\hypertarget{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{}\doxysection{Fauna\+D\+B.\+Client.\+I\+Client\+IO Interface Reference}
+\label{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}\index{FaunaDB.Client.IClientIO@{FaunaDB.Client.IClientIO}}
+
+
+Handles actual I/O for a \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}}.  
+
+
+
+
+Inherited by Fauna\+D\+B.\+Client.\+Default\+Client\+IO.
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{I\+Client\+IO}} \mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_aa7a17e48a3d0585d9398b5739b0cd948}{New\+Session\+Client}} (string secret)
+\item 
+Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_request_result}{Request\+Result}} $>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_a83c05925eae95310fb8dd16781bd34ff}{Do\+Request}} (\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}{Http\+Method\+Kind}} method, string path, string data, I\+Read\+Only\+Dictionary$<$ string, string $>$ query=null, Time\+Span? query\+Timeout=null)
+\item 
+Task$<$ \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result}{Streaming\+Request\+Result}} $>$ \mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_a5dd39e3deea5f6462cca70d4e675f441}{Do\+Streaming\+Request}} (string data, I\+Read\+Only\+Dictionary$<$ string, string $>$ query=null)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles actual I/O for a \mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_fauna_client}{Fauna\+Client}}. 
+
+
+
+Definition at line 10 of file I\+Client\+I\+O.\+cs.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_a83c05925eae95310fb8dd16781bd34ff}\label{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_a83c05925eae95310fb8dd16781bd34ff}} 
+\index{FaunaDB.Client.IClientIO@{FaunaDB.Client.IClientIO}!DoRequest@{DoRequest}}
+\index{DoRequest@{DoRequest}!FaunaDB.Client.IClientIO@{FaunaDB.Client.IClientIO}}
+\doxysubsubsection{\texorpdfstring{DoRequest()}{DoRequest()}}
+{\footnotesize\ttfamily Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_request_result}{Request\+Result}}$>$ Fauna\+D\+B.\+Client.\+I\+Client\+I\+O.\+Do\+Request (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_fauna_d_b_1_1_client_aa4c25359e2a44040bbba060f45e9fca8}{Http\+Method\+Kind}}}]{method,  }\item[{string}]{path,  }\item[{string}]{data,  }\item[{I\+Read\+Only\+Dictionary$<$ string, string $>$}]{query = {\ttfamily null},  }\item[{Time\+Span?}]{query\+Timeout = {\ttfamily null} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_a5dd39e3deea5f6462cca70d4e675f441}\label{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_a5dd39e3deea5f6462cca70d4e675f441}} 
+\index{FaunaDB.Client.IClientIO@{FaunaDB.Client.IClientIO}!DoStreamingRequest@{DoStreamingRequest}}
+\index{DoStreamingRequest@{DoStreamingRequest}!FaunaDB.Client.IClientIO@{FaunaDB.Client.IClientIO}}
+\doxysubsubsection{\texorpdfstring{DoStreamingRequest()}{DoStreamingRequest()}}
+{\footnotesize\ttfamily Task$<$\mbox{\hyperlink{class_fauna_d_b_1_1_client_1_1_streaming_request_result}{Streaming\+Request\+Result}}$>$ Fauna\+D\+B.\+Client.\+I\+Client\+I\+O.\+Do\+Streaming\+Request (\begin{DoxyParamCaption}\item[{string}]{data,  }\item[{I\+Read\+Only\+Dictionary$<$ string, string $>$}]{query = {\ttfamily null} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_aa7a17e48a3d0585d9398b5739b0cd948}\label{interface_fauna_d_b_1_1_client_1_1_i_client_i_o_aa7a17e48a3d0585d9398b5739b0cd948}} 
+\index{FaunaDB.Client.IClientIO@{FaunaDB.Client.IClientIO}!NewSessionClient@{NewSessionClient}}
+\index{NewSessionClient@{NewSessionClient}!FaunaDB.Client.IClientIO@{FaunaDB.Client.IClientIO}}
+\doxysubsubsection{\texorpdfstring{NewSessionClient()}{NewSessionClient()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{interface_fauna_d_b_1_1_client_1_1_i_client_i_o}{I\+Client\+IO}} Fauna\+D\+B.\+Client.\+I\+Client\+I\+O.\+New\+Session\+Client (\begin{DoxyParamCaption}\item[{string}]{secret }\end{DoxyParamCaption})}
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Work/fauna/faunadb-\/csharp/\+Fauna\+D\+B.\+Client/\+Client/\mbox{\hyperlink{_i_client_i_o_8cs}{I\+Client\+I\+O.\+cs}}\end{DoxyCompactItemize}
