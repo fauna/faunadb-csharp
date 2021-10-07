@@ -35,4 +35,3 @@ git add -A
 git commit -m "Update docs to version: $PACKAGE_VERSION"
 
 echo "Documentation commited"
-ls
