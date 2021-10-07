@@ -23,7 +23,7 @@ apk add doxygen
 doxygen "../../fauna-csharp-repository/doc/Doxyfile"
 rm -r man
 rm -r latex
-cp -R ./html ./
+cp -a ./html/. ./
 rm -r html
 
 git config --global user.email "nobody@fauna.com"
