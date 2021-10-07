@@ -26,8 +26,12 @@ rm -r latex
 cp -a ./html/. ./
 rm -r html
 
+echo "Documentation created"
+
 git config --global user.email "nobody@fauna.com"
 git config --global user.name "Fauna, Inc"
 
 git add -A
 git commit -m "Update docs to version: $PACKAGE_VERSION"
+
+echo "Documentation commited"
