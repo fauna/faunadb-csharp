@@ -20,7 +20,7 @@ cd "${PACKAGE_VERSION}"
 # apk add update
 apk add doxygen
 
-doxygen "../../doc/Doxyfile"
+doxygen "../../fauna-csharp-repository/doc/Doxyfile"
 rm -r man
 rm -r latex
 cp -a ./html/. ./
