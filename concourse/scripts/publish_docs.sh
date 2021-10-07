@@ -16,9 +16,9 @@ cd fauna-csharp-repository-updated-docs
 mkdir "${PACKAGE_VERSION}"
 cd "${PACKAGE_VERSION}"
 
-apt-add-repository universe
-apk add update
-apk add install doxygen
+# apt-add-repository universe
+# apk add update
+apk add doxygen
 
 doxygen "../../fauna-csharp-repository/doc/Doxyfile"
 rm -r man
