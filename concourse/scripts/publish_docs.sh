@@ -16,11 +16,10 @@ cd fauna-csharp-repository-updated-docs
 mkdir "${PACKAGE_VERSION}"
 cd "${PACKAGE_VERSION}"
 
-sudo apt-add-repository universe
-sudo apt-get update
-sudo apt-get install doxygen
+apt-add-repository universe
+apk add update
+apk add install doxygen
 
---go to doc folder
 doxygen "../../fauna-csharp-repository/doc/Doxyfile"
 rm -r man
 rm -r latex
