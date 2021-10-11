@@ -11,8 +11,8 @@ resources:
     type: git
     icon: github
     source:
-      # uri: git@github.com:fauna/faunadb-csharp.git
-      uri: https://github.com/fauna/faunadb-csharp
+      uri: git@github.com:fauna/faunadb-csharp.git
+      # uri: https://github.com/fauna/faunadb-csharp
       branch: gh-pages
       private_key: ((github_repo_key))
 
