@@ -34,14 +34,14 @@ echo "================================="
 echo "Adding google manager tag to head"
 echo "================================="
 
-HEAD_GTM=$(cat ./fauna-csharp-repository/concourse/scripts/head_gtm.dat)
+HEAD_GTM=$(cat ../../fauna-csharp-repository/concourse/scripts/head_gtm.dat)
 sed -i.bak "0,/<\/title>/{s/<\/title>/<\/title>${HEAD_GTM}/}" ./index.html
 
 echo "================================="
 echo "Adding google manager tag to body"
 echo "================================="
 
-BODY_GTM=$(cat ./fauna-csharp-repository/concourse/scripts/body_gtm.dat)
+BODY_GTM=$(cat ../../fauna-csharp-repository/concourse/scripts/body_gtm.dat)
 sed -i.bak "0,/<body>/{s/<body>/<body>${BODY_GTM}/}" ./index.html
 
 rm ./index.html.bak
