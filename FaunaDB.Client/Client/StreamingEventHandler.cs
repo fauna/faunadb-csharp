@@ -11,7 +11,7 @@ namespace FaunaDB.Client
 {
     public class StreamingEventHandler : IObservable<Value>, IDisposable
     {
-        private const int TIME_OUT = 10000;
+        private const int TIME_OUT_IN_MILLIS = 10000;
         private readonly List<IObserver<Value>> observers;
         private StreamReader streamReader;
         private CancellationTokenSource cancelTokenSource;
@@ -52,9 +52,9 @@ namespace FaunaDB.Client
                             }
                         }
 
-                        Task.Delay(TIME_OUT, token).Wait();
+                        Task.Delay(TIME_OUT_IN_MILLIS, token).Wait();
                     }
-                }, TaskCreationOptions.AttachedToParent
+                }
                 );
             }
         }
