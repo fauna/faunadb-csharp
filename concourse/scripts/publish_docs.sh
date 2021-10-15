@@ -16,8 +16,8 @@ cd fauna-csharp-repository-updated-docs
 mkdir "${PACKAGE_VERSION}"
 cd "${PACKAGE_VERSION}"
 
-# apt-add-repository universe
-# apk add update
+sed -i.bak "s/_DOC_VERSION_/${PACKAGE_VERSION}/" ../../fauna-csharp-repository/doc/Doxyfile
+
 apk add doxygen
 
 doxygen "../../fauna-csharp-repository/doc/Doxyfile"
