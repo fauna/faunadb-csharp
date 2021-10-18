@@ -6,6 +6,14 @@ resources:
     source:
       uri: https://github.com/fauna/faunadb-csharp
       branch: main
+      
+  - name: fauna-csharp-repository-docs
+    type: git
+    icon: github
+    source:
+      uri: git@github.com:fauna/faunadb-csharp.git
+      branch: gh-pages
+      private_key: ((github_repo_key))
 
 jobs:
   - name: release
@@ -13,7 +21,8 @@ jobs:
     public: false
     plan:
       - get: fauna-csharp-repository
-
+      - get: fauna-csharp-repository-docs
+      
       - task: integration-tests
         file: fauna-csharp-repository/concourse/tasks/integration-tests.yml
         privileged: true
@@ -28,3 +37,10 @@ jobs:
         file: fauna-csharp-repository/concourse/tasks/publish.yml
         params:
           NUGET_API_KEY: ((nuget_api_key))
+
+      - task: publish-docs
+        file: fauna-csharp-repository/concourse/tasks/publish-docs.yml
+
+      - put: fauna-csharp-repository-docs
+        params:
+          repository: fauna-csharp-repository-updated-docs
