@@ -3,6 +3,12 @@
 [![NuGet](https://img.shields.io/nuget/v/FaunaDB.Client.svg?maxAge=21600)](https://www.nuget.org/packages/FaunaDB.Client/)
 [![License](https://img.shields.io/badge/license-MPL_2.0-blue.svg?maxAge=2592000)](https://raw.githubusercontent.com/fauna/faunadb-csharp/main/LICENSE)
 
+## Documentation
+
+C# doc are hosted on GitHub:
+
+* [faunadb-csharp](https://fauna.github.io/faunadb-csharp/4.1.0/)
+
 ## How to Build
 
 ### Requirements
