@@ -2,8 +2,6 @@
 set -eou
 cd ./fauna-csharp-repository
 
-# PACKAGE_VERSION="4.0.1"
-
 apk add xmlstarlet
 PACKAGE_VERSION=$(xml sel -t -v "/Project/PropertyGroup/Version" ./FaunaDB.Client/FaunaDB.Client.csproj)
 
@@ -51,5 +49,3 @@ git config --global user.name "Fauna, Inc"
 
 git add -A
 git commit -m "Update docs to version: $PACKAGE_VERSION"
-
-echo "Documentation commited"

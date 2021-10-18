@@ -5,7 +5,7 @@ resources:
     icon: github
     source:
       uri: https://github.com/fauna/faunadb-csharp
-      branch: main
+      branch: v5
       
   - name: fauna-csharp-repository-docs
     type: git
