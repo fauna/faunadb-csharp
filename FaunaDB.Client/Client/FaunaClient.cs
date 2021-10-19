@@ -31,18 +31,18 @@ namespace FaunaDB.Client
         /// </summary>
         /// <param name="secret">Auth token for the FaunaDB server.</param>
         /// <param name="endpoint">URL for the FaunaDB server. Defaults to "https://db.fauna.com:443"</param>
-        /// <param name="timeout">Timeout for I/O operations. Defaults to 1 minute.</param>
+        /// <param name="queryTimeout">Timeout for I/O operations. Defaults to 1 minute.</param>
         /// <param name="httpVersion">Version of http. Default value is HttpVersion.Version11, is you use .net core 3.0 and above you can enable http/2 support by passing HttpVersion.Version20</param>
         /// <param name="checkNewVersion">Check new NuGet package driver version. Default value is true (Check new version).</param>
         public FaunaClient(
             string secret,
             string endpoint = "https://db.fauna.com:443",
-            TimeSpan? timeout = null,
+            TimeSpan? queryTimeout = null,
             HttpClient httpClient = null,
             Version httpVersion = null,
             bool checkNewVersion = true,
             IReadOnlyDictionary<string, string> customHeaders = null)
-            : this(CreateClient(secret, endpoint, timeout, httpClient, httpVersion, checkNewVersion, customHeaders))
+            : this(CreateClient(secret, endpoint, queryTimeout, httpClient, httpVersion, checkNewVersion, customHeaders))
         { }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace FaunaDB.Client
         /// See <see cref="Query(Expr)"/> for more information on the individual queries.
         /// </para>
         /// </summary>
-        /// <param name="queryTimeout">Timeout for that specific query (it will override the client timetout, if any).</param>
+        /// <param name="queryTimeout">Timeout for that specific query (it will override the client queryTimeout, if any).</param>
         /// <param name="expressions">the list of query expressions to be sent to FaunaDB.</param>
         /// <returns>a <see cref="Task"/> containing an ordered list of root response nodes.</returns>
         public async Task<Value[]> Query(TimeSpan queryTimeout, params Expr[] expressions)
@@ -125,7 +125,7 @@ namespace FaunaDB.Client
         /// </para>
         /// </summary>
         /// <param name="expressions">the list of query expressions to be sent to FaunaDB.</param>
-        /// <param name="queryTimeout">Timeout for that specific query (it will override the client timetout, if any).</param>
+        /// <param name="queryTimeout">Timeout for that specific query (it will override the client queryTimeout, if any).</param>
         /// <returns>a <see cref="Task"/> containing an ordered list of root response nodes.</returns>
         public async Task<IEnumerable<Value>> Query(IEnumerable<Expr> expressions, TimeSpan? queryTimeout = null)
         {
@@ -251,7 +251,7 @@ namespace FaunaDB.Client
         private static IClientIO CreateClient(
             string secret,
             string endpoint,
-            TimeSpan? timeout = null,
+            TimeSpan? queryTimeout = null,
             HttpClient httpClient = null,
             Version httpVersion = null,
             bool checkNewVersion = true,
@@ -268,7 +268,7 @@ namespace FaunaDB.Client
             return DefaultClientIO.Builder()
                                   .SetSecret(secret)
                                   .SetEndpoint(new Uri(endpoint))
-                                  .SetTimeout(timeout)
+                                  .SetTimeout(queryTimeout)
                                   .SetClient(httpClient)
                                   .SetHttpVersion(httpVersion)
                                   .Build();
