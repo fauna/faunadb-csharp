@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FaunaDB.Errors;
 using FaunaDB.Types;
 
@@ -9,18 +11,52 @@ namespace FaunaDB.Client
 {
     public class StreamingEventHandler : IObservable<Value>, IDisposable
     {
+        private const int TIME_OUT_IN_MILLIS = 10000;
         private readonly List<IObserver<Value>> observers;
         private StreamReader streamReader;
+        private CancellationTokenSource cancelTokenSource;
+        private Task checkConnectionTask;
 
         private static Field<string> CODE = Field.At("event", "code").To<string>();
         private static Field<string> DESCRIPTION = Field.At("event", "description").To<string>();
         private static Field<string> TYPE = Field.At("type").To<string>();
 
-        public StreamingEventHandler(Stream dataSource)
+        public StreamingEventHandler(Stream dataSource, Func<Task> checkConnection = null)
         {
             dataSource.AssertNotNull(nameof(dataSource));
             observers = new List<IObserver<Value>>();
             streamReader = new StreamReader(dataSource);
+            if (checkConnection != null)
+            {
+                cancelTokenSource = new CancellationTokenSource();
+                CancellationToken token = cancelTokenSource.Token;
+
+                checkConnectionTask = Task.Factory.StartNew(async () =>
+                {
+                    while (true)
+                    {
+                        if (token.IsCancellationRequested)
+                        {
+                            return;
+                        }
+
+                        try
+                        {
+                            await checkConnection?.Invoke();
+                        }
+                        catch (Exception ex)
+                        {
+                            foreach (var observer in observers.ToList())
+                            {
+                                observer.OnError(ex);
+                            }
+                        }
+
+                        Task.Delay(TIME_OUT_IN_MILLIS, token).Wait();
+                    }
+                }
+                );
+            }
         }
 
         public IDisposable Subscribe(IObserver<Value> observer)
@@ -61,6 +97,15 @@ namespace FaunaDB.Client
 
         public void Complete()
         {
+            if (cancelTokenSource != null)
+            {
+                cancelTokenSource.Cancel();
+                if (!checkConnectionTask.IsCanceled)
+                {
+                    checkConnectionTask.Wait();
+                }
+            }
+
             foreach (var observer in observers.ToList())
             {
                 observer.OnCompleted();
@@ -70,6 +115,10 @@ namespace FaunaDB.Client
         public void Dispose()
         {
             streamReader.Dispose();
+            if (cancelTokenSource != null)
+            {
+                cancelTokenSource.Cancel();
+            }
         }
 
         private FaunaException ConstructStreamingException(Exception ex)
