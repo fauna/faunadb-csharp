@@ -23,7 +23,7 @@ namespace Test
             dummy = new DummyServer();
             dummy.Start();
 
-            client = new FaunaClient("secret", "http://127.0.0.1:9999", timeout: TimeSpan.FromSeconds(10));
+            client = new FaunaClient("secret", "http://127.0.0.1:9999", queryTimeout: TimeSpan.FromSeconds(10));
         }
 
         [TearDown]

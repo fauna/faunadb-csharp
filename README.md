@@ -127,7 +127,7 @@ This small example shows how to use pretty much every aspect of the library.
 #### How to instantiate a FaunaDB `FaunaClient`
 
 ```csharp
-var client = new FaunaClient(endpoint: ENDPOINT, secret: SECRET, httpClient: HTTP_CLIENT, timeout: TIMEOUT);
+var client = new FaunaClient(endpoint: ENDPOINT, secret: SECRET, httpClient: HTTP_CLIENT, queryTimeout: TIMEOUT);
 ```
 
 Except `secret` all other arguments are optional.
