@@ -2224,7 +2224,7 @@ namespace Test
                 secret: faunaSecret,
                 endpoint: faunaEndpoint,
                 httpClient: customHttp,
-                timeout: TimeSpan.FromSeconds(42));
+                queryTimeout: TimeSpan.FromSeconds(42));
 
             await faunaClient1.Query(Count(Databases()));
             await faunaClient1.Query(Count(Collections()));

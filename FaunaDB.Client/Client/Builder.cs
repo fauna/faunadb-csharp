@@ -20,7 +20,7 @@ namespace FaunaDB.Client
 
         internal Uri Endpoint { get; private set; }
 
-        internal TimeSpan? Timeout { get; private set; }
+        internal TimeSpan? QueryTimeout { get; private set; }
 
         internal IReadOnlyDictionary<string, string> CustomHeaders { get; private set; }
 
@@ -50,9 +50,9 @@ namespace FaunaDB.Client
             return this;
         }
 
-        internal Builder SetTimeout(TimeSpan? timeout)
+        internal Builder SetTimeout(TimeSpan? queryTimeout)
         {
-            Timeout = timeout;
+            QueryTimeout = queryTimeout;
             return this;
         }
 

@@ -19,7 +19,7 @@ namespace FaunaDB.Client
     internal class DefaultClientIO : IClientIO
     {
         private readonly Uri endpoint;
-        private readonly TimeSpan? clientTimeout;
+        private readonly TimeSpan? clientQueryTimeout;
 
         private readonly HttpClient client;
         private readonly AuthenticationHeaderValue authHeader;
@@ -50,7 +50,7 @@ namespace FaunaDB.Client
             this.authHeader = builder.AuthHeader ?? AuthHeader(builder.Secret);
             this.lastSeen = builder.LastSeen ?? new LastSeen();
             this.endpoint = builder.Endpoint;
-            this.clientTimeout = builder.Timeout;
+            this.clientQueryTimeout = builder.QueryTimeout;
             this.customHeaders = builder.CustomHeaders;
 
 #if NETSTANDARD2_1
@@ -67,7 +67,7 @@ namespace FaunaDB.Client
                     .SetAuthHeader(AuthHeader(secret))
                     .SetLastSeen(lastSeen)
                     .SetEndpoint(endpoint)
-                    .SetTimeout(clientTimeout)
+                    .SetTimeout(clientQueryTimeout)
                     .SetHttpVersion(httpVersion)
                     .SetCustomHeaders(customHeaders)
                     .Build();
@@ -114,7 +114,7 @@ namespace FaunaDB.Client
                 message.Headers.Add("X-Last-Seen-Txn", last.Value.ToString());
             }
 
-            TimeSpan? timeout = queryTimeout ?? clientTimeout ?? client.Timeout;
+            TimeSpan? timeout = queryTimeout ?? clientQueryTimeout ?? client.Timeout;
             if (timeout.HasValue)
             {
                 message.SetTimeout(timeout);
