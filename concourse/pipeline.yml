@@ -1,5 +1,16 @@
 ---
+resource_types:
+  - name: slack-notification
+    type: docker-image
+    source:
+      repository: cfcommunity/slack-notification-resource
+
 resources:
+  - name: notify
+    type: slack-notification
+    source:
+      url: ((slack-webhook))
+
   - name: fauna-csharp-repository
     type: git
     icon: github
@@ -37,6 +48,10 @@ jobs:
         file: fauna-csharp-repository/concourse/tasks/publish.yml
         params:
           NUGET_API_KEY: ((nuget_api_key))
+        on_success:
+          put: notify
+          params:
+            text_file: slack-message/publish
 
       - task: publish-docs
         file: fauna-csharp-repository/concourse/tasks/publish-docs.yml
