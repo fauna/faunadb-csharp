@@ -1,3 +1,7 @@
+## 5.0.0
+- Supports fauna database API v5
+- Implemented new driver exception hierarchy
+
 ## 4.1.0
 - Added a possibility to provide custom headers for the FaunaClient constructor
 - Added naming strategy for value encoder/decoder
