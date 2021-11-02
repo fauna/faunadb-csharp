@@ -1,5 +1,4 @@
 ## 5.0.0-preview
-- Supports fauna database API v5
 - Implemented new driver exception hierarchy
 
 ## 4.1.0
