@@ -283,6 +283,42 @@ There are three attributes that can be used to change the behavior of the `Encod
 - Primitive arrays, generic collections such as `List<T>`, and their respective interfaces such as `IList<T>`.
 - Dictionaries with string keys, such as `Dictionary<string, T>` and its respective interface `IDictionary<string, T>`.
 
+### Exceptions handling
+
+Since 5.0.0 release, we introduced children classes for base FaunaException class,
+for example:
+```
+public class AuthenticationFailedException : FaunaException
+{
+    public AuthenticationFailedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.AuthenticationFailed, message, position) { }
+}
+
+public class InvalidArgumentException : FaunaException
+{
+    public InvalidArgumentException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidArgument, message, position) { }
+}
+
+public class TransactionAbortedException : FaunaException
+{
+    public TransactionAbortedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.TransactionAborted, message, position) { }
+}
+```
+where each class corresponds to the error code from fauna database server,
+you can inspect "FaunaException.cs" file for more information on how it is implemented.
+
+Below you can see an example of how you can take advantage of a new exception hierarchy:
+```
+try
+{
+    adminClient.Query(ToDouble(Now()));
+}
+catch (InvalidArgumentException e)
+{
+    Console.WriteLine(e.HttpStatusCode);
+    Console.WriteLine(e.Message);
+}
+```
+
 ### Document streaming
 
 Fauna supports document streaming, where changes to a streamed document are pushed to all clients subscribing to that document.
