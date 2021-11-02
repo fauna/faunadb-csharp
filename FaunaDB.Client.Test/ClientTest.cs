@@ -1653,7 +1653,7 @@ namespace Test
             {
                 {"lambda", Arr("x", "y") },
                 {"expr", Concat(Arr(Var("x"), "/", Var("y"))) },
-                { "api_version", "5" },
+                { "api_version", "4" },
             }));
         }
 
@@ -2213,7 +2213,7 @@ namespace Test
 
             var headers = customHttp.LastMessage.Headers;
             Assert.That(headers.GetValues("X-Driver-Env").First(), Does.Match("driver=csharp-.*; runtime=.*; env=.*; os=.*"));
-            Assert.AreEqual("5", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("4", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.IsFalse(headers.Contains("X-Last-Seen-Txn"));
 
             // the default HttpClient.Timeout is 100 seconds
@@ -2231,7 +2231,7 @@ namespace Test
 
             headers = customHttp.LastMessage.Headers;
 
-            Assert.AreEqual("5", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("4", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.AreEqual("42000", headers.GetValues("X-Query-Timeout").First());
             Assert.IsTrue(long.Parse(headers.GetValues("X-Last-Seen-Txn").First()) > 0);
 
