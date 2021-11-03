@@ -285,8 +285,8 @@ There are three attributes that can be used to change the behavior of the `Encod
 
 ### Exceptions handling
 
-Since 5.0.0 release, we introduced children classes for base FaunaException class,
-for example:
+With the 5.0.0 release, child classes of the base FaunaException class now exist.
+For example:
 ```
 public class AuthenticationFailedException : FaunaException
 {
