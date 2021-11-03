@@ -304,7 +304,8 @@ public class TransactionAbortedException : FaunaException
 }
 ```
 Each class corresponds to an error code from Fauna.
-you can inspect "FaunaException.cs" file for more information on how it is implemented.
+Inspect the [`FaunaException.cs`](https://github.com/fauna/faunadb-csharp/blob/v5/FaunaDB.Client/Errors/FaunaException.cs)
+file for more information on how it is implemented.
 
 Below you can see an example of how you can take advantage of a new exception hierarchy:
 ```
