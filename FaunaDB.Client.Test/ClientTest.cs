@@ -2213,7 +2213,7 @@ namespace Test
 
             var headers = customHttp.LastMessage.Headers;
             Assert.That(headers.GetValues("X-Driver-Env").First(), Does.Match("driver=csharp-.*; runtime=.*; env=.*; os=.*"));
-            Assert.AreEqual("4", headers.GetValues("X-FaunaDB-API-Version").First());
+            Assert.AreEqual("5", headers.GetValues("X-FaunaDB-API-Version").First());
             Assert.IsFalse(headers.Contains("X-Last-Seen-Txn"));
 
             // the default HttpClient.Timeout is 100 seconds
