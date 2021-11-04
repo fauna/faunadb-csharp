@@ -11,7 +11,7 @@ executors:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk
 
-      - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:latest
+      - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:21.10.01.nightly20211029
         name: core
         auth:
           username: _json_key
