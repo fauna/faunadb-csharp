@@ -317,6 +317,7 @@ catch (InvalidArgumentException e)
 {
     Console.WriteLine(e.HttpStatusCode);
     Console.WriteLine(e.Message);
+    Console.WriteLine(e.Position);
 }
 ```
 
