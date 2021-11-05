@@ -5,7 +5,7 @@ namespace FaunaDB.Errors
 {
     public class QueryError
     {
-        public IReadOnlyList<string> Positions { get; private set; }
+        public IReadOnlyList<string> Position { get; private set; }
 
         public string Code { get; private set; }
 
@@ -16,7 +16,7 @@ namespace FaunaDB.Errors
         [JsonConstructor]
         public QueryError(IReadOnlyList<string> position, string code, string description, IReadOnlyList<ValidationFailure> failures, IReadOnlyList<ValidationFailure> cause = null)
         {
-            Positions = position ?? new List<string>();
+            Position = position ?? new List<string>();
             Code = code;
             Description = description;
             Failures = failures ?? cause ?? new List<ValidationFailure>();
