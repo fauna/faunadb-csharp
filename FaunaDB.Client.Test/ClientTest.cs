@@ -169,7 +169,7 @@ namespace Test
                 async () => await GetClient(secret: "invalid secret").Query(Ref(Collection("spelss"), "1234"))
             );
 
-            AssertErrors(ex, code: "unauthorized", description: "Unauthorized");
+            AssertErrors(ex, code: "unauthorized", description: "Unauthorized. Check that endpoint, schema, port and secret are correct during client’s instantiation");
 
             AssertPosition(ex, positions: Is.EquivalentTo(new List<string> { }));
         }
