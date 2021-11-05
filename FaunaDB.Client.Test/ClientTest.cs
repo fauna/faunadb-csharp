@@ -2802,9 +2802,9 @@ namespace Test
 
         internal static void AssertErrors(FaunaException ex, string code, string description, int errorCount = 1)
         {
-            if (ex.Positions.Count > 0)
+            if (ex.Position.Count > 0)
             {
-                Assert.That(ex.Positions, Has.Length.EqualTo(errorCount));
+                Assert.That(ex.Position, Has.Length.EqualTo(errorCount));
             }
 
             Assert.AreEqual(code, ex.Code);
@@ -2813,14 +2813,14 @@ namespace Test
 
         private static void AssertFailures(FaunaException ex, string code, string description, IResolveConstraint fields)
         {
-            Assert.That(ex.Positions, Has.Count.EqualTo(1));
+            Assert.That(ex.Position, Has.Count.EqualTo(1));
             Assert.AreEqual(code, ex.Code);
             Assert.AreEqual(description, ex.Message);
         }
 
         private static void AssertPosition(FaunaException ex, IResolveConstraint positions)
         {
-            Assert.That(ex.Positions, positions);
+            Assert.That(ex.Position, positions);
         }
     }
 }

@@ -11,12 +11,15 @@ namespace FaunaDB.Errors
 
         public string Description { get; private set; }
 
+        public IReadOnlyList<string> Position { get; private set; }
+
         [JsonConstructor]
         public ValidationFailure(IReadOnlyList<string> field, IReadOnlyList<string> position, string code, string description)
         {
             Field = field ?? position ?? new List<string>();
             Code = code;
             Description = description;
+            Position = position;
         }
     }
 }

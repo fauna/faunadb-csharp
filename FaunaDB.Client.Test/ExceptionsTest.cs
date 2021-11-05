@@ -109,7 +109,7 @@ namespace Test
         public async Task CallErrorTest()
         {
             await testClient.Query(CreateFunction(Obj("name", "increment", "body", Query(Lambda("x", Divide(Var("x"), LongV.Of(0)))))));
-            Assert.ThrowsAsync<FunctionCallErrorException>(async () => await testClient.Query(Call(Function("increment"), 10)));
+            Assert.ThrowsAsync<FunctionCallException>(async () => await testClient.Query(Call(Function("increment"), 10)));
         }
 
         [Test]

@@ -11,8 +11,8 @@ namespace FaunaDB.Errors
             List<FaunaException> exceptions = new List<FaunaException>();
             foreach (var error in response.Errors)
             {
-                string[] exceptionPositions = new string[error.Positions.Count];
-                string[] responsePositions = error.Positions.ToArray();
+                string[] exceptionPositions = new string[error.Position.Count];
+                string[] responsePositions = error.Position.ToArray();
                 Array.Copy(responsePositions, exceptionPositions, responsePositions.Length);
 
                 switch (error.Code)
@@ -30,7 +30,9 @@ namespace FaunaDB.Errors
                         exceptions.Add(new InstanceAlreadyExistsException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.ValidationFailed:
-                        exceptions.Add(new ValidationFailedException(httpStatusCode, error.Description, exceptionPositions, error.Failures));
+                        var failures = error.Failures.Select(v =>
+                            "field[" + string.Join(",", v.Field) + "]" + " - " + v.Code + ": " + v.Description).ToList();
+                        exceptions.Add(new ValidationFailedException(httpStatusCode, error.Description, exceptionPositions, failures));
                         break;
                     case ExceptionCodes.FeatureNotAvailable:
                         exceptions.Add(new FeatureNotAvailableException(httpStatusCode, error.Description, exceptionPositions));
@@ -60,7 +62,10 @@ namespace FaunaDB.Errors
                         exceptions.Add(new InvalidTokenException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.CallError:
-                        exceptions.Add(new FunctionCallErrorException(httpStatusCode, error.Description, exceptionPositions, error.Failures));
+                        var faunaExceptions = error.Failures.Select(cause =>
+                            new FunctionCallException(httpStatusCode, cause.Description, cause.Position.ToArray(),
+                                new List<FaunaException>())).ToList();
+                        exceptions.Add(new FunctionCallException(httpStatusCode, error.Description, exceptionPositions, faunaExceptions));
                         break;
                     case ExceptionCodes.StackOverflow:
                         exceptions.Add(new StackOverflowException(httpStatusCode, error.Description, exceptionPositions));

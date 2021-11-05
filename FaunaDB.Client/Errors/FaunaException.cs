@@ -22,13 +22,13 @@ namespace FaunaDB.Errors
         /// <summary>
         /// Array of errors sent by the server.
         /// </summary>
-        public IReadOnlyList<string> Positions { get; private set; }
+        public IReadOnlyList<string> Position { get; private set; }
 
-        public FaunaException(int httpStatusCode, string code, string message, string[] positions) : base(message)
+        public FaunaException(int httpStatusCode, string code, string message, string[] position) : base(message)
         {
             Code = code;
             HttpStatusCode = httpStatusCode;
-            Positions = positions;
+            Position = position;
         }
     }
 
@@ -54,9 +54,9 @@ namespace FaunaDB.Errors
 
     public class ValidationFailedException : FaunaException
     {
-        public IReadOnlyList<ValidationFailure> Failures { get; private set; }
+        public IReadOnlyList<string> Failures { get; private set; }
 
-        public ValidationFailedException(int httpStatusCode, string message, string[] position, IReadOnlyList<ValidationFailure> failures) : base(httpStatusCode, ExceptionCodes.ValidationFailed, message, position)
+        public ValidationFailedException(int httpStatusCode, string message, string[] position, IReadOnlyList<string> failures) : base(httpStatusCode, ExceptionCodes.ValidationFailed, message, position)
         {
             this.Failures = failures;
         }
@@ -112,13 +112,13 @@ namespace FaunaDB.Errors
         public InvalidTokenException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidToken, message, position) { }
     }
 
-    public class FunctionCallErrorException : FaunaException
+    public class FunctionCallException : FaunaException
     {
-        public IReadOnlyList<ValidationFailure> Failures { get; private set; }
+        public IReadOnlyList<FaunaException> Exceptions { get; private set; }
 
-        public FunctionCallErrorException(int httpStatusCode, string message, string[] position, IReadOnlyList<ValidationFailure> failures) : base(httpStatusCode, ExceptionCodes.CallError, message, position)
+        public FunctionCallException(int httpStatusCode, string message, string[] position, IReadOnlyList<FaunaException> exceptions) : base(httpStatusCode, ExceptionCodes.CallError, message, position)
         {
-            this.Failures = failures;
+            this.Exceptions = exceptions;
         }
     }
 
