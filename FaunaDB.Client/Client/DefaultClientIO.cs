@@ -97,6 +97,11 @@ namespace FaunaDB.Client
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             message.Headers.Add("X-FaunaDB-API-Version", "4");
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
+            if (httpVersion.ToString() == "1.1")
+            {
+                message.Headers.Add("Keep-Alive", "3000");
+            }
+
             message.Version = httpVersion;
 
             // adding custom headers provided during the client creation
@@ -246,13 +251,8 @@ namespace FaunaDB.Client
             return string.Join("&", keyValues);
         }
 
-        private static HttpClient CreateClient()
-        {
-            var httpClient = new HttpClient(new TimeoutHandler());
-            httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
-            httpClient.DefaultRequestHeaders.Add("Keep-Alive", "3000");
-            return httpClient;
-        }
+        private static HttpClient CreateClient() =>
+            new HttpClient(new TimeoutHandler());
     }
 
     /// <summary>
