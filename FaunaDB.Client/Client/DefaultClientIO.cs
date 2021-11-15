@@ -246,8 +246,13 @@ namespace FaunaDB.Client
             return string.Join("&", keyValues);
         }
 
-        private static HttpClient CreateClient() =>
-            new HttpClient(new TimeoutHandler());
+        private static HttpClient CreateClient()
+        {
+            var httpClient = new HttpClient(new TimeoutHandler());
+            httpClient.DefaultRequestHeaders.Add("Connection", "keep-alive");
+            httpClient.DefaultRequestHeaders.Add("Keep-Alive", "3000");
+            return httpClient;
+        }
     }
 
     /// <summary>
