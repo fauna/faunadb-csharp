@@ -97,6 +97,11 @@ namespace FaunaDB.Client
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             message.Headers.Add("X-FaunaDB-API-Version", "4");
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
+            if (httpVersion.ToString() == "1.1")
+            {
+                message.Headers.Add("Keep-Alive", "3000");
+            }
+
             message.Version = httpVersion;
 
             // adding custom headers provided during the client creation
