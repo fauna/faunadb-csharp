@@ -43,6 +43,8 @@ namespace Test
                             )
                     );
             await testClient.Query(Create(Collection(EXISTS_COLLECTION), Obj("data", Obj("unique_field", 1))));
+
+            await client.Query(CreateCollection(Obj("name", "spells")));
         }
 
         [Test]
@@ -125,6 +127,35 @@ namespace Test
         {
             await testClient.Query(CreateFunction(Obj("name", "StackOverflowFunc", "body", Query(Lambda("x", Call(Function("StackOverflowFunc"), Var("x")))))));
             Assert.ThrowsAsync<StackOverflowException>(async () => await testClient.Query(Call(Function("StackOverflowFunc"), 10)));
+        }
+
+        [Test]
+        public void InvalidWriteTimeTest()
+        {
+            Assert.ThrowsAsync<InvalidWriteTimeException>(async () => await testClient.Query(
+                Insert(
+                    Ref(Collection("spells"), "1234"),
+                    TimeAdd(Now(), 5, "days"),
+                    ActionType.Create,
+                    Obj("data", Obj("color", "YELLOW"))
+                )
+            ));
+        }
+
+        [Test]
+        public void MissingIdentityTest()
+        {
+            Assert.ThrowsAsync<MissingIdentityException>(async () => await testClient.Query(
+                CurrentIdentity()
+            ));
+        }
+
+        [Test]
+        public void InvalidTokenTest()
+        {
+            Assert.ThrowsAsync<InvalidTokenException>(async () => await testClient.Query(
+                CurrentToken()
+            ));
         }
     }
 }
