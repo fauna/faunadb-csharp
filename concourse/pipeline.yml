@@ -39,7 +39,7 @@ jobs:
         privileged: true
         params:
           FAUNA_ROOT_KEY: secret
-          FAUNA_DOMAIN: core
+          FAUNA_DOMAIN: faunadb
           FAUNA_SCHEME: http
           FAUNA_PORT: 8443
           FAUNA_REPO_PASSWORD: ((gcr-key))
