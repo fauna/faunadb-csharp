@@ -38,10 +38,10 @@ jobs:
         file: fauna-csharp-repository/concourse/tasks/integration-tests.yml
         privileged: true
         params:
-          FAUNA_ROOT_KEY: ((fauna.secret))
-          FAUNA_DOMAIN: ((fauna.domain))
-          FAUNA_SCHEME: ((fauna.scheme))
-          FAUNA_PORT: ((fauna.port))
+          FAUNA_ROOT_KEY: secret
+          FAUNA_DOMAIN: core
+          FAUNA_SCHEME: http
+          FAUNA_PORT: 8443
           FAUNA_REPO_PASSWORD: ((gcr-key))
       
       - task: publish
