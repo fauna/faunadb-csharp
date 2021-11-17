@@ -95,7 +95,7 @@ namespace FaunaDB.Client
             message.Headers.Authorization = authHeader;
             message.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
             message.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            message.Headers.Add("X-FaunaDB-API-Version", "4");
+            message.Headers.Add("X-FaunaDB-API-Version", "5");
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
             if (httpVersion.ToString() == "1.1")
             {
@@ -167,7 +167,7 @@ namespace FaunaDB.Client
             var message = new HttpRequestMessage(new HttpMethod(StreamingHttpMethod.Name()), $"{endpoint}{path}");
             message.Content = dataString;
             message.Headers.Authorization = authHeader;
-            message.Headers.Add("X-FaunaDB-API-Version", "4");
+            message.Headers.Add("X-FaunaDB-API-Version", "5");
             message.Headers.Add("X-Driver-Env", RuntimeEnvironmentHeader.Construct(EnvironmentEditor.Create()));
             message.Version = httpVersion;
             message.SetTimeout(Timeout.InfiniteTimeSpan);

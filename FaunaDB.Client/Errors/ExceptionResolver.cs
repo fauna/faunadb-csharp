@@ -77,7 +77,9 @@ namespace FaunaDB.Errors
                         exceptions.Add(new InstanceNotUniqueException(httpStatusCode, error.Description, exceptionPositions));
                         break;
                     case ExceptionCodes.Unauthorized:
-                        exceptions.Add(new UnauthorizedException(httpStatusCode, error.Description, exceptionPositions));
+                        var message =
+                            error.Description + ". Check that endpoint, schema, port and secret are correct during client’s instantiation";
+                        exceptions.Add(new UnauthorizedException(httpStatusCode, message, exceptionPositions));
                         break;
                     default:
                         exceptions.Add(new UnknownException(httpStatusCode, error.Description, exceptionPositions));

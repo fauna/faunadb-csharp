@@ -7,7 +7,7 @@
 
 C# doc are hosted on GitHub:
 
-* [faunadb-csharp](https://fauna.github.io/faunadb-csharp/4.1.0/)
+* [faunadb-csharp](https://fauna.github.io/faunadb-csharp/5.0.0-preview/)
 
 ## How to Build
 
@@ -75,7 +75,7 @@ dotnet test FaunaDB.Client.Test --filter FullyQualifiedName~Test.EnvironmentHead
 First install the Nuget package by adding the package reference to your MSBuild project:
 
 ```xml
-<PackageReference Include="FaunaDB.Client" Version="4.1.0" />
+<PackageReference Include="FaunaDB.Client" Version="5.0.0-preview" />
 ```
 
 or by using your IDE and searching for `FaunaDB.Client`.
@@ -282,6 +282,44 @@ There are three attributes that can be used to change the behavior of the `Encod
 - Primitive scalar types (`int`, `long`, `string`, etc.)
 - Primitive arrays, generic collections such as `List<T>`, and their respective interfaces such as `IList<T>`.
 - Dictionaries with string keys, such as `Dictionary<string, T>` and its respective interface `IDictionary<string, T>`.
+
+### Exceptions handling
+
+With the 5.0.0 release, child classes of the base FaunaException class now exist.
+For example:
+```
+public class AuthenticationFailedException : FaunaException
+{
+    public AuthenticationFailedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.AuthenticationFailed, message, position) { }
+}
+
+public class InvalidArgumentException : FaunaException
+{
+    public InvalidArgumentException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.InvalidArgument, message, position) { }
+}
+
+public class TransactionAbortedException : FaunaException
+{
+    public TransactionAbortedException(int httpStatusCode, string message, string[] position) : base(httpStatusCode, ExceptionCodes.TransactionAborted, message, position) { }
+}
+```
+Each class corresponds to an error code from Fauna.
+Inspect the [`FaunaException.cs`](https://github.com/fauna/faunadb-csharp/blob/v5/FaunaDB.Client/Errors/FaunaException.cs)
+file for more information on how it is implemented.
+
+The following example demonstrates the methods that you can access from the exception object:
+```
+try
+{
+    adminClient.Query(ToDouble(Now()));
+}
+catch (InvalidArgumentException e)
+{
+    Console.WriteLine(e.HttpStatusCode);
+    Console.WriteLine(e.Message);
+    Console.WriteLine(e.Position);
+}
+```
 
 ### Document streaming
 
