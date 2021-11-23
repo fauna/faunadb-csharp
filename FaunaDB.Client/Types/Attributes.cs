@@ -4,7 +4,7 @@ namespace FaunaDB.Types
 {
     /// <summary>
     /// Maps a property/field member constructor parameter to FaunaDB object property while encoding/deconding an object.
-    /// If this attribute if not specified the property/field name constructor parameter name will be used instead.
+    /// If this attribute is not specified the property/field name constructor parameter name will be used instead.
     /// </summary>
     /// <example>
     /// class Car
@@ -143,9 +143,9 @@ namespace FaunaDB.Types
     { }
 
     /// <summary>
-    /// Instruct the decoder wich constructor to use when decoding a object.
-    /// It can also be used in a public static method instead in a constructor.
-    /// That attribute can only be used once per class.
+    /// Instruct the decoder which constructor to use when decoding an object.
+    /// It can also be used in a public static method instead of a constructor.
+    /// This attribute can only be used once per class.
     /// </summary>
     /// <example>
     /// class Product
