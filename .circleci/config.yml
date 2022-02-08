@@ -11,11 +11,8 @@ executors:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk
 
-      - image: gcr.io/faunadb-cloud/faunadb/enterprise/<<parameters.version>>:latest
+      - image: fauna/faunadb
         name: core
-        auth:
-          username: _json_key
-          password: $GCR_KEY
 
     environment:
       FAUNA_ROOT_KEY: secret
@@ -53,6 +50,7 @@ commands:
       - run:
           name: Run Tests 5.0
           command: |
+            apt-get install -y dotnet-sdk-5.0
             dotnet --info
             dotnet restore
             dotnet test --framework net5.0 --logger "junit;LogFilePath=./TestResults/results50.xml" FaunaDB.Client.Test
