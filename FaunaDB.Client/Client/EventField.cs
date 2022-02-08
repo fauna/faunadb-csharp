@@ -16,5 +16,7 @@ namespace FaunaDB.Client
         public static EventField DiffField => new EventField("diff");
 
         public static EventField ActionField => new EventField("action");
+
+        public static EventField IndexField => new EventField("index");
     }
 }
