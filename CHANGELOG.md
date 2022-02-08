@@ -1,3 +1,6 @@
+## 4.2.0
+- [#187](https://github.com/fauna/faunadb-csharp/pull/187) Add support for [set streaming](https://docs.fauna.com/fauna/current/drivers/streaming).
+
 ## 4.1.0
 - Added a possibility to provide custom headers for the FaunaClient constructor
 - Added naming strategy for value encoder/decoder
