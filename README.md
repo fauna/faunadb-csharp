@@ -7,7 +7,7 @@
 
 C# doc are hosted on GitHub:
 
-* [faunadb-csharp](https://fauna.github.io/faunadb-csharp/4.1.0/)
+* [faunadb-csharp](https://fauna.github.io/faunadb-csharp/4.2.0/)
 
 ## How to Build
 
@@ -75,7 +75,7 @@ dotnet test FaunaDB.Client.Test --filter FullyQualifiedName~Test.EnvironmentHead
 First install the Nuget package by adding the package reference to your MSBuild project:
 
 ```xml
-<PackageReference Include="FaunaDB.Client" Version="4.1.0" />
+<PackageReference Include="FaunaDB.Client" Version="4.2.0" />
 ```
 
 or by using your IDE and searching for `FaunaDB.Client`.
