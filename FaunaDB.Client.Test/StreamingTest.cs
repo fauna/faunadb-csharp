@@ -39,8 +39,8 @@ namespace Test
         {
             AsyncTestDelegate doc = async () => { await adminClient.Stream(Collection("streams_test")); };
             var ex = Assert.ThrowsAsync<BadRequest>(doc);
-            Assert.AreEqual("invalid argument: Expected a Document Ref or Version, got Collection Ref.", ex.Message);
-            AssertErrors(ex, code: "invalid argument", description: "Expected a Document Ref or Version, got Collection Ref.");
+            Assert.AreEqual("invalid argument: Expected a Document Ref or Version, or a Set Ref, got Collection Ref.", ex.Message);
+            AssertErrors(ex, code: "invalid argument", description: "Expected a Document Ref or Version, or a Set Ref, got Collection Ref.");
         }
 
         [Test]
