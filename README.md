@@ -3,6 +3,13 @@
 [![NuGet](https://img.shields.io/nuget/v/FaunaDB.Client.svg?maxAge=21600)](https://www.nuget.org/packages/FaunaDB.Client/)
 [![License](https://img.shields.io/badge/license-MPL_2.0-blue.svg?maxAge=2592000)](https://raw.githubusercontent.com/fauna/faunadb-csharp/main/LICENSE)
 
+> [!WARNING]
+>  Fauna is decomissioning FQL v4 on June 30, 2025. See the [v4 end of life (EOL)
+> announcement](https://docs.fauna.com/fauna/v4/#fql-v4-end-of-life) and
+> [related FAQ](https://docs.fauna.com/fauna/v4/migration/faq).
+>
+> This driver is not compatible with FQL v10, the latest version.
+
 ## Documentation
 
 C# doc are hosted on GitHub:
@@ -154,7 +161,7 @@ var client = new FaunaClient("secret", "http://localhost:9090/", httpClient: htt
 
 #### HTTP 2.0 support
 Starting from version 4.0.0 of this driver (faunadb-csharp), HTTP/2 support is enabled by default for .NET standards 2.1 and above.
-This means that if you use .NET core 3.1 and above (which support that standard), you'll be sending requests to Fauna on HTTP/2. 
+This means that if you use .NET core 3.1 and above (which support that standard), you'll be sending requests to Fauna on HTTP/2.
 .NET standards lower than 2.1 and .NET frameworks 4.5-4.8 have HTTP/1.1 enabled as the default protocol version, since they lack of support for HTTP/2.
 We've also added an optional parameter if you want to specify the version of the protocol directly:
 ```csharp
@@ -171,7 +178,7 @@ var adminClient = new FaunaClient(
 Value result = await client.Query(Paginate(Match(Index("spells"))));
 ```
 
-`Query` methods receives an `Expr` object. `Expr` objects can be composed with others `Expr` to create complex query objects. `FaunaDB.Query.Language` is a helper class where you can find all available expressions in the library. 
+`Query` methods receives an `Expr` object. `Expr` objects can be composed with others `Expr` to create complex query objects. `FaunaDB.Query.Language` is a helper class where you can find all available expressions in the library.
 
 You can also pass a `TimeSpan queryTimeout` argument to that specific query as well:
 
@@ -287,7 +294,7 @@ There are three attributes that can be used to change the behavior of the `Encod
 
 Fauna supports document streaming, where changes to a streamed document are pushed to all clients subscribing to that document.
 
-The streaming API is built using the Observer pattern which enables a subscriber to register with and receive notifications from a provider.  
+The streaming API is built using the Observer pattern which enables a subscriber to register with and receive notifications from a provider.
 Provider is implemented within `StreamingEventHandler` class, and subscriber within `StreamingEventMonitor` class.
 
 The following example assumes that you have already created a `FaunaClient`.
