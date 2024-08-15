@@ -1,0 +1,5 @@
+is_global = true
+build_property.RootNamespace = FaunaDB.Client.Test
+build_property.ProjectDir = /Users/jrodewig/dev/faunadb-csharp/FaunaDB.Client.Test/
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
