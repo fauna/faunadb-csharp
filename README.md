@@ -1,14 +1,26 @@
-# FaunaDB C# Driver
+# C# driver for Fauna v4 (deprecated)
 
 [![NuGet](https://img.shields.io/nuget/v/FaunaDB.Client.svg?maxAge=21600)](https://www.nuget.org/packages/FaunaDB.Client/)
 [![License](https://img.shields.io/badge/license-MPL_2.0-blue.svg?maxAge=2592000)](https://raw.githubusercontent.com/fauna/faunadb-csharp/main/LICENSE)
 
 > [!WARNING]
->  Fauna is decomissioning FQL v4 on June 30, 2025. See the [v4 end of life (EOL)
+>  Fauna is decommissioning FQL v4 on June 30, 2025.
+>
+> This driver is not compatible with FQL v10, the latest version. Fauna accounts
+> created after August 21, 2024 must use FQL v10. Ensure you migrate existing
+> projects to the official v10 driver by the v4 EOL date:
+> https://github.com/fauna/fauna-dotnet.
+>
+> For more information, see the [v4 end of life (EOL)
 > announcement](https://docs.fauna.com/fauna/v4/#fql-v4-end-of-life) and
 > [related FAQ](https://docs.fauna.com/fauna/v4/migration/faq).
->
-> This driver is not compatible with FQL v10, the latest version.
+
+The official C# driver for [Fauna v4](https://docs.fauna.com/fauna/v4/).
+
+See the [Fauna v4 documentation](https://docs.fauna.com/fauna/v4) and
+[tutorials](https://docs.fauna.com/fauna/v4/learn/tutorials/fql/crud?lang=javascript) for
+guides and a complete database [API
+reference](https://docs.fauna.com/fauna/v4/api/fql/).
 
 ## Documentation
 
