@@ -20,7 +20,7 @@
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
     <meta name="robots" content="noindex">
 </head>
-<body>
+<body><div style="background-color: #f8d7da; color: #721c24; padding: 15px; text-align: center; font-family: Arial, sans-serif; border: 1px solid #f5c6cb; margin-bottom: 20px; font-size: 18px;"> <p><strong>Warning:</strong><br> Fauna is decommissioning FQL v4 on June 30, 2025.</p> <p>This driver is not compatible with FQL v10, the latest version. Fauna accounts created after August 21, 2024 must use FQL v10.<br>Ensure you migrate existing projects to the official v10 driver by the v4 EOL date: <a href="https://github.com/fauna/fauna-dotnet">https://github.com/fauna/fauna-dotnet</a>.</p><p>For more information, see the <a href="https://docs.fauna.com/fauna/v4/#fql-v4-end-of-life">v4 end of life (EOL) announcement</a> and <a href="https://docs.fauna.com/fauna/v4/migration/faq">related FAQ</a>.</p></div>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
 <div id="titlearea">
 <table cellspacing="0" cellpadding="0">
@@ -38,8 +38,8 @@
                onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
           <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onfocus="searchBox.OnSearchFieldFocus(true)"
+               onblur="searchBox.OnSearchFieldFocus(false)"
                onkeyup="searchBox.OnSearchFieldChange(event)"/>
           </span><span class="right">
             <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
@@ -66,7 +66,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -87,7 +87,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>Methods modeling the <a class="el" href="namespace_fauna_d_b.html">FaunaDB</a> query language. This class is intended to be statically imported into your code:  
+<p>Methods modeling the <a class="el" href="namespace_fauna_d_b.html">FaunaDB</a> query language. This class is intended to be statically imported into your code:
  <a href="struct_fauna_d_b_1_1_query_1_1_language.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -104,10 +104,10 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a81c3cdbca42d6f918b2cd6041b9d419e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419e">Normalizer</a> { <br />
-&#160;&#160;<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ea87e2719d8e782e8be505fe500f202c37">Normalizer.NFD</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ead6fef5d168d085196fddede17c3fdd05">Normalizer.NFC</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ea6e614ec29d0c9814ab1ac806707ff2bf">Normalizer.NFKD</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ea3601d5e96def53c030641936b35c9b5d">Normalizer.NFKC</a>, 
+&#160;&#160;<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ea87e2719d8e782e8be505fe500f202c37">Normalizer.NFD</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ead6fef5d168d085196fddede17c3fdd05">Normalizer.NFC</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ea6e614ec29d0c9814ab1ac806707ff2bf">Normalizer.NFKD</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419ea3601d5e96def53c030641936b35c9b5d">Normalizer.NFKC</a>,
 <br />
 &#160;&#160;<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419eae58345d4843a4bd74931557a552b187a">Normalizer.NFKCCaseFold</a>
 <br />
@@ -115,20 +115,20 @@ Public Types</h2></td></tr>
 <tr class="memdesc:a81c3cdbca42d6f918b2cd6041b9d419e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Possible normalizer values accepted by Casefold(Expr, Normalizer).  <a href="struct_fauna_d_b_1_1_query_1_1_language.html#a81c3cdbca42d6f918b2cd6041b9d419e">More...</a><br /></td></tr>
 <tr class="separator:a81c3cdbca42d6f918b2cd6041b9d419e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4cbcf1d55ea8230e2afc3a29899127a2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2">TimeUnit</a> { <br />
-&#160;&#160;<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a03727ac48595a24daed975559c944a44">TimeUnit.Day</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2aff3f8fe2262b5a28e839a0a6c17cc36f">TimeUnit.HalfDay</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2ab55e509c697e4cca0e1d160a7806698f">TimeUnit.Hour</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a62902641c38f3a4a8eb3212454360e24">TimeUnit.Minute</a>, 
+&#160;&#160;<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a03727ac48595a24daed975559c944a44">TimeUnit.Day</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2aff3f8fe2262b5a28e839a0a6c17cc36f">TimeUnit.HalfDay</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2ab55e509c697e4cca0e1d160a7806698f">TimeUnit.Hour</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a62902641c38f3a4a8eb3212454360e24">TimeUnit.Minute</a>,
 <br />
-&#160;&#160;<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2ac22cf8376b1893dcfcef0649fe1a7d87">TimeUnit.Second</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a988bbeeb80e7e0a6b4651aab5a76b413">TimeUnit.Millisecond</a>, 
-<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a1f14b3811ca5de688daa740d8471249e">TimeUnit.Microsecond</a>, 
+&#160;&#160;<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2ac22cf8376b1893dcfcef0649fe1a7d87">TimeUnit.Second</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a988bbeeb80e7e0a6b4651aab5a76b413">TimeUnit.Millisecond</a>,
+<a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a1f14b3811ca5de688daa740d8471249e">TimeUnit.Microsecond</a>,
 <a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2a4146c294bcc82b1723c65bdc64b55089">TimeUnit.Nanosecond</a>
 <br />
  }</td></tr>
 <tr class="memdesc:a4cbcf1d55ea8230e2afc3a29899127a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Possible time units accepted by <a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#ab0c14d64c8405a5e0bb88d19f24502c0" title="Creates a new Epoch expression.">Epoch(Expr, TimeUnit)</a>.  <a href="struct_fauna_d_b_1_1_query_1_1_language.html#a4cbcf1d55ea8230e2afc3a29899127a2">More...</a><br /></td></tr>
 <tr class="separator:a4cbcf1d55ea8230e2afc3a29899127a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0cb52da78a92e6660db907533f213e6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#ac0cb52da78a92e6660db907533f213e6">ActionType</a> { <a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#ac0cb52da78a92e6660db907533f213e6a686e697538050e4664636337cc3b834f">ActionType.Create</a>, 
+<tr class="memitem:ac0cb52da78a92e6660db907533f213e6"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#ac0cb52da78a92e6660db907533f213e6">ActionType</a> { <a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#ac0cb52da78a92e6660db907533f213e6a686e697538050e4664636337cc3b834f">ActionType.Create</a>,
 <a class="el" href="struct_fauna_d_b_1_1_query_1_1_language.html#ac0cb52da78a92e6660db907533f213e6af2a6c498fb90ee345d997f888fce3b18">ActionType.Delete</a>
  }</td></tr>
 <tr class="memdesc:ac0cb52da78a92e6660db907533f213e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Possible actions for functions Insert(Expr, Expr, ActionType, Expr) and Remove(Expr, Expr, ActionType).  <a href="struct_fauna_d_b_1_1_query_1_1_language.html#ac0cb52da78a92e6660db907533f213e6">More...</a><br /></td></tr>
@@ -1323,7 +1323,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a11d2f9d110dd30411f99ba00a9d8f798">All</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="keyword">true</span>, <span class="keyword">true</span>, <span class="keyword">true</span>)));</div>
 <div class="line"> </div>
 <div class="line">Assert.IsTrue(<span class="keyword">true</span>, result.To&lt;<span class="keywordtype">bool</span>&gt;().Value);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ad5ed35627b12e69d2804eb10d83091ee"></a>
@@ -1390,7 +1390,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a26249c2336617a3e3c2539407c0ab161">Any</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="keyword">true</span>, <span class="keyword">false</span>, <span class="keyword">false</span>)));</div>
 <div class="line"> </div>
 <div class="line">Assert.IsTrue(<span class="keyword">true</span>, result.To&lt;<span class="keywordtype">bool</span>&gt;().Value);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="aa30c495e4fc90c336338a40d134dbbc3"></a>
@@ -1439,7 +1439,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#aa30c495e4fc90c336338a40d134dbbc3">Append</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(4, 5, 6), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3, 4, 5, 6), result);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a5b242bdfc5191c0d8865aa31f89eed48"></a>
@@ -3288,7 +3288,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a0a42ec6adf8277dc607833cea216d129">Drop</a>(2, <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(3), result);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="aa5a2f4e3a387f7d8985d4ecd5ed0786c"></a>
@@ -3639,7 +3639,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a39db289b398f38a298e040979f1039f1">Filter</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3, 4), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<span class="stringliteral">&quot;i&quot;</span>, <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a962837ea157c3e7c8c2dbecbec0db3b4">GT</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;i&quot;</span>), 2))));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(3, 4), result);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="aeadd79547ee5353169daf9ff02021e62"></a>
@@ -5353,7 +5353,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#aff2af1c57a3ff20305d9c1a0a59a2b27">IsEmpty</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(4, 5, 6)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<span class="keyword">false</span>, result.To&lt;<span class="keywordtype">bool</span>&gt;().Value);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a312456f8c8029c63c7e1e7ba3e807f68"></a>
@@ -5541,7 +5541,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#acb525a560749c47c25873c77c43f14ff">IsNonEmpty</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(4, 5, 6)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<span class="keyword">true</span>, result.To&lt;<span class="keywordtype">bool</span>&gt;().Value);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="afd1d4691845607141d2d1b0e499a57b8"></a>
@@ -6201,7 +6201,7 @@ Static Public Member Functions</h2></td></tr>
 </dl>
 <div class="fragment"><div class="line">var lambda1 = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<span class="stringliteral">&quot;a&quot;</span>, <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>), 1);</div>
 <div class="line">var lambda2 = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;b&quot;</span>));</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a76e442645f3ba61c92691560696ad51d"></a>
@@ -6233,7 +6233,7 @@ Static Public Member Functions</h2></td></tr>
 <p>. </p>
 <div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(a =&gt; a);</div>
 </div><!-- fragment --><p> is equivalent to </p><div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<span class="stringliteral">&quot;a&quot;</span>, <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>));</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_language_8_basic_8_lambda_8cs_source.html#l00023">23</a> of file <a class="el" href="_language_8_basic_8_lambda_8cs_source.html">Language.Basic.Lambda.cs</a>.</p>
 
 </div>
@@ -6267,7 +6267,7 @@ Static Public Member Functions</h2></td></tr>
 <p>. </p>
 <div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>((a, b) =&gt; <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(a, b));</div>
 </div><!-- fragment --><p> is equivalent to </p><div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;b&quot;</span>)));</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_language_8_basic_8_lambda_8cs_source.html#l00046">46</a> of file <a class="el" href="_language_8_basic_8_lambda_8cs_source.html">Language.Basic.Lambda.cs</a>.</p>
 
 </div>
@@ -6301,7 +6301,7 @@ Static Public Member Functions</h2></td></tr>
 <p>. </p>
 <div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>((a, b, c) =&gt; <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(a, b, c));</div>
 </div><!-- fragment --><p> is equivalent to </p><div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>, <span class="stringliteral">&quot;c&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;b&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;c&quot;</span>)));</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_language_8_basic_8_lambda_8cs_source.html#l00072">72</a> of file <a class="el" href="_language_8_basic_8_lambda_8cs_source.html">Language.Basic.Lambda.cs</a>.</p>
 
 </div>
@@ -6335,7 +6335,7 @@ Static Public Member Functions</h2></td></tr>
 <p>. </p>
 <div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>((a, b, c, d) =&gt; <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(a, b, c, d));</div>
 </div><!-- fragment --><p> is equivalent to </p><div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>, <span class="stringliteral">&quot;c&quot;</span>, <span class="stringliteral">&quot;d&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;b&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;c&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;d&quot;</span>)));</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_language_8_basic_8_lambda_8cs_source.html#l00099">99</a> of file <a class="el" href="_language_8_basic_8_lambda_8cs_source.html">Language.Basic.Lambda.cs</a>.</p>
 
 </div>
@@ -6369,7 +6369,7 @@ Static Public Member Functions</h2></td></tr>
 <p>. </p>
 <div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>((a, b, c, d, e) =&gt; <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(a, b, c, d, e));</div>
 </div><!-- fragment --><p> is equivalent to </p><div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>, <span class="stringliteral">&quot;c&quot;</span>, <span class="stringliteral">&quot;d&quot;</span>, <span class="stringliteral">&quot;e&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;b&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;c&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;d&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;e&quot;</span>)));</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_language_8_basic_8_lambda_8cs_source.html#l00127">127</a> of file <a class="el" href="_language_8_basic_8_lambda_8cs_source.html">Language.Basic.Lambda.cs</a>.</p>
 
 </div>
@@ -6403,7 +6403,7 @@ Static Public Member Functions</h2></td></tr>
 <p>. </p>
 <div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>((a, b, c, d, e, f) =&gt; <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(a, b, c, d, e, f));</div>
 </div><!-- fragment --><p> is equivalent to </p><div class="fragment"><div class="line">var lambda = <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(<span class="stringliteral">&quot;a&quot;</span>, <span class="stringliteral">&quot;b&quot;</span>, <span class="stringliteral">&quot;c&quot;</span>, <span class="stringliteral">&quot;d&quot;</span>, <span class="stringliteral">&quot;f&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#abfdadc5f2ccb2eb6997a9f162c4ab939">Add</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;a&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;b&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;c&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;d&quot;</span>), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;f&quot;</span>)));</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 <p class="definition">Definition at line <a class="el" href="_language_8_basic_8_lambda_8cs_source.html#l00156">156</a> of file <a class="el" href="_language_8_basic_8_lambda_8cs_source.html">Language.Basic.Lambda.cs</a>.</p>
 
 </div>
@@ -7303,7 +7303,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#ade5167c24bca61ca9530aa950fb1be5b">Lambda</a>(<span class="stringliteral">&quot;i&quot;</span>, <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a68b87ae1e59d6d1f4c0c41cf1dff1aa3">Multiply</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a9ca3ef0b129037f84291d0b9100babd9">Var</a>(<span class="stringliteral">&quot;i&quot;</span>), 2)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(2, 4, 6), result);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="af8652c62ec362ccbd092e485d502d651"></a>
@@ -8921,7 +8921,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a18efbaa0c52b8a4bfd1650a31c42d8cc">Prepend</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3), <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(4, 5, 6)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3, 4, 5, 6), result);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ac6f8c142df452d84b3cfc11147d1b362"></a>
@@ -9580,7 +9580,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#aa4d1af73418b8656cf66beeadb9875ab">Reverse</a>(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(0, 1, 2, 3)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<span class="keyword">new</span> <span class="keywordtype">int</span>[] { 3, 2, 1, 0 }, result.To&lt;<span class="keywordtype">int</span>[]&gt;().Value);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a905f4ed53ffe1988a54ffb56691ba8c5"></a>
@@ -10276,7 +10276,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="fragment"><div class="line">var result = await client.Query(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a8a6723610511acc42e9fe0604d0cd765">Take</a>(2, <a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2, 3)));</div>
 <div class="line"> </div>
 <div class="line">Assert.AreEqual(<a class="code" href="struct_fauna_d_b_1_1_query_1_1_language.html#a80246c5c6d8c2f52f84ef64e5b01011d">Arr</a>(1, 2), result);</div>
-</div><!-- fragment --> 
+</div><!-- fragment -->
 </div>
 </div>
 <a id="aceaa34da2c0a5c4ef713fbd52f82a42d"></a>
